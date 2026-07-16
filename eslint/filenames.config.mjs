@@ -24,6 +24,7 @@ export const FILE_SUFFIX_KINDS = {
   'enums.ts': 'enums',
   'types.ts': 'types',
   'interfaces.ts': 'interfaces',
+  'errors.ts': 'errors',
   'variants.ts': 'variants',
   'keys.ts': 'keys',
   'store.ts': 'store',
@@ -57,6 +58,7 @@ export const EXACT_FILE_KINDS = {
 /** Kinds whose files may hold module-scope literal configuration. */
 export const DECLARATION_HOME_KINDS = [
   'constants',
+  'errors',
   'enums',
   'variants',
   'keys',

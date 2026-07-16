@@ -1,0 +1,31 @@
+{
+  "generated": true,
+  "direction": "app -> modules -> platform -> shared -> packages -> vendors",
+  "allowedImports": {
+    "app": [
+      "app",
+      "modules",
+      "platform",
+      "shared",
+      "packages"
+    ],
+    "modules": [
+      "modules(public surface)",
+      "platform",
+      "shared",
+      "packages"
+    ],
+    "platform": [
+      "platform",
+      "shared",
+      "packages"
+    ],
+    "shared": [
+      "shared",
+      "packages"
+    ],
+    "packages": [
+      "packages"
+    ]
+  }
+}

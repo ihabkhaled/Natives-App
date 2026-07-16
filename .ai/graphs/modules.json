@@ -1,0 +1,66 @@
+{
+  "generated": true,
+  "modules": [
+    {
+      "name": "auth",
+      "publicSurface": [
+        "AuthUser",
+        "CurrentUserQueryView",
+        "LogoutMutationView",
+        "SESSION_STATUS",
+        "SessionStatus",
+        "SessionView",
+        "authQueryKeys",
+        "authTokensDtoSchema",
+        "authUserDtoSchema",
+        "bootstrapSessionFromStoredTokens",
+        "buildAuthUser",
+        "createAuthTokenRepository",
+        "createRefreshExecutor",
+        "getAuthRouteDefinitions",
+        "getAuthTokenRepository",
+        "handleAuthFailure",
+        "loginResponseSchema",
+        "logoutResponseSchema",
+        "refreshResponseSchema",
+        "useCurrentUserQuery",
+        "useLogoutMutation",
+        "useSession"
+      ]
+    },
+    {
+      "name": "health",
+      "publicSurface": [
+        "HealthCardContainer",
+        "healthQueryKeys",
+        "healthResponseSchema"
+      ]
+    },
+    {
+      "name": "home",
+      "publicSurface": [
+        "getHomeRouteDefinitions",
+        "getNotFoundRouteDefinition",
+        "homePath",
+        "welcomePath"
+      ]
+    },
+    {
+      "name": "settings",
+      "publicSurface": [
+        "AppearancePreferences",
+        "getSettingsRouteDefinitions",
+        "selectIsDarkTheme",
+        "settingsPath",
+        "useAppearancePreferences"
+      ]
+    },
+    {
+      "name": "ui-workbench",
+      "publicSurface": [
+        "getWorkbenchRouteDefinitions",
+        "workbenchPath"
+      ]
+    }
+  ]
+}
