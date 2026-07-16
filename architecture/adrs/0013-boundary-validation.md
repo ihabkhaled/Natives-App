@@ -46,7 +46,8 @@ hand — schemas are hand-authored, so they can drift from the backend until a c
 it. Parsing costs runtime work on every response. Throwing on bad env is unforgiving during setup.
 
 **Enforcement:** the registry pins `zod` to `@/packages/schema`;
-`architecture/no-import-meta-env-outside-environment`, `architecture/no-process-env-outside-tooling`,
+`architecture/no-import-meta-env-outside-environment`,
+`architecture/no-process-env-outside-tooling`,
 `architecture/no-raw-vendor-types-in-domain`; 100% coverage on `*.schema.ts` and `*.parser.ts`
 under the pure-file policy; `npm run test:contract` proves the schemas match the wire.
 

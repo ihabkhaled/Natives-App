@@ -24,10 +24,10 @@ today, which is why it is written down.
 
 ## Keyboard resize policy is config, not code
 
-`plugins.Keyboard.resize: 'native'` with `resizeOnFullScreen: true`. Changing the mode changes layout
-on every screen at once — content jumping when the keyboard opens is almost always this setting, not
-the form. The `@capacitor/keyboard` owner exists but nothing calls it yet: the config is live
-regardless of whether JavaScript ever touches the plugin.
+`plugins.Keyboard.resize: 'native'` with `resizeOnFullScreen: true`. Changing the mode changes
+layout on every screen at once — content jumping when the keyboard opens is almost always this
+setting, not the form. The `@capacitor/keyboard` owner exists but nothing calls it yet: the config
+is live regardless of whether JavaScript ever touches the plugin.
 
 ## Splash and status bar are owned by platform startup
 

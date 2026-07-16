@@ -21,9 +21,9 @@ named after the file.
 
 - Screen hooks return a finished view model: `src/modules/health/hooks/use-health-card.hook.ts`
   translates and formats so its component receives strings.
-- Owner packages expose their vendor hooks the same way: `src/packages/query/hooks/use-app-query.hook.ts`
-  is the only caller of TanStack Query's `useQuery`, and `src/packages/i18n/hooks/use-app-translation.hook.ts`
-  is the only caller of `react-i18next`.
+- Owner packages expose their vendor hooks the same way: `use-app-query.hook.ts` is the only caller
+  of TanStack Query's `useQuery`, and `use-app-translation.hook.ts` the only caller of
+  `react-i18next`.
 - Containers are the sole exception by design: they call one screen hook and render.
 - Effects that register native listeners return their cleanup, as in
   `src/app/lifecycle/use-app-lifecycle.hook.ts`, which unsubscribes back button, deep links, and

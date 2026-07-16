@@ -1,7 +1,15 @@
 import { getFileKind } from '../shared/file-info.mjs';
 import { createRuleMeta, isApplicationSource, isTestFile } from '../shared/rule-helpers.mjs';
 
-const HTTP_METHODS = new Set(['get', 'post', 'put', 'patch', 'delete', 'download', 'postMultipart']);
+const HTTP_METHODS = new Set([
+  'get',
+  'post',
+  'put',
+  'patch',
+  'delete',
+  'download',
+  'postMultipart',
+]);
 
 export default {
   meta: createRuleMeta({
@@ -30,7 +38,11 @@ export default {
           return;
         }
         const firstArg = node.arguments[0];
-        if (firstArg !== undefined && firstArg.type === 'Literal' && typeof firstArg.value === 'string') {
+        if (
+          firstArg !== undefined &&
+          firstArg.type === 'Literal' &&
+          typeof firstArg.value === 'string'
+        ) {
           context.report({
             node: firstArg,
             messageId: 'inlineEndpoint',

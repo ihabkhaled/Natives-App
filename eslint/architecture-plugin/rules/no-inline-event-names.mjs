@@ -7,8 +7,7 @@ export default {
   meta: createRuleMeta({
     description: 'Analytics and realtime event names come from constants, never inline strings.',
     messages: {
-      inlineEventName:
-        'Raw event name passed to "{{callee}}". Move it to a *.constants.ts file.',
+      inlineEventName: 'Raw event name passed to "{{callee}}". Move it to a *.constants.ts file.',
     },
   }),
   create(context) {
@@ -32,7 +31,11 @@ export default {
           return;
         }
         const firstArg = node.arguments[0];
-        if (firstArg !== undefined && firstArg.type === 'Literal' && typeof firstArg.value === 'string') {
+        if (
+          firstArg !== undefined &&
+          firstArg.type === 'Literal' &&
+          typeof firstArg.value === 'string'
+        ) {
           context.report({
             node: firstArg,
             messageId: 'inlineEventName',

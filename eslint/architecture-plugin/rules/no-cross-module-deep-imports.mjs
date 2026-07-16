@@ -19,7 +19,11 @@ export default {
     return {
       ImportDeclaration(node) {
         const targetInfo = getImportLayerInfo(filename, String(node.source.value));
-        if (targetInfo === null || targetInfo.layer !== 'modules' || targetInfo.moduleName === null) {
+        if (
+          targetInfo === null ||
+          targetInfo.layer !== 'modules' ||
+          targetInfo.moduleName === null
+        ) {
           return;
         }
         if (importerInfo.layer === 'modules' && importerInfo.moduleName === targetInfo.moduleName) {

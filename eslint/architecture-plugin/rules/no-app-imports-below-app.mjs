@@ -5,6 +5,5 @@ export default createLayerImportBanRule({
   fromLayers: ['modules', 'platform', 'shared', 'packages'],
   bannedTargetLayers: ['app'],
   messageId: 'appImportBelowApp',
-  message:
-    'Importing from src/app below the app layer inverts the dependency direction.',
+  message: 'Importing from src/app below the app layer inverts the dependency direction.',
 });

@@ -136,6 +136,69 @@ describe('createPersistedAppStore', () => {
     expect(migrate).not.toHaveBeenCalled();
   });
 
+  it('runs validate on a same-version payload, which migrate never sees', async () => {
+    const storage = createMemoryStorage({
+      counter: JSON.stringify({ state: { count: 'tampered' }, version: 1 }),
+    });
+    const migrate = vi.fn((persisted: unknown) => persisted as CounterState);
+    const validate = vi.fn((candidate: unknown): CounterState => {
+      const { count } = candidate as { count?: unknown };
+      const isValid = typeof count === 'number';
+      return {
+        count: isValid ? count : 0,
+        draft: isValid ? 'restored' : 'defaulted',
+        increment: () => undefined,
+        setDraft: () => undefined,
+      };
+    });
+
+    const useStore = createPersistedAppStore<CounterState>((set) => counterInitializer(set), {
+      storageKey: 'counter',
+      version: 1,
+      storage,
+      migrate,
+      validate,
+    });
+
+    await vi.waitFor(() => {
+      expect(validate).toHaveBeenCalledWith({ count: 'tampered' });
+    });
+    // zustand skips migrate when the version matches, so validate is the only
+    // thing standing between a tampered payload and application state.
+    expect(migrate).not.toHaveBeenCalled();
+    expect(useStore.getState().count).toBe(0);
+    expect(useStore.getState().draft).toBe('defaulted');
+  });
+
+  it('validates after migrating, without re-running the migration', async () => {
+    const storage = createMemoryStorage({
+      counter: JSON.stringify({ state: { count: 3 }, version: 0 }),
+    });
+    // A non-idempotent upgrade: applying it twice would yield 5, not 4.
+    const migrate = vi.fn((persisted: unknown): CounterState => ({
+      count: (persisted as { count: number }).count + 1,
+      draft: 'migrated',
+      increment: () => undefined,
+      setDraft: () => undefined,
+    }));
+    const validate = vi.fn((candidate: unknown) => candidate as CounterState);
+
+    const useStore = createPersistedAppStore<CounterState>((set) => counterInitializer(set), {
+      storageKey: 'counter',
+      version: 1,
+      storage,
+      migrate,
+      validate,
+    });
+
+    await vi.waitFor(() => {
+      expect(useStore.getState().draft).toBe('migrated');
+    });
+    expect(migrate).toHaveBeenCalledOnce();
+    expect(validate).toHaveBeenCalledOnce();
+    expect(useStore.getState().count).toBe(4);
+  });
+
   it('migrates a payload written by an older version', async () => {
     const storage = createMemoryStorage({
       counter: JSON.stringify({ state: { count: 3 }, version: 0 }),

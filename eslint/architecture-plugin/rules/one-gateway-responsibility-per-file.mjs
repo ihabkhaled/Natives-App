@@ -30,7 +30,10 @@ export default {
           }
           return;
         }
-        if (declaration.type === 'TSInterfaceDeclaration' || declaration.type === 'TSTypeAliasDeclaration') {
+        if (
+          declaration.type === 'TSInterfaceDeclaration' ||
+          declaration.type === 'TSTypeAliasDeclaration'
+        ) {
           return;
         }
         context.report({

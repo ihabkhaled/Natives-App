@@ -36,14 +36,14 @@ Run two compilers, with a single, explicit division of labour.
 arrangement must be deleted — drop the `typescript` 5.x devDependency, point `typescript` at v7,
 remove the `typescript7` alias, and collapse the two typecheck scripts into one.
 
-That condition is watched mechanically, not remembered. `node scripts/quality/check-toolchain-compatibility.mjs`
-reads the alias's major from `package.json` and the live peer range from
-`node_modules/typescript-eslint/package.json`, and **exits non-zero when the range's upper bound no
-longer excludes the primary major** — failing precisely when the dual setup becomes unnecessary. It
-is deliberately not part of the `quality` chain: it is a retirement alarm, run on dependency work.
-A companion reference at `docs/dependencies/typescript-compatibility.md` is the intended home for
-the version snapshot and re-verification steps; it does not exist yet, so this ADR carries the
-contract in the meantime.
+That condition is watched mechanically, not remembered:
+`node scripts/quality/check-toolchain-compatibility.mjs` reads the alias's major from `package.json`
+and the live peer range from `node_modules/typescript-eslint/package.json`, and **exits non-zero
+when the range's upper bound no longer excludes the primary major** — failing precisely when the
+dual setup becomes unnecessary. It is deliberately outside the `quality` chain: a retirement alarm,
+run on dependency work. A companion reference at `docs/dependencies/typescript-compatibility.md` is
+the intended home for the version snapshot; it does not exist yet, so this ADR carries the contract
+in the meantime.
 
 ## Consequences
 

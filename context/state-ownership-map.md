@@ -29,7 +29,8 @@ Everything the backend owns. The client caches it; it never re-homes it.
   `use-app-mutation.hook.ts`.
 - Keys are builders, never literals: `healthQueryKeys.all` → `['health']`, `.status()` →
   `['health', 'status']`. Hierarchy is what makes invalidation a typed call.
-- The authenticated profile is server state: `use-current-user-query.hook.ts`, not the session store.
+- The authenticated profile is server state — `use-current-user-query.hook.ts`, not the session
+  store.
 
 ## Client-global state — Zustand
 

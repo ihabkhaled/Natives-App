@@ -25,7 +25,8 @@ of the vendor; `useQuery` and `useMutation` are reachable only through
   `AppProviders`; devtools mount only when the environment flag and dev mode both agree.
 - Modules follow a fixed shape: `queries/<name>.keys.ts` builds hierarchical keys,
   `queries/<name>.query.ts` builds options, `hooks/use-*-query.hook.ts` adapts the result to a view
-  model, and `mutations/use-*-mutation.hook.ts` holds writes. `src/modules/health/` is the reference.
+  model, and `mutations/use-*-mutation.hook.ts` holds writes. `src/modules/health/` is the
+  reference.
 - Query hooks convert failures to `AppError` at the edge, so screens never see a vendor error.
 
 ## Consequences

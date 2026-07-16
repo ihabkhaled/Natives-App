@@ -23,9 +23,9 @@ the app above the socket is byte-for-byte identical.
 - `src/tests/msw/handlers.ts` serves the NestJS wire contract — the same Zod schemas parse mock and
   remote responses, and `nest-error.helper.ts` emits the real error envelope with `statusCode`,
   `code`, `errors[]`, `path`, `timestamp`, and `requestId`.
-- Handlers hold real behavior, not canned strings: `/auth/refresh` rotates the token pair, `/auth/me`
-  checks the bearer against issued tokens, and scenario emails in `MOCK_SCENARIO_EMAILS` trigger 403,
-  429, 500, and timeout paths on demand.
+- Handlers hold real behavior, not canned strings: `/auth/refresh` rotates the token pair,
+  `/auth/me` checks the bearer against issued tokens, and scenario emails in
+  `MOCK_SCENARIO_EMAILS` trigger 403, 429, 500, and timeout paths on demand.
 - Startup is fenced twice in `startMockModeIfEnabled()` (`src/app/startup/start-app.ts`): the worker
   starts only when `apiMode === 'mock'` **and** `!isProduction`, and it is a dynamic `import()`, so
   MSW is not in the production bundle.

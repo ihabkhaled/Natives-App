@@ -3,7 +3,13 @@ import { getImportLayerInfo } from './import-info.mjs';
 import { createRuleMeta, isApplicationSource, isTestFile } from './rule-helpers.mjs';
 
 /** Factory for rules banning imports of one layer from another. */
-export function createLayerImportBanRule({ description, fromLayers, bannedTargetLayers, messageId, message }) {
+export function createLayerImportBanRule({
+  description,
+  fromLayers,
+  bannedTargetLayers,
+  messageId,
+  message,
+}) {
   return {
     meta: createRuleMeta({ description, messages: { [messageId]: message } }),
     create(context) {

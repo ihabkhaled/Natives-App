@@ -87,8 +87,7 @@ npm run test:visual
 `render-with-providers.helper.tsx`, `i18n-test.helper.ts`, and `ionic-events.helper.ts`.
 `tests/factories/http.factory.ts` and `src/modules/auth/factories/auth.factory.ts` build
 deterministic data shared by MSW handlers and tests, so the mock and the assertions cannot disagree.
-E2E selectors go through `TEST_IDS` (`tests/e2e/fixtures/app.fixture.ts`), which means a renamed
-test id fails typecheck instead of silently matching nothing.
-
-Two jsdom facts worth knowing before writing a component test — Ionic booleans are DOM properties,
-not attributes, and Ionic events need the helper — are recorded in `memory/known-pitfalls.md`.
+E2E selectors go through `TEST_IDS` (`tests/e2e/fixtures/app.fixture.ts`), so a renamed test id
+fails typecheck instead of silently matching nothing. Two jsdom facts worth knowing first — Ionic
+booleans are DOM properties, not attributes, and Ionic events need the helper — are recorded in
+[known-pitfalls](../memory/known-pitfalls.md).

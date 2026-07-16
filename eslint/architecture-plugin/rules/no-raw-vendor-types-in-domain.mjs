@@ -26,7 +26,10 @@ export default {
           return;
         }
         const classified = classifyImport(filename, String(node.source.value));
-        if (classified.kind === 'vendor' && !FOUNDATIONAL_VENDORS.includes(classified.packageName)) {
+        if (
+          classified.kind === 'vendor' &&
+          !FOUNDATIONAL_VENDORS.includes(classified.packageName)
+        ) {
           context.report({
             node,
             messageId: 'vendorTypeInDomain',

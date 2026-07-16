@@ -43,8 +43,9 @@ plugin is a mechanical, reviewable shape: package, facade, registry entry.
 each facade is a partial view of its plugin's API. Two hops (owner, then platform facade) separate
 a feature from the device.
 
-**Enforcement:** `architecture/no-raw-capacitor-imports`, `architecture/require-native-listener-cleanup`,
-`architecture/no-floating-native-listeners`, `architecture/no-direct-browser-api-outside-platform`,
+**Enforcement:** `architecture/no-raw-capacitor-imports`,
+`architecture/require-native-listener-cleanup`, `architecture/no-floating-native-listeners`,
+`architecture/no-direct-browser-api-outside-platform`,
 `architecture/no-direct-storage-api-outside-platform`, plus `npm run quality:package-ownership`.
 
 ## Alternatives considered

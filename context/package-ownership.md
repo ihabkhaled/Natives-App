@@ -58,9 +58,10 @@ Two more rules complete the boundary:
 - [no-module-imports-in-package-owners](../docs/eslint/no-module-imports-in-package-owners.md) —
   owners wrap vendors; importing `modules`, `shared`, `platform`, or `app` would couple the owner to
   the app it is meant to insulate.
-- [no-direct-navigation-outside-router-owner](../docs/eslint/no-direct-navigation-outside-router-owner.md) —
-  `history.pushState` and `location.assign` are ownership violations that are not imports, so they
-  are matched on the AST instead.
+- `no-direct-navigation-outside-router-owner`
+  ([doc](../docs/eslint/no-direct-navigation-outside-router-owner.md)) — `history.pushState` and
+  `location.assign` are ownership violations that are not imports, so they are matched on the AST
+  instead.
 
 ## The type-only exception
 
@@ -71,7 +72,7 @@ The exception is narrow on purpose: it does not apply to `modules/`, `shared/`, 
 `architecture/no-raw-vendor-types-in-domain` keeps vendor types out of the domain.
 
 The ownership script applies the same exception, more strictly: `importsVendorTypeOnly` returns true
-only when **every** import of that vendor in the file is type-only. One value import taints the file.
+only when **every** import of that vendor in the file is type-only. One value import taints it.
 
 ## The script
 

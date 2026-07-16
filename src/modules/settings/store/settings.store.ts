@@ -49,6 +49,15 @@ export const useSettingsStore = createPersistedAppStore<SettingsState>(
     storage: createPreferencesStorageAdapter(),
     migrate: (persisted, fromVersion) =>
       migratePersistedSettings(persisted, fromVersion, resolveDefaults()) as SettingsState,
+    // Re-parsing at the current version is idempotent: a valid payload passes
+    // through untouched, anything else degrades to defaults rather than
+    // putting an unknown theme or locale into state.
+    validate: (candidate) =>
+      migratePersistedSettings(
+        candidate,
+        SETTINGS_STORE_VERSION,
+        resolveDefaults(),
+      ) as SettingsState,
     partialize: (state) => ({ theme: state.theme, locale: state.locale }),
   },
 );

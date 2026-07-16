@@ -2,15 +2,7 @@
   "generated": true,
   "governanceVersion": 1,
   "entrypoint": ".ai/BOOTSTRAP.md",
-  "canonicalRoots": [
-    "rules",
-    "skills",
-    "agents",
-    "context",
-    "memory",
-    "architecture/adrs",
-    "docs"
-  ],
+  "canonicalRoots": ["rules", "skills", "agents", "context", "memory", "architecture/adrs", "docs"],
   "files": {
     "rules/00-non-negotiable-rules.md": "0b378a3d9c9aaadd",
     "rules/01-architecture-and-dependency-direction.md": "6d33159df6f24f91",

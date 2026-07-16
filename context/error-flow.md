@@ -18,9 +18,9 @@ I18nKey
 ```
 
 Two `Record` types make the pipeline total: `HTTP_KIND_TO_APP_CODE` is
-`Record<HttpErrorKind, AppErrorCode>` and `ERROR_CODE_TO_I18N_KEY` is `Record<AppErrorCode, I18nKey>`.
-Add a kind or a code and the build breaks until every mapper handles it — the taxonomy cannot drift
-silently.
+`Record<HttpErrorKind, AppErrorCode>` and `ERROR_CODE_TO_I18N_KEY` is
+`Record<AppErrorCode, I18nKey>`. Add a kind or a code and the build breaks until every mapper
+handles it — the taxonomy cannot drift silently.
 
 ## Stage 1 — transport → `HttpError`
 
@@ -80,8 +80,9 @@ Sentry runs with `sendDefaultPii: false` and stays disabled entirely without a D
 
 ## The guardrails
 
-`architecture/no-unsafe-error-display` rejects raw error text in JSX. `architecture/no-raw-i18n-text`
-rejects untranslated literals. `architecture/no-raw-vendor-types-in-domain` keeps `AxiosError` out
-of feature code. The pure-file coverage policy requires 100% on every `*.mapper.ts`, so an unmapped
-branch fails the build. `tests/e2e/auth.spec.ts` closes the loop from the outside: a locked account
-must show a permission message, never the backend's `ACCOUNT_LOCKED` text.
+`architecture/no-unsafe-error-display` rejects raw error text in JSX.
+`architecture/no-raw-i18n-text` rejects untranslated literals.
+`architecture/no-raw-vendor-types-in-domain` keeps `AxiosError` out of feature code. The pure-file
+coverage policy requires 100% on every `*.mapper.ts`, so an unmapped branch fails the build.
+`tests/e2e/auth.spec.ts` closes the loop from the outside: a locked account must show a permission
+message, never the backend's `ACCOUNT_LOCKED` text.

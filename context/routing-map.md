@@ -21,7 +21,6 @@ exports typed builders in `routes/*.paths.ts` and definitions in `routes/*.route
 Registration order is `auth`, `home`, `settings`, `ui-workbench`, then the root redirect, then the
 catch-all. The catch-all comes from `getCatchAllRouteDefinition()` and **must** stay last — React
 Router v5 matches in order, so a catch-all registered earlier would swallow everything after it.
-
 `settings` and `workbench` are public deliberately: preferences must be reachable before signing in,
 and the workbench is a design-system catalogue with no data of its own.
 
@@ -64,8 +63,8 @@ module boundaries themselves. The router owner (`@/packages/router`) is the only
 `src/app/router/app-router.routes.tsx` renders `IonReactRouter` → `AppLifecycle` →
 `IonRouterOutlet`, mapping every definition to a `<Route>` whose `render` returns a `GuardedRoute`.
 Ionic's outlet, not React Router, owns page transitions — which is why the router owner re-exports
-from both `@ionic/react-router` and `react-router-dom`, and why React Router stays on v5 (see
-`memory/ionic-router-compatibility.md`).
+from both `@ionic/react-router` and `react-router-dom`, and why React Router stays on v5
+([ionic-router-compatibility](../memory/ionic-router-compatibility.md)).
 
 ## Deep-link allowlist policy
 
@@ -92,9 +91,9 @@ Three properties make it an allowlist rather than a filter:
 
 `use-app-lifecycle.hook.ts` wires the listener: accepted links go to
 `router.push(path, 'root', 'replace')`; rejected ones raise a translated toast
-(`I18N_KEYS.errors.deepLinkRejected`) and change nothing. Cold start
-(`getLaunchUrl()`) and warm start (`subscribeToAppUrlOpen`) both pass through the same parser —
-there is no second, more trusting path.
+(`I18N_KEYS.errors.deepLinkRejected`) and change nothing. Cold start (`getLaunchUrl()`) and warm
+start (`subscribeToAppUrlOpen`) both pass through the same parser — there is no second, more
+trusting path.
 
-Deep-link and auth work sits in the **critical** risk lane, so changes here require the integration
-and contract suites plus the security scans before merge — see [release-gates](./release-gates.md).
+Deep-link and auth work sits in the **critical** risk lane — see
+[release-gates](./release-gates.md).

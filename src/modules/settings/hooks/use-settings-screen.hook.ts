@@ -6,7 +6,7 @@ import { I18N_KEYS } from '@/shared/i18n';
 import { useSettingsStore } from '../store/settings.store';
 import { useRuntimeInfo } from './use-runtime-info.hook';
 
-export interface SettingsChoice<Value extends string> {
+interface SettingsChoice<Value extends string> {
   readonly value: Value;
   readonly label: string;
 }

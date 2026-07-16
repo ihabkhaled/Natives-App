@@ -33,9 +33,7 @@ export default {
           parent.object.type === 'Identifier' &&
           (parent.object.name === 'globalThis' || parent.object.name === 'window');
         const isBareReference =
-          parent.type !== 'MemberExpression' ||
-          parent.object === node ||
-          isGlobalMember;
+          parent.type !== 'MemberExpression' || parent.object === node || isGlobalMember;
         if (
           isBareReference &&
           parent.type !== 'Property' &&

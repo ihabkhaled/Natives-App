@@ -60,7 +60,8 @@ page is for. Read it before acting on `ncu` output.
 ## After any dependency change
 
 1. Register new runtime dependencies in `eslint/package-ownership.config.mjs` and build the owner
-   package first — the ownership gate fails on an unowned dependency, lint on an unregistered import.
+   package first — the ownership gate fails on an unowned dependency, lint on an unregistered
+   import.
 2. `npm run quality` — the full chain, including `quality:dead-code`, which catches a dependency
    nothing uses.
 3. `npm run security:audit` and `npm run security:secrets`.

@@ -29,8 +29,9 @@ concurrent requests each start their own refresh.
   and **every** JSON response crosses a Zod schema via `helpers/parse-response.helper.ts`; a
   contract violation raises `HttpError` with kind `response-contract`.
 - `http-error.mapper.ts` normalizes: cancellation, `ECONNABORTED`/`ETIMEDOUT`, missing response, and
-  then the status code — parsing the body first as the NestJS envelope (`schemas/api-error.schema.ts`,
-  keeping `requestId` and field errors) and falling back to problem details.
+  then the status code — parsing the body first as the NestJS envelope
+  (`schemas/api-error.schema.ts`, keeping `requestId` and field errors) and falling back to problem
+  details.
 - `http-client.facade.ts` is the composition seam. `start-app.ts` calls `configureAppHttpClient`
   once; gateways resolve the client lazily with `getAppHttpClient()`.
 - Feature modules reach HTTP through a `gateways/*.gateway.ts` file only — one resource per file,

@@ -73,7 +73,10 @@ function scenarioResponseForEmail(email: string): Response | Promise<Response> |
   return null;
 }
 
-function issueTokens(access: string, refresh: string): { accessToken: string; refreshToken: string } {
+function issueTokens(
+  access: string,
+  refresh: string,
+): { accessToken: string; refreshToken: string } {
   issuedAccessTokens.add(access);
   return { accessToken: access, refreshToken: refresh };
 }
@@ -126,7 +129,10 @@ export const mockApiHandlers = [
   }),
   http.post(apiUrl('/auth/refresh'), async ({ request }) => {
     const body = (await request.json().catch(() => ({}))) as { refreshToken?: string };
-    if (body.refreshToken !== MOCK_TOKENS.refresh && body.refreshToken !== MOCK_TOKENS.rotatedRefresh) {
+    if (
+      body.refreshToken !== MOCK_TOKENS.refresh &&
+      body.refreshToken !== MOCK_TOKENS.rotatedRefresh
+    ) {
       return nestErrorResponse({
         statusCode: 401,
         code: 'INVALID_REFRESH_TOKEN',

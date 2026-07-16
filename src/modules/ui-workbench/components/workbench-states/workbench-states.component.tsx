@@ -1,11 +1,5 @@
 import { IonText } from '@/packages/ionic';
-import {
-  EmptyState,
-  ErrorState,
-  LoadingState,
-  OfflineState,
-  PermissionState,
-} from '@/shared/ui';
+import { EmptyState, ErrorState, LoadingState, OfflineState, PermissionState } from '@/shared/ui';
 
 import { WORKBENCH_STATES_TEST_ID } from './workbench-states.constants';
 import type { WorkbenchStatesProps } from './workbench-states.types';

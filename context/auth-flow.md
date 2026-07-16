@@ -12,9 +12,9 @@ Login, refresh, failure, and logout — with the real file for every step. The s
 configureAppHttpClient(
   createHttpClient({
     config: { baseUrl: environment.apiBaseUrl, timeoutMs: environment.apiTimeoutMs },
-    tokenStore: getAuthTokenRepository(), // modules/auth/repositories/token.repository.ts
-    refreshExecutor: createRefreshExecutor(), // modules/auth/services/refresh-session.service.ts
-    onAuthFailure: handleAuthFailure, // modules/auth/services/auth-failure.service.ts
+    tokenStore: getAuthTokenRepository(), // auth/repositories/token.repository.ts
+    refreshExecutor: createRefreshExecutor(), // auth/services/refresh-session.service.ts
+    onAuthFailure: handleAuthFailure, // auth/services/auth-failure.service.ts
     logger: getPlatformLogger('http'),
   }),
 );
@@ -66,23 +66,22 @@ request C ─┘                      └─ 401 ─┘        │
                                                    └─→ all three replay with the fresh token
 ```
 
-`getFreshAccessToken()` assigns `#inFlight ??= this.#refresh().finally(() => { #inFlight = null; })`,
-so concurrent callers await the same promise and exactly one refresh request goes out.
-`createUnauthorizedRetryHandler` then sets `appRetried = true`, rewrites the `Authorization` header,
-and re-issues the original request. `appRetried` is the loop guard: a replay that 401s again is not
-retried.
-
-`tests/integration/token-refresh.integration.test.ts` proves this against MSW: three concurrent
-`getCurrentUser()` calls produce exactly one `/auth/refresh` request.
+`getFreshAccessToken()` assigns
+`#inFlight ??= this.#refresh().finally(() => { #inFlight = null; })`, so concurrent callers await
+one promise and exactly one refresh goes out. `createUnauthorizedRetryHandler` then sets
+`appRetried = true`, rewrites the `Authorization` header, and re-issues the original request.
+`appRetried` is the loop guard: a replay that 401s again is not retried.
 
 ## Refresh failure → clear + anonymous
 
-`#refresh()` fails when there is no refresh token or the executor throws. Either way `#handleFailure()`
-runs: `tokenStore.clearTokens()` then `onAuthFailure?.()` → `handleAuthFailure()` →
-`useSessionStore.getState().markAnonymous()`. The original request's `HttpError` still propagates and
-maps to `UNAUTHORIZED`, so the caller sees a real failure while the guard redirects to `/login`.
-The same integration test asserts all three: the error code, the anonymous status, and a null
-refresh token.
+`#refresh()` fails when there is no refresh token or the executor throws. Either way
+`#handleFailure()` runs: `tokenStore.clearTokens()` then `onAuthFailure?.()` → `handleAuthFailure()`
+→ `useSessionStore.getState().markAnonymous()`. The original request's `HttpError` still propagates
+and maps to `UNAUTHORIZED`, so the caller sees a real failure while the guard redirects to `/login`.
+
+`tests/integration/token-refresh.integration.test.ts` proves all of it against MSW: three concurrent
+`getCurrentUser()` calls produce exactly one `/auth/refresh`, and a rejected refresh yields the
+error code, the anonymous status, and a null refresh token.
 
 ## Logout
 

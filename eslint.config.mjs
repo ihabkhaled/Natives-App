@@ -59,14 +59,8 @@ export default tseslint.config(
         'error',
         { argsIgnorePattern: '^_', varsIgnorePattern: '^_' },
       ],
-      '@typescript-eslint/consistent-type-imports': [
-        'error',
-        { fixStyle: 'inline-type-imports' },
-      ],
-      '@typescript-eslint/restrict-template-expressions': [
-        'error',
-        { allowNumber: true },
-      ],
+      '@typescript-eslint/consistent-type-imports': ['error', { fixStyle: 'inline-type-imports' }],
+      '@typescript-eslint/restrict-template-expressions': ['error', { allowNumber: true }],
     },
   },
   {
@@ -159,10 +153,7 @@ export default tseslint.config(
     files: ['src/**/*.component.tsx'],
     rules: {
       'max-lines': ['error', { max: 150, skipBlankLines: true, skipComments: true }],
-      'max-lines-per-function': [
-        'error',
-        { max: 120, skipBlankLines: true, skipComments: true },
-      ],
+      'max-lines-per-function': ['error', { max: 120, skipBlankLines: true, skipComments: true }],
     },
   },
   {
@@ -170,10 +161,7 @@ export default tseslint.config(
     files: ['src/**/*.hook.ts'],
     rules: {
       'max-lines': ['error', { max: 200, skipBlankLines: true, skipComments: true }],
-      'max-lines-per-function': [
-        'error',
-        { max: 90, skipBlankLines: true, skipComments: true },
-      ],
+      'max-lines-per-function': ['error', { max: 90, skipBlankLines: true, skipComments: true }],
     },
   },
   architectureConfig,

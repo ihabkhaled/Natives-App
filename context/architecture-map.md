@@ -56,7 +56,8 @@ the auth repository implements the interface, and `src/app/startup/start-app.ts`
   `errors/` (`AppError`, codes), `mappers/`, `i18n/` (keys + `en`/`ar` catalogs), `config/`
   (`APP_PATHS`, `STORAGE_KEYS`, `TEST_IDS`, `APP_IDENTITY`), `enums/`, `types/`, `security/`.
 - **`src/packages/`** — vendor owners; see [dependency-map](./dependency-map.md).
-- **`src/tests/msw/`** — the mock network layer ([ADR 0016](../architecture/adrs/0016-mock-api-mode.md)).
+- **`src/tests/msw/`** — the mock network layer
+  ([ADR 0016](../architecture/adrs/0016-mock-api-mode.md)).
 
 ## Entry points
 

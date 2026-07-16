@@ -35,7 +35,11 @@ export default {
     return {
       ImportDeclaration(node) {
         const targetInfo = getImportLayerInfo(filename, String(node.source.value));
-        if (targetInfo === null || targetInfo.layer === 'outside' || targetInfo.layer === 'unknown') {
+        if (
+          targetInfo === null ||
+          targetInfo.layer === 'outside' ||
+          targetInfo.layer === 'unknown'
+        ) {
           return;
         }
         if (!allowed.includes(targetInfo.layer)) {

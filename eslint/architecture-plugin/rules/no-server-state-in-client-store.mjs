@@ -7,8 +7,7 @@ const SERVER_STATE_SUFFIXES = ['.gateway', '.query', '.mutation'];
 
 export default {
   meta: createRuleMeta({
-    description:
-      'Client stores hold client state only; remote data belongs to TanStack Query.',
+    description: 'Client stores hold client state only; remote data belongs to TanStack Query.',
     messages: {
       serverStateInStore:
         'Store file imports "{{source}}", which belongs to server state. Keep remote data in TanStack Query (rules/14, rules/15).',

@@ -5,9 +5,10 @@ what enforces it, and what would invalidate it. ADRs rank second in the authorit
 security and privacy policy, above normative rules. When a rule and an ADR disagree, the ADR wins
 and the rule is the bug.
 
-An ADR is not a tutorial. It explains _why_ the boundary exists; the [context maps](../../context/README.md)
-explain how the pieces connect today, the [rules](../../rules/README.md) say what you must do, and
-the [ESLint rule catalogue](../../docs/eslint/README.md) explains how each rule behaves.
+An ADR is not a tutorial. It explains _why_ the boundary exists. The
+[context maps](../../context/README.md) explain how the pieces connect today, the
+[rules](../../rules/README.md) say what you must do, and the
+[ESLint rule catalogue](../../docs/eslint/README.md) explains how each rule behaves.
 
 ## The records
 

@@ -6,14 +6,15 @@
 
 ## Context
 
-With server state assigned to TanStack Query ([ADR 0008](./0008-tanstack-query-server-state-ownership.md)),
-what genuinely remains is small: the user's theme and locale preference, and whether a session
-exists. That residue still needs a home that survives navigation, is readable outside React (startup
-code, services), and can persist selectively. React Context re-renders whole subtrees and cannot be
-read from a service; a full Redux setup is disproportionate to two values.
+With server state assigned to TanStack Query
+([ADR 0008](./0008-tanstack-query-server-state-ownership.md)), what genuinely remains is small: the
+user's theme and locale preference, and whether a session exists. That residue still needs a home
+that survives navigation, is readable outside React (startup code, services), and can persist
+selectively. React Context re-renders whole subtrees and cannot be read from a service; a full Redux
+setup is disproportionate to two values.
 
 Persistence adds its own force: anything written to disk will eventually be read back in a shape the
-code no longer expects — a build from six months ago, a half-written value, a field that was renamed.
+code no longer expects — a build from six months ago, a half-written value, a renamed field.
 
 ## Decision
 
