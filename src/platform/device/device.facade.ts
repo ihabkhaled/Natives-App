@@ -1,6 +1,10 @@
 import { getDeviceSummary } from '@/packages/capacitor-device';
 
-import { getRuntimePlatform, isNativeRuntime, type RuntimePlatform } from '../runtime/runtime.facade';
+import {
+  getRuntimePlatform,
+  isNativeRuntime,
+  type RuntimePlatform,
+} from '../runtime/runtime.facade';
 
 export interface DeviceInformation {
   readonly platform: RuntimePlatform;

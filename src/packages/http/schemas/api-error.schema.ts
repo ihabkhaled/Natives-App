@@ -4,7 +4,9 @@ import { schemaBuilder } from '@/packages/schema';
 export const nestErrorEnvelopeSchema = schemaBuilder.object({
   statusCode: schemaBuilder.number().int(),
   code: schemaBuilder.string().optional(),
-  message: schemaBuilder.union([schemaBuilder.string(), schemaBuilder.array(schemaBuilder.string())]).optional(),
+  message: schemaBuilder
+    .union([schemaBuilder.string(), schemaBuilder.array(schemaBuilder.string())])
+    .optional(),
   errors: schemaBuilder
     .array(
       schemaBuilder.object({

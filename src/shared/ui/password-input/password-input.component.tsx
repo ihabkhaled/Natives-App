@@ -18,7 +18,9 @@ export function AppPasswordInput(props: AppPasswordInputProps): React.JSX.Elemen
       autocomplete="current-password"
       {...(props.errorMessage === undefined ? {} : { errorText: props.errorMessage })}
       className={toInputStateClass(props.errorMessage !== undefined)}
-      onIonInput={(event) => { props.onValueChange(extractIonInputValue(event.detail.value)); }}
+      onIonInput={(event) => {
+        props.onValueChange(extractIonInputValue(event.detail.value));
+      }}
       {...(props.onBlur === undefined ? {} : { onIonBlur: props.onBlur })}
       fill="outline"
     >

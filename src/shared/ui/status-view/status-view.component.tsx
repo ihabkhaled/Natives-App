@@ -11,7 +11,11 @@ export function StatusView(props: StatusViewProps): React.JSX.Element {
       className="flex min-h-40 flex-col items-center justify-center gap-1 p-6 text-center"
       role="status"
     >
-      <IonIcon icon={props.icon} className={statusIconVariants({ tone: props.tone })} aria-hidden="true" />
+      <IonIcon
+        icon={props.icon}
+        className={statusIconVariants({ tone: props.tone })}
+        aria-hidden="true"
+      />
       <IonText>
         <h2 className="m-0 text-lg font-semibold">{props.title}</h2>
       </IonText>

@@ -49,8 +49,6 @@ export function useLoginScreen(): LoginScreenView {
     form,
     isSubmitting: loginMutation.isSubmitting,
     submitErrorMessage:
-      loginMutation.error === null
-        ? undefined
-        : t(mapErrorCodeToI18nKey(loginMutation.error.code)),
+      loginMutation.error === null ? undefined : t(mapErrorCodeToI18nKey(loginMutation.error.code)),
   };
 }

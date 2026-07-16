@@ -25,8 +25,7 @@ function translateFieldError(
 ): FormFieldBinding {
   return {
     ...binding,
-    errorMessage:
-      binding.errorMessage === undefined ? undefined : translate(binding.errorMessage),
+    errorMessage: binding.errorMessage === undefined ? undefined : translate(binding.errorMessage),
   };
 }
 

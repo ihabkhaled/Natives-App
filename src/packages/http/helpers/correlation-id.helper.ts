@@ -1,5 +1,5 @@
 interface RandomUuidSource {
-  readonly randomUUID?: () => string;
+  readonly randomUUID?: (() => string) | undefined;
 }
 
 export function createCorrelationId(source: RandomUuidSource = globalThis.crypto): string {

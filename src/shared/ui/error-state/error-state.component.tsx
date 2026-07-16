@@ -4,7 +4,8 @@ import { ERROR_STATE_DEFAULT_TEST_ID, ERROR_STATE_ICON } from './error-state.con
 import type { ErrorStateProps } from './error-state.types';
 
 export function ErrorState(props: ErrorStateProps): React.JSX.Element {
-  const canRetry = props.onRetry !== undefined && props.retryLabel !== undefined;
+  const { onRetry, retryLabel } = props;
+  const canRetry = onRetry !== undefined && retryLabel !== undefined;
   return (
     <StatusView
       icon={ERROR_STATE_ICON}
@@ -13,9 +14,7 @@ export function ErrorState(props: ErrorStateProps): React.JSX.Element {
       message={props.message}
       testId={props.testId ?? ERROR_STATE_DEFAULT_TEST_ID}
       action={
-        canRetry ? (
-          <AppButton label={props.retryLabel ?? ''} tone="secondary" onClick={props.onRetry} />
-        ) : undefined
+        canRetry ? <AppButton label={retryLabel} tone="secondary" onClick={onRetry} /> : undefined
       }
     />
   );

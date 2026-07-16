@@ -1,8 +1,5 @@
 export { createTestAdapter, type TestRoute, type TestRouteResponse } from './adapters/test.adapter';
-export {
-  HTTP_ERROR_KIND,
-  type HttpErrorKind,
-} from './constants/http-error-kind.constants';
+export { HTTP_ERROR_KIND, type HttpErrorKind } from './constants/http-error-kind.constants';
 export { HttpError, isHttpError } from './errors/http.errors';
 export { createCorrelationId } from './helpers/correlation-id.helper';
 export {

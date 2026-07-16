@@ -5,7 +5,10 @@ export function isAppError(value: unknown): value is AppError {
   return value instanceof AppError;
 }
 
-export function toAppError(value: unknown, fallbackCode: AppErrorCode = APP_ERROR_CODE.Unexpected): AppError {
+export function toAppError(
+  value: unknown,
+  fallbackCode: AppErrorCode = APP_ERROR_CODE.Unexpected,
+): AppError {
   if (isAppError(value)) {
     return value;
   }

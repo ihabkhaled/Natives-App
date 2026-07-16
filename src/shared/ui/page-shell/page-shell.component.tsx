@@ -1,11 +1,4 @@
-import {
-  IonButtons,
-  IonContent,
-  IonHeader,
-  IonPage,
-  IonTitle,
-  IonToolbar,
-} from '@/packages/ionic';
+import { IonButtons, IonContent, IonHeader, IonPage, IonTitle, IonToolbar } from '@/packages/ionic';
 
 import type { PageShellProps } from './page-shell.types';
 

@@ -2,6 +2,7 @@ import type { AxiosInstance } from 'axios';
 
 import type { AppSchema } from '@/packages/schema';
 
+import { CONTENT_TYPE_MULTIPART, HTTP_HEADER } from './constants/http.constants';
 import { toAxiosRequestConfig } from './helpers/axios-config.helper';
 import { parseResponseWithSchema } from './helpers/parse-response.helper';
 import type { HttpClient } from './interfaces/http.interfaces';
@@ -96,6 +97,10 @@ export class AxiosHttpClient implements HttpClient {
       method: 'POST',
       url: path,
       data: form,
+      // The instance defaults to application/json, and Axios silently converts
+      // FormData to JSON whenever that content type is set. Overriding it here
+      // keeps the FormData intact; the adapter then appends the boundary.
+      headers: { ...options?.headers, [HTTP_HEADER.ContentType]: CONTENT_TYPE_MULTIPART },
     });
     return parseResponseWithSchema(responseSchema, response.data);
   }

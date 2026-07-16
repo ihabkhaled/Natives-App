@@ -26,12 +26,10 @@ export function requestLogin(
 export function requestTokenRefresh(
   refreshToken: string,
 ): Promise<SchemaOutput<typeof refreshResponseSchema>> {
-  return getAppHttpClient().post(
-    AUTH_API_PATHS.refresh,
-    { refreshToken },
-    refreshResponseSchema,
-    { skipAuth: true, skipRetryOnUnauthorized: true },
-  );
+  return getAppHttpClient().post(AUTH_API_PATHS.refresh, { refreshToken }, refreshResponseSchema, {
+    skipAuth: true,
+    skipRetryOnUnauthorized: true,
+  });
 }
 
 export function requestLogout(): Promise<SchemaOutput<typeof logoutResponseSchema>> {

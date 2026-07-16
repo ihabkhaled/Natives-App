@@ -1,8 +1,5 @@
 import { hideSplashScreen } from '@/packages/capacitor-splash-screen';
-import {
-  applyStatusBarAppearance,
-  STATUS_BAR_APPEARANCE,
-} from '@/packages/capacitor-status-bar';
+import { applyStatusBarAppearance, STATUS_BAR_APPEARANCE } from '@/packages/capacitor-status-bar';
 
 import { isNativeRuntime } from '../runtime/runtime.facade';
 
