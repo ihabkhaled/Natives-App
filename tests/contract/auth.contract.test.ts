@@ -1,4 +1,4 @@
-import { describe, expect, it } from 'vitest';
+import { assert, describe, expect, it } from 'vitest';
 
 import {
   authUserDtoSchema,
@@ -50,10 +50,8 @@ describe('auth wire contract (mock mode = remote contract)', () => {
     });
     expect(response.status).toBe(401);
     const parsed = safeParseWithSchema(nestErrorContract, await response.json());
-    expect(parsed.success).toBe(true);
-    if (parsed.success) {
-      expect(parsed.data.code).toBe('INVALID_CREDENTIALS');
-    }
+    assert(parsed.success, 'the 401 body did not match the NestJS error envelope');
+    expect(parsed.data.code).toBe('INVALID_CREDENTIALS');
   });
 
   it('POST /auth/login without a body returns a validation envelope with field errors', async () => {
@@ -68,10 +66,8 @@ describe('auth wire contract (mock mode = remote contract)', () => {
     const response = await postJson('/auth/refresh', { refreshToken: MOCK_TOKENS.refresh });
     expect(response.status).toBe(200);
     const parsed = safeParseWithSchema(refreshResponseSchema, await response.json());
-    expect(parsed.success).toBe(true);
-    if (parsed.success) {
-      expect(parsed.data.tokens.accessToken).toBe(MOCK_TOKENS.rotatedAccess);
-    }
+    assert(parsed.success, 'the refresh body did not match refreshResponseSchema');
+    expect(parsed.data.tokens.accessToken).toBe(MOCK_TOKENS.rotatedAccess);
   });
 
   it('GET /auth/me honors issued bearer tokens', async () => {

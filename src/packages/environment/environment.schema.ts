@@ -10,11 +10,17 @@ const booleanFlag = schemaBuilder
   .default('false')
   .transform((value) => value === 'true');
 
+const localeCode = schemaBuilder.string().min(2);
+
+/**
+ * Parses to a non-empty tuple so downstream code can read the first locale
+ * without a fallback branch that could never run.
+ */
 const csvLocales = schemaBuilder
   .string()
   .min(1)
   .transform((value) => value.split(',').map((locale) => locale.trim()))
-  .pipe(schemaBuilder.array(schemaBuilder.string().min(2)).min(1));
+  .pipe(schemaBuilder.tuple([localeCode], localeCode));
 
 const APP_ID_SEGMENT = /^[a-z][a-z0-9]*$/u;
 

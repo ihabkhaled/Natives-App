@@ -1,8 +1,4 @@
-import {
-  useQuery,
-  type UseQueryOptions,
-  type UseQueryResult,
-} from '@tanstack/react-query';
+import { useQuery, type UseQueryOptions, type UseQueryResult } from '@tanstack/react-query';
 
 /**
  * The single owner of useQuery access. Module query hooks compose this

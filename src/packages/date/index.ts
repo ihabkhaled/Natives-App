@@ -1,6 +1,1 @@
-export {
-  formatDate,
-  formatDateTime,
-  formatRelativeToNow,
-  isValidIsoDateTime,
-} from './date.facade';
+export { formatDate, formatDateTime, formatRelativeToNow, isValidIsoDateTime } from './date.facade';

@@ -5,5 +5,7 @@ export interface AppVirtualListProps<Item> {
   readonly renderItem: (item: Item, index: number) => ReactNode;
   readonly heightPx: number;
   readonly overscan?: number | undefined;
+  /** Items to render before the list measures itself (server rendering, tests). */
+  readonly initialItemCount?: number | undefined;
   readonly testId?: string | undefined;
 }

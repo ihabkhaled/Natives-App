@@ -1,10 +1,5 @@
 import { standardSchemaResolver } from '@hookform/resolvers/standard-schema';
-import {
-  useForm,
-  type DefaultValues,
-  type FieldValues,
-  type UseFormReturn,
-} from 'react-hook-form';
+import { useForm, type DefaultValues, type FieldValues, type UseFormReturn } from 'react-hook-form';
 
 import type { AppSchema } from '@/packages/schema';
 

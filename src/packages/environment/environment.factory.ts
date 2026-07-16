@@ -13,9 +13,6 @@ export function createEnvironment(source: RawEnvironmentSource): AppEnvironment 
   const defaultLocale = raw.VITE_SUPPORTED_LOCALES.includes(raw.VITE_DEFAULT_LOCALE)
     ? raw.VITE_DEFAULT_LOCALE
     : raw.VITE_SUPPORTED_LOCALES[0];
-  if (defaultLocale === undefined) {
-    throw new Error('Invalid environment configuration. VITE_SUPPORTED_LOCALES is empty.');
-  }
   return Object.freeze({
     appName: raw.VITE_APP_NAME,
     appId: raw.VITE_APP_ID,

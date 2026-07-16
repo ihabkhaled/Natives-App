@@ -9,8 +9,7 @@ import type { AppTranslation, TranslateParams } from '../i18n.types';
 export function useAppTranslation(): AppTranslation {
   const { t, i18n } = useTranslation();
   return {
-    t: (key: string, params?: TranslateParams) =>
-      params === undefined ? t(key) : t(key, params),
+    t: (key: string, params?: TranslateParams) => (params === undefined ? t(key) : t(key, params)),
     locale: i18n.resolvedLanguage ?? i18n.language,
   };
 }

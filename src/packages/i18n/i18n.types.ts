@@ -1,4 +1,7 @@
-export type TranslationResources = Record<string, { readonly translation: Record<string, unknown> }>;
+export type TranslationResources = Record<
+  string,
+  { readonly translation: Record<string, unknown> }
+>;
 
 export interface InitI18nOptions {
   readonly resources: TranslationResources;

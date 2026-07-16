@@ -10,9 +10,7 @@ function toCleanup(handlePromise: Promise<PluginListenerHandle>): ListenerCleanu
 }
 
 /** Fires with true when the app enters the foreground. */
-export function subscribeToAppStateChange(
-  onChange: (isActive: boolean) => void,
-): ListenerCleanup {
+export function subscribeToAppStateChange(onChange: (isActive: boolean) => void): ListenerCleanup {
   return toCleanup(
     App.addListener('appStateChange', (state) => {
       onChange(state.isActive);

@@ -12,6 +12,9 @@ export function AppVirtualList<Item>(props: AppVirtualListProps<Item>): React.JS
       <Virtuoso
         data={props.items}
         overscan={props.overscan ?? 0}
+        {...(props.initialItemCount === undefined
+          ? {}
+          : { initialItemCount: props.initialItemCount })}
         itemContent={(index, item) => props.renderItem(item, index)}
         style={{ height: '100%' }}
       />

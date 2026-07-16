@@ -1,4 +1,4 @@
-import { describe, expect, it } from 'vitest';
+import { assert, describe, expect, it } from 'vitest';
 
 import { healthResponseSchema } from '@/modules/health';
 import { getEnvironment } from '@/packages/environment';
@@ -11,12 +11,10 @@ describe('health wire contract (mock mode = remote contract)', () => {
     expect(response.status).toBe(200);
 
     const parsed = safeParseWithSchema(healthResponseSchema, await response.json());
-    expect(parsed.success).toBe(true);
-    if (parsed.success) {
-      expect(parsed.data.status).toBe('ok');
-      expect(parsed.data.version).toBe(MOCK_HEALTH.version);
-      expect(Number.isNaN(Date.parse(parsed.data.timestamp))).toBe(false);
-    }
+    assert(parsed.success, 'mock /health violated the schema the app parses with');
+    expect(parsed.data.status).toBe('ok');
+    expect(parsed.data.version).toBe(MOCK_HEALTH.version);
+    expect(Number.isNaN(Date.parse(parsed.data.timestamp))).toBe(false);
   });
 
   it('rejects a payload that violates the contract', () => {
