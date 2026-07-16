@@ -10,7 +10,7 @@ function isFunctionNode(node) {
   );
 }
 
-export function childNodesOf(node) {
+function childNodesOf(node) {
   const children = [];
   for (const [key, value] of Object.entries(node)) {
     if (key === 'parent' || value === null || typeof value !== 'object') {

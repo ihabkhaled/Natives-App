@@ -1,6 +1,5 @@
 import {
   COMPONENT_FAMILY_KINDS,
-  DECLARATION_HOME_KINDS,
   EXACT_FILE_KINDS,
   FILE_SUFFIX_KINDS,
 } from '../../filenames.config.mjs';
@@ -36,10 +35,6 @@ export function getFileKind(filename) {
 
 export function isComponentFamily(kind) {
   return COMPONENT_FAMILY_KINDS.includes(kind);
-}
-
-export function isDeclarationHome(kind) {
-  return DECLARATION_HOME_KINDS.includes(kind);
 }
 
 const SRC_MARKER = '/src/';

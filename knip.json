@@ -10,7 +10,11 @@
     "scripts/**/*.mjs",
     "tests/**/*.test.{ts,tsx}",
     "tests/setup/*.ts",
-    "eslint/architecture-plugin/tests/**/*.test.mjs"
+    "tests/e2e/**/*.spec.ts",
+    "tests/accessibility/**/*.spec.ts",
+    "tests/visual/**/*.spec.ts",
+    "eslint/architecture-plugin/tests/**/*.test.mjs",
+    "eslint/architecture-plugin/fixtures/*.fixtures.mjs"
   ],
   "project": ["src/**/*.{ts,tsx}", "scripts/**/*.mjs", "eslint/**/*.mjs", "tests/**/*.ts"],
   "ignore": ["public/mockServiceWorker.js", ".ai/**", "android/**", "ios/**"],
@@ -21,6 +25,6 @@
     "@commitlint/config-conventional",
     "tailwindcss"
   ],
-  "ignoreBinaries": ["trivy", "cap", "gradlew"],
+  "ignoreBinaries": ["trivy", "cap", "gradlew", "java"],
   "includeEntryExports": false
 }

@@ -55,34 +55,11 @@ export const EXACT_FILE_KINDS = {
   'browser.ts': 'msw-infra',
 };
 
-/** Kinds whose files may hold module-scope literal configuration. */
-export const DECLARATION_HOME_KINDS = [
-  'constants',
-  'errors',
-  'enums',
-  'variants',
-  'keys',
-  'paths',
-  'schema',
-  'mapper',
-  'helper',
-  'utils',
-  'factory',
-  'facade',
-  'adapter',
-  'coordinator',
-  'parser',
-  'listener',
-  'migrations',
-  'selectors',
-  'types',
-  'interfaces',
-  'client',
-  'registry',
-  'msw-infra',
-];
-
-/** UI file family with the strictest declaration rules. */
+/**
+ * UI file family with the strictest declaration rules. Every other kind in
+ * FILE_SUFFIX_KINDS may hold module-scope declarations; see
+ * rules/28-file-naming.md for the full taxonomy.
+ */
 export const COMPONENT_FAMILY_KINDS = [
   'component',
   'container',
