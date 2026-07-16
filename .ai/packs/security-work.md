@@ -7,7 +7,7 @@ Read in order:
 - rules/18-security.md
 - rules/12-routing-and-deep-links.md
 - skills/secure-storage.md
-- skills/security-review.md (missing — create it)
+- skills/security-review.md
 - context/auth-flow.md
 - docs/security/token-storage.md
 - architecture/adrs/0010-secure-token-storage.md
