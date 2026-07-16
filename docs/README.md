@@ -1,0 +1,63 @@
+# Documentation
+
+Reference material. Normative rules live in [`rules/`](../rules/), decisions in
+[`architecture/adrs/`](../architecture/adrs/), and task playbooks in [`skills/`](../skills/).
+
+## Setup
+
+| Page                                                    | What it covers                                                        |
+| ------------------------------------------------------- | --------------------------------------------------------------------- |
+| [getting-started](setup/getting-started.md)             | Requirements, install, run, mock vs remote, everyday commands.        |
+| [project-customization](setup/project-customization.md) | Every placeholder to replace when rebranding.                         |
+| [coverage-policy](setup/coverage-policy.md)             | Per-file thresholds, the pure-logic 100% rule, legitimate exclusions. |
+
+## API
+
+| Page                                              | What it covers                                                         |
+| ------------------------------------------------- | ---------------------------------------------------------------------- |
+| [nest-error-contract](api/nest-error-contract.md) | Success/error envelopes, status→code mapping, auth endpoints, headers. |
+
+## Dependencies
+
+| Page                                                                 | What it covers                                                                           |
+| -------------------------------------------------------------------- | ---------------------------------------------------------------------------------------- |
+| [version-snapshot](dependencies/version-snapshot.md)                 | Exact versions and the deliberate pins (Sentry, React Router v5, ESLint overrides, npm). |
+| [typescript-compatibility](dependencies/typescript-compatibility.md) | The dual-compiler arrangement and its automated removal trigger.                         |
+
+## Native
+
+| Page                                         | What it covers                                                         |
+| -------------------------------------------- | ---------------------------------------------------------------------- |
+| [android-runbook](native/android-runbook.md) | Requirements, commands, security posture, deep links, troubleshooting. |
+| [ios-runbook](native/ios-runbook.md)         | Requirements, honest verification, ATS, universal links.               |
+
+## Security
+
+| Page                                       | What it covers                                                   |
+| ------------------------------------------ | ---------------------------------------------------------------- |
+| [token-storage](security/token-storage.md) | Secure storage, the web fallback tradeoff, redaction, lifecycle. |
+
+## Operations
+
+| Page                                                       | What it covers                                                   |
+| ---------------------------------------------------------- | ---------------------------------------------------------------- |
+| [ci](operations/ci.md)                                     | Every CI job, the `.ai` drift check, the visual-baseline caveat. |
+| [deployment-templates](operations/deployment-templates.md) | Commented templates — nothing is wired.                          |
+
+## Features
+
+| Page                               | What it covers                                            |
+| ---------------------------------- | --------------------------------------------------------- |
+| [mock-mode](features/mock-mode.md) | Deterministic MSW backend, identities, failure scenarios. |
+
+## ESLint
+
+| Page                              | What it covers                            |
+| --------------------------------- | ----------------------------------------- |
+| [eslint/README](eslint/README.md) | All 50 architecture rules, one page each. |
+
+## Exceptions
+
+| Page                                      | What it covers                              |
+| ----------------------------------------- | ------------------------------------------- |
+| [exceptions/README](exceptions/README.md) | The `EXC-nnnn` register and how to add one. |
