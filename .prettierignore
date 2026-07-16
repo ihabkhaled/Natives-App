@@ -1,0 +1,14 @@
+node_modules/
+dist/
+coverage/
+playwright-report/
+test-results/
+android/
+ios/
+package-lock.json
+public/mockServiceWorker.js
+.husky/_/
+.ai/graphs/
+.ai/packs/
+.ai/reports/
+CLAUDE.local.md
