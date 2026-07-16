@@ -12,8 +12,11 @@ export interface LogoutMutationView {
 export function useLogoutMutation(): LogoutMutationView {
   const queryClient = useQueryClient();
   const markAnonymous = useSessionStore((state) => state.markAnonymous);
-  const mutation = useAppMutation<void, void>({
-    mutationFn: () => logoutUser(),
+  const mutation = useAppMutation<boolean, undefined>({
+    mutationFn: async () => {
+      await logoutUser();
+      return true;
+    },
     onSettled: () => {
       queryClient.clear();
       markAnonymous();

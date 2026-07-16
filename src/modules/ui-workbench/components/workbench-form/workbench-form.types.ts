@@ -8,5 +8,5 @@ export interface WorkbenchFormProps {
   readonly name: FormFieldBinding;
   readonly email: FormFieldBinding;
   readonly successMessage: string | undefined;
-  readonly onSubmit: (event: React.FormEvent<HTMLFormElement>) => void;
+  readonly onSubmit: (event: React.SyntheticEvent<HTMLFormElement>) => void;
 }

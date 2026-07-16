@@ -1,5 +1,5 @@
 import { useAppMutation } from '@/packages/query';
-import { AppError } from '@/shared/errors/app.errors';
+import { type AppError } from '@/shared/errors/app.errors';
 import { toAppError } from '@/shared/errors/app-error.helper';
 
 import type { AuthSession } from '../mappers/auth.mapper';

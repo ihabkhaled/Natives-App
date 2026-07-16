@@ -16,7 +16,7 @@ export function AppInput(props: AppInputProps): React.JSX.Element {
       {...(props.autocomplete === undefined ? {} : { autocomplete: props.autocomplete })}
       {...(props.errorMessage === undefined ? {} : { errorText: props.errorMessage })}
       className={toInputStateClass(props.errorMessage !== undefined)}
-      onIonInput={(event) => props.onValueChange(extractIonInputValue(event.detail.value))}
+      onIonInput={(event) => { props.onValueChange(extractIonInputValue(event.detail.value)); }}
       {...(props.onBlur === undefined ? {} : { onIonBlur: props.onBlur })}
       fill="outline"
     />

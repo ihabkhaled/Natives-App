@@ -1,6 +1,4 @@
-export interface RawEnvironmentSource {
-  readonly [key: string]: unknown;
-}
+export type RawEnvironmentSource = Readonly<Record<string, unknown>>;
 
 export interface AppEnvironment {
   readonly appName: string;

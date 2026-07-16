@@ -3,7 +3,6 @@ import {
   useForm,
   type DefaultValues,
   type FieldValues,
-  type Resolver,
   type UseFormReturn,
 } from 'react-hook-form';
 
@@ -21,11 +20,7 @@ export interface UseAppFormOptions<TFieldValues extends FieldValues> {
 export function useAppForm<TFieldValues extends FieldValues>(
   options: UseAppFormOptions<TFieldValues>,
 ): UseFormReturn<TFieldValues, unknown, TFieldValues> {
-  const resolver = standardSchemaResolver(options.schema) as Resolver<
-    TFieldValues,
-    unknown,
-    TFieldValues
-  >;
+  const resolver = standardSchemaResolver(options.schema);
   return useForm<TFieldValues, unknown, TFieldValues>({
     resolver,
     defaultValues: options.defaultValues,

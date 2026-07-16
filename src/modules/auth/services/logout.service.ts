@@ -1,5 +1,6 @@
 import { trackEvent } from '@/packages/analytics';
 
+import { AUTH_ANALYTICS_EVENTS } from '../constants/auth-analytics.constants';
 import { requestLogout } from '../gateways/auth.gateway';
 import { getAuthTokenRepository } from '../repositories/token.repository';
 
@@ -14,5 +15,5 @@ export async function logoutUser(): Promise<void> {
     // Best-effort server logout; local cleanup below is what matters.
   }
   await getAuthTokenRepository().clearTokens();
-  trackEvent('auth.logout_completed');
+  trackEvent(AUTH_ANALYTICS_EVENTS.logoutCompleted);
 }

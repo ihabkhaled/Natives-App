@@ -1,5 +1,7 @@
 import { createConsoleSink, createLogger, type AppLogger } from '@/packages/logger';
 
+import { ANALYTICS_EVENTS } from './analytics.constants';
+
 export type AnalyticsProperties = Record<string, string | number | boolean>;
 
 let analyticsLogger: AppLogger = createLogger('analytics', createConsoleSink());
@@ -13,7 +15,7 @@ export function trackEvent(name: string, properties?: AnalyticsProperties): void
 }
 
 export function trackScreenView(screenName: string): void {
-  trackEvent('screen_view', { screen: screenName });
+  trackEvent(ANALYTICS_EVENTS.screenView, { screen: screenName });
 }
 
 export function setAnalyticsLoggerForTesting(logger: AppLogger): void {

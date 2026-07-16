@@ -2,7 +2,6 @@ import {
   useQuery,
   type UseQueryOptions,
   type UseQueryResult,
-  type QueryKey,
 } from '@tanstack/react-query';
 
 /**
@@ -10,7 +9,7 @@ import {
  * instead of importing TanStack Query directly.
  */
 export function useAppQuery<TData, TError = unknown>(
-  options: UseQueryOptions<TData, TError, TData, QueryKey>,
+  options: UseQueryOptions<TData, TError, TData>,
 ): UseQueryResult<TData, TError> {
   return useQuery(options);
 }

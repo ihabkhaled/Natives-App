@@ -10,7 +10,7 @@ export function AppVirtualList<Item>(props: AppVirtualListProps<Item>): React.JS
   return (
     <div data-testid={props.testId} style={{ height: props.heightPx }}>
       <Virtuoso
-        data={props.items as Item[]}
+        data={props.items}
         overscan={props.overscan ?? 0}
         itemContent={(index, item) => props.renderItem(item, index)}
         style={{ height: '100%' }}

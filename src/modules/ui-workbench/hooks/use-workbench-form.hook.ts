@@ -10,7 +10,7 @@ export interface WorkbenchFormView {
   readonly name: FormFieldBinding;
   readonly email: FormFieldBinding;
   readonly submittedName: string | undefined;
-  readonly onSubmit: (event: React.FormEvent<HTMLFormElement>) => void;
+  readonly onSubmit: (event: React.SyntheticEvent<HTMLFormElement>) => void;
 }
 
 interface UseWorkbenchFormOptions {

@@ -7,13 +7,7 @@ import { TEST_IDS } from '@/shared/config';
 import { I18N_KEYS } from '@/shared/i18n';
 import { ErrorState } from '@/shared/ui';
 
-export interface AppErrorBoundaryProps {
-  readonly children: ReactNode;
-}
-
-interface AppErrorBoundaryState {
-  readonly hasError: boolean;
-}
+import type { AppErrorBoundaryProps, AppErrorBoundaryState } from './app-error-boundary.types';
 
 /**
  * Last-resort UI boundary. Renders a sanitized error state (never the raw

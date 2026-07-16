@@ -2,10 +2,7 @@ import { OFFLINE_BANNER_TEST_ID } from './offline-banner.constants';
 import type { OfflineBannerViewProps } from './offline-banner.types';
 
 export function OfflineBannerView(props: OfflineBannerViewProps): React.JSX.Element | null {
-  if (!props.visible) {
-    return null;
-  }
-  return (
+  return props.visible ? (
     <div
       data-testid={OFFLINE_BANNER_TEST_ID}
       role="status"
@@ -14,5 +11,5 @@ export function OfflineBannerView(props: OfflineBannerViewProps): React.JSX.Elem
     >
       {props.message}
     </div>
-  );
+  ) : null;
 }

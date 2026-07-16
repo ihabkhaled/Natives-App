@@ -14,8 +14,3 @@ export async function bootstrapSessionFromStoredTokens(): Promise<void> {
   }
   state.markAuthenticated();
 }
-
-/** Wired as the HTTP owner's unrecoverable-auth-failure callback. */
-export function handleAuthFailure(): void {
-  useSessionStore.getState().markAnonymous();
-}

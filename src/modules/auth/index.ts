@@ -12,9 +12,7 @@ export {
   logoutResponseSchema,
   refreshResponseSchema,
 } from './schemas/auth.schema';
-export {
-  bootstrapSessionFromStoredTokens,
-  handleAuthFailure,
-} from './services/bootstrap-session.service';
+export { handleAuthFailure } from './services/auth-failure.service';
+export { bootstrapSessionFromStoredTokens } from './services/bootstrap-session.service';
 export { createRefreshExecutor } from './services/refresh-session.service';
 export { SESSION_STATUS, type AuthUser, type SessionStatus } from './types/auth.types';

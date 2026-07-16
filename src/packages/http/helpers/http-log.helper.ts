@@ -1,4 +1,4 @@
-const SENSITIVE_HEADER_PATTERN = /^(authorization|cookie|set-cookie|x-api-key)$/i;
+const SENSITIVE_HEADER_PATTERN = /^(?:authorization|cookie|set-cookie|x-api-key)$/i;
 const REDACTED = '[REDACTED]';
 
 export function sanitizeHeadersForLog(

@@ -4,10 +4,9 @@ import { useAppTranslation } from '@/packages/i18n';
 import { I18N_KEYS } from '@/shared/i18n';
 import { useAppToast } from '@/shared/ui';
 
+import { WORKBENCH_LIST_SIZE } from '../constants/workbench.constants';
 import { buildWorkbenchItems, type WorkbenchItem } from '../helpers/workbench-items.helper';
 import { useWorkbenchForm, type WorkbenchFormView } from './use-workbench-form.hook';
-
-const WORKBENCH_LIST_SIZE = 500;
 
 export interface WorkbenchScreenView {
   readonly title: string;

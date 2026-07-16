@@ -25,7 +25,7 @@ export function SettingsView(props: SettingsViewProps): React.JSX.Element {
           value={props.theme}
           data-testid={SETTINGS_VIEW_TEST_IDS.themeSegment}
           aria-label={props.themeLabel}
-          onIonChange={(event) => props.onThemeChange(event.detail.value as ThemeMode)}
+          onIonChange={(event) => { props.onThemeChange(event.detail.value as ThemeMode); }}
         >
           {props.themeChoices.map((choice) => (
             <IonSegmentButton key={choice.value} value={choice.value}>
@@ -40,7 +40,7 @@ export function SettingsView(props: SettingsViewProps): React.JSX.Element {
           value={props.locale}
           data-testid={SETTINGS_VIEW_TEST_IDS.localeSegment}
           aria-label={props.languageLabel}
-          onIonChange={(event) => props.onLocaleChange(event.detail.value as AppLocale)}
+          onIonChange={(event) => { props.onLocaleChange(event.detail.value as AppLocale); }}
         >
           {props.localeChoices.map((choice) => (
             <IonSegmentButton key={choice.value} value={choice.value}>

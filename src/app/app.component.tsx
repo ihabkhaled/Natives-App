@@ -1,10 +1,6 @@
-import type { ReactNode } from 'react';
-
 import { IonApp } from '@/packages/ionic';
 
-export interface AppComponentProps {
-  readonly children: ReactNode;
-}
+import type { AppComponentProps } from './app.types';
 
 /** Root Ionic frame; all app chrome renders inside it. */
 export function AppComponent(props: AppComponentProps): React.JSX.Element {

@@ -5,6 +5,7 @@ import { AppError } from '@/shared/errors/app.errors';
 import { toAppError } from '@/shared/errors/app-error.helper';
 import { mapHttpErrorToAppError } from '@/shared/mappers';
 
+import { AUTH_ANALYTICS_EVENTS } from '../constants/auth-analytics.constants';
 import { requestLogin } from '../gateways/auth.gateway';
 import { mapLoginResponseToSession, type AuthSession } from '../mappers/auth.mapper';
 import { getAuthTokenRepository } from '../repositories/token.repository';
@@ -26,7 +27,7 @@ export async function loginUser(credentials: LoginCredentials): Promise<AuthSess
     const response = await requestLogin(credentials);
     const session = mapLoginResponseToSession(response);
     await getAuthTokenRepository().setTokens(session.tokens);
-    trackEvent('auth.login_succeeded');
+    trackEvent(AUTH_ANALYTICS_EVENTS.loginSucceeded);
     return session;
   } catch (error) {
     throw toLoginError(error);

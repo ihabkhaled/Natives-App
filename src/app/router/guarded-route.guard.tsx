@@ -1,13 +1,10 @@
 import { Redirect } from '@/packages/router';
 import { APP_PATHS, TEST_IDS } from '@/shared/config';
-import { ROUTE_ACCESS, type AppRouteDefinition } from '@/shared/types';
+import { ROUTE_ACCESS } from '@/shared/types';
 import { LoadingState } from '@/shared/ui';
 
 import { useRouteGuard } from './hooks/use-route-guard.hook';
-
-export interface GuardedRouteProps {
-  readonly definition: AppRouteDefinition;
-}
+import type { GuardedRouteProps } from './guarded-route.types';
 
 /**
  * Session-aware route gate. Ownership of post-auth transitions lives here:

@@ -8,7 +8,7 @@ export interface LoginFormProps {
   readonly password: FormFieldBinding;
   readonly passwordRevealed: boolean;
   readonly onTogglePasswordReveal: () => void;
-  readonly onSubmit: (event: React.FormEvent<HTMLFormElement>) => void;
+  readonly onSubmit: (event: React.SyntheticEvent<HTMLFormElement>) => void;
   readonly isSubmitting: boolean;
   readonly submitErrorMessage: string | undefined;
 }

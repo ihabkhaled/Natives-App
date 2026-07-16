@@ -16,9 +16,16 @@ const csvLocales = schemaBuilder
   .transform((value) => value.split(',').map((locale) => locale.trim()))
   .pipe(schemaBuilder.array(schemaBuilder.string().min(2)).min(1));
 
+const APP_ID_SEGMENT = /^[a-z][a-z0-9]*$/u;
+
+function isReverseDomainAppId(value: string): boolean {
+  const segments = value.split('.');
+  return segments.length >= 2 && segments.every((segment) => APP_ID_SEGMENT.test(segment));
+}
+
 export const rawEnvironmentSchema = schemaBuilder.object({
   VITE_APP_NAME: schemaBuilder.string().min(1),
-  VITE_APP_ID: schemaBuilder.string().regex(/^[a-z][a-z0-9]*(\.[a-z][a-z0-9]*)+$/u),
+  VITE_APP_ID: schemaBuilder.string().refine(isReverseDomainAppId),
   VITE_API_BASE_URL: schemaBuilder.url(),
   VITE_API_MODE: schemaBuilder.union([
     schemaBuilder.literal('mock'),

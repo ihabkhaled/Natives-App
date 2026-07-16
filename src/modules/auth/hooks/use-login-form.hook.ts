@@ -11,7 +11,7 @@ export interface LoginFormView {
   readonly password: FormFieldBinding;
   readonly passwordRevealed: boolean;
   readonly onTogglePasswordReveal: () => void;
-  readonly onSubmit: (event: React.FormEvent<HTMLFormElement>) => void;
+  readonly onSubmit: (event: React.SyntheticEvent<HTMLFormElement>) => void;
 }
 
 interface UseLoginFormOptions {
