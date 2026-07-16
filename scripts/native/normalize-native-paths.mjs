@@ -18,15 +18,19 @@ import { existsSync, readFileSync, writeFileSync } from 'node:fs';
 import process from 'node:process';
 
 const SPM_MANIFEST = 'ios/App/CapApp-SPM/Package.swift';
-const WINDOWS_PATH_ARGUMENT = /path:\s*"([^"]*\\[^"]*)"/gu;
+// One unambiguous quantifier: two adjacent `[^"]*` around a literal would let
+// the engine trade characters between them and backtrack super-linearly
+// (regexp/no-super-linear-backtracking). Match the whole quoted argument, then
+// decide in JS.
+const PATH_ARGUMENT = /path:\s*"([^"]*)"/gu;
 
 function normalizeSwiftPackagePaths(filePath) {
   if (!existsSync(filePath)) {
     return false;
   }
   const original = readFileSync(filePath, 'utf8');
-  const normalized = original.replaceAll(WINDOWS_PATH_ARGUMENT, (_match, rawPath) => {
-    return `path: "${rawPath.replaceAll('\\', '/')}"`;
+  const normalized = original.replaceAll(PATH_ARGUMENT, (match, rawPath) => {
+    return rawPath.includes('\\') ? `path: "${rawPath.replaceAll('\\', '/')}"` : match;
   });
   if (normalized === original) {
     return false;
