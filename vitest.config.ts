@@ -22,7 +22,6 @@ export default defineConfig({
     globals: false,
     coverage: {
       provider: 'v8',
-      all: true,
       include: ['src/**/*.{ts,tsx}'],
       exclude: [
         'src/main.tsx',

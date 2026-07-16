@@ -8,7 +8,7 @@ export default defineConfig({
   fullyParallel: true,
   forbidOnly: isCi,
   retries: isCi ? 2 : 0,
-  workers: isCi ? 2 : undefined,
+  ...(isCi ? { workers: 2 } : {}),
   reporter: isCi ? [['list'], ['html', { open: 'never' }]] : [['list']],
   expect: {
     toHaveScreenshot: {

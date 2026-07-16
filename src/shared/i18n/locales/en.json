@@ -1,0 +1,107 @@
+{
+  "common": {
+    "appName": "Capacitor Ranger",
+    "loading": "Loading…",
+    "retry": "Try again",
+    "requestId": "Request ID"
+  },
+  "errors": {
+    "network": "You appear to be offline. Check your connection and try again.",
+    "timeout": "The request took too long. Please try again.",
+    "unauthorized": "You need to sign in to continue.",
+    "forbidden": "You do not have permission to do that.",
+    "notFound": "We could not find what you were looking for.",
+    "rateLimited": "Too many attempts. Please wait a moment and try again.",
+    "validation": "Some fields need attention.",
+    "server": "Something went wrong on our side. Please try again.",
+    "unexpected": "Something unexpected happened. Please try again.",
+    "invalidCredentials": "The email or password is incorrect.",
+    "sessionExpired": "Your session has expired. Please sign in again.",
+    "deepLinkRejected": "That link cannot be opened."
+  },
+  "states": {
+    "emptyTitle": "Nothing here yet",
+    "emptyMessage": "There is no content to show right now.",
+    "errorTitle": "Something went wrong",
+    "offlineTitle": "You are offline",
+    "offlineMessage": "Reconnect to load the latest data.",
+    "permissionTitle": "Permission needed",
+    "permissionMessage": "Grant the required permission to use this feature."
+  },
+  "welcome": {
+    "title": "Welcome to Capacitor Ranger",
+    "subtitle": "A strict Ionic React and Capacitor starter with enforced architecture.",
+    "loginCta": "Sign in"
+  },
+  "auth": {
+    "loginTitle": "Sign in",
+    "emailLabel": "Email",
+    "emailPlaceholder": "you@example.com",
+    "passwordLabel": "Password",
+    "passwordPlaceholder": "Your password",
+    "showPassword": "Show password",
+    "hidePassword": "Hide password",
+    "submit": "Sign in",
+    "submitting": "Signing in…",
+    "validationEmailRequired": "Email is required.",
+    "validationEmailInvalid": "Enter a valid email address.",
+    "validationPasswordRequired": "Password is required.",
+    "validationPasswordMin": "Password must be at least 8 characters."
+  },
+  "home": {
+    "title": "Home",
+    "greeting": "Hello, {{name}}",
+    "logout": "Sign out"
+  },
+  "health": {
+    "title": "API health",
+    "statusUp": "Operational",
+    "statusDown": "Unavailable",
+    "version": "Version",
+    "checkedAt": "Checked",
+    "refresh": "Refresh"
+  },
+  "settings": {
+    "title": "Settings",
+    "appearance": "Appearance",
+    "theme": "Theme",
+    "themeLight": "Light",
+    "themeDark": "Dark",
+    "themeSystem": "System",
+    "language": "Language",
+    "languageEnglish": "English",
+    "languageArabic": "العربية",
+    "connectivity": "Connectivity",
+    "networkOnline": "Online",
+    "networkOffline": "Offline",
+    "apiMode": "API mode",
+    "apiModeMock": "Mock (MSW)",
+    "apiModeRemote": "Remote (NestJS)",
+    "runtime": "Runtime",
+    "runtimePlatform": "Platform",
+    "runtimeNative": "Native",
+    "runtimeWeb": "Web"
+  },
+  "workbench": {
+    "title": "UI Workbench",
+    "buttonsSection": "Buttons",
+    "buttonPrimary": "Primary action",
+    "buttonSecondary": "Secondary action",
+    "buttonDanger": "Destructive action",
+    "formSection": "Form",
+    "formNameLabel": "Name",
+    "formEmailLabel": "Email",
+    "formSubmit": "Submit",
+    "formSuccess": "Submitted as {{name}}",
+    "formValidationNameRequired": "Name is required.",
+    "formValidationEmailInvalid": "Enter a valid email address.",
+    "statesSection": "States",
+    "listSection": "Virtualized list",
+    "listItemTitle": "Item {{index}}"
+  },
+  "notFound": {
+    "title": "Page not found",
+    "message": "The page you are looking for does not exist.",
+    "goHome": "Go home"
+  }
+}

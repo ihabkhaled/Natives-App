@@ -1,0 +1,24 @@
+@import 'tailwindcss';
+
+/* Bridge Ionic design tokens into the utility layer. */
+@theme {
+  --color-brand: #0054e9;
+}
+
+/* Respect reduced-motion preferences globally (WCAG 2.2). */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Keep the visible focus indicator strong on interactive elements. */
+:focus-visible {
+  outline: 2px solid var(--ion-color-primary);
+  outline-offset: 2px;
+}

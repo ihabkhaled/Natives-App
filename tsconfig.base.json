@@ -31,7 +31,6 @@
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "erasableSyntaxOnly": true,
-    "baseUrl": ".",
     "paths": {
       "@/*": ["./src/*"]
     }
