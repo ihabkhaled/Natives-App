@@ -22,6 +22,19 @@ export async function gotoApp(page: Page, path: string): Promise<void> {
   await expect(page.getByTestId(TEST_IDS.appShell)).toBeVisible();
 }
 
+/**
+ * Assert a routed screen is the presented one.
+ *
+ * Mid-transition, Ionic's router outlet holds the outgoing and incoming pages
+ * in the DOM at once, so a bare getByTestId can match two elements and trip
+ * Playwright's strict mode. Ionic marks pages it has not presented yet with
+ * `ion-page-invisible`, so excluding that class asserts what we actually mean:
+ * this screen is the one on top.
+ */
+export async function expectPresentedPage(page: Page, testId: string): Promise<void> {
+  await expect(page.locator(`[data-testid="${testId}"]:not(.ion-page-invisible)`)).toBeVisible();
+}
+
 export async function fillIonInput(page: Page, testId: string, value: string): Promise<void> {
   await page.getByTestId(testId).locator('input').fill(value);
 }

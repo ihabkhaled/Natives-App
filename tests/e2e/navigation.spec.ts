@@ -2,7 +2,7 @@ import { expect, test } from '@playwright/test';
 
 import { TEST_IDS } from '@/shared/config';
 
-import { APP_ROUTES, gotoApp } from './fixtures/app.fixture';
+import { APP_ROUTES, expectPresentedPage, gotoApp } from './fixtures/app.fixture';
 
 test.describe('public navigation', () => {
   test('redirects the root path to the welcome screen', async ({ page }) => {
@@ -17,7 +17,7 @@ test.describe('public navigation', () => {
 
     await page.getByTestId(TEST_IDS.welcomeLoginCta).click();
 
-    await expect(page.getByTestId(TEST_IDS.loginPage)).toBeVisible();
+    await expectPresentedPage(page, TEST_IDS.loginPage);
     await expect(page).toHaveURL(/\/login$/u);
   });
 
@@ -34,7 +34,8 @@ test.describe('public navigation', () => {
 
     await expect(page.getByTestId(TEST_IDS.notFoundPage)).toBeVisible();
     await page.getByTestId(TEST_IDS.notFoundHomeLink).click();
-    await expect(page.getByTestId(TEST_IDS.welcomePage)).toBeVisible();
+    await expect(page).toHaveURL(/\/welcome$/u);
+    await expectPresentedPage(page, TEST_IDS.welcomePage);
   });
 
   test('sends an anonymous visitor from the protected home route to login', async ({ page }) => {

@@ -28,5 +28,8 @@ export const playwrightTestConfig = {
   rules: {
     ...playwrightPlugin.configs['flat/recommended'].rules,
     'playwright/no-focused-test': 'error',
+    // Custom assertion helpers in tests/e2e/fixtures wrap expect(); without
+    // this the rule reports tests that assert only through them.
+    'playwright/expect-expect': ['error', { assertFunctionNames: ['expectPresentedPage'] }],
   },
 };

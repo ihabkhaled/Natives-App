@@ -3,7 +3,13 @@ import { expect, test } from '@playwright/test';
 import { TEST_IDS } from '@/shared/config';
 import { MOCK_CREDENTIALS, MOCK_SCENARIO_EMAILS } from '@/tests/msw/mock-data.constants';
 
-import { APP_ROUTES, fillIonInput, gotoApp, login } from './fixtures/app.fixture';
+import {
+  APP_ROUTES,
+  expectPresentedPage,
+  fillIonInput,
+  gotoApp,
+  login,
+} from './fixtures/app.fixture';
 
 test.describe('authentication', () => {
   test('signs in with valid credentials and reaches the protected home screen', async ({
@@ -11,7 +17,7 @@ test.describe('authentication', () => {
   }) => {
     await login(page);
 
-    await expect(page.getByTestId(TEST_IDS.homePage)).toBeVisible();
+    await expectPresentedPage(page, TEST_IDS.homePage);
     await expect(page.getByTestId(TEST_IDS.homeGreeting)).toContainText('Ranger One');
     await expect(page.getByTestId(TEST_IDS.healthCard)).toBeVisible();
     await expect(page.getByTestId(TEST_IDS.healthStatus)).toContainText('Operational');
@@ -23,7 +29,7 @@ test.describe('authentication', () => {
     const error = page.getByTestId(TEST_IDS.loginErrorMessage);
     await expect(error).toBeVisible();
     await expect(error).toHaveText('The email or password is incorrect.');
-    await expect(page.getByTestId(TEST_IDS.loginPage)).toBeVisible();
+    await expectPresentedPage(page, TEST_IDS.loginPage);
   });
 
   test('maps a locked account to a permission message, never the backend text', async ({
@@ -45,32 +51,32 @@ test.describe('authentication', () => {
 
     await expect(page.getByText('Enter a valid email address.')).toBeVisible();
     await expect(page.getByText('Password must be at least 8 characters.')).toBeVisible();
-    await expect(page.getByTestId(TEST_IDS.loginPage)).toBeVisible();
+    await expectPresentedPage(page, TEST_IDS.loginPage);
   });
 
   test('keeps an authenticated visitor away from the login route', async ({ page }) => {
     await login(page);
-    await expect(page.getByTestId(TEST_IDS.homePage)).toBeVisible();
+    await expectPresentedPage(page, TEST_IDS.homePage);
 
     await gotoApp(page, APP_ROUTES.login);
 
-    await expect(page.getByTestId(TEST_IDS.homePage)).toBeVisible();
+    await expectPresentedPage(page, TEST_IDS.homePage);
   });
 
   test('signs out and returns to the public flow', async ({ page }) => {
     await login(page);
-    await expect(page.getByTestId(TEST_IDS.homePage)).toBeVisible();
+    await expectPresentedPage(page, TEST_IDS.homePage);
 
     await page.getByTestId(TEST_IDS.homeLogoutButton).click();
 
-    await expect(page.getByTestId(TEST_IDS.loginPage)).toBeVisible();
+    await expectPresentedPage(page, TEST_IDS.loginPage);
     await gotoApp(page, APP_ROUTES.home);
-    await expect(page.getByTestId(TEST_IDS.loginPage)).toBeVisible();
+    await expectPresentedPage(page, TEST_IDS.loginPage);
   });
 
   test('never exposes tokens to localStorage', async ({ page }) => {
     await login(page);
-    await expect(page.getByTestId(TEST_IDS.homePage)).toBeVisible();
+    await expectPresentedPage(page, TEST_IDS.homePage);
 
     const localStorageDump = await page.evaluate(() => JSON.stringify(globalThis.localStorage));
     expect(localStorageDump).not.toContain('mock-access-token');
