@@ -1,9 +1,9 @@
 {
-  "name": "capacitor-ranger",
+  "name": "natives-app",
   "version": "0.1.0",
   "private": true,
   "type": "module",
-  "description": "Capacitor Ranger: strict Ionic React and Capacitor application boilerplate with module-first architecture, package ownership, TypeScript 7, and enforced quality gates.",
+  "description": "Ultimate Natives app — Ionic React + Capacitor client for the Ultimate Natives Frisbee team, built on the strict CapacitorRanger module-first architecture (package ownership, TypeScript 7, per-file coverage, and mechanically enforced quality gates).",
   "engines": {
     "node": ">=24.0.0",
     "npm": ">=10.0.0"

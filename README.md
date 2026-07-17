@@ -1,4 +1,18 @@
-# Capacitor Ranger
+# Natives-App — Ultimate Natives client
+
+> Ionic React + Capacitor client for the **Ultimate Natives** Frisbee team (Sheikh Zayed, Giza, Egypt).
+> Built on the strict **CapacitorRanger** module-first architecture, whose rules, gates, and attribution
+> are preserved in full below.
+>
+> **Provenance:** derived from CapacitorRanger (`upstream-template`) at commit
+> `fd6b3575a68f768c428b3746b27d6392f6d967e1`. See [`docs/provenance.md`](./docs/provenance.md),
+> [`docs/product/open-decisions.md`](./docs/product/open-decisions.md), and
+> [`docs/source-data-handling.md`](./docs/source-data-handling.md). Branding, bundle IDs, and native
+> assets are set in prompt 800; the inherited display identity remains until then.
+
+---
+
+## Inherited engineering operating system (CapacitorRanger)
 
 A strict Ionic React + Capacitor starter where the architecture is **mechanically enforced**, not
 just described. Fifty custom ESLint rules, per-file coverage floors, and honest gates mean the

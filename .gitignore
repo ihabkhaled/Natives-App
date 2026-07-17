@@ -43,3 +43,16 @@ ios/App/App/capacitor.config.json
 android/app/src/main/assets/public/
 android/app/src/main/assets/capacitor.config.json
 android/app/src/main/assets/capacitor.plugins.json
+
+# ---------------------------------------------------------------------------
+# Ultimate Natives — private source-data handling (NEVER commit team data)
+# See docs/source-data-handling.md. Private workbooks/exports/uploads live only
+# in an ignored, access-controlled dir and are never mounted into the frontend.
+# ---------------------------------------------------------------------------
+/private-imports/
+*.xlsx
+*.xls
+*.xlsm
+*.csv
+/exports/
+/uploads/
