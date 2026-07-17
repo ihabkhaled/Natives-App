@@ -1,0 +1,10 @@
+---
+description: Hook orchestration rules
+globs: src/**/*.hook.ts
+alwaysApply: false
+---
+
+One primary hook per file. No JSX, no components, no raw Axios or Capacitor imports.
+
+Extract types, constants, helpers, and mappers to companion files. Clean up every listener, timer,
+observer, and subscription. Stay safe under React Strict Mode. Avoid effects for derived state.

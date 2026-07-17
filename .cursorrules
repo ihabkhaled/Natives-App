@@ -1,0 +1,6 @@
+Read AGENTS.md first — it is the canonical contract.
+Use .ai/BOOTSTRAP.md and `npm run knowledge:context -- --task="..."` to resolve task context.
+Never bypass architecture, package ownership, hook isolation, strict typing, tests, security,
+accessibility, localization, or native safety. When a guardrail blocks you, move the code to the
+correct layer instead of disabling the rule. Suppressions require a documented EXC-nnnn exception.
+Do not edit generated .ai files: update canonical knowledge, then run `npm run knowledge:build`.

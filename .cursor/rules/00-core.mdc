@@ -1,0 +1,10 @@
+---
+description: Universal strict architecture rules
+alwaysApply: true
+---
+
+Read AGENTS.md and rules/00-non-negotiable-rules.md before editing.
+
+Never bypass package ownership, hook isolation, module boundaries, strict typing, or tests.
+One-way dependency direction: app → modules → platform → shared → packages → vendors.
+When a guardrail blocks a change, the code is in the wrong layer — move it.

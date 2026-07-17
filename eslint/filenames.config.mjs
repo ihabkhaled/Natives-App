@@ -1,0 +1,70 @@
+/**
+ * Canonical file-suffix taxonomy. Consumed by the architecture plugin,
+ * scripts/quality/validate-filenames.mjs, and documentation.
+ */
+export const FILE_SUFFIX_KINDS = {
+  'component.tsx': 'component',
+  'container.tsx': 'container',
+  'provider.tsx': 'provider',
+  'guard.tsx': 'guard',
+  'boundary.tsx': 'boundary',
+  'routes.tsx': 'routes',
+  'routes.ts': 'routes',
+  'paths.ts': 'paths',
+  'hook.ts': 'hook',
+  'hook.tsx': 'hook',
+  'service.ts': 'service',
+  'gateway.ts': 'gateway',
+  'repository.ts': 'repository',
+  'mapper.ts': 'mapper',
+  'schema.ts': 'schema',
+  'helper.ts': 'helper',
+  'utils.ts': 'utils',
+  'constants.ts': 'constants',
+  'enums.ts': 'enums',
+  'types.ts': 'types',
+  'interfaces.ts': 'interfaces',
+  'errors.ts': 'errors',
+  'variants.ts': 'variants',
+  'keys.ts': 'keys',
+  'store.ts': 'store',
+  'query.ts': 'query',
+  'mutation.ts': 'mutation',
+  'facade.ts': 'facade',
+  'factory.ts': 'factory',
+  'adapter.ts': 'adapter',
+  'coordinator.ts': 'coordinator',
+  'parser.ts': 'parser',
+  'listener.ts': 'listener',
+  'migrations.ts': 'migrations',
+  'selectors.ts': 'selectors',
+  'test.ts': 'test',
+  'test.tsx': 'test',
+};
+
+/** Files allowed to exist without a dotted kind suffix. */
+export const EXACT_FILE_KINDS = {
+  'index.ts': 'index',
+  'main.tsx': 'main',
+  'vite-env.d.ts': 'declaration',
+  'http-client.ts': 'client',
+  'ionic-styles.ts': 'styles',
+  'start-app.ts': 'startup',
+  'route-registry.ts': 'registry',
+  'handlers.ts': 'msw-infra',
+  'browser.ts': 'msw-infra',
+};
+
+/**
+ * UI file family with the strictest declaration rules. Every other kind in
+ * FILE_SUFFIX_KINDS may hold module-scope declarations; see
+ * rules/28-file-naming.md for the full taxonomy.
+ */
+export const COMPONENT_FAMILY_KINDS = [
+  'component',
+  'container',
+  'provider',
+  'guard',
+  'boundary',
+  'routes',
+];

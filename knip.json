@@ -1,0 +1,30 @@
+{
+  "$schema": "https://unpkg.com/knip@6/schema.json",
+  "entry": [
+    "src/main.tsx",
+    "src/packages/*/index.ts",
+    "src/modules/*/index.ts",
+    "src/platform/index.ts",
+    "src/shared/index.ts",
+    "eslint/architecture-plugin/index.mjs",
+    "scripts/**/*.mjs",
+    "tests/**/*.test.{ts,tsx}",
+    "tests/setup/*.ts",
+    "tests/e2e/**/*.spec.ts",
+    "tests/accessibility/**/*.spec.ts",
+    "tests/visual/**/*.spec.ts",
+    "eslint/architecture-plugin/tests/**/*.test.mjs",
+    "eslint/architecture-plugin/fixtures/*.fixtures.mjs"
+  ],
+  "project": ["src/**/*.{ts,tsx}", "scripts/**/*.mjs", "eslint/**/*.mjs", "tests/**/*.ts"],
+  "ignore": ["public/mockServiceWorker.js", ".ai/**", "android/**", "ios/**"],
+  "ignoreDependencies": [
+    "@capacitor/android",
+    "@capacitor/ios",
+    "typescript7",
+    "@commitlint/config-conventional",
+    "tailwindcss"
+  ],
+  "ignoreBinaries": ["trivy", "cap", "gradlew", "java"],
+  "includeEntryExports": false
+}

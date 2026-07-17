@@ -1,0 +1,11 @@
+---
+description: UI-only component rules
+globs: src/**/*.component.tsx
+alwaysApply: false
+---
+
+Components render prepared props only.
+
+Forbidden here: hooks, services, gateways, stores, queries, native APIs, browser APIs, raw user
+copy, raw routes, raw endpoints, raw test ids, and module-scope supporting declarations.
+Extract types to `*.types.ts`, constants to `*.constants.ts`, variants to `*.variants.ts`.

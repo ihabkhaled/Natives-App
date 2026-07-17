@@ -1,0 +1,5 @@
+npm run typecheck
+npm run lint
+npm run quality:architecture
+npm run quality:package-ownership
+npm run test

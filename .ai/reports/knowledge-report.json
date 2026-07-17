@@ -1,0 +1,13 @@
+{
+  "generated": true,
+  "governanceVersion": 1,
+  "canonicalFileCount": 179,
+  "packs": [
+    "api-work",
+    "feature-work",
+    "native-work",
+    "security-work",
+    "testing-work",
+    "ui-work"
+  ]
+}

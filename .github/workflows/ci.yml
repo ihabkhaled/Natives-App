@@ -1,0 +1,344 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  NODE_VERSION: '24'
+
+jobs:
+  knowledge:
+    name: Knowledge build and validation
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+      - run: npm ci
+      - run: npm run knowledge:build
+      - name: Fail if .ai drifted from canonical knowledge
+        run: git diff --exit-code -- .ai
+      - run: npm run knowledge:validate
+      - run: npm run knowledge:contradictions
+      - run: npm run knowledge:duplicates
+      - run: npm run knowledge:orphans
+      - run: npm run knowledge:benchmark
+
+  format:
+    name: Formatting
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+      - run: npm ci
+      - run: npm run format:check
+
+  lint:
+    name: Lint (clean + autofix check)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+      - run: npm ci
+      - run: npm run lint
+      - name: Fail if --fix would change anything
+        run: |
+          npm run lint:fix
+          git diff --exit-code
+
+  typecheck:
+    name: TypeScript 7 typecheck
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+      - run: npm ci
+      - run: npm run typecheck
+
+  typecheck-toolchain:
+    name: Toolchain compatibility typecheck
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+      - run: npm ci
+      - run: npm run typecheck:toolchain
+      - name: Warn when the compatibility compiler can be retired
+        run: node scripts/quality/check-toolchain-compatibility.mjs
+        continue-on-error: true
+
+  architecture-rules:
+    name: Architecture plugin tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+      - run: npm ci
+      - run: npm run quality:architecture-rules
+
+  coverage:
+    name: Unit/integration coverage (per-file)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+      - run: npm ci
+      - run: npm run test:coverage
+      - run: npm run test:coverage:per-file
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: coverage-report
+          path: coverage/
+          retention-days: 7
+
+  build:
+    name: Production build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+      - run: npm ci
+      - run: npm run build
+      - uses: actions/upload-artifact@v4
+        with:
+          name: web-build
+          path: dist/
+          retention-days: 7
+
+  e2e:
+    name: Playwright E2E (desktop + mobile + RTL)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+      - run: npm run test:e2e
+        env:
+          CI: 'true'
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: playwright-report-e2e
+          path: |
+            playwright-report/
+            test-results/
+          retention-days: 7
+
+  accessibility:
+    name: Accessibility (axe, WCAG 2.2 AA)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+      - run: npm run test:a11y
+        env:
+          CI: 'true'
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: playwright-report-a11y
+          path: |
+            playwright-report/
+            test-results/
+          retention-days: 7
+
+  visual:
+    name: Visual regression
+    runs-on: ubuntu-latest
+    # Baselines are platform-specific: Playwright names them per OS. The
+    # committed *-linux.png files are generated in the Playwright container that
+    # matches this runner (see docs/operations/ci.md), so this is a real gate.
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+      - run: npm run test:visual
+        env:
+          CI: 'true'
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: playwright-report-visual
+          path: |
+            playwright-report/
+            test-results/
+          retention-days: 7
+
+  static-analysis:
+    name: Dead code, cycles, duplication
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+      - run: npm ci
+      - run: npm run quality:dead-code
+      - run: npm run quality:circular
+      - run: npm run quality:duplicates
+
+  architecture-gates:
+    name: Architecture, ownership, exports, filenames, locales, docs
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+      - run: npm ci
+      - run: npm run quality:architecture
+      - run: npm run quality:package-ownership
+      - run: npm run quality:exports
+      - run: npm run quality:filenames
+      - run: npm run quality:locales
+      - run: npm run quality:docs
+      - run: npm run quality:agent-docs
+
+  security:
+    name: npm audit and Trivy
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+      - run: npm ci
+      - run: npm run security:audit
+      - name: Trivy vulnerability, secret, and misconfiguration scan
+        uses: aquasecurity/trivy-action@v0.36.0
+        with:
+          scan-type: fs
+          scanners: vuln,secret,misconfig
+          severity: HIGH,CRITICAL
+          exit-code: '1'
+          skip-dirs: node_modules,dist,coverage,android,ios
+
+  capacitor-sync:
+    name: Capacitor sync drift
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+      - run: npm ci
+      - run: npm run cap:sync
+      - run: npm run cap:sync:check
+
+  android:
+    name: Android lint, test, build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+      - run: npm ci
+      - run: npm run android:verify
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: android-reports
+          path: android/app/build/reports/
+          retention-days: 7
+
+  ios:
+    name: iOS build verification (macOS)
+    runs-on: macos-latest
+    # Only meaningful on macOS with Xcode; the verifier reports UNVERIFIED
+    # anywhere else rather than claiming a pass it did not perform.
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+      - run: npm ci
+      - run: npm run build
+      - run: npx cap sync ios
+      - run: npm run ios:verify
+
+  all-gates-green:
+    name: all-gates-green
+    runs-on: ubuntu-latest
+    if: always()
+    needs:
+      - knowledge
+      - format
+      - lint
+      - typecheck
+      - typecheck-toolchain
+      - architecture-rules
+      - coverage
+      - build
+      - e2e
+      - accessibility
+      - visual
+      - static-analysis
+      - architecture-gates
+      - security
+      - capacitor-sync
+      - android
+      - ios
+    steps:
+      - name: Fail unless every mandatory gate succeeded
+        run: |
+          echo "Gate results: ${{ join(needs.*.result, ', ') }}"
+          if echo "${{ join(needs.*.result, ',') }}" | grep -qE 'failure|cancelled'; then
+            echo "::error::One or more mandatory gates did not succeed."
+            exit 1
+          fi
+          echo "All mandatory gates succeeded."

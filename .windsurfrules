@@ -1,0 +1,7 @@
+Read AGENTS.md first — it is the canonical contract.
+Treat rules/00-non-negotiable-rules.md as mandatory.
+Do not import vendors — Ionic, Capacitor, Axios, Day.js, Virtuoso, Zustand, Zod, TanStack Query —
+outside their owner package in src/packages. Components are UI-only; hooks live in *.hook.ts files.
+Cross-module imports use @/modules/<feature> public surfaces only.
+Per-file coverage is 95% (100% for pure logic); lint runs at zero warnings.
+Do not edit generated .ai files; rebuild them with `npm run knowledge:build`.
