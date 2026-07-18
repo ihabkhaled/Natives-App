@@ -15,6 +15,7 @@ export interface LoginScreenLabels {
   readonly hidePassword: string;
   readonly submit: string;
   readonly submitting: string;
+  readonly forgotPassword: string;
 }
 
 export interface LoginScreenView {
@@ -45,6 +46,7 @@ export function useLoginScreen(): LoginScreenView {
       hidePassword: t(I18N_KEYS.auth.hidePassword),
       submit: t(I18N_KEYS.auth.submit),
       submitting: t(I18N_KEYS.auth.submitting),
+      forgotPassword: t(I18N_KEYS.auth.forgotPasswordLink),
     },
     form,
     isSubmitting: loginMutation.isSubmitting,

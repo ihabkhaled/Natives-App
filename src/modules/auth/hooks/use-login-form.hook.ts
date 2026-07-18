@@ -1,6 +1,11 @@
 import { useState } from 'react';
 
-import { useAppForm, useAppFormField, type FormFieldBinding } from '@/packages/forms';
+import {
+  translateFieldError,
+  useAppForm,
+  useAppFormField,
+  type FormFieldBinding,
+} from '@/packages/forms';
 import type { TranslateParams } from '@/packages/i18n';
 
 import { loginFormSchema } from '../schemas/login-form.schema';
@@ -17,16 +22,6 @@ export interface LoginFormView {
 interface UseLoginFormOptions {
   readonly translate: (key: string, params?: TranslateParams) => string;
   readonly onValidSubmit: (values: LoginFormValues) => void;
-}
-
-function translateFieldError(
-  binding: FormFieldBinding,
-  translate: UseLoginFormOptions['translate'],
-): FormFieldBinding {
-  return {
-    ...binding,
-    errorMessage: binding.errorMessage === undefined ? undefined : translate(binding.errorMessage),
-  };
 }
 
 /** Schema-validated login form; error messages arrive as translated copy. */

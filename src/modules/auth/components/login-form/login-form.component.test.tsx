@@ -21,6 +21,7 @@ const LABELS: LoginScreenLabels = {
   hidePassword: 'Hide password',
   submit: 'Sign in',
   submitting: 'Signing in…',
+  forgotPassword: 'Forgot your password?',
 };
 
 function buildBinding(name: string, overrides: Partial<FormFieldBinding> = {}): FormFieldBinding {

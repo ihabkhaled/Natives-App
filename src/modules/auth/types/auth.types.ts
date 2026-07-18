@@ -35,6 +35,34 @@ export interface LoginFormValues {
   readonly password: string;
 }
 
+export interface ForgotPasswordFormValues {
+  readonly email: string;
+}
+
+export interface SetPasswordFormValues {
+  readonly password: string;
+  readonly confirmPassword: string;
+}
+
+/** Read-only view of a pending invitation, shown before password creation. */
+export interface InvitationDetails {
+  readonly email: string;
+  readonly teamName: string;
+  readonly inviterName: string;
+  /** Expiry instant in UTC (ISO 8601). */
+  readonly expiresAtIso: string;
+}
+
+/** One authenticated device/session in the account's session list. */
+export interface DeviceSession {
+  readonly id: string;
+  readonly device: string;
+  readonly approxLocation: string;
+  /** Last-seen instant in UTC (ISO 8601). */
+  readonly lastActiveAtIso: string;
+  readonly isCurrent: boolean;
+}
+
 export const SESSION_STATUS = {
   Unknown: 'unknown',
   Authenticated: 'authenticated',

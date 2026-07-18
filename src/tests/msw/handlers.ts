@@ -13,6 +13,7 @@ import {
   MOCK_TOKENS,
 } from './mock-data.constants';
 import { nestErrorResponse } from './nest-error.helper';
+import { recoveryHandlers, resetMockRecoveryState } from './recovery-handlers';
 
 const COACH_PERMISSIONS = [
   PERMISSIONS.membersRead,
@@ -74,6 +75,7 @@ const issuedTokenEmails = new Map<string, string>();
 
 export function resetMockAuthState(): void {
   issuedTokenEmails.clear();
+  resetMockRecoveryState();
 }
 
 function apiUrl(path: string): string {
@@ -211,6 +213,7 @@ export const mockApiHandlers = [
         path: '/api/v1/auth/login',
       });
     }
+    resetMockRecoveryState();
     return HttpResponse.json({ tokens: issueTokensForUser(persona), user: persona });
   }),
   http.post(apiUrl('/auth/refresh'), async ({ request }) => {
@@ -244,4 +247,5 @@ export const mockApiHandlers = [
     }
     return HttpResponse.json(persona);
   }),
+  ...recoveryHandlers,
 ];

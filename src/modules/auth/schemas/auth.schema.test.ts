@@ -3,11 +3,16 @@ import { describe, expect, it } from 'vitest';
 import { safeParseWithSchema } from '@/packages/schema';
 
 import {
+  authAckSchema,
   authTokensDtoSchema,
   authUserDtoSchema,
+  invitationDetailsDtoSchema,
   loginResponseSchema,
   logoutResponseSchema,
   refreshResponseSchema,
+  revokeOthersResponseSchema,
+  sessionDtoSchema,
+  sessionListResponseSchema,
 } from './auth.schema';
 
 const validUser = {
@@ -118,5 +123,62 @@ describe('logoutResponseSchema', () => {
 
   it('rejects a non-boolean acknowledgement', () => {
     expect(safeParseWithSchema(logoutResponseSchema, { success: 'yes' }).success).toBe(false);
+  });
+});
+
+describe('authAckSchema', () => {
+  it('accepts a boolean acknowledgement and rejects a non-boolean one', () => {
+    expect(safeParseWithSchema(authAckSchema, { success: true }).success).toBe(true);
+    expect(safeParseWithSchema(authAckSchema, { success: 1 }).success).toBe(false);
+  });
+});
+
+describe('invitationDetailsDtoSchema', () => {
+  const valid = {
+    email: 'invitee@example.com',
+    teamName: 'Cairo Natives',
+    inviterName: 'Coach Nadia',
+    expiresAt: '2026-08-01T12:00:00.000Z',
+  };
+
+  it('accepts a well-formed invitation payload', () => {
+    expect(safeParseWithSchema(invitationDetailsDtoSchema, valid).success).toBe(true);
+  });
+
+  it('rejects an invalid email and an empty team name', () => {
+    expect(safeParseWithSchema(invitationDetailsDtoSchema, { ...valid, email: 'x' }).success).toBe(
+      false,
+    );
+    expect(
+      safeParseWithSchema(invitationDetailsDtoSchema, { ...valid, teamName: '' }).success,
+    ).toBe(false);
+  });
+});
+
+describe('session schemas', () => {
+  const session = {
+    id: 'session-1',
+    device: 'Chrome on macOS',
+    approxLocation: 'Cairo, EG',
+    lastActiveAt: '2026-07-18T09:30:00.000Z',
+    current: true,
+  };
+
+  it('accepts a session and a session list', () => {
+    expect(safeParseWithSchema(sessionDtoSchema, session).success).toBe(true);
+    expect(safeParseWithSchema(sessionListResponseSchema, { sessions: [session] }).success).toBe(
+      true,
+    );
+  });
+
+  it('rejects a session without an id', () => {
+    expect(safeParseWithSchema(sessionDtoSchema, { ...session, id: '' }).success).toBe(false);
+  });
+
+  it('accepts a non-negative revoked count and rejects a negative one', () => {
+    expect(safeParseWithSchema(revokeOthersResponseSchema, { revokedCount: 2 }).success).toBe(true);
+    expect(safeParseWithSchema(revokeOthersResponseSchema, { revokedCount: -1 }).success).toBe(
+      false,
+    );
   });
 });

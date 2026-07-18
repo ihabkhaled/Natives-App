@@ -19,6 +19,7 @@ describe('APP_ERROR_CODE', () => {
       InvalidCredentials: 'INVALID_CREDENTIALS',
       SessionExpired: 'SESSION_EXPIRED',
       DeepLinkRejected: 'DEEP_LINK_REJECTED',
+      LinkInvalidOrExpired: 'LINK_INVALID_OR_EXPIRED',
     });
   });
 

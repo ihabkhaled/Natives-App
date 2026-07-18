@@ -9,11 +9,23 @@ import {
 } from '@/packages/http';
 
 import { buildTokenPair, createMemoryTokenStore } from '../../../../tests/factories/http.factory';
-import { AUTH_API_PATHS } from '../constants/auth-api.constants';
+import {
+  AUTH_API_PATHS,
+  invitationAcceptPath,
+  invitationDetailPath,
+  sessionRevokePath,
+} from '../constants/auth-api.constants';
 import {
   requestCurrentUser,
+  requestInvitationAccept,
+  requestInvitationDetails,
   requestLogin,
   requestLogout,
+  requestPasswordForgot,
+  requestPasswordReset,
+  requestSessionList,
+  requestSessionRevoke,
+  requestSessionsRevokeOthers,
   requestTokenRefresh,
 } from './auth.gateway';
 
@@ -35,6 +47,20 @@ const USER_DTO = {
   ],
 };
 const TOKENS_DTO = { accessToken: 'access-2', refreshToken: 'refresh-2' };
+const INVITATION_DTO = {
+  email: 'invitee@example.com',
+  teamName: 'Cairo Natives',
+  inviterName: 'Coach Nadia',
+  expiresAt: '2026-08-01T12:00:00.000Z',
+};
+const SESSION_DTO = {
+  id: 'session-2',
+  device: 'Safari on iPad',
+  approxLocation: 'Cairo, EG',
+  lastActiveAt: '2026-07-18T09:30:00.000Z',
+  current: false,
+};
+const INVITE_TOKEN = 'invite-1';
 
 let seen: SeenRequest[] = [];
 
@@ -66,6 +92,16 @@ beforeEach(() => {
         recordingRoute('POST', AUTH_API_PATHS.refresh, { tokens: TOKENS_DTO }),
         recordingRoute('POST', AUTH_API_PATHS.logout, { success: true }),
         recordingRoute('GET', AUTH_API_PATHS.currentUser, USER_DTO),
+        recordingRoute('POST', AUTH_API_PATHS.passwordForgot, { success: true }),
+        recordingRoute('POST', AUTH_API_PATHS.passwordReset, { success: true }),
+        recordingRoute('GET', invitationDetailPath(INVITE_TOKEN), INVITATION_DTO),
+        recordingRoute('POST', invitationAcceptPath(INVITE_TOKEN), {
+          tokens: TOKENS_DTO,
+          user: USER_DTO,
+        }),
+        recordingRoute('GET', AUTH_API_PATHS.sessions, { sessions: [SESSION_DTO] }),
+        recordingRoute('POST', sessionRevokePath('session-2'), { success: true }),
+        recordingRoute('POST', AUTH_API_PATHS.sessionsRevokeOthers, { revokedCount: 2 }),
       ]),
     }),
   );
@@ -145,5 +181,74 @@ describe('requestCurrentUser', () => {
     );
 
     await expect(requestCurrentUser()).rejects.toThrow();
+  });
+});
+
+describe('requestPasswordForgot', () => {
+  it('posts the email without a bearer token and returns the acknowledgement', async () => {
+    const response = await requestPasswordForgot('user@example.com');
+
+    expect(response).toEqual({ success: true });
+    const request = seenFor(AUTH_API_PATHS.passwordForgot);
+    expect(request.data).toEqual({ email: 'user@example.com' });
+    expect(request.headers['Authorization']).toBeUndefined();
+  });
+});
+
+describe('requestPasswordReset', () => {
+  it('posts the token and new password without a bearer token', async () => {
+    const response = await requestPasswordReset('reset-token', 'Ranger#Strong1234');
+
+    expect(response).toEqual({ success: true });
+    const request = seenFor(AUTH_API_PATHS.passwordReset);
+    expect(request.data).toEqual({ token: 'reset-token', password: 'Ranger#Strong1234' });
+    expect(request.headers['Authorization']).toBeUndefined();
+  });
+});
+
+describe('requestInvitationDetails', () => {
+  it('reads the invitation without a bearer token and returns the parsed details', async () => {
+    const response = await requestInvitationDetails(INVITE_TOKEN);
+
+    expect(response).toEqual(INVITATION_DTO);
+    expect(seenFor(invitationDetailPath(INVITE_TOKEN)).headers['Authorization']).toBeUndefined();
+  });
+});
+
+describe('requestInvitationAccept', () => {
+  it('posts the chosen password and returns the login envelope', async () => {
+    const response = await requestInvitationAccept(INVITE_TOKEN, 'Ranger#Strong1234');
+
+    expect(response).toEqual({ tokens: TOKENS_DTO, user: USER_DTO });
+    const request = seenFor(invitationAcceptPath(INVITE_TOKEN));
+    expect(request.data).toEqual({ password: 'Ranger#Strong1234' });
+    expect(request.headers['Authorization']).toBeUndefined();
+  });
+});
+
+describe('session gateways', () => {
+  it('lists sessions with the bearer token', async () => {
+    const response = await requestSessionList();
+
+    expect(response).toEqual({ sessions: [SESSION_DTO] });
+    expect(seenFor(AUTH_API_PATHS.sessions).headers['Authorization']).toBe('Bearer access-1');
+  });
+
+  it('revokes a single session with the bearer token', async () => {
+    const response = await requestSessionRevoke('session-2');
+
+    expect(response).toEqual({ success: true });
+    expect(seenFor(sessionRevokePath('session-2')).headers['Authorization']).toBe(
+      'Bearer access-1',
+    );
+  });
+
+  it('revokes other sessions and returns the revoked count', async () => {
+    const response = await requestSessionsRevokeOthers();
+
+    expect(response).toEqual({ revokedCount: 2 });
+    expect(seenFor(AUTH_API_PATHS.sessionsRevokeOthers).headers['Authorization']).toBe(
+      'Bearer access-1',
+    );
   });
 });

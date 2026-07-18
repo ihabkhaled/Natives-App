@@ -1,6 +1,29 @@
 # Auth module
 
-Owns authentication: credentials in, a session out. It is the only module that touches tokens.
+Owns authentication and account recovery: credentials in, a session out. It is the only module that
+touches tokens. Beyond login/logout it owns invitation acceptance, forgot/reset password, and
+device-session management.
+
+## Screens
+
+| Route                | Access     | Purpose                                                                 |
+| -------------------- | ---------- | ----------------------------------------------------------------------- |
+| `/login`             | PublicOnly | Sign in; links to the forgot-password flow.                             |
+| `/forgot-password`   | PublicOnly | Request a reset link. Enumeration-safe: one confirmation for any email. |
+| `/reset-password`    | PublicOnly | Set a new password from a `?token=` link; invalid/expired link states.  |
+| `/accept-invitation` | PublicOnly | Look up an invitation by `?token=`, create a password, start a session. |
+| `/sessions`          | Protected  | List active devices, revoke one, or sign out all other devices.         |
+
+## Recovery invariants
+
+- Reset and invitation links carry an opaque token read from the URL through `@/packages/router`
+  (`useSearchParam`); a missing, used, or expired link resolves to a single `LinkInvalidOrExpired`
+  code via `services/map-auth-link-error.helper.ts`, never a raw backend message.
+- New passwords use the strong policy in `schemas/set-password-form.schema.ts` (12+ chars, mixed case,
+  a digit, matching confirmation), with a visibility toggle, Caps Lock signal, and accessible summary.
+- Forgot-password is enumeration-safe: the backend responds identically whether the account exists.
+- Revoking a device never touches the current session's tokens; signing out the current device stays
+  a plain logout.
 
 ## Public surface (`index.ts`)
 

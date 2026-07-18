@@ -14,6 +14,10 @@ describe('getAppRouteDefinitions', () => {
   it('aggregates every module route table', () => {
     expect(paths()).toEqual([
       APP_PATHS.login,
+      APP_PATHS.forgotPassword,
+      APP_PATHS.resetPassword,
+      APP_PATHS.acceptInvitation,
+      APP_PATHS.sessions,
       APP_PATHS.welcome,
       APP_PATHS.home,
       APP_PATHS.admin,
@@ -43,7 +47,9 @@ describe('getAppRouteDefinitions', () => {
     );
 
     expect(byPath.get(APP_PATHS.home)).toBe(ROUTE_ACCESS.Protected);
+    expect(byPath.get(APP_PATHS.sessions)).toBe(ROUTE_ACCESS.Protected);
     expect(byPath.get(APP_PATHS.login)).toBe(ROUTE_ACCESS.PublicOnly);
+    expect(byPath.get(APP_PATHS.acceptInvitation)).toBe(ROUTE_ACCESS.PublicOnly);
     expect(byPath.get(APP_PATHS.welcome)).toBe(ROUTE_ACCESS.Public);
   });
 });

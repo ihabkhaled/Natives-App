@@ -2,6 +2,7 @@ import AxeBuilder from '@axe-core/playwright';
 import { expect, test, type Page } from '@playwright/test';
 
 import { TEST_IDS } from '@/shared/config';
+import { MOCK_RESET } from '@/tests/msw/mock-data.constants';
 
 import { APP_ROUTES, fillIonInput, gotoApp, login } from '../e2e/fixtures/app.fixture';
 
@@ -30,6 +31,24 @@ test.describe('accessibility (WCAG 2.2 AA)', () => {
 
   test('settings screen has no violations', async ({ page }) => {
     await gotoApp(page, APP_ROUTES.settings);
+    expect((await analyze(page)).violations).toEqual([]);
+  });
+
+  test('forgot-password screen has no violations', async ({ page }) => {
+    await gotoApp(page, '/forgot-password');
+    expect((await analyze(page)).violations).toEqual([]);
+  });
+
+  test('reset-password screen has no violations', async ({ page }) => {
+    await gotoApp(page, `/reset-password?token=${MOCK_RESET.validToken}`);
+    expect((await analyze(page)).violations).toEqual([]);
+  });
+
+  test('session management screen has no violations', async ({ page }) => {
+    await login(page);
+    await expect(page.getByTestId(TEST_IDS.homePage)).toBeVisible();
+    await page.getByTestId(TEST_IDS.homeSessionsLink).click();
+    await expect(page.getByTestId(TEST_IDS.sessionsPage)).toBeVisible();
     expect((await analyze(page)).violations).toEqual([]);
   });
 

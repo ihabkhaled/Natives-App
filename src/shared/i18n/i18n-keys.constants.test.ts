@@ -48,6 +48,7 @@ describe('I18N_KEYS', () => {
       'states',
       'welcome',
       'auth',
+      'sessions',
       'home',
       'health',
       'settings',

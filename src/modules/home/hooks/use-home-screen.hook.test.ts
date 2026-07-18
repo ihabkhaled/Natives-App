@@ -54,6 +54,7 @@ describe('useHomeScreen', () => {
     expect(result.current.title).toBe('Home');
     expect(result.current.loadingLabel).toBe('Loading…');
     expect(result.current.logoutLabel).toBe('Sign out');
+    expect(result.current.manageSessionsLabel).toBe('Manage your devices');
   });
 
   it('interpolates the display name into the greeting', () => {
@@ -112,6 +113,7 @@ describe('useHomeScreen', () => {
       'isLoggingOut',
       'loadingLabel',
       'logoutLabel',
+      'manageSessionsLabel',
       'onLogout',
       'title',
     ]);

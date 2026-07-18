@@ -16,4 +16,14 @@ describe('authQueryKeys', () => {
     expect(authQueryKeys.currentUser()).not.toBe(authQueryKeys.currentUser());
     expect(authQueryKeys.currentUser()).toEqual(authQueryKeys.currentUser());
   });
+
+  it('scopes the invitation key by token and roots it under the namespace', () => {
+    expect(authQueryKeys.invitation('abc')).toEqual(['auth', 'invitation', 'abc']);
+    expect(authQueryKeys.invitation('abc')).not.toEqual(authQueryKeys.invitation('def'));
+  });
+
+  it('composes the sessions key from the namespace root', () => {
+    expect(authQueryKeys.sessions()).toEqual(['auth', 'sessions']);
+    expect(authQueryKeys.sessions().slice(0, 1)).toEqual([...authQueryKeys.all]);
+  });
 });

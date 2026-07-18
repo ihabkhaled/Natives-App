@@ -41,3 +41,31 @@ export const refreshResponseSchema = schemaBuilder.object({
 export const logoutResponseSchema = schemaBuilder.object({
   success: schemaBuilder.boolean(),
 });
+
+/** Generic acknowledgement envelope for forgot/reset/revoke endpoints. */
+export const authAckSchema = schemaBuilder.object({
+  success: schemaBuilder.boolean(),
+});
+
+export const invitationDetailsDtoSchema = schemaBuilder.object({
+  email: schemaBuilder.email(),
+  teamName: schemaBuilder.string().min(1),
+  inviterName: schemaBuilder.string().min(1),
+  expiresAt: schemaBuilder.string().min(1),
+});
+
+export const sessionDtoSchema = schemaBuilder.object({
+  id: schemaBuilder.string().min(1),
+  device: schemaBuilder.string(),
+  approxLocation: schemaBuilder.string(),
+  lastActiveAt: schemaBuilder.string().min(1),
+  current: schemaBuilder.boolean(),
+});
+
+export const sessionListResponseSchema = schemaBuilder.object({
+  sessions: schemaBuilder.array(sessionDtoSchema),
+});
+
+export const revokeOthersResponseSchema = schemaBuilder.object({
+  revokedCount: schemaBuilder.number().int().nonnegative(),
+});

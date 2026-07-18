@@ -14,6 +14,7 @@ const ERROR_CODE_TO_I18N_KEY: Record<AppErrorCode, I18nKey> = {
   [APP_ERROR_CODE.InvalidCredentials]: I18N_KEYS.errors.invalidCredentials,
   [APP_ERROR_CODE.SessionExpired]: I18N_KEYS.errors.sessionExpired,
   [APP_ERROR_CODE.DeepLinkRejected]: I18N_KEYS.errors.deepLinkRejected,
+  [APP_ERROR_CODE.LinkInvalidOrExpired]: I18N_KEYS.errors.linkInvalidOrExpired,
 };
 
 export function mapErrorCodeToI18nKey(code: AppErrorCode): I18nKey {

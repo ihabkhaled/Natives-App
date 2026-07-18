@@ -38,4 +38,52 @@ export const MOCK_HEALTH = {
   timestamp: '2026-07-16T12:00:00.000Z',
 } as const;
 
+/**
+ * Invitation acceptance fixtures. Each token selects a deterministic lifecycle
+ * state so invite lookup and acceptance can be exercised end to end.
+ */
+export const MOCK_INVITATION = {
+  validToken: 'invite-valid-token',
+  expiredToken: 'invite-expired-token',
+  usedToken: 'invite-used-token',
+  email: 'invitee@example.com',
+  teamName: 'Cairo Natives',
+  inviterName: 'Coach Nadia',
+  expiresAt: '2026-08-01T12:00:00.000Z',
+} as const;
+
+/** Password-reset fixtures keyed by the token embedded in the reset link. */
+export const MOCK_RESET = {
+  validToken: 'reset-valid-token',
+  expiredToken: 'reset-expired-token',
+} as const;
+
+/** A strong password that satisfies the set-password policy in mock flows. */
+export const MOCK_STRONG_PASSWORD = 'Ranger#Strong1234';
+
+/** Deterministic device/session directory for session management flows. */
+export const MOCK_SESSIONS = [
+  {
+    id: 'session-current',
+    device: 'Chrome on macOS',
+    approxLocation: 'Cairo, EG',
+    lastActiveAt: '2026-07-18T09:30:00.000Z',
+    current: true,
+  },
+  {
+    id: 'session-tablet',
+    device: 'Safari on iPad',
+    approxLocation: 'Alexandria, EG',
+    lastActiveAt: '2026-07-17T18:05:00.000Z',
+    current: false,
+  },
+  {
+    id: 'session-phone',
+    device: 'Ultimate Natives on Android',
+    approxLocation: 'Cairo, EG',
+    lastActiveAt: '2026-07-16T21:15:00.000Z',
+    current: false,
+  },
+] as const;
+
 export const MOCK_TIMEOUT_DELAY_MS = 60_000;

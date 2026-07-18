@@ -14,11 +14,16 @@ export { authQueryKeys } from './queries/auth.keys';
 export { createAuthTokenRepository, getAuthTokenRepository } from './repositories/token.repository';
 export { getAuthRouteDefinitions } from './routes/auth.routes';
 export {
+  authAckSchema,
   authTokensDtoSchema,
   authUserDtoSchema,
+  invitationDetailsDtoSchema,
   loginResponseSchema,
   logoutResponseSchema,
   refreshResponseSchema,
+  revokeOthersResponseSchema,
+  sessionDtoSchema,
+  sessionListResponseSchema,
 } from './schemas/auth.schema';
 export { handleAuthFailure } from './services/auth-failure.service';
 export { bootstrapSessionFromStoredTokens } from './services/bootstrap-session.service';

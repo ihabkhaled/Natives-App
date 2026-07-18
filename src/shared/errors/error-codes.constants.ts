@@ -16,6 +16,7 @@ export const APP_ERROR_CODE = {
   InvalidCredentials: 'INVALID_CREDENTIALS',
   SessionExpired: 'SESSION_EXPIRED',
   DeepLinkRejected: 'DEEP_LINK_REJECTED',
+  LinkInvalidOrExpired: 'LINK_INVALID_OR_EXPIRED',
 } as const;
 
 export type AppErrorCode = (typeof APP_ERROR_CODE)[keyof typeof APP_ERROR_CODE];

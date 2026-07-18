@@ -8,6 +8,7 @@ export interface HomeScreenView {
   readonly isLoadingUser: boolean;
   readonly loadingLabel: string;
   readonly logoutLabel: string;
+  readonly manageSessionsLabel: string;
   readonly isLoggingOut: boolean;
   readonly onLogout: () => void;
 }
@@ -22,6 +23,7 @@ export function useHomeScreen(): HomeScreenView {
     isLoadingUser: currentUser.isLoading,
     loadingLabel: t(I18N_KEYS.common.loading),
     logoutLabel: t(I18N_KEYS.home.logout),
+    manageSessionsLabel: t(I18N_KEYS.home.manageSessions),
     isLoggingOut: logoutMutation.isLoggingOut,
     onLogout: logoutMutation.logout,
   };

@@ -48,6 +48,7 @@ describe('useLoginScreen', () => {
       hidePassword: 'Hide password',
       submit: 'Sign in',
       submitting: 'Signing in…',
+      forgotPassword: 'Forgot your password?',
     });
   });
 

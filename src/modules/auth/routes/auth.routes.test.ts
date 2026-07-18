@@ -2,30 +2,63 @@ import { describe, expect, it } from 'vitest';
 
 import { ROUTE_ACCESS } from '@/shared/types';
 
+import { AcceptInvitationContainer } from '../containers/accept-invitation.container';
+import { ForgotPasswordContainer } from '../containers/forgot-password.container';
 import { LoginContainer } from '../containers/login.container';
-import { loginPath } from './auth.paths';
+import { ResetPasswordContainer } from '../containers/reset-password.container';
+import { SessionsContainer } from '../containers/sessions.container';
+import {
+  acceptInvitationPath,
+  forgotPasswordPath,
+  loginPath,
+  resetPasswordPath,
+  sessionsPath,
+} from './auth.paths';
 import { getAuthRouteDefinitions } from './auth.routes';
 
+function definitionFor(path: string) {
+  const definition = getAuthRouteDefinitions().find((candidate) => candidate.path === path);
+  expect(definition).toBeDefined();
+  return definition!;
+}
+
 describe('getAuthRouteDefinitions', () => {
-  it('exposes exactly one route: the login screen', () => {
-    const definitions = getAuthRouteDefinitions();
-
-    expect(definitions).toHaveLength(1);
-    expect(definitions[0]!.path).toBe(loginPath());
-    expect(definitions[0]!.path).toBe('/login');
+  it('exposes the login, recovery, invitation, and session routes', () => {
+    expect(getAuthRouteDefinitions().map((definition) => definition.path)).toEqual([
+      loginPath(),
+      forgotPasswordPath(),
+      resetPasswordPath(),
+      acceptInvitationPath(),
+      sessionsPath(),
+    ]);
   });
 
-  it('matches the login path exactly and keeps it public-only', () => {
-    const [login] = getAuthRouteDefinitions();
-
-    expect(login!.exact).toBe(true);
-    expect(login!.access).toBe(ROUTE_ACCESS.PublicOnly);
-    expect(login!.access).toBe('public-only');
+  it('keeps every route exact', () => {
+    for (const definition of getAuthRouteDefinitions()) {
+      expect(definition.exact).toBe(true);
+    }
   });
 
-  it('wires the login container as the route component', () => {
-    const [login] = getAuthRouteDefinitions();
+  it('keeps the public recovery flows public-only', () => {
+    for (const path of [
+      loginPath(),
+      forgotPasswordPath(),
+      resetPasswordPath(),
+      acceptInvitationPath(),
+    ]) {
+      expect(definitionFor(path).access).toBe(ROUTE_ACCESS.PublicOnly);
+    }
+  });
 
-    expect(login!.component).toBe(LoginContainer);
+  it('protects the session-management route', () => {
+    expect(definitionFor(sessionsPath()).access).toBe(ROUTE_ACCESS.Protected);
+  });
+
+  it('wires each container to its route', () => {
+    expect(definitionFor(loginPath()).component).toBe(LoginContainer);
+    expect(definitionFor(forgotPasswordPath()).component).toBe(ForgotPasswordContainer);
+    expect(definitionFor(resetPasswordPath()).component).toBe(ResetPasswordContainer);
+    expect(definitionFor(acceptInvitationPath()).component).toBe(AcceptInvitationContainer);
+    expect(definitionFor(sessionsPath()).component).toBe(SessionsContainer);
   });
 });

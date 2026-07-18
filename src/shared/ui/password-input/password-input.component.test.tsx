@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react';
+import { fireEvent, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vitest';
 
@@ -104,5 +104,20 @@ describe('AppPasswordInput', () => {
     renderPasswordInput();
 
     expect(screen.getByTestId('password-input')).not.toHaveClass('ion-invalid');
+  });
+
+  it('advertises the new-password autofill hint when asked', () => {
+    renderPasswordInput({ autocomplete: 'new-password' });
+
+    expect(screen.getByTestId('password-input')).toHaveAttribute('autocomplete', 'new-password');
+  });
+
+  it('forwards key-up events so callers can detect Caps Lock', () => {
+    const onKeyUp = vi.fn();
+    renderPasswordInput({ onKeyUp });
+
+    fireEvent.keyUp(screen.getByTestId('password-input'), { key: 'a' });
+
+    expect(onKeyUp).toHaveBeenCalledTimes(1);
   });
 });

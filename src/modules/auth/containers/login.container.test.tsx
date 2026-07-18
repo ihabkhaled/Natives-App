@@ -22,6 +22,7 @@ const LABELS = {
   hidePassword: 'Hide password',
   submit: 'Sign in',
   submitting: 'Signing in…',
+  forgotPassword: 'Forgot your password?',
 } as const;
 
 function buildBinding(name: string): FormFieldBinding {
@@ -96,5 +97,15 @@ describe('LoginContainer', () => {
     expect(screen.getByTestId(TEST_IDS.loginErrorMessage)).toHaveTextContent(
       'The email or password is incorrect.',
     );
+  });
+
+  it('offers a forgot-password link that navigates to the recovery flow', () => {
+    mockLoginScreen();
+
+    renderWithProviders(<LoginContainer />);
+
+    const link = screen.getByTestId(TEST_IDS.loginForgotPasswordLink);
+    expect(link).toHaveTextContent(LABELS.forgotPassword);
+    fireEvent.click(link);
   });
 });
