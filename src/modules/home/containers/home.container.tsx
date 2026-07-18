@@ -1,3 +1,4 @@
+import { DashboardContainer } from '@/modules/dashboard';
 import { HealthCardContainer } from '@/modules/health';
 import { IonButton } from '@/packages/ionic';
 import { useAppNavigation } from '@/packages/router';
@@ -19,6 +20,7 @@ export function HomeContainer(): React.JSX.Element {
         logoutLabel={screen.logoutLabel}
         isLoggingOut={screen.isLoggingOut}
         onLogout={screen.onLogout}
+        dashboardSlot={<DashboardContainer />}
         healthSlot={<HealthCardContainer />}
       />
       <IonButton
@@ -32,6 +34,9 @@ export function HomeContainer(): React.JSX.Element {
       >
         {screen.manageSessionsLabel}
       </IonButton>
+      {/* Clears the fixed bottom navigation on compact viewports so the last
+          action never sits beneath the tab bar. */}
+      <div aria-hidden="true" className="h-20" />
     </PageShell>
   );
 }

@@ -50,6 +50,7 @@ describe('I18N_KEYS', () => {
       'auth',
       'sessions',
       'home',
+      'dashboard',
       'health',
       'settings',
       'workbench',

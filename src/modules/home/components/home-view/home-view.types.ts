@@ -7,5 +7,6 @@ export interface HomeViewProps {
   readonly logoutLabel: string;
   readonly isLoggingOut: boolean;
   readonly onLogout: () => void;
+  readonly dashboardSlot: ReactNode;
   readonly healthSlot: ReactNode;
 }

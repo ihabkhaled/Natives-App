@@ -4,6 +4,7 @@ import { buildAuthUser, type AuthUser } from '@/modules/auth';
 import { getEnvironment } from '@/packages/environment';
 import { PERMISSIONS } from '@/shared/security';
 
+import { buildDashboardSummaryResponse } from './dashboard-summary.fixture';
 import {
   MOCK_CREDENTIALS,
   MOCK_HEALTH,
@@ -246,6 +247,18 @@ export const mockApiHandlers = [
       });
     }
     return HttpResponse.json(persona);
+  }),
+  http.get(apiUrl('/dashboard/summary'), ({ request }) => {
+    const persona = personaFromToken(request);
+    if (persona === null) {
+      return nestErrorResponse({
+        statusCode: 401,
+        code: 'UNAUTHORIZED',
+        message: 'Missing or invalid access token',
+        path: '/api/v1/dashboard/summary',
+      });
+    }
+    return HttpResponse.json(buildDashboardSummaryResponse(persona));
   }),
   ...recoveryHandlers,
 ];

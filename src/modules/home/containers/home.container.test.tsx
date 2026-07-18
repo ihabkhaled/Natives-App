@@ -13,6 +13,9 @@ vi.mock('../hooks/use-home-screen.hook', () => ({ useHomeScreen: vi.fn() }));
 vi.mock('@/modules/health', () => ({
   HealthCardContainer: () => <div data-testid="health-card">Health card</div>,
 }));
+vi.mock('@/modules/dashboard', () => ({
+  DashboardContainer: () => <div data-testid="dashboard-view">Dashboard</div>,
+}));
 
 const onLogout = vi.fn();
 
@@ -60,6 +63,12 @@ describe('HomeContainer', () => {
     renderWithProviders(<HomeContainer />);
 
     expect(screen.getByTestId(TEST_IDS.healthCard)).toBeInTheDocument();
+  });
+
+  it('fills the dashboard slot with the dashboard module container', () => {
+    renderWithProviders(<HomeContainer />);
+
+    expect(screen.getByTestId(TEST_IDS.dashboardView)).toBeInTheDocument();
   });
 
   it('shows the loading state while the profile loads', () => {

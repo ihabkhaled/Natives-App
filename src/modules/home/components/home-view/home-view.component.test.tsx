@@ -16,6 +16,7 @@ function buildProps(overrides: Partial<HomeViewProps> = {}): HomeViewProps {
     logoutLabel: 'Sign out',
     isLoggingOut: false,
     onLogout: vi.fn(),
+    dashboardSlot: <div data-testid={TEST_IDS.dashboardView}>Dashboard</div>,
     healthSlot: <div data-testid={TEST_IDS.healthCard}>Health</div>,
     ...overrides,
   };
@@ -44,6 +45,18 @@ describe('HomeView', () => {
     mountHome();
 
     expect(screen.getByTestId(TEST_IDS.healthCard)).toBeInTheDocument();
+  });
+
+  it('renders whatever the dashboard slot contains', () => {
+    mountHome();
+
+    expect(screen.getByTestId(TEST_IDS.dashboardView)).toBeInTheDocument();
+  });
+
+  it('keeps the dashboard slot mounted while the profile loads', () => {
+    mountHome(buildProps({ isLoadingUser: true }));
+
+    expect(screen.getByTestId(TEST_IDS.dashboardView)).toBeInTheDocument();
   });
 
   it('keeps the health slot mounted while the profile loads', () => {

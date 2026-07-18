@@ -16,6 +16,7 @@ export function HomeView(props: HomeViewProps): React.JSX.Element {
           </h2>
         </IonText>
       )}
+      {props.dashboardSlot}
       {props.healthSlot}
       <AppButton
         label={props.logoutLabel}
