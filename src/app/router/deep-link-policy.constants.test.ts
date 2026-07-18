@@ -8,7 +8,7 @@ import { APP_DEEP_LINK_POLICY } from './deep-link-policy.constants';
 describe('APP_DEEP_LINK_POLICY', () => {
   it('allows https and the app custom scheme only', () => {
     expect(APP_DEEP_LINK_POLICY.allowedSchemes).toEqual(['https', APP_IDENTITY.appId]);
-    expect(APP_DEEP_LINK_POLICY.allowedSchemes).toEqual(['https', 'com.capacitorranger.app']);
+    expect(APP_DEEP_LINK_POLICY.allowedSchemes).toEqual(['https', 'com.ultimatenatives.app']);
   });
 
   it('never allows an unencrypted scheme', () => {
@@ -16,7 +16,7 @@ describe('APP_DEEP_LINK_POLICY', () => {
   });
 
   it('allows the production host and local development only', () => {
-    expect(APP_DEEP_LINK_POLICY.allowedHosts).toEqual(['capacitorranger.app', 'localhost']);
+    expect(APP_DEEP_LINK_POLICY.allowedHosts).toEqual(['ultimatenatives.app', 'localhost']);
   });
 
   it('allows exactly the canonical route table as path prefixes', () => {
@@ -32,7 +32,7 @@ describe('APP_DEEP_LINK_POLICY', () => {
   });
 
   it('admits a link to a real screen', () => {
-    expect(parseDeepLink('https://capacitorranger.app/home', APP_DEEP_LINK_POLICY)).toMatchObject({
+    expect(parseDeepLink('https://ultimatenatives.app/home', APP_DEEP_LINK_POLICY)).toMatchObject({
       ok: true,
       value: '/home',
     });
@@ -40,18 +40,18 @@ describe('APP_DEEP_LINK_POLICY', () => {
 
   it('admits a link opened through the app custom scheme', () => {
     expect(
-      parseDeepLink('com.capacitorranger.app://capacitorranger.app/settings', APP_DEEP_LINK_POLICY)
+      parseDeepLink('com.ultimatenatives.app://ultimatenatives.app/settings', APP_DEEP_LINK_POLICY)
         .ok,
     ).toBe(true);
   });
 
   it('rejects a link from a look-alike host', () => {
     expect(
-      parseDeepLink('https://capacitorranger.app.evil.com/home', APP_DEEP_LINK_POLICY).ok,
+      parseDeepLink('https://ultimatenatives.app.evil.com/home', APP_DEEP_LINK_POLICY).ok,
     ).toBe(false);
   });
 
   it('rejects a plain http link', () => {
-    expect(parseDeepLink('http://capacitorranger.app/home', APP_DEEP_LINK_POLICY).ok).toBe(false);
+    expect(parseDeepLink('http://ultimatenatives.app/home', APP_DEEP_LINK_POLICY).ok).toBe(false);
   });
 });

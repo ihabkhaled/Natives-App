@@ -5,9 +5,9 @@ import { APP_IDENTITY } from './app-identity.constants';
 describe('APP_IDENTITY', () => {
   it('pins the identity that native project generation derives from', () => {
     expect(APP_IDENTITY).toEqual({
-      appId: 'com.capacitorranger.app',
-      appName: 'Capacitor Ranger',
-      appSlug: 'capacitor-ranger',
+      appId: 'com.ultimatenatives.app',
+      appName: 'Ultimate Natives',
+      appSlug: 'ultimate-natives',
       packageScope: '@app',
     });
   });

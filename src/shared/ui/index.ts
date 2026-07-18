@@ -1,4 +1,10 @@
 export { useConfirmAlert, type ConfirmAlertApi, type ShowConfirmAlertOptions } from './alert';
+export {
+  AvatarFallback,
+  type AvatarFallbackProps,
+  type AvatarFallbackSize,
+} from './avatar-fallback';
+export { BrandLogo, type BrandLogoProps, type BrandLogoSize } from './brand-logo';
 export { AppButton, type AppButtonProps, type AppButtonTone } from './button';
 export { EmptyState, type EmptyStateProps } from './empty-state';
 export { ErrorState, type ErrorStateProps } from './error-state';

@@ -4,9 +4,9 @@
  * architecture/no-inline-storage-keys).
  */
 export const STORAGE_KEYS = {
-  settings: 'capacitor-ranger.settings.v1',
-  authAccessToken: 'capacitor-ranger.auth.access-token',
-  authRefreshToken: 'capacitor-ranger.auth.refresh-token',
+  settings: 'ultimate-natives.settings.v1',
+  authAccessToken: 'ultimate-natives.auth.access-token',
+  authRefreshToken: 'ultimate-natives.auth.refresh-token',
 } as const;
 
 export type StorageKey = (typeof STORAGE_KEYS)[keyof typeof STORAGE_KEYS];

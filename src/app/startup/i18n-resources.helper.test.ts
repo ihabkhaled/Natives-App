@@ -20,7 +20,7 @@ describe('buildI18nResources', () => {
   it('carries the English copy the app renders', () => {
     const english = buildI18nResources()[APP_LOCALE.English]?.translation;
 
-    expect(english).toMatchObject({ common: { appName: 'Capacitor Ranger' } });
+    expect(english).toMatchObject({ common: { appName: 'Ultimate Natives' } });
   });
 
   it('carries a translated Arabic catalog rather than a copy of English', () => {

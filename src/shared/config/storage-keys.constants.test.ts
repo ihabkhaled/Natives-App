@@ -8,9 +8,9 @@ const KEY_PREFIX = `${APP_IDENTITY.appSlug}.`;
 describe('STORAGE_KEYS', () => {
   it('pins every persisted key', () => {
     expect(STORAGE_KEYS).toEqual({
-      settings: 'capacitor-ranger.settings.v1',
-      authAccessToken: 'capacitor-ranger.auth.access-token',
-      authRefreshToken: 'capacitor-ranger.auth.refresh-token',
+      settings: 'ultimate-natives.settings.v1',
+      authAccessToken: 'ultimate-natives.auth.access-token',
+      authRefreshToken: 'ultimate-natives.auth.refresh-token',
     });
   });
 

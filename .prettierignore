@@ -13,3 +13,8 @@ public/mockServiceWorker.js
 # only creates a trap: rebuild the plane, and format:check fails.
 .ai/
 CLAUDE.local.md
+# Generated from src/shared/design tokens and guarded by their *.helper.test.ts
+# (byte-for-byte equality), not by style rules. Formatting them would break those checks.
+src/shared/design/brand-tokens.generated.css
+public/favicon.svg
+public/manifest.webmanifest

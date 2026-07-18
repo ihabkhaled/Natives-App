@@ -44,6 +44,8 @@ export const TEST_IDS = {
   permissionState: 'permission-state',
   notFoundPage: 'not-found-page',
   notFoundHomeLink: 'not-found-home-link',
+  brandLogo: 'brand-logo',
+  avatarFallback: 'avatar-fallback',
 } as const;
 
 export type TestId = (typeof TEST_IDS)[keyof typeof TEST_IDS];

@@ -1,8 +1,13 @@
 @import 'tailwindcss';
 
-/* Bridge Ionic design tokens into the utility layer. */
+/* Ultimate Natives brand tokens (generated from src/shared/design). Loaded via
+   :root:root / :root:root.ion-palette-dark so brand values win over Ionic's
+   defaults regardless of import order. */
+@import '../../shared/design/brand-tokens.generated.css';
+
+/* Bridge the signature brand gold into the utility layer. */
 @theme {
-  --color-brand: #0054e9;
+  --color-brand: #d4af37;
 }
 
 /* Respect reduced-motion preferences globally (WCAG 2.2). */
@@ -17,8 +22,9 @@
   }
 }
 
-/* Keep the visible focus indicator strong on interactive elements. */
+/* Keep the visible focus indicator strong on interactive elements. The brand
+   focus ring meets WCAG AA contrast on both the light and dark surfaces. */
 :focus-visible {
-  outline: 2px solid var(--ion-color-primary);
+  outline: 2px solid var(--un-focus-ring, var(--ion-color-primary));
   outline-offset: 2px;
 }

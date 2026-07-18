@@ -10,6 +10,10 @@ export const I18N_KEYS = {
     retry: 'common.retry',
     requestId: 'common.requestId',
   },
+  brand: {
+    logoAlt: 'brand.logoAlt',
+    tagline: 'brand.tagline',
+  },
   errors: {
     network: 'errors.network',
     timeout: 'errors.timeout',

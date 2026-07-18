@@ -27,10 +27,12 @@ describe('useWelcomeScreen', () => {
   it('exposes every label as translated English copy', () => {
     const { result } = renderWelcome();
 
-    expect(result.current.screen.title).toBe('Welcome to Capacitor Ranger');
+    expect(result.current.screen.title).toBe('Welcome to Ultimate Natives');
     expect(result.current.screen.subtitle).toBe(
-      'A strict Ionic React and Capacitor starter with enforced architecture.',
+      'Manage practices, attendance, and player performance for your team.',
     );
+    expect(result.current.screen.tagline).toBe('Elite ultimate. One community.');
+    expect(result.current.screen.logoLabel).toBe('Ultimate Natives logo');
     expect(result.current.screen.loginCta).toBe('Sign in');
   });
 

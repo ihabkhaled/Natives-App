@@ -31,6 +31,15 @@ Reference material. Normative rules live in [`rules/`](../rules/), decisions in
 | [android-runbook](native/android-runbook.md) | Requirements, commands, security posture, deep links, troubleshooting. |
 | [ios-runbook](native/ios-runbook.md)         | Requirements, honest verification, ATS, universal links.               |
 
+## Branding
+
+| Page                                          | What it covers                                                     |
+| --------------------------------------------- | ------------------------------------------------------------------ |
+| [brand-system](brand/brand-system.md)         | Black/gold/white tokens, themes, typography, accessibility rules.  |
+| [asset-generation](brand/asset-generation.md) | Source vs generated ownership, determinism, the regeneration flow. |
+| [native-identity](brand/native-identity.md)   | Bundle IDs, display names, applied vs deferred, verification.      |
+| [signing-runbook](brand/signing-runbook.md)   | Android/iOS signing placeholders; no secrets in Git.               |
+
 ## Security
 
 | Page                                       | What it covers                                                   |

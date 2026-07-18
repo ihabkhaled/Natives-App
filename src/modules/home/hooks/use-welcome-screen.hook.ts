@@ -6,6 +6,8 @@ import { I18N_KEYS } from '@/shared/i18n';
 export interface WelcomeScreenView {
   readonly title: string;
   readonly subtitle: string;
+  readonly tagline: string;
+  readonly logoLabel: string;
   readonly loginCta: string;
   readonly onLoginClick: () => void;
 }
@@ -16,6 +18,8 @@ export function useWelcomeScreen(): WelcomeScreenView {
   return {
     title: t(I18N_KEYS.welcome.title),
     subtitle: t(I18N_KEYS.welcome.subtitle),
+    tagline: t(I18N_KEYS.brand.tagline),
+    logoLabel: t(I18N_KEYS.brand.logoAlt),
     loginCta: t(I18N_KEYS.welcome.loginCta),
     onLoginClick: () => {
       navigation.push(APP_PATHS.login);

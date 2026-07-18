@@ -1,9 +1,13 @@
 {
   "common": {
-    "appName": "Capacitor Ranger",
+    "appName": "Ultimate Natives",
     "loading": "Loading…",
     "retry": "Try again",
     "requestId": "Request ID"
+  },
+  "brand": {
+    "logoAlt": "Ultimate Natives logo",
+    "tagline": "Elite ultimate. One community."
   },
   "errors": {
     "network": "You appear to be offline. Check your connection and try again.",
@@ -29,8 +33,8 @@
     "permissionMessage": "Grant the required permission to use this feature."
   },
   "welcome": {
-    "title": "Welcome to Capacitor Ranger",
-    "subtitle": "A strict Ionic React and Capacitor starter with enforced architecture.",
+    "title": "Welcome to Ultimate Natives",
+    "subtitle": "Manage practices, attendance, and player performance for your team.",
     "loginCta": "Sign in"
   },
   "auth": {

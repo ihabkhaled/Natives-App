@@ -126,8 +126,12 @@
     "architecture/adrs/0015-generated-ai-knowledge.md": "ec315fef7d56127d",
     "architecture/adrs/0016-mock-api-mode.md": "e785b2f7f771e34d",
     "architecture/adrs/README.md": "37e81e9fe304d4f0",
-    "docs/README.md": "bf00b67be4ebb31d",
+    "docs/README.md": "85447a677b4e1e26",
     "docs/api/nest-error-contract.md": "432e2ed1aa40cbfe",
+    "docs/brand/asset-generation.md": "c671270a10e2823a",
+    "docs/brand/brand-system.md": "a95e53777c407f68",
+    "docs/brand/native-identity.md": "b06e5570fe8a892b",
+    "docs/brand/signing-runbook.md": "eefb749963aa9d5b",
     "docs/dependencies/typescript-compatibility.md": "8df8873ede86be81",
     "docs/dependencies/version-snapshot.md": "9763ec87bc9428c8",
     "docs/eslint/README.md": "300415466451416c",
@@ -187,9 +191,12 @@
     "docs/native/ios-runbook.md": "62b906c8c13718a4",
     "docs/operations/ci.md": "70e39c1b41ff449b",
     "docs/operations/deployment-templates.md": "97a8b487a3f5535e",
+    "docs/product/open-decisions.md": "56f0859e61b5dc99",
+    "docs/provenance.md": "f62fca7287d0d762",
     "docs/security/token-storage.md": "6b038f7e50bca171",
     "docs/setup/coverage-policy.md": "2da35ea74d28eaa3",
     "docs/setup/getting-started.md": "4e752d3295df4577",
-    "docs/setup/project-customization.md": "474b3c75ec1ea697"
+    "docs/setup/project-customization.md": "474b3c75ec1ea697",
+    "docs/source-data-handling.md": "f43854bae66628f6"
   }
 }

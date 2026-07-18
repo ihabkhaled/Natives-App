@@ -7,8 +7,9 @@
 > **Provenance:** derived from CapacitorRanger (`upstream-template`) at commit
 > `fd6b3575a68f768c428b3746b27d6392f6d967e1`. See [`docs/provenance.md`](./docs/provenance.md),
 > [`docs/product/open-decisions.md`](./docs/product/open-decisions.md), and
-> [`docs/source-data-handling.md`](./docs/source-data-handling.md). Branding, bundle IDs, and native
-> assets are set in prompt 800; the inherited display identity remains until then.
+> [`docs/source-data-handling.md`](./docs/source-data-handling.md). Branding, design tokens, bundle IDs,
+> and web/PWA assets are applied in prompt 800 — see [`docs/brand/`](./docs/brand/brand-system.md); native
+> raster launcher assets remain the template artwork pending a toolchain (documented as UNVERIFIED).
 
 ---
 

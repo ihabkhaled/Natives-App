@@ -4,7 +4,7 @@ android {
     namespace = "com.capacitorranger.app"
     compileSdk = rootProject.ext.compileSdkVersion
     defaultConfig {
-        applicationId "com.capacitorranger.app"
+        applicationId "com.ultimatenatives.app"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1

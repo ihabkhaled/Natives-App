@@ -14,8 +14,10 @@ const onLoginClick = vi.fn();
 
 beforeEach(() => {
   vi.mocked(useWelcomeScreen).mockReturnValue({
-    title: 'Welcome to Capacitor Ranger',
-    subtitle: 'A strict Ionic React and Capacitor starter with enforced architecture.',
+    title: 'Welcome to Ultimate Natives',
+    subtitle: 'Manage practices, attendance, and player performance for your team.',
+    tagline: 'Elite ultimate. One community.',
+    logoLabel: 'Ultimate Natives logo',
     loginCta: 'Sign in',
     onLoginClick,
   });
@@ -39,9 +41,9 @@ describe('WelcomeContainer', () => {
   it('titles both the toolbar and the view from the screen hook', () => {
     render(<WelcomeContainer />);
 
-    expect(getIonTitle()).toHaveTextContent('Welcome to Capacitor Ranger');
+    expect(getIonTitle()).toHaveTextContent('Welcome to Ultimate Natives');
     expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent(
-      'Welcome to Capacitor Ranger',
+      'Welcome to Ultimate Natives',
     );
   });
 
@@ -49,7 +51,7 @@ describe('WelcomeContainer', () => {
     render(<WelcomeContainer />);
 
     expect(
-      screen.getByText('A strict Ionic React and Capacitor starter with enforced architecture.'),
+      screen.getByText('Manage practices, attendance, and player performance for your team.'),
     ).toBeInTheDocument();
     expect(screen.getByTestId(WELCOME_VIEW_TEST_IDS.loginCta)).toHaveTextContent('Sign in');
   });

@@ -4,8 +4,8 @@ import { createEnvironment } from './environment.factory';
 import type { RawEnvironmentSource } from './environment.types';
 
 const VALID_SOURCE = {
-  VITE_APP_NAME: 'Capacitor Ranger',
-  VITE_APP_ID: 'com.capacitorranger.app',
+  VITE_APP_NAME: 'Ultimate Natives',
+  VITE_APP_ID: 'com.ultimatenatives.app',
   VITE_API_BASE_URL: 'http://localhost:3000/api/v1',
   VITE_API_MODE: 'mock',
   VITE_API_TIMEOUT_MS: '5000',
@@ -24,8 +24,8 @@ function buildSource(overrides: Readonly<Record<string, unknown>> = {}): RawEnvi
 describe('createEnvironment', () => {
   it('maps a valid source onto the application environment', () => {
     expect(createEnvironment(buildSource())).toEqual({
-      appName: 'Capacitor Ranger',
-      appId: 'com.capacitorranger.app',
+      appName: 'Ultimate Natives',
+      appId: 'com.ultimatenatives.app',
       apiBaseUrl: 'http://localhost:3000/api/v1',
       apiMode: 'mock',
       apiTimeoutMs: 5000,

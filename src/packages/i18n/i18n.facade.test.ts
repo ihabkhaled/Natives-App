@@ -10,7 +10,7 @@ beforeAll(async () => {
 describe('initI18n', () => {
   it('initializes the shared instance with the requested locale', () => {
     expect(getActiveLocale()).toBe('en');
-    expect(translateNow('common.appName')).toBe('Capacitor Ranger');
+    expect(translateNow('common.appName')).toBe('Ultimate Natives');
   });
 
   it('returns early on a second call instead of re-initializing', async () => {
@@ -21,7 +21,7 @@ describe('initI18n', () => {
     });
 
     expect(getActiveLocale()).toBe('en');
-    expect(translateNow('common.appName')).toBe('Capacitor Ranger');
+    expect(translateNow('common.appName')).toBe('Ultimate Natives');
   });
 });
 
@@ -30,12 +30,12 @@ describe('changeAppLocale', () => {
     await changeAppLocale('ar');
 
     expect(getActiveLocale()).toBe('ar');
-    expect(translateNow('common.appName')).toBe('كاباسيتور رينجر');
+    expect(translateNow('common.appName')).toBe('ألتيميت ناتيفز');
 
     await changeAppLocale('en');
 
     expect(getActiveLocale()).toBe('en');
-    expect(translateNow('common.appName')).toBe('Capacitor Ranger');
+    expect(translateNow('common.appName')).toBe('Ultimate Natives');
   });
 
   it('resolves a regional locale down to its supported language', async () => {

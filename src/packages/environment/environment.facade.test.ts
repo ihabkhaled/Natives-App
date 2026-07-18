@@ -10,8 +10,8 @@ describe('getEnvironment', () => {
   it('parses the vite environment loaded from .env.test', () => {
     const environment = getEnvironment();
 
-    expect(environment.appName).toBe('Capacitor Ranger');
-    expect(environment.appId).toBe('com.capacitorranger.app');
+    expect(environment.appName).toBe('Ultimate Natives');
+    expect(environment.appId).toBe('com.ultimatenatives.app');
     expect(environment.apiBaseUrl).toBe('http://localhost:3000/api/v1');
     expect(environment.apiMode).toBe('mock');
     expect(environment.apiTimeoutMs).toBe(5000);

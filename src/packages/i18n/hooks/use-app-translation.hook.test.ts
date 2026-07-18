@@ -14,7 +14,7 @@ describe('useAppTranslation', () => {
   it('translates a key without params', () => {
     const { result } = renderHook(() => useAppTranslation());
 
-    expect(result.current.t('common.appName')).toBe('Capacitor Ranger');
+    expect(result.current.t('common.appName')).toBe('Ultimate Natives');
   });
 
   it('interpolates params into a translation', () => {
@@ -43,7 +43,7 @@ describe('useAppTranslation', () => {
     });
 
     expect(result.current.locale).toBe('ar');
-    expect(result.current.t('common.appName')).toBe('كاباسيتور رينجر');
+    expect(result.current.t('common.appName')).toBe('ألتيميت ناتيفز');
 
     await act(async () => {
       await changeAppLocale('en');

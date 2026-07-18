@@ -6,8 +6,10 @@ import { WelcomeView } from './welcome-view.component';
 import { WELCOME_VIEW_TEST_IDS } from './welcome-view.constants';
 
 const PROPS = {
-  title: 'Welcome to Capacitor Ranger',
-  subtitle: 'A strict Ionic React and Capacitor starter with enforced architecture.',
+  title: 'Welcome to Ultimate Natives',
+  subtitle: 'Manage practices, attendance, and player performance for your team.',
+  tagline: 'Elite ultimate. One community.',
+  logoLabel: 'Ultimate Natives logo',
   loginCta: 'Sign in',
 };
 
@@ -20,14 +22,21 @@ describe('WelcomeView', () => {
     mountWelcome();
 
     expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent(
-      'Welcome to Capacitor Ranger',
+      'Welcome to Ultimate Natives',
     );
   });
 
-  it('renders the subtitle', () => {
+  it('renders the brand logo with accessible alt text', () => {
+    mountWelcome();
+
+    expect(screen.getByRole('img', { name: PROPS.logoLabel })).toBeInTheDocument();
+  });
+
+  it('renders the subtitle and the brand tagline', () => {
     mountWelcome();
 
     expect(screen.getByText(PROPS.subtitle)).toBeInTheDocument();
+    expect(screen.getByText(PROPS.tagline)).toBeInTheDocument();
   });
 
   it('renders the call to action under its test id', () => {

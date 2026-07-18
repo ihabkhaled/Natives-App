@@ -25,6 +25,7 @@
     "test:contract": "vitest run --project contract",
     "test:coverage": "vitest run --coverage",
     "test:coverage:per-file": "node scripts/quality/check-per-file-coverage.mjs",
+    "brand:generate": "node scripts/branding/generate-brand-assets.mjs",
     "test:e2e": "playwright test tests/e2e",
     "test:e2e:install": "playwright install chromium",
     "test:a11y": "playwright test tests/accessibility",

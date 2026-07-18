@@ -5,8 +5,8 @@
  * for every place that must change when rebranding.
  */
 export const APP_IDENTITY = {
-  appId: 'com.capacitorranger.app',
-  appName: 'Capacitor Ranger',
-  appSlug: 'capacitor-ranger',
+  appId: 'com.ultimatenatives.app',
+  appName: 'Ultimate Natives',
+  appSlug: 'ultimate-natives',
   packageScope: '@app',
 } as const;

@@ -11,8 +11,8 @@ const getEnvironmentMock = vi.mocked(getEnvironment);
 
 function buildEnvironment(overrides: Partial<AppEnvironment> = {}): AppEnvironment {
   return {
-    appName: 'Capacitor Ranger',
-    appId: 'com.capacitorranger.app',
+    appName: 'Ultimate Natives',
+    appId: 'com.ultimatenatives.app',
     apiBaseUrl: 'http://localhost:3000/api/v1',
     apiMode: 'mock',
     apiTimeoutMs: 5000,

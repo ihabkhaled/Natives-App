@@ -11,6 +11,8 @@ export function WelcomeContainer(): React.JSX.Element {
       <WelcomeView
         title={screen.title}
         subtitle={screen.subtitle}
+        tagline={screen.tagline}
+        logoLabel={screen.logoLabel}
         loginCta={screen.loginCta}
         onLoginClick={screen.onLoginClick}
       />
