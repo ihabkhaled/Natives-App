@@ -13,6 +13,7 @@ import { type RsvpReason } from '../constants/practice.constants';
 import { buildPracticeSessionScreenView } from '../helpers/practice-session-screen.helper';
 import { useRsvpMutation } from '../mutations/use-rsvp-mutation.hook';
 import { usePracticeSessionQuery } from './use-practice-session-query.hook';
+import { usePracticeTeamContext } from './use-practice-team-context.hook';
 import type { PracticeSessionScreenView } from '../types/practice-view.types';
 
 /** Prepared, translated session-detail screen with the self-RSVP flow. */
@@ -20,10 +21,11 @@ export function usePracticeSessionDetails(sessionId: string): PracticeSessionScr
   const { t, locale } = useAppTranslation();
   const network = useNetworkStatus();
   const permissions = useEffectivePermissions();
-  const query = usePracticeSessionQuery(sessionId);
+  const team = usePracticeTeamContext();
+  const query = usePracticeSessionQuery(team.teamId, sessionId);
   const toast = useAppToast();
   const [reason, setReason] = useState<RsvpReason | null>(null);
-  const mutation = useRsvpMutation(sessionId, {
+  const mutation = useRsvpMutation(team.teamId, sessionId, {
     onSuccess: () => {
       void toast.showToast({ message: t(I18N_KEYS.practice.rsvpUpdatedToast), tone: 'success' });
     },
@@ -41,7 +43,7 @@ export function usePracticeSessionDetails(sessionId: string): PracticeSessionScr
     t,
     locale,
     detail,
-    isLoading: query.isLoading,
+    isLoading: team.isLoading || query.isLoading,
     error: query.error,
     isOffline: !network.isOnline,
     now: nowIso(),
@@ -52,7 +54,7 @@ export function usePracticeSessionDetails(sessionId: string): PracticeSessionScr
     onRetry: query.refetch,
     onSelectReason: setReason,
     onSubmitRsvp: (status) => {
-      mutation.submit({ status, reasonCategory: reason, version: detail?.rsvp.version ?? 0 });
+      mutation.submit({ status, reasonCategory: reason, version: detail?.rsvp.version ?? null });
     },
     onOpenMap: (url) => {
       void openExternalUrl(url).catch(() => undefined);

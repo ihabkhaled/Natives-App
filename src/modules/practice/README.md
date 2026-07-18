@@ -1,64 +1,74 @@
 # Practice module
 
-The Cairo-time practice calendar, session detail, venue, and one-tap RSVP experience (prompt 804).
-The backend owns every projection (counts, capacity, deadline, waitlist); the client presents what it
-is given, stores and transports instants in UTC, and renders them in Africa/Cairo.
+The Cairo-time practice calendar, session detail, and one-tap RSVP experience (prompt 804). Remote
+and mock modes consume the backend's committed team-scoped OpenAPI contract exactly. Instants stay
+in UTC over the wire and render in Africa/Cairo.
 
 ## Public surface (`index.ts`)
 
-| Export                                                              | Purpose                                                        |
-| ------------------------------------------------------------------- | -------------------------------------------------------------- |
-| `getPracticeRouteDefinitions`                                       | Calendar + detail routes for the app router.                   |
-| `practicesPath` / `practiceSessionPath`                             | Typed navigation targets (list and deep-linkable detail).      |
-| `practiceQueryKeys`                                                 | Query-key builders for cache reads and invalidation.           |
-| `practiceSessionListResponseSchema` / `…DetailSchema` / `upcoming…` | Wire contracts shared by remote NestJS mode and MSW mock mode. |
-| `PRACTICE_TYPE` / `PRACTICE_STATUS` / `RSVP_STATUS` / `RSVP_REASON` | Domain vocabularies (as-const, never TypeScript enums).        |
-| `PracticeSessionSummary` / `PracticeSessionDetail`                  | App-owned domain types.                                        |
+| Export                                                                | Purpose                                                    |
+| --------------------------------------------------------------------- | ---------------------------------------------------------- |
+| `getPracticeRouteDefinitions`                                         | Calendar + detail routes for the app router.               |
+| `practicesPath` / `practiceSessionPath`                               | Typed navigation targets.                                  |
+| `practiceQueryKeys`                                                   | Team-scoped cache key builders.                            |
+| `practiceSessionListResponseSchema` / `practiceSessionResponseSchema` | Exact list and session response DTOs.                      |
+| `practiceRsvpResponseSchema`                                          | Exact self-RSVP response DTO.                              |
+| `PRACTICE_TYPE` / `PRACTICE_STATUS` / `RSVP_STATUS` / `RSVP_REASON`   | App domain vocabularies (as-const, never TypeScript enum). |
+| `PracticeSessionSummary` / `PracticeSessionDetail`                    | App-owned domain types.                                    |
 
 ## Anatomy
 
 ```text
-constants/practice-api.constants.ts        endpoint paths (list, upcoming, detail, rsvp)
-constants/practice.constants.ts            domain vocabularies + i18n label maps + filter options
-schemas/practice-session.schema.ts         wire contracts (Zod), UTC ISO instants, nullable projections
-mappers/practice-session.mapper.ts         DTO → domain (pure, 100% covered), renames instants to …Iso
-gateways/practice.gateway.ts               authenticated calls; list carries bounded, allowlisted params
-services/*.service.ts                      one use case each; HttpError → AppError (incl. 409 → CONFLICT)
-queries/practice.keys.ts|*.query.ts        key builders + query options (upcoming cached for offline)
+constants/practice-api.constants.ts        team-scoped list, detail, and RSVP path builders
+constants/practice.constants.ts            domain vocabularies + i18n labels + filter options
+schemas/practice-session.schema.ts         exact Session/ListSessions/Rsvp response DTO schemas
+mappers/practice-session.mapper.ts         generated DTO vocabulary → app domain
+gateways/practice.gateway.ts               generated request types + exact authenticated calls
+services/*.service.ts                      use cases; resource composition; HttpError → AppError
+queries/practice.keys.ts|*.query.ts        team-scoped keys + query options
 hooks/use-*-query.hook.ts                  query hooks
-hooks/use-practice-calendar.hook.ts        calendar view model (filters, scope, bounded pagination)
-hooks/use-practice-session-details.hook.ts detail view model + RSVP flow wiring
-mutations/use-rsvp-mutation.hook.ts        optimistic update + rollback + invalidation + conflict recovery
-helpers/*.helper.ts                        pure view-model builders (Cairo grouping, RSVP state machine)
-components/*                               UI-only (calendar, cards, filter bar, venue, agenda, RSVP)
-containers/*.container.tsx                 composition (one hook + one component)
-routes/practice.paths.ts|.routes.ts        APP_PATHS builders + permission-guarded route table
+hooks/use-practice-team-context.hook.ts    team id from the authenticated membership query
+hooks/use-practice-calendar.hook.ts        filters, scope, and bounded pagination
+hooks/use-practice-session-details.hook.ts detail view model + RSVP wiring
+mutations/use-rsvp-mutation.hook.ts        optimistic RSVP patch + rollback + invalidation
+helpers/*.helper.ts                        pure Cairo-time and RSVP view-model builders
+components/*                               UI-only calendar, detail, and RSVP controls
+containers/*.container.tsx                 one screen hook wired to one component
+routes/practice.paths.ts|.routes.ts        APP_PATHS builders + team/permission guards
 ```
 
 ## Query contract and RSVP flow
 
-- `GET /practices/sessions?scope&type&rsvp&pageSize` returns a bounded, deterministically ordered page.
-- `GET /practices/sessions/upcoming` returns the bounded upcoming list, cached for offline reads.
-- `GET /practices/sessions/:id` returns the full detail incl. venue, agenda preview, privacy-safe counts,
-  status, last update, and the member's RSVP state (with an optimistic-concurrency `version`).
-- `PUT /practices/sessions/:id/rsvp` takes `{ status, reasonCategory, version }` and returns the updated
-  detail. A stale `version` returns `409` → a `CONFLICT` AppError; the mutation rolls back the optimistic
-  patch and invalidates the cache so the member re-answers against the authoritative latest state.
+- `GET /teams/:teamId/practice-sessions?from&to&sessionType&status&limit&offset` returns
+  `ListSessionsResponseDto`.
+- There is no backend `upcoming` route. Upcoming reads use that list endpoint with `from` and a
+  limit of five.
+- `GET /teams/:teamId/practice-sessions/:sessionId` returns `SessionResponseDto`; the member's RSVP
+  is loaded separately from `GET .../:sessionId/rsvp`.
+- `PUT .../:sessionId/rsvp` takes `SetRsvpDto` (`expectedVersion`, not the removed frontend
+  `version` wire field) and returns `RsvpResponseDto`, not a session detail.
+- The bounded calendar joins every returned session with its self-RSVP resource. The generated list
+  DTO has no RSVP filter, so that optional UI filter applies only to the loaded bounded page.
 
 ## Invariants
 
-- UTC stored/transported; Africa/Cairo presented through the date package owner (DST-aware).
-- `null` means "unknown / not set" and is never coerced to zero (counts, capacity, waitlist position).
-- Permission-guarded: routes require `practices.read`; the RSVP action requires `practices.rsvp.self`.
-- RSVP after the deadline is disabled with an explanation; controls prevent duplicate submits.
-- Errors reach the UI as translated copy from the error code, never as raw backend text.
-- Calendar-subscription guidance never exposes private coach notes.
+- UTC stored/transported; Africa/Cairo presented through the date package owner.
+- Every cache key includes `teamId`; one team never reuses another team's practice cache.
+- The route requires membership context. Until a team selector exists, the first authenticated
+  membership is the deterministic active scope.
+- `null` means unknown/not set and is never coerced to zero.
+- Venue, agenda, aggregate counts, and waitlist position are absent from the committed session
+  contract, so existing unknown/empty states render instead of invented data.
+- Routes require `practices.read`; RSVP actions require `practices.rsvp.self`.
+- RSVP after the cutoff is disabled; controls prevent duplicate submits.
+- Errors render translated `AppErrorCode` copy, never raw backend messages.
 
 ## Tests
 
 - Unit: colocated `*.test.ts(x)`.
 - Contract: [practice wire contract](../../../tests/contract/practice.contract.test.ts).
 - Integration: [practice RSVP flow](../../../tests/integration/practice-rsvp-flow.integration.test.tsx).
+- E2E: [practice experience](../../../tests/e2e/practice.spec.ts).
 
 ## Related
 

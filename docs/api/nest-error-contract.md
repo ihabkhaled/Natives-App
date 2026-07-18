@@ -75,9 +75,9 @@ which asserts the raw backend string is absent from the DOM.
 ## Authentication
 
 - `POST /auth/login` → `{ tokens: { accessToken, refreshToken }, user }`
-- `POST /auth/refresh` → `{ tokens: { accessToken, refreshToken } }`
-- `POST /auth/logout` → `{ success: true }`
-- `GET /auth/me` → the user resource
+- `POST /auth/refresh` → `{ accessToken, refreshToken, refreshTokenExpiresAt, userId }`
+- `POST /auth/logout` with `{ refreshToken }` → `{ message }`
+- `GET /auth/me` → the same auth-user resource shape nested under login
 
 Requirements the client depends on:
 

@@ -27,10 +27,6 @@ afterEach(() => {
   vi.clearAllMocks();
 });
 
-function getIonTitle(): Element | null {
-  return document.body.querySelector('ion-title');
-}
-
 describe('WelcomeContainer', () => {
   it('renders the welcome page shell', () => {
     render(<WelcomeContainer />);
@@ -38,10 +34,10 @@ describe('WelcomeContainer', () => {
     expect(screen.getByTestId(TEST_IDS.welcomePage)).toBeInTheDocument();
   });
 
-  it('titles both the toolbar and the view from the screen hook', () => {
+  it('uses an immersive heading without a duplicate toolbar', () => {
     render(<WelcomeContainer />);
 
-    expect(getIonTitle()).toHaveTextContent('Welcome to Ultimate Natives');
+    expect(screen.getAllByText('Welcome to Ultimate Natives')).toHaveLength(1);
     expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent(
       'Welcome to Ultimate Natives',
     );

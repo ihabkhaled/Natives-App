@@ -22,7 +22,7 @@ describe('usePracticeSessionsQuery', () => {
   it('exposes the page once it resolves', async () => {
     vi.mocked(listPracticeSessions).mockResolvedValue(buildPracticeSessionListPage());
 
-    const { result } = renderHookWithProviders(() => usePracticeSessionsQuery(PARAMS));
+    const { result } = renderHookWithProviders(() => usePracticeSessionsQuery('team-1', PARAMS));
 
     await waitFor(() => {
       expect(result.current.page?.items).toHaveLength(1);
@@ -35,7 +35,7 @@ describe('usePracticeSessionsQuery', () => {
       new AppError({ code: APP_ERROR_CODE.Forbidden }),
     );
 
-    const { result } = renderHookWithProviders(() => usePracticeSessionsQuery(PARAMS));
+    const { result } = renderHookWithProviders(() => usePracticeSessionsQuery('team-1', PARAMS));
 
     await waitFor(() => {
       expect(result.current.error?.code).toBe(APP_ERROR_CODE.Forbidden);
@@ -45,7 +45,7 @@ describe('usePracticeSessionsQuery', () => {
   it('refetches on demand', async () => {
     vi.mocked(listPracticeSessions).mockResolvedValue(buildPracticeSessionListPage());
 
-    const { result } = renderHookWithProviders(() => usePracticeSessionsQuery(PARAMS));
+    const { result } = renderHookWithProviders(() => usePracticeSessionsQuery('team-1', PARAMS));
     await waitFor(() => {
       expect(result.current.page).toBeDefined();
     });

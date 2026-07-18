@@ -67,7 +67,7 @@ describe('auth wire contract (mock mode = remote contract)', () => {
     expect(response.status).toBe(200);
     const parsed = safeParseWithSchema(refreshResponseSchema, await response.json());
     assert(parsed.success, 'the refresh body did not match refreshResponseSchema');
-    expect(parsed.data.tokens.accessToken).toBe(MOCK_TOKENS.rotatedAccess);
+    expect(parsed.data.accessToken).toBe(MOCK_TOKENS.rotatedAccess);
   });
 
   it('GET /auth/me honors issued bearer tokens', async () => {
@@ -85,7 +85,9 @@ describe('auth wire contract (mock mode = remote contract)', () => {
   });
 
   it('POST /auth/logout acknowledges', async () => {
-    const response = await postJson('/auth/logout', {});
+    const response = await postJson('/auth/logout', {
+      refreshToken: MOCK_TOKENS.refresh,
+    });
     expect(response.status).toBe(200);
     expect(safeParseWithSchema(logoutResponseSchema, await response.json()).success).toBe(true);
   });

@@ -9,6 +9,7 @@ import {
   type CurrentUserQueryView,
   type LogoutMutationView,
 } from '@/modules/auth';
+import { useAppNavigation } from '@/packages/router';
 
 import { initTestI18n } from '../../../../tests/setup/i18n-test.helper';
 import { useHomeScreen } from './use-home-screen.hook';
@@ -18,8 +19,10 @@ vi.mock('@/modules/auth', async (importOriginal) => ({
   useCurrentUserQuery: vi.fn(),
   useLogoutMutation: vi.fn(),
 }));
+vi.mock('@/packages/router', () => ({ useAppNavigation: vi.fn() }));
 
 const logout = vi.fn();
+const push = vi.fn();
 
 function mockCurrentUser(overrides: Partial<CurrentUserQueryView> = {}): void {
   vi.mocked(useCurrentUserQuery).mockReturnValue({
@@ -39,6 +42,12 @@ beforeAll(async () => {
 });
 
 beforeEach(() => {
+  vi.mocked(useAppNavigation).mockReturnValue({
+    push,
+    replace: vi.fn(),
+    goBack: vi.fn(),
+    currentPath: '/home',
+  });
   mockCurrentUser();
   mockLogout();
 });
@@ -96,6 +105,22 @@ describe('useHomeScreen', () => {
     expect(logout).toHaveBeenCalledOnce();
   });
 
+  it('navigates to device-session management', () => {
+    const { result } = renderHook(() => useHomeScreen());
+
+    result.current.onManageSessions();
+
+    expect(push).toHaveBeenCalledExactlyOnceWith('/sessions');
+  });
+
+  it('navigates to the practice calendar', () => {
+    const { result } = renderHook(() => useHomeScreen());
+
+    result.current.onOpenPracticeCalendar();
+
+    expect(push).toHaveBeenCalledExactlyOnceWith('/practices');
+  });
+
   it('mirrors the in-flight logout flag', () => {
     mockLogout({ isLoggingOut: true });
 
@@ -116,6 +141,8 @@ describe('useHomeScreen', () => {
       'logoutLabel',
       'manageSessionsLabel',
       'onLogout',
+      'onManageSessions',
+      'onOpenPracticeCalendar',
       'practiceCalendarLabel',
       'title',
     ]);

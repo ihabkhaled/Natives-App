@@ -16,14 +16,31 @@ describe('practiceQueryKeys', () => {
   });
 
   it('embeds the query params in the sessions key', () => {
-    expect(practiceQueryKeys.sessions(PARAMS)).toEqual(['practice', 'sessions', PARAMS]);
+    expect(practiceQueryKeys.sessions('team-1', PARAMS)).toEqual([
+      'practice',
+      'team',
+      'team-1',
+      'sessions',
+      PARAMS,
+    ]);
   });
 
   it('builds a stable upcoming key', () => {
-    expect(practiceQueryKeys.upcoming()).toEqual(['practice', 'upcoming']);
+    expect(practiceQueryKeys.upcoming('team-1')).toEqual([
+      'practice',
+      'team',
+      'team-1',
+      'upcoming',
+    ]);
   });
 
   it('embeds the session id in the detail key', () => {
-    expect(practiceQueryKeys.detail('sess-7')).toEqual(['practice', 'detail', 'sess-7']);
+    expect(practiceQueryKeys.detail('team-1', 'sess-7')).toEqual([
+      'practice',
+      'team',
+      'team-1',
+      'detail',
+      'sess-7',
+    ]);
   });
 });

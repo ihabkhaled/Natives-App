@@ -86,4 +86,22 @@ describe('useAppToast', () => {
 
     expect(lastToastOptions()['duration']).toBe(8000);
   });
+
+  it('forwards one accessible action without invoking it eagerly', async () => {
+    const onSelect = vi.fn();
+    const { result } = renderHook(() => useAppToast());
+
+    await result.current.showToast({
+      message: 'Update ready',
+      action: { label: 'Restart', onSelect },
+    });
+
+    expect(lastToastOptions()['buttons']).toStrictEqual([
+      {
+        text: 'Restart',
+        handler: onSelect,
+      },
+    ]);
+    expect(onSelect).not.toHaveBeenCalled();
+  });
 });

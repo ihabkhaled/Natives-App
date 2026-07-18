@@ -1,113 +1,179 @@
 import type { SchemaOutput } from '@/packages/schema';
 
+import {
+  PRACTICE_CHANGE_KIND,
+  PRACTICE_STATUS,
+  PRACTICE_TYPE,
+  type PracticeChangeKind,
+  type PracticeStatus,
+  type PracticeType,
+  type RsvpStatus,
+} from '../constants/practice.constants';
 import type {
-  practiceSessionDetailSchema,
+  practiceRsvpResponseSchema,
   practiceSessionListResponseSchema,
-  practiceSessionSummarySchema,
-  rsvpStateSchema,
-  upcomingPracticesResponseSchema,
+  practiceSessionResponseSchema,
 } from '../schemas/practice-session.schema';
 import type {
   PracticeSessionDetail,
   PracticeSessionListPage,
   PracticeSessionSummary,
   RsvpState,
+  RsvpUpdate,
 } from '../types/practice.types';
 
-type SummaryDto = SchemaOutput<typeof practiceSessionSummarySchema>;
+type SessionDto = SchemaOutput<typeof practiceSessionResponseSchema>;
 type ListDto = SchemaOutput<typeof practiceSessionListResponseSchema>;
-type UpcomingDto = SchemaOutput<typeof upcomingPracticesResponseSchema>;
-type DetailDto = SchemaOutput<typeof practiceSessionDetailSchema>;
-type RsvpDto = SchemaOutput<typeof rsvpStateSchema>;
+type RsvpDto = SchemaOutput<typeof practiceRsvpResponseSchema>;
 
-/** Pure DTO → domain projection for one RSVP state (renames wire instants). */
-export function mapRsvpState(dto: RsvpDto): RsvpState {
+function mapPracticeType(sessionType: string): PracticeType {
+  const knownType = Object.values(PRACTICE_TYPE).find((value) => value === sessionType);
+  return knownType ?? PRACTICE_TYPE.custom;
+}
+
+function mapPracticeStatus(status: SessionDto['status']): PracticeStatus {
+  if (status === 'rescheduled') {
+    return PRACTICE_STATUS.rescheduled;
+  }
+  if (status === 'cancelled') {
+    return PRACTICE_STATUS.cancelled;
+  }
+  return PRACTICE_STATUS.scheduled;
+}
+
+function mapChangeKind(status: SessionDto['status']): PracticeChangeKind | null {
+  if (status === 'rescheduled') {
+    return PRACTICE_CHANGE_KIND.rescheduled;
+  }
+  if (status === 'cancelled') {
+    return PRACTICE_CHANGE_KIND.cancelled;
+  }
+  return null;
+}
+
+/** Exact RSVP DTO translated into the app's UI state. */
+export function mapRsvpState(
+  dto: RsvpDto,
+  deadlineAtIso: string | null,
+  canRespond: boolean,
+): RsvpState {
   return {
     status: dto.status,
     reasonCategory: dto.reasonCategory,
     respondedAtIso: dto.respondedAt,
     version: dto.version,
     waitlisted: dto.waitlisted,
-    waitlistPosition: dto.waitlistPosition,
-    deadlineAtIso: dto.deadlineAt,
-    canRespond: dto.canRespond,
+    waitlistPosition: null,
+    deadlineAtIso,
+    canRespond,
   };
 }
 
-/** Pure DTO → domain projection for one calendar list item. */
-export function mapPracticeSessionSummary(dto: SummaryDto): PracticeSessionSummary {
+/** Exact RSVP mutation result translated without inventing session projections. */
+export function mapRsvpUpdate(dto: RsvpDto): RsvpUpdate {
   return {
-    id: dto.id,
-    type: dto.type,
-    title: dto.title,
     status: dto.status,
-    startAtIso: dto.startAt,
-    endAtIso: dto.endAt,
-    meetAtIso: dto.meetAt,
-    rsvpDeadlineAtIso: dto.rsvpDeadlineAt,
-    venueName: dto.venueName,
-    capacity: dto.capacity,
-    myRsvpStatus: dto.myRsvpStatus,
+    reasonCategory: dto.reasonCategory,
+    respondedAtIso: dto.respondedAt,
+    version: dto.version,
     waitlisted: dto.waitlisted,
-    changeKind: dto.changeKind,
   };
 }
 
-/** Pure DTO → domain projection for a bounded, paginated calendar page. */
-export function mapPracticeSessionListPage(dto: ListDto): PracticeSessionListPage {
+/** Exact session + RSVP resources projected into one calendar card. */
+export function mapPracticeSessionSummary(
+  session: SessionDto,
+  rsvp: RsvpDto,
+): PracticeSessionSummary {
   return {
-    items: dto.items.map(mapPracticeSessionSummary),
-    page: dto.page,
-    pageSize: dto.pageSize,
+    id: session.id,
+    type: mapPracticeType(session.sessionType),
+    title: null,
+    status: mapPracticeStatus(session.status),
+    startAtIso: session.startsAt,
+    endAtIso: session.endsAt,
+    meetAtIso: session.meetAt,
+    rsvpDeadlineAtIso: session.rsvpCutoffAt,
+    venueName: null,
+    capacity: session.capacity,
+    myRsvpStatus: rsvp.status,
+    waitlisted: rsvp.waitlisted,
+    changeKind: mapChangeKind(session.status),
+  };
+}
+
+/** Exact offset page translated into the app's pagination vocabulary. */
+export function mapPracticeSessionListPage(
+  dto: ListDto,
+  rsvps: readonly RsvpDto[],
+): PracticeSessionListPage {
+  const rsvpBySessionId = new Map(rsvps.map((rsvp) => [rsvp.sessionId, rsvp]));
+  const items = dto.items.flatMap((session) => {
+    const rsvp = rsvpBySessionId.get(session.id);
+    return rsvp === undefined ? [] : [mapPracticeSessionSummary(session, rsvp)];
+  });
+  return {
+    items,
+    page: Math.floor(dto.offset / dto.limit) + 1,
+    pageSize: dto.limit,
     total: dto.total,
-    hasMore: dto.hasMore,
+    hasMore: dto.offset + dto.items.length < dto.total,
   };
 }
 
-/** Pure DTO → domain projection for the bounded upcoming list. */
-export function mapUpcomingPractices(dto: UpcomingDto): readonly PracticeSessionSummary[] {
-  return dto.items.map(mapPracticeSessionSummary);
-}
-
-/** Pure DTO → domain projection for the full session detail. */
-export function mapPracticeSessionDetail(dto: DetailDto): PracticeSessionDetail {
+/** Exact session + self-RSVP resources projected into the existing detail UI. */
+export function mapPracticeSessionDetail(
+  session: SessionDto,
+  rsvp: RsvpDto,
+): PracticeSessionDetail {
+  const canRespond = session.status === 'published' || session.status === 'rescheduled';
   return {
-    id: dto.id,
-    type: dto.type,
-    title: dto.title,
-    status: dto.status,
-    startAtIso: dto.startAt,
-    endAtIso: dto.endAt,
-    meetAtIso: dto.meetAt,
-    rsvpDeadlineAtIso: dto.rsvpDeadlineAt,
-    venue:
-      dto.venue === null
-        ? null
-        : {
-            id: dto.venue.id,
-            name: dto.venue.name,
-            addressLine: dto.venue.addressLine,
-            mapUrl: dto.venue.mapUrl,
-            notes: dto.venue.notes,
-          },
-    instructions: dto.instructions,
-    capacity: dto.capacity,
-    counts:
-      dto.counts === null
-        ? null
-        : {
-            going: dto.counts.going,
-            maybe: dto.counts.maybe,
-            notGoing: dto.counts.notGoing,
-            waitlist: dto.counts.waitlist,
-          },
-    agenda: dto.agenda.map((item) => ({
-      id: item.id,
-      labelKey: item.labelKey,
-      durationMinutes: item.durationMinutes,
-    })),
-    rsvp: mapRsvpState(dto.rsvp),
-    changeKind: dto.changeKind,
-    updatedAtIso: dto.updatedAt,
+    id: session.id,
+    type: mapPracticeType(session.sessionType),
+    title: null,
+    status: mapPracticeStatus(session.status),
+    startAtIso: session.startsAt,
+    endAtIso: session.endsAt,
+    meetAtIso: session.meetAt,
+    rsvpDeadlineAtIso: session.rsvpCutoffAt,
+    venue: null,
+    instructions: null,
+    capacity: session.capacity,
+    counts: null,
+    agenda: [],
+    rsvp: mapRsvpState(rsvp, session.rsvpCutoffAt, canRespond),
+    changeKind: mapChangeKind(session.status),
+    updatedAtIso: session.updatedAt,
   };
+}
+
+/** Client-side RSVP filter for a backend page whose list DTO has no RSVP filter. */
+export function filterPracticePageByRsvp(
+  page: PracticeSessionListPage,
+  status: RsvpStatus | null,
+): PracticeSessionListPage {
+  return status === null
+    ? page
+    : {
+        ...page,
+        items: page.items.filter((item) => item.myRsvpStatus === status),
+      };
+}
+
+/** Client-side fallback for the generated contract's free-form sessionType. */
+export function filterPracticePageByType(
+  page: PracticeSessionListPage,
+  type: PracticeType | null,
+): PracticeSessionListPage {
+  return type === null
+    ? page
+    : {
+        ...page,
+        items: page.items.filter((item) => item.type === type),
+      };
+}
+
+/** UI type filter fallback for backend session types outside the known vocabulary. */
+export function toBackendSessionType(type: PracticeType | null): string | null {
+  return type === PRACTICE_TYPE.custom ? null : type;
 }

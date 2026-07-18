@@ -52,6 +52,9 @@ Reference material. Normative rules live in [`rules/`](../rules/), decisions in
 | ---------------------------------------------------------- | ---------------------------------------------------------------- |
 | [ci](operations/ci.md)                                     | Every CI job, the `.ai` drift check, the visual-baseline caveat. |
 | [deployment-templates](operations/deployment-templates.md) | Commented templates — nothing is wired.                          |
+| [pwa](operations/pwa.md)                                   | Install surface, safe cache classes, updates, offline recovery.  |
+| [api-contract](operations/api-contract.md)                 | OpenAPI sync, generated types, drift checks, and rollback.       |
+| [attendance queue](operations/attendance-offline-queue.md) | Offline replay, conflicts, privacy, and restart recovery.        |
 
 ## Features
 

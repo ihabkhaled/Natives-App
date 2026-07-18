@@ -1,61 +1,72 @@
 import { getAppHttpClient } from '@/packages/http';
+import type {
+  PracticeSessionListQueryContract,
+  SetRsvpRequestContract,
+} from '@/packages/api-contract';
 import type { SchemaOutput } from '@/packages/schema';
 
 import {
-  PRACTICE_API_PATHS,
   practiceRsvpPath,
   practiceSessionDetailPath,
+  practiceSessionsPath,
 } from '../constants/practice-api.constants';
 import {
-  practiceSessionDetailSchema,
+  practiceRsvpResponseSchema,
   practiceSessionListResponseSchema,
-  upcomingPracticesResponseSchema,
+  practiceSessionResponseSchema,
 } from '../schemas/practice-session.schema';
-import type { PracticeSessionQueryParams, RsvpSubmission } from '../types/practice.types';
+import type { PracticeSessionRequestParams, RsvpSubmission } from '../types/practice.types';
 
 type ListDto = SchemaOutput<typeof practiceSessionListResponseSchema>;
-type UpcomingDto = SchemaOutput<typeof upcomingPracticesResponseSchema>;
-type DetailDto = SchemaOutput<typeof practiceSessionDetailSchema>;
+type SessionDto = SchemaOutput<typeof practiceSessionResponseSchema>;
+type RsvpDto = SchemaOutput<typeof practiceRsvpResponseSchema>;
 
-function toQueryParams(params: PracticeSessionQueryParams): Record<string, string | number> {
-  const query: Record<string, string | number> = {
-    scope: params.scope,
-    pageSize: params.pageSize,
+function toQueryParams(params: PracticeSessionRequestParams): PracticeSessionListQueryContract {
+  return {
+    limit: params.limit,
+    offset: params.offset,
+    ...(params.from === null ? {} : { from: params.from }),
+    ...(params.to === null ? {} : { to: params.to }),
+    ...(params.sessionType === null ? {} : { sessionType: params.sessionType }),
   };
-  if (params.type !== null) {
-    query['type'] = params.type;
-  }
-  if (params.rsvp !== null) {
-    query['rsvp'] = params.rsvp;
-  }
-  return query;
 }
 
 /** Bounded, filtered, deterministically ordered calendar page. */
-export function requestPracticeSessions(params: PracticeSessionQueryParams): Promise<ListDto> {
-  return getAppHttpClient().get(PRACTICE_API_PATHS.sessions, practiceSessionListResponseSchema, {
-    params: toQueryParams(params),
-  });
-}
-
-/** Bounded upcoming list (offline-cacheable approved reads). */
-export function requestUpcomingPractices(): Promise<UpcomingDto> {
-  return getAppHttpClient().get(PRACTICE_API_PATHS.upcoming, upcomingPracticesResponseSchema);
+export function requestPracticeSessions(params: PracticeSessionRequestParams): Promise<ListDto> {
+  return getAppHttpClient().get(
+    practiceSessionsPath(params.teamId),
+    practiceSessionListResponseSchema,
+    { params: toQueryParams(params) },
+  );
 }
 
 /** One authenticated session detail, schema-parsed. */
-export function requestPracticeSession(sessionId: string): Promise<DetailDto> {
-  return getAppHttpClient().get(practiceSessionDetailPath(sessionId), practiceSessionDetailSchema);
+export function requestPracticeSession(teamId: string, sessionId: string): Promise<SessionDto> {
+  return getAppHttpClient().get(
+    practiceSessionDetailPath(teamId, sessionId),
+    practiceSessionResponseSchema,
+  );
 }
 
-/** Self-RSVP write; the server returns the authoritative updated detail. */
+/** The authenticated membership's RSVP state for one session. */
+export function requestPracticeRsvp(teamId: string, sessionId: string): Promise<RsvpDto> {
+  return getAppHttpClient().get(practiceRsvpPath(teamId, sessionId), practiceRsvpResponseSchema);
+}
+
+/** Self-RSVP write; the server returns the authoritative RSVP resource. */
 export function requestRsvpUpdate(
+  teamId: string,
   sessionId: string,
   submission: RsvpSubmission,
-): Promise<DetailDto> {
+): Promise<RsvpDto> {
+  const request: SetRsvpRequestContract = {
+    status: submission.status,
+    ...(submission.reasonCategory === null ? {} : { reasonCategory: submission.reasonCategory }),
+    ...(submission.version === null ? {} : { expectedVersion: submission.version }),
+  };
   return getAppHttpClient().put(
-    practiceRsvpPath(sessionId),
-    submission,
-    practiceSessionDetailSchema,
+    practiceRsvpPath(teamId, sessionId),
+    request,
+    practiceRsvpResponseSchema,
   );
 }

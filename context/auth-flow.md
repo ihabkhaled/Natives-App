@@ -44,6 +44,19 @@ Both flags on the login call matter. `skipAuth` prevents sending a stale bearer 
 endpoint; `skipRetryOnUnauthorized` prevents a wrong password (a legitimate 401) from being
 misread as an expired session and triggering a refresh.
 
+## Invitation, recovery, and device sessions
+
+- Invitation details come from `GET /auth/invitations/:token` as exactly
+  `{ email, role, inviterName, expiresAt }`. The UI localizes the role and uses a branded
+  Ultimate Natives fallback when `inviterName` is `null`; it never fabricates a team name.
+- Acceptance posts `{ token, password }` to `POST /invitations/accept`. The backend returns the
+  flat session DTO; `acceptInvitation()` stores that token pair, loads the real user through
+  `/auth/me`, and clears the pair if profile hydration fails.
+- Recovery uses `POST /auth/forgot-password` and `POST /auth/reset-password`.
+- Device management uses the bounded `GET /auth/sessions` envelope including
+  `sessions`, `total`, `limit`, and `offset`, plus `POST /auth/sessions/:id/revoke` and
+  `POST /auth/sessions/revoke-others`.
+
 ## Token storage
 
 `repositories/token.repository.ts` implements `TokenStore` over `@/packages/secure-storage`, keyed

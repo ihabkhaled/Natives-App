@@ -1,7 +1,11 @@
 import type { SchemaOutput } from '@/packages/schema';
 import type { TokenPair } from '@/packages/http';
 
-import type { authUserDtoSchema, loginResponseSchema } from '../schemas/auth.schema';
+import type {
+  authUserDtoSchema,
+  loginResponseSchema,
+  refreshResponseSchema,
+} from '../schemas/auth.schema';
 import type { AuthUser } from '../types/auth.types';
 
 export interface AuthSession {
@@ -30,5 +34,14 @@ export function mapLoginResponseToSession(
       accessToken: dto.tokens.accessToken,
       refreshToken: dto.tokens.refreshToken,
     },
+  };
+}
+
+export function mapAuthSessionResponseToTokens(
+  dto: SchemaOutput<typeof refreshResponseSchema>,
+): TokenPair {
+  return {
+    accessToken: dto.accessToken,
+    refreshToken: dto.refreshToken,
   };
 }

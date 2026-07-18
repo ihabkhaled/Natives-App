@@ -3,135 +3,123 @@ import { describe, expect, it } from 'vitest';
 import { safeParseWithSchema } from '@/packages/schema';
 
 import {
-  practiceSessionDetailSchema,
+  practiceRsvpResponseSchema,
   practiceSessionListResponseSchema,
-  upcomingPracticesResponseSchema,
+  practiceSessionResponseSchema,
 } from './practice-session.schema';
 
-const SUMMARY = {
-  id: 'sess-1',
-  type: 'practice',
-  title: 'Evening practice',
-  status: 'scheduled',
-  startAt: '2026-07-26T15:00:00.000Z',
-  endAt: '2026-07-26T17:00:00.000Z',
-  meetAt: null,
-  rsvpDeadlineAt: '2026-07-25T12:00:00.000Z',
-  venueName: 'Zamalek Club Field',
+const SESSION = {
+  cancellationReason: null,
   capacity: 24,
-  myRsvpStatus: 'no_response',
-  waitlisted: false,
-  changeKind: null,
+  createdAt: '2026-07-18T09:00:00.000Z',
+  createdBy: null,
+  endsAt: '2026-07-26T17:00:00.000Z',
+  field: null,
+  id: 'sess-1',
+  meetAt: '2026-07-26T14:30:00.000Z',
+  notes: null,
+  occurrenceDate: '2026-07-26',
+  organizerUserId: null,
+  rsvpCutoffAt: '2026-07-25T12:00:00.000Z',
+  scheduleId: null,
+  seasonId: 'season-1',
+  sessionType: 'practice',
+  startsAt: '2026-07-26T15:00:00.000Z',
+  status: 'published',
+  teamId: 'team-1',
+  timezone: 'Africa/Cairo',
+  updatedAt: '2026-07-18T09:00:00.000Z',
+  updatedBy: null,
+  venueId: null,
+  version: 2,
+  visibility: 'team',
 } as const;
 
-const DETAIL = {
-  id: 'sess-1',
-  type: 'practice',
-  title: null,
-  status: 'rescheduled',
-  startAt: '2026-07-26T15:00:00.000Z',
-  endAt: '2026-07-26T17:00:00.000Z',
-  meetAt: '2026-07-26T14:30:00.000Z',
-  rsvpDeadlineAt: '2026-07-25T12:00:00.000Z',
-  venue: {
-    id: 'venue-1',
-    name: 'Zamalek Club Field',
-    addressLine: null,
-    mapUrl: 'https://maps.example.com/?q=zamalek',
-    notes: null,
-  },
-  instructions: 'Bring both jerseys.',
-  capacity: 24,
-  counts: { going: 12, maybe: 3, notGoing: 2, waitlist: 0 },
-  agenda: [{ id: 'a1', labelKey: 'practice.typeThrowing', durationMinutes: 30 }],
-  rsvp: {
-    status: 'going',
-    reasonCategory: 'travel',
-    respondedAt: '2026-07-24T10:00:00.000Z',
-    version: 2,
-    waitlisted: false,
-    waitlistPosition: null,
-    deadlineAt: '2026-07-25T12:00:00.000Z',
-    canRespond: true,
-  },
-  changeKind: 'venue_changed',
-  updatedAt: '2026-07-24T09:00:00.000Z',
+const RSVP = {
+  membershipId: 'membership-1',
+  sessionId: 'sess-1',
+  status: 'going',
+  reasonCategory: 'travel',
+  note: null,
+  noteVisibility: null,
+  respondedAt: '2026-07-24T10:00:00.000Z',
+  source: 'self',
+  version: 2,
+  waitlisted: false,
 } as const;
+
+describe('practiceSessionResponseSchema', () => {
+  it('accepts the exact SessionResponseDto shape', () => {
+    expect(safeParseWithSchema(practiceSessionResponseSchema, SESSION).success).toBe(true);
+  });
+
+  it('rejects an invented frontend status', () => {
+    expect(
+      safeParseWithSchema(practiceSessionResponseSchema, {
+        ...SESSION,
+        status: 'scheduled',
+      }).success,
+    ).toBe(false);
+  });
+
+  it('rejects a non-ISO session instant', () => {
+    expect(
+      safeParseWithSchema(practiceSessionResponseSchema, {
+        ...SESSION,
+        startsAt: 'tomorrow',
+      }).success,
+    ).toBe(false);
+  });
+});
 
 describe('practiceSessionListResponseSchema', () => {
-  it('accepts a bounded paginated page', () => {
-    const result = safeParseWithSchema(practiceSessionListResponseSchema, {
-      items: [SUMMARY],
-      page: 1,
-      pageSize: 20,
-      total: 1,
-      hasMore: false,
-    });
-
-    expect(result.success).toBe(true);
+  it('accepts the exact offset-based list envelope', () => {
+    expect(
+      safeParseWithSchema(practiceSessionListResponseSchema, {
+        items: [SESSION],
+        limit: 20,
+        offset: 0,
+        total: 1,
+      }).success,
+    ).toBe(true);
   });
 
-  it('rejects a non-ISO start instant', () => {
-    const result = safeParseWithSchema(practiceSessionListResponseSchema, {
-      items: [{ ...SUMMARY, startAt: 'yesterday' }],
-      page: 1,
-      pageSize: 20,
-      total: 1,
-      hasMore: false,
-    });
-
-    expect(result.success).toBe(false);
-  });
-});
-
-describe('upcomingPracticesResponseSchema', () => {
-  it('accepts a bounded upcoming list', () => {
-    expect(safeParseWithSchema(upcomingPracticesResponseSchema, { items: [SUMMARY] }).success).toBe(
-      true,
-    );
+  it('rejects the old invented page envelope', () => {
+    expect(
+      safeParseWithSchema(practiceSessionListResponseSchema, {
+        items: [SESSION],
+        page: 1,
+        pageSize: 20,
+        total: 1,
+        hasMore: false,
+      }).success,
+    ).toBe(false);
   });
 });
 
-describe('practiceSessionDetailSchema', () => {
-  it('accepts a full detail with nullable projections', () => {
-    expect(safeParseWithSchema(practiceSessionDetailSchema, DETAIL).success).toBe(true);
+describe('practiceRsvpResponseSchema', () => {
+  it('accepts the exact RsvpResponseDto shape', () => {
+    expect(safeParseWithSchema(practiceRsvpResponseSchema, RSVP).success).toBe(true);
   });
 
-  it('accepts a detail with no venue and no counts', () => {
-    const result = safeParseWithSchema(practiceSessionDetailSchema, {
-      ...DETAIL,
-      venue: null,
-      counts: null,
-      agenda: [],
-    });
-
-    expect(result.success).toBe(true);
-  });
-
-  it('rejects a negative RSVP version', () => {
-    const result = safeParseWithSchema(practiceSessionDetailSchema, {
-      ...DETAIL,
-      rsvp: { ...DETAIL.rsvp, version: -1 },
-    });
-
-    expect(result.success).toBe(false);
+  it('accepts nullable version and response metadata', () => {
+    expect(
+      safeParseWithSchema(practiceRsvpResponseSchema, {
+        ...RSVP,
+        reasonCategory: null,
+        respondedAt: null,
+        source: null,
+        version: null,
+      }).success,
+    ).toBe(true);
   });
 
   it('rejects an unknown RSVP status', () => {
-    const result = safeParseWithSchema(practiceSessionDetailSchema, {
-      ...DETAIL,
-      rsvp: { ...DETAIL.rsvp, status: 'perhaps' },
-    });
-
-    expect(result.success).toBe(false);
-  });
-
-  it('rejects a non-URL map link', () => {
-    const result = safeParseWithSchema(practiceSessionDetailSchema, {
-      ...DETAIL,
-      venue: { ...DETAIL.venue, mapUrl: 'not a url' },
-    });
-
-    expect(result.success).toBe(false);
+    expect(
+      safeParseWithSchema(practiceRsvpResponseSchema, {
+        ...RSVP,
+        status: 'perhaps',
+      }).success,
+    ).toBe(false);
   });
 });

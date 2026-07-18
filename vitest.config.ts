@@ -27,6 +27,7 @@ export default defineConfig({
         'src/main.tsx',
         'src/vite-env.d.ts',
         'src/tests/**',
+        'src/packages/api-contract/generated/**',
         'src/**/*.test.{ts,tsx}',
         'src/**/*.types.ts',
         'src/**/*.interfaces.ts',

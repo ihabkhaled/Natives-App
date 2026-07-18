@@ -12,9 +12,9 @@ export interface UpcomingPracticesQueryView {
   readonly refetch: () => void;
 }
 
-export function useUpcomingPracticesQuery(): UpcomingPracticesQueryView {
+export function useUpcomingPracticesQuery(teamId: string): UpcomingPracticesQueryView {
   const query = useAppQuery<readonly PracticeSessionSummary[]>(
-    buildUpcomingPracticesQueryOptions(),
+    buildUpcomingPracticesQueryOptions(teamId),
   );
   return {
     sessions: query.data,

@@ -60,5 +60,6 @@ mock responses satisfy the schemas the app parses with.
 
 ## Supersession
 
-Revisit if the backend publishes a contract that can generate handlers, or if a shared staging
-environment makes hand-written mocks redundant for E2E.
+[ADR 0017](./0017-canonical-openapi-contract.md) now checks mock/runtime schema types against a
+published backend contract. Handwritten MSW behavior remains until a generator can preserve the
+stateful personas and failure scenarios this ADR requires.

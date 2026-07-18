@@ -12,8 +12,8 @@ import { getInvitation } from './get-invitation.service';
 const TOKEN = 'invite-1';
 const DTO = {
   email: 'Invitee@Example.com',
-  teamName: '  Cairo Natives  ',
-  inviterName: 'Coach Nadia',
+  role: 'user',
+  inviterName: null,
   expiresAt: '2026-08-01T12:00:00.000Z',
 };
 
@@ -36,8 +36,8 @@ describe('getInvitation', () => {
 
     await expect(getInvitation(TOKEN)).resolves.toEqual({
       email: 'invitee@example.com',
-      teamName: 'Cairo Natives',
-      inviterName: 'Coach Nadia',
+      role: 'user',
+      inviterName: null,
       expiresAtIso: '2026-08-01T12:00:00.000Z',
     });
   });

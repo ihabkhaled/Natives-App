@@ -23,8 +23,8 @@ describe('buildInvitationQueryOptions', () => {
   it('delegates lookup to the invitation use case with the token', async () => {
     const details = {
       email: 'invitee@example.com',
-      teamName: 'Cairo Natives',
-      inviterName: 'Coach Nadia',
+      role: 'user' as const,
+      inviterName: null,
       expiresAtIso: '2026-08-01T12:00:00.000Z',
     };
     vi.mocked(getInvitation).mockResolvedValue(details);

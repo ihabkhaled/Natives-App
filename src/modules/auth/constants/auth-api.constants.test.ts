@@ -1,11 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import {
-  AUTH_API_PATHS,
-  invitationAcceptPath,
-  invitationDetailPath,
-  sessionRevokePath,
-} from './auth-api.constants';
+import { AUTH_API_PATHS, invitationDetailPath, sessionRevokePath } from './auth-api.constants';
 
 describe('AUTH_API_PATHS', () => {
   it('pins every static auth endpoint to its versioned-base-relative path', () => {
@@ -14,9 +9,10 @@ describe('AUTH_API_PATHS', () => {
       refresh: '/auth/refresh',
       logout: '/auth/logout',
       currentUser: '/auth/me',
-      passwordForgot: '/auth/password/forgot',
-      passwordReset: '/auth/password/reset',
+      passwordForgot: '/auth/forgot-password',
+      passwordReset: '/auth/reset-password',
       invitations: '/auth/invitations',
+      invitationAccept: '/invitations/accept',
       sessions: '/auth/sessions',
       sessionsRevokeOthers: '/auth/sessions/revoke-others',
     });
@@ -31,9 +27,8 @@ describe('AUTH_API_PATHS', () => {
 });
 
 describe('parameterized auth paths', () => {
-  it('builds the invitation lookup and acceptance paths from a token', () => {
+  it('builds the invitation lookup path from a token', () => {
     expect(invitationDetailPath('abc')).toBe('/auth/invitations/abc');
-    expect(invitationAcceptPath('abc')).toBe('/auth/invitations/abc/accept');
   });
 
   it('builds the single-session revoke path from a session id', () => {

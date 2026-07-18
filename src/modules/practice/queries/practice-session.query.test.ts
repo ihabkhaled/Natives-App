@@ -12,21 +12,22 @@ afterEach(() => {
 
 describe('buildPracticeSessionQueryOptions', () => {
   it('keys the query by the session id and enables it', () => {
-    const options = buildPracticeSessionQueryOptions('sess-7');
+    const options = buildPracticeSessionQueryOptions('team-1', 'sess-7');
 
-    expect(options.queryKey).toEqual(practiceQueryKeys.detail('sess-7'));
+    expect(options.queryKey).toEqual(practiceQueryKeys.detail('team-1', 'sess-7'));
     expect(options.enabled).toBe(true);
   });
 
   it('stays disabled for an empty id', () => {
-    expect(buildPracticeSessionQueryOptions('').enabled).toBe(false);
+    expect(buildPracticeSessionQueryOptions('team-1', '').enabled).toBe(false);
+    expect(buildPracticeSessionQueryOptions('', 'sess-7').enabled).toBe(false);
   });
 
   it('runs the detail use case', async () => {
     vi.mocked(getPracticeSession).mockResolvedValue({} as never);
 
-    await buildPracticeSessionQueryOptions('sess-7').queryFn();
+    await buildPracticeSessionQueryOptions('team-1', 'sess-7').queryFn();
 
-    expect(getPracticeSession).toHaveBeenCalledWith('sess-7');
+    expect(getPracticeSession).toHaveBeenCalledWith('team-1', 'sess-7');
   });
 });

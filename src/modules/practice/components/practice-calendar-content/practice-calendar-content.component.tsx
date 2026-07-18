@@ -7,7 +7,7 @@ import type { PracticeCalendarContentProps } from './practice-calendar-content.t
 /** The ready-state calendar body: offline banner, day sections, pagination. */
 export function PracticeCalendarContent(props: PracticeCalendarContentProps): React.JSX.Element {
   return (
-    <div className="flex flex-col gap-3">
+    <div className="app-practice-calendar-content flex flex-col gap-3">
       {props.isOffline ? <IonNote>{props.offlineNoticeLabel}</IonNote> : null}
       {props.sections.map((section) => (
         <PracticeDaySection

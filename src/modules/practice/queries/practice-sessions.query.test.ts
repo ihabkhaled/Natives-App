@@ -20,8 +20,8 @@ afterEach(() => {
 
 describe('buildPracticeSessionsQueryOptions', () => {
   it('keys the query by the params', () => {
-    expect(buildPracticeSessionsQueryOptions(PARAMS).queryKey).toEqual(
-      practiceQueryKeys.sessions(PARAMS),
+    expect(buildPracticeSessionsQueryOptions('team-1', PARAMS).queryKey).toEqual(
+      practiceQueryKeys.sessions('team-1', PARAMS),
     );
   });
 
@@ -34,14 +34,20 @@ describe('buildPracticeSessionsQueryOptions', () => {
       hasMore: false,
     });
 
-    await buildPracticeSessionsQueryOptions(PARAMS).queryFn();
+    await buildPracticeSessionsQueryOptions('team-1', PARAMS).queryFn();
 
-    expect(listPracticeSessions).toHaveBeenCalledWith(PARAMS);
+    expect(listPracticeSessions).toHaveBeenCalledWith('team-1', PARAMS);
   });
 
   it('keeps the previous page as placeholder data', () => {
     const previous = { items: [], page: 1, pageSize: 20, total: 0, hasMore: false } as const;
 
-    expect(buildPracticeSessionsQueryOptions(PARAMS).placeholderData(previous)).toBe(previous);
+    expect(buildPracticeSessionsQueryOptions('team-1', PARAMS).placeholderData(previous)).toBe(
+      previous,
+    );
+  });
+
+  it('disables the request until a membership team is available', () => {
+    expect(buildPracticeSessionsQueryOptions('', PARAMS).enabled).toBe(false);
   });
 });

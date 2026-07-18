@@ -3,53 +3,59 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import { HTTP_ERROR_KIND, HttpError } from '@/packages/http';
 import { APP_ERROR_CODE } from '@/shared/errors';
 
-import { requestUpcomingPractices } from '../gateways/practice.gateway';
+import {
+  buildPracticeRsvpDto,
+  buildPracticeSessionDto,
+} from '../../../../tests/factories/practice.factory';
+import { requestPracticeRsvp, requestPracticeSessions } from '../gateways/practice.gateway';
 import { getUpcomingPractices } from './get-upcoming-practices.service';
 
-vi.mock('../gateways/practice.gateway', () => ({ requestUpcomingPractices: vi.fn() }));
-
-const SUMMARY = {
-  id: 'sess-1',
-  type: 'practice',
-  title: null,
-  status: 'scheduled',
-  startAt: '2026-07-26T15:00:00.000Z',
-  endAt: '2026-07-26T17:00:00.000Z',
-  meetAt: null,
-  rsvpDeadlineAt: null,
-  venueName: null,
-  capacity: null,
-  myRsvpStatus: 'no_response',
-  waitlisted: false,
-  changeKind: null,
-} as const;
+vi.mock('../gateways/practice.gateway', () => ({
+  requestPracticeRsvp: vi.fn(),
+  requestPracticeSessions: vi.fn(),
+}));
 
 afterEach(() => {
   vi.clearAllMocks();
 });
 
 describe('getUpcomingPractices', () => {
-  it('maps the bounded upcoming list', async () => {
-    vi.mocked(requestUpcomingPractices).mockResolvedValue({ items: [SUMMARY] });
+  it('uses the canonical list endpoint with a bounded from window', async () => {
+    vi.mocked(requestPracticeSessions).mockResolvedValue({
+      items: [buildPracticeSessionDto()],
+      limit: 5,
+      offset: 0,
+      total: 1,
+    });
+    vi.mocked(requestPracticeRsvp).mockResolvedValue(buildPracticeRsvpDto());
 
-    const sessions = await getUpcomingPractices();
+    const sessions = await getUpcomingPractices('team-1', '2026-07-18T12:00:00.000Z');
 
+    expect(requestPracticeSessions).toHaveBeenCalledWith({
+      teamId: 'team-1',
+      from: '2026-07-18T12:00:00.000Z',
+      to: null,
+      sessionType: null,
+      limit: 5,
+      offset: 0,
+    });
     expect(sessions).toHaveLength(1);
-    expect(sessions[0]?.id).toBe('sess-1');
   });
 
   it('maps a transport failure to an AppError', async () => {
-    vi.mocked(requestUpcomingPractices).mockRejectedValue(
+    vi.mocked(requestPracticeSessions).mockRejectedValue(
       new HttpError({ kind: HTTP_ERROR_KIND.Server }),
     );
 
-    await expect(getUpcomingPractices()).rejects.toMatchObject({ code: APP_ERROR_CODE.Server });
+    await expect(getUpcomingPractices('team-1')).rejects.toMatchObject({
+      code: APP_ERROR_CODE.Server,
+    });
   });
 
   it('normalizes a non-http failure to an unexpected AppError', async () => {
-    vi.mocked(requestUpcomingPractices).mockRejectedValue(new Error('boom'));
+    vi.mocked(requestPracticeSessions).mockRejectedValue(new Error('boom'));
 
-    await expect(getUpcomingPractices()).rejects.toMatchObject({
+    await expect(getUpcomingPractices('team-1')).rejects.toMatchObject({
       code: APP_ERROR_CODE.Unexpected,
     });
   });

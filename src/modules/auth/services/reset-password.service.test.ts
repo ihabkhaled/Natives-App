@@ -31,7 +31,7 @@ afterEach(() => {
 
 describe('resetPassword', () => {
   it('resolves and tracks completion when the token is accepted', async () => {
-    installTestAppHttpClient([resetRoute(200, { success: true })]);
+    installTestAppHttpClient([resetRoute(200, { message: 'identity.password.reset.completed' })]);
 
     await expect(resetPassword('reset-token', VALUES)).resolves.toBeUndefined();
     expect(trackEvent).toHaveBeenCalledExactlyOnceWith(

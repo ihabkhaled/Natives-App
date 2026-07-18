@@ -1,6 +1,3 @@
-import type { PrimaryNavItem } from '../navigation.types';
+import type { PrimaryNavigationView } from '../navigation.types';
 
-export interface PrimaryNavigationProps {
-  readonly ariaLabel: string;
-  readonly items: readonly PrimaryNavItem[];
-}
+export type PrimaryNavigationProps = PrimaryNavigationView;

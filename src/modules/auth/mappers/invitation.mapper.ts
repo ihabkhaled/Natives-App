@@ -9,8 +9,8 @@ export function mapInvitationDtoToDetails(
 ): InvitationDetails {
   return {
     email: dto.email.toLowerCase(),
-    teamName: dto.teamName.trim(),
-    inviterName: dto.inviterName.trim(),
+    role: dto.role,
+    inviterName: dto.inviterName === null ? null : dto.inviterName.trim(),
     expiresAtIso: dto.expiresAt,
   };
 }

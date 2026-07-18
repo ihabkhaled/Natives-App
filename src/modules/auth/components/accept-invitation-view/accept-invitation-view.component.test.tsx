@@ -13,7 +13,7 @@ describe('AcceptInvitationView', () => {
   it('shows who invited the user, their email, and the password form', () => {
     render(
       <AcceptInvitationView
-        introMessage="Coach Nadia invited you to join Cairo Natives."
+        introMessage="Coach Nadia invited you to join Ultimate Natives as a member."
         emailLabel="Your email"
         invitationEmail="invitee@example.com"
         fieldsLabels={buildSetPasswordFieldsLabelsFixture({ submit: 'Create account' })}
@@ -23,7 +23,9 @@ describe('AcceptInvitationView', () => {
       />,
     );
 
-    expect(screen.getByText('Coach Nadia invited you to join Cairo Natives.')).toBeInTheDocument();
+    expect(
+      screen.getByText('Coach Nadia invited you to join Ultimate Natives as a member.'),
+    ).toBeInTheDocument();
     expect(screen.getByTestId(TEST_IDS.acceptInvitationEmail)).toHaveTextContent(
       'invitee@example.com',
     );

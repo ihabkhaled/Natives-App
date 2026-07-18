@@ -27,6 +27,13 @@ export { applyNativeChrome } from './lifecycle/native-chrome.facade';
 export { getPlatformLogger } from './logging/platform-logger.facade';
 export { useNetworkStatus, type NetworkStatus } from './network/hooks/use-network-status.hook';
 export {
+  registerPwaServiceWorker,
+  type ApplyPwaUpdate,
+  type PwaServiceWorkerLifecycle,
+  type PwaServiceWorkerOptions,
+  type PwaUpdateApplyResult,
+} from './pwa/service-worker.facade';
+export {
   mapRawPermissionState,
   PERMISSION_STATUS,
   type PermissionStatus,

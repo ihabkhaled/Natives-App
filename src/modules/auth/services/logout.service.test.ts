@@ -2,7 +2,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { trackEvent } from '@/packages/analytics';
 import { resetAppHttpClientForTesting, type TestRoute } from '@/packages/http';
-import { getSecureValue, setSecureValue } from '@/packages/secure-storage';
+import { getSecureValue, removeSecureValue, setSecureValue } from '@/packages/secure-storage';
 import { STORAGE_KEYS } from '@/shared/config';
 
 import { installTestAppHttpClient } from '../../../../tests/factories/http.factory';
@@ -34,7 +34,7 @@ afterEach(() => {
 
 describe('logoutUser', () => {
   it('clears the stored tokens after the server acknowledges', async () => {
-    installTestAppHttpClient([logoutRoute(200, { success: true })]);
+    installTestAppHttpClient([logoutRoute(200, { message: 'identity.session.revoked' })]);
 
     await logoutUser();
 
@@ -58,8 +58,18 @@ describe('logoutUser', () => {
     await expect(getSecureValue(STORAGE_KEYS.authRefreshToken)).resolves.toBeNull();
   });
 
+  it('skips the server request when no refresh token is stored', async () => {
+    await removeSecureValue(STORAGE_KEYS.authRefreshToken);
+    installTestAppHttpClient([]);
+
+    await expect(logoutUser()).resolves.toBeUndefined();
+
+    await expect(getSecureValue(STORAGE_KEYS.authAccessToken)).resolves.toBeNull();
+    expect(trackEvent).toHaveBeenCalledExactlyOnceWith(AUTH_ANALYTICS_EVENTS.logoutCompleted);
+  });
+
   it('tracks the logout-completed event on the happy path', async () => {
-    installTestAppHttpClient([logoutRoute(200, { success: true })]);
+    installTestAppHttpClient([logoutRoute(200, { message: 'identity.session.revoked' })]);
 
     await logoutUser();
 

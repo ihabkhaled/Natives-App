@@ -5,6 +5,7 @@ import { mapErrorCodeToI18nKey } from '@/shared/mappers';
 
 import { buildSetPasswordFieldsLabels } from '../components/set-password-fields/set-password-fields.helper';
 import type { SetPasswordFieldsLabels } from '../components/set-password-fields/set-password-fields.types';
+import { buildInvitationIntro } from '../helpers/invitation-copy.helper';
 import { useAcceptInvitationMutation } from '../mutations/use-accept-invitation-mutation.hook';
 import { useBackToLogin } from './use-back-to-login.hook';
 import { useInvitationQuery } from './use-invitation-query.hook';
@@ -68,13 +69,7 @@ export function useAcceptInvitationScreen(): AcceptInvitationScreenView {
     isLoadingInvitation: token !== '' && invitationQuery.isLoading,
     isInvitationInvalid: token === '' || invitationQuery.error !== null,
     invitationEmail: invitation?.email,
-    introMessage:
-      invitation === undefined
-        ? undefined
-        : t(I18N_KEYS.auth.acceptInvitationIntro, {
-            inviter: invitation.inviterName,
-            team: invitation.teamName,
-          }),
+    introMessage: invitation === undefined ? undefined : buildInvitationIntro(invitation, t),
     isSubmitting: mutation.isSubmitting,
     submitErrorMessage:
       mutation.error === null ? undefined : t(mapErrorCodeToI18nKey(mutation.error.code)),

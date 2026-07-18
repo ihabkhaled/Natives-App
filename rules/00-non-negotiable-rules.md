@@ -65,6 +65,9 @@
     [29-exceptions](29-exceptions.md)
 34. `npm run validate` MUST pass before a release; no gate may be weakened to make it pass.
     [30-release-gates](30-release-gates.md)
+35. Agents MUST communicate concisely, avoid unrelated detours and speculative work, make reasonable
+    in-scope decisions promptly, and continue through verification; focus MUST NOT bypass any
+    architecture, security, accessibility, testing, documentation, or release gate.
 
 ## Forbidden
 
@@ -119,6 +122,6 @@ index at all, and whether an invariant has quietly stopped matching the code it 
 
 ## Definition of done
 
-- [ ] The change violates none of the 34 invariants above.
+- [ ] The change violates none of the 35 invariants above.
 - [ ] Any new invariant is listed here, defined in a rule file, and enforced by a named mechanism.
 - [ ] No gate was weakened, skipped, or scoped away to land the change.

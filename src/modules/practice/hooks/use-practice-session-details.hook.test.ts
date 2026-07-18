@@ -14,11 +14,13 @@ import { RSVP_REASON, RSVP_STATUS } from '../constants/practice.constants';
 import { useRsvpMutation } from '../mutations/use-rsvp-mutation.hook';
 import { usePracticeSessionDetails } from './use-practice-session-details.hook';
 import { usePracticeSessionQuery } from './use-practice-session-query.hook';
+import { usePracticeTeamContext } from './use-practice-team-context.hook';
 
 const submit = vi.fn();
 const showToast = vi.fn();
 
 vi.mock('./use-practice-session-query.hook', () => ({ usePracticeSessionQuery: vi.fn() }));
+vi.mock('./use-practice-team-context.hook', () => ({ usePracticeTeamContext: vi.fn() }));
 vi.mock('../mutations/use-rsvp-mutation.hook', () => ({ useRsvpMutation: vi.fn() }));
 vi.mock('@/modules/auth', () => ({ useEffectivePermissions: vi.fn() }));
 vi.mock('@/platform', () => ({
@@ -28,7 +30,7 @@ vi.mock('@/platform', () => ({
 vi.mock('@/shared/ui', () => ({ useAppToast: vi.fn(() => ({ showToast })) }));
 
 function mutationCallbacks() {
-  return vi.mocked(useRsvpMutation).mock.calls[0]?.[1];
+  return vi.mocked(useRsvpMutation).mock.calls[0]?.[2];
 }
 
 beforeAll(async () => {
@@ -36,6 +38,11 @@ beforeAll(async () => {
 });
 
 beforeEach(() => {
+  vi.mocked(usePracticeTeamContext).mockReturnValue({
+    teamId: 'team-1',
+    isLoading: false,
+    isError: false,
+  });
   vi.mocked(usePracticeSessionQuery).mockReturnValue({
     session: buildPracticeSessionDetail({
       rsvp: { ...buildPracticeSessionDetail().rsvp, version: 5 },
@@ -70,6 +77,8 @@ describe('usePracticeSessionDetails', () => {
   it('builds a ready view enabling the RSVP control', () => {
     const { result } = renderHook(() => usePracticeSessionDetails('sess-1'));
 
+    expect(usePracticeSessionQuery).toHaveBeenCalledWith('team-1', 'sess-1');
+    expect(useRsvpMutation).toHaveBeenCalledWith('team-1', 'sess-1', expect.any(Object));
     expect(result.current.status).toBe('ready');
     expect(result.current.detail?.rsvp.canRespond).toBe(true);
   });
@@ -130,7 +139,7 @@ describe('usePracticeSessionDetails', () => {
     expect(successToast.tone).toBe('success');
   });
 
-  it('submits version zero when the detail has not loaded', () => {
+  it('omits the expected version when the detail has not loaded', () => {
     vi.mocked(usePracticeSessionQuery).mockReturnValue({
       session: undefined,
       isLoading: true,
@@ -146,7 +155,7 @@ describe('usePracticeSessionDetails', () => {
     expect(submit).toHaveBeenCalledWith({
       status: RSVP_STATUS.going,
       reasonCategory: null,
-      version: 0,
+      version: null,
     });
   });
 });

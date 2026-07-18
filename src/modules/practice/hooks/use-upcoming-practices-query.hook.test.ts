@@ -19,7 +19,7 @@ describe('useUpcomingPracticesQuery', () => {
   it('exposes the bounded upcoming list', async () => {
     vi.mocked(getUpcomingPractices).mockResolvedValue([buildPracticeSessionSummary()]);
 
-    const { result } = renderHookWithProviders(() => useUpcomingPracticesQuery());
+    const { result } = renderHookWithProviders(() => useUpcomingPracticesQuery('team-1'));
 
     await waitFor(() => {
       expect(result.current.sessions).toHaveLength(1);
@@ -31,7 +31,7 @@ describe('useUpcomingPracticesQuery', () => {
       new AppError({ code: APP_ERROR_CODE.Server }),
     );
 
-    const { result } = renderHookWithProviders(() => useUpcomingPracticesQuery());
+    const { result } = renderHookWithProviders(() => useUpcomingPracticesQuery('team-1'));
 
     await waitFor(() => {
       expect(result.current.error?.code).toBe(APP_ERROR_CODE.Server);

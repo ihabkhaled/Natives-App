@@ -1,4 +1,5 @@
 import { IonIcon } from '@/packages/ionic';
+import { BrandLogo } from '@/shared/ui';
 
 import { PRIMARY_NAV_TEST_ID } from './primary-navigation.constants';
 import type { PrimaryNavigationProps } from './primary-navigation.types';
@@ -8,9 +9,13 @@ import type { PrimaryNavigationProps } from './primary-navigation.types';
  * side rail on wider ones (driven by CSS). UI-only — every item arrives
  * translated with its active state and handler already prepared.
  */
-export function PrimaryNavigation(props: PrimaryNavigationProps): React.JSX.Element {
-  return (
+export function PrimaryNavigation(props: PrimaryNavigationProps): React.JSX.Element | null {
+  return props.isVisible ? (
     <nav aria-label={props.ariaLabel} data-testid={PRIMARY_NAV_TEST_ID} className="app-primary-nav">
+      <div className="app-primary-nav__brand">
+        <BrandLogo label={props.logoLabel} size="sm" />
+        <span>{props.appName}</span>
+      </div>
       {props.items.map((item) => (
         <button
           key={item.key}
@@ -25,5 +30,5 @@ export function PrimaryNavigation(props: PrimaryNavigationProps): React.JSX.Elem
         </button>
       ))}
     </nav>
-  );
+  ) : null;
 }

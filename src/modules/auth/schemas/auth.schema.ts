@@ -1,6 +1,6 @@
 import { schemaBuilder } from '@/packages/schema';
 
-import { ACCOUNT_STATE } from '../types/auth.types';
+import { ACCOUNT_STATE, INVITATION_ROLE } from '../types/auth.types';
 
 const authMembershipDtoSchema = schemaBuilder.object({
   teamId: schemaBuilder.string().min(1),
@@ -35,23 +35,26 @@ export const loginResponseSchema = schemaBuilder.object({
 });
 
 export const refreshResponseSchema = schemaBuilder.object({
-  tokens: authTokensDtoSchema,
+  accessToken: schemaBuilder.string().min(1),
+  refreshToken: schemaBuilder.string().min(1),
+  refreshTokenExpiresAt: schemaBuilder.iso.datetime({ offset: true }),
+  userId: schemaBuilder.string().min(1),
 });
 
 export const logoutResponseSchema = schemaBuilder.object({
-  success: schemaBuilder.boolean(),
+  message: schemaBuilder.string().min(1),
 });
 
 /** Generic acknowledgement envelope for forgot/reset/revoke endpoints. */
 export const authAckSchema = schemaBuilder.object({
-  success: schemaBuilder.boolean(),
+  message: schemaBuilder.string().min(1),
 });
 
 export const invitationDetailsDtoSchema = schemaBuilder.object({
   email: schemaBuilder.email(),
-  teamName: schemaBuilder.string().min(1),
-  inviterName: schemaBuilder.string().min(1),
-  expiresAt: schemaBuilder.string().min(1),
+  role: schemaBuilder.enum([INVITATION_ROLE.Admin, INVITATION_ROLE.User]),
+  inviterName: schemaBuilder.string().min(1).nullable(),
+  expiresAt: schemaBuilder.iso.datetime({ offset: true }),
 });
 
 export const sessionDtoSchema = schemaBuilder.object({
@@ -64,6 +67,9 @@ export const sessionDtoSchema = schemaBuilder.object({
 
 export const sessionListResponseSchema = schemaBuilder.object({
   sessions: schemaBuilder.array(sessionDtoSchema),
+  total: schemaBuilder.number().int().nonnegative(),
+  limit: schemaBuilder.number().int().positive(),
+  offset: schemaBuilder.number().int().nonnegative(),
 });
 
 export const revokeOthersResponseSchema = schemaBuilder.object({

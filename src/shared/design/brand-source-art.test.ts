@@ -8,6 +8,7 @@ import {
   BRAND_LOGO_DIMENSIONS,
   BRAND_LOGO_SOURCE_PATH,
   BRAND_LOGO_SOURCE_SHA256,
+  BRAND_PWA_ICON_DERIVATIVES,
 } from './brand-source.constants';
 
 describe('brand source art', () => {
@@ -24,4 +25,16 @@ describe('brand source art', () => {
     expect(bytes.readUInt32BE(16)).toBe(BRAND_LOGO_DIMENSIONS.width);
     expect(bytes.readUInt32BE(20)).toBe(BRAND_LOGO_DIMENSIONS.height);
   });
+
+  it.each(BRAND_PWA_ICON_DERIVATIVES)(
+    'keeps generated PWA derivative $path reproducible',
+    ({ path, width, height, sha256 }) => {
+      const bytes = readFileSync(resolve(path));
+
+      expect(bytes.subarray(0, 8).toString('hex')).toBe('89504e470d0a1a0a');
+      expect(bytes.readUInt32BE(16)).toBe(width);
+      expect(bytes.readUInt32BE(20)).toBe(height);
+      expect(createHash('sha256').update(bytes).digest('hex')).toBe(sha256);
+    },
+  );
 });

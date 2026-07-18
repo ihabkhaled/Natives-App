@@ -17,6 +17,16 @@ export function useAppToast(): AppToastApi {
         message: options.message,
         duration: options.durationMs ?? TOAST_DEFAULT_DURATION_MS,
         position: 'bottom',
+        ...(options.action === undefined
+          ? {}
+          : {
+              buttons: [
+                {
+                  text: options.action.label,
+                  handler: options.action.onSelect,
+                },
+              ],
+            }),
         ...(color === undefined ? {} : { color }),
       });
     },

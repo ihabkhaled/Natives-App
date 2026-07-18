@@ -36,6 +36,9 @@ npm run knowledge:context -- --task="<exact task>"
 - Per-file coverage is 95%; pure logic is 100%. Lint runs at zero warnings.
 - Suppressions require a documented `EXC-nnnn` exception.
 - `.ai/` is generated output, never canonical truth.
+- Execute with focus: communicate concisely, avoid unrelated detours and speculative work, make
+  reasonable in-scope decisions promptly, and continue through verification. This never permits
+  skipping an architecture, security, accessibility, testing, documentation, or release gate.
 
 ## Task workflow
 

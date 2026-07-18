@@ -17,6 +17,8 @@ service              get-health.service.ts             use case; HttpError → A
    ↓
 gateway              health.gateway.ts                 one resource; endpoint constant
    ↓
+contract types        @/packages/api-contract           generated from backend OpenAPI
+   ↓
 http owner           getAppHttpClient() → AxiosHttpClient
    ↓
 axios instance       request interceptor → adapter → response/error interceptor
@@ -76,7 +78,33 @@ Axios adapter for a route table: no sockets, no MSW, no jsdom, and unmatched req
 
 ## Adding an endpoint
 
-Path into `constants/<name>-api.constants.ts` → schema → mapper → `request*` in the gateway →
-service → query key + options → hook. Public endpoints pass `skipAuth: true` (as `health.gateway.ts`
-does). Endpoints that must never trigger the refresh interceptor pass `skipRetryOnUnauthorized:
-true` — the auth endpoints do, for the reason given in [auth-flow](./auth-flow.md).
+Synchronize the canonical contract first, then add the path to
+`constants/<name>-api.constants.ts` → runtime schema → mapper → typed `request*` in the gateway →
+service → query key + options → hook. Public endpoints pass `skipAuth: true` (as
+`health.gateway.ts` does). Endpoints that must never trigger the refresh interceptor pass
+`skipRetryOnUnauthorized: true` — the auth endpoints do, for the reason given in
+[auth-flow](./auth-flow.md).
+
+## Team-scoped practice flow
+
+Practice is the reference for a screen assembled from two canonical resources. The authenticated
+profile supplies the membership `teamId`; list, detail, and RSVP cache keys all include it. Calendar
+reads call `GET /teams/:teamId/practice-sessions` with only the generated `from`, `to`,
+`sessionType`, `status`, `limit`, and `offset` query fields, then load each bounded item's
+`GET .../:sessionId/rsvp` resource. Detail loads `SessionResponseDto` and `RsvpResponseDto`
+concurrently. `PUT .../:sessionId/rsvp` sends `SetRsvpDto` and patches only the RSVP portion of the
+cached detail because the backend returns an RSVP resource, not an invented session envelope.
+
+## Coach attendance and offline replay
+
+`AttendanceContainer` -> `useAttendanceScreen` -> bounded sheet/history queries or attendance
+mutation hooks -> React-free attendance services -> `attendance.gateway.ts` ->
+`@/packages/http`. Every response is parsed by the handwritten runtime schema that mirrors the
+generated `Attendance*Dto` declarations.
+
+Online bulk marking uses the atomic bulk endpoint. Offline or transiently disconnected writes are
+reduced to privacy-safe per-member operations in the bounded persisted attendance queue. Reconnect
+replays the exact record-one DTO with `expectedVersion`; success refetches the authoritative sheet,
+while HTTP 409 becomes a visible conflict that requires explicit coach resolution. Finalization and
+audited correction use their dedicated OpenAPI endpoints. Private note/evidence fields never enter
+the queue or view model.

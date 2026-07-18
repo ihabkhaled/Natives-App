@@ -2,9 +2,15 @@ import AxeBuilder from '@axe-core/playwright';
 import { expect, test, type Page } from '@playwright/test';
 
 import { TEST_IDS } from '@/shared/config';
-import { MOCK_RESET } from '@/tests/msw/mock-data.constants';
+import { MOCK_INVITATION, MOCK_RESET } from '@/tests/msw/mock-data.constants';
 
-import { APP_ROUTES, fillIonInput, gotoApp, login } from '../e2e/fixtures/app.fixture';
+import {
+  APP_ROUTES,
+  fillIonInput,
+  gotoApp,
+  login,
+  waitForAppAnimations,
+} from '../e2e/fixtures/app.fixture';
 
 const WCAG_TAGS = ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa'];
 
@@ -44,6 +50,12 @@ test.describe('accessibility (WCAG 2.2 AA)', () => {
     expect((await analyze(page)).violations).toEqual([]);
   });
 
+  test('invitation acceptance screen has no violations', async ({ page }) => {
+    await gotoApp(page, `/accept-invitation?token=${MOCK_INVITATION.validToken}`);
+    await expect(page.getByTestId(TEST_IDS.acceptInvitationEmail)).toBeVisible();
+    expect((await analyze(page)).violations).toEqual([]);
+  });
+
   test('session management screen has no violations', async ({ page }) => {
     await login(page);
     await expect(page.getByTestId(TEST_IDS.homePage)).toBeVisible();
@@ -60,6 +72,23 @@ test.describe('accessibility (WCAG 2.2 AA)', () => {
   test('authenticated home screen has no violations', async ({ page }) => {
     await login(page);
     await expect(page.getByTestId(TEST_IDS.homePage)).toBeVisible();
+    expect((await analyze(page)).violations).toEqual([]);
+  });
+
+  test('practice calendar and session detail have no violations', async ({ page }) => {
+    await login(page);
+    await expect(page.getByTestId(TEST_IDS.homePage)).toBeVisible();
+    await page.getByTestId(`${TEST_IDS.primaryNavItem}-practice-calendar`).click();
+    await expect(page.getByTestId(TEST_IDS.practiceSessionCard).first()).toBeVisible();
+
+    expect((await analyze(page)).violations).toEqual([]);
+
+    await page
+      .getByTestId(TEST_IDS.practiceSessionCard)
+      .filter({ hasText: 'Evening practice' })
+      .click();
+    await expect(page.getByTestId(TEST_IDS.rsvpControl)).toBeVisible();
+    await waitForAppAnimations(page);
     expect((await analyze(page)).violations).toEqual([]);
   });
 

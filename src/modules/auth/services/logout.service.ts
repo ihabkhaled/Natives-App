@@ -9,11 +9,15 @@ import { getAuthTokenRepository } from '../repositories/token.repository';
  * tokens are always cleared even when the network is unavailable.
  */
 export async function logoutUser(): Promise<void> {
+  const tokens = getAuthTokenRepository();
   try {
-    await requestLogout();
+    const refreshToken = await tokens.getRefreshToken();
+    if (refreshToken !== null) {
+      await requestLogout(refreshToken);
+    }
   } catch {
     // Best-effort server logout; local cleanup below is what matters.
   }
-  await getAuthTokenRepository().clearTokens();
+  await tokens.clearTokens();
   trackEvent(AUTH_ANALYTICS_EVENTS.logoutCompleted);
 }

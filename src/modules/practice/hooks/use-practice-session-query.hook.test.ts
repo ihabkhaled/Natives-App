@@ -19,7 +19,7 @@ describe('usePracticeSessionQuery', () => {
   it('exposes the detail once it resolves', async () => {
     vi.mocked(getPracticeSession).mockResolvedValue(buildPracticeSessionDetail());
 
-    const { result } = renderHookWithProviders(() => usePracticeSessionQuery('sess-1'));
+    const { result } = renderHookWithProviders(() => usePracticeSessionQuery('team-1', 'sess-1'));
 
     await waitFor(() => {
       expect(result.current.session?.id).toBe('sess-1');
@@ -31,7 +31,7 @@ describe('usePracticeSessionQuery', () => {
       new AppError({ code: APP_ERROR_CODE.NotFound }),
     );
 
-    const { result } = renderHookWithProviders(() => usePracticeSessionQuery('missing'));
+    const { result } = renderHookWithProviders(() => usePracticeSessionQuery('team-1', 'missing'));
 
     await waitFor(() => {
       expect(result.current.error?.code).toBe(APP_ERROR_CODE.NotFound);
@@ -40,7 +40,7 @@ describe('usePracticeSessionQuery', () => {
   });
 
   it('stays idle for an empty id', () => {
-    const { result } = renderHookWithProviders(() => usePracticeSessionQuery(''));
+    const { result } = renderHookWithProviders(() => usePracticeSessionQuery('team-1', ''));
 
     expect(result.current.session).toBeUndefined();
     expect(getPracticeSession).not.toHaveBeenCalled();

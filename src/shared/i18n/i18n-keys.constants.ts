@@ -1,3 +1,4 @@
+import { ATTENDANCE_I18N_KEYS } from './attendance-keys.constants';
 import { PRACTICE_I18N_KEYS } from './practice-keys.constants';
 
 /**
@@ -40,6 +41,11 @@ export const I18N_KEYS = {
     offlineMessage: 'states.offlineMessage',
     permissionTitle: 'states.permissionTitle',
     permissionMessage: 'states.permissionMessage',
+  },
+  pwa: {
+    updateReady: 'pwa.updateReady',
+    updateAction: 'pwa.updateAction',
+    updateBlocked: 'pwa.updateBlocked',
   },
   welcome: {
     title: 'welcome.title',
@@ -86,7 +92,10 @@ export const I18N_KEYS = {
     validationConfirmRequired: 'auth.validationConfirmRequired',
     validationPasswordsMismatch: 'auth.validationPasswordsMismatch',
     acceptInvitationTitle: 'auth.acceptInvitationTitle',
-    acceptInvitationIntro: 'auth.acceptInvitationIntro',
+    acceptInvitationIntroWithInviter: 'auth.acceptInvitationIntroWithInviter',
+    acceptInvitationIntroFromTeam: 'auth.acceptInvitationIntroFromTeam',
+    invitationRoleAdmin: 'auth.invitationRoleAdmin',
+    invitationRoleUser: 'auth.invitationRoleUser',
     acceptInvitationEmailLabel: 'auth.acceptInvitationEmailLabel',
     acceptInvitationSubmit: 'auth.acceptInvitationSubmit',
     acceptInvitationSubmitting: 'auth.acceptInvitationSubmitting',
@@ -171,6 +180,7 @@ export const I18N_KEYS = {
     taskReviewAudit: 'dashboard.taskReviewAudit',
     taskPostMaintenance: 'dashboard.taskPostMaintenance',
   },
+  attendance: ATTENDANCE_I18N_KEYS,
   practice: PRACTICE_I18N_KEYS,
   health: {
     title: 'health.title',

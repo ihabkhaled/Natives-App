@@ -61,5 +61,7 @@ work for a throwaway request. The facade is a module-level singleton, so tests m
 
 ## Supersession
 
-Revisit if the backend publishes a stable OpenAPI/typed contract that can generate both the schemas
-and the gateway signatures.
+The backend now publishes the stable artifact adopted by
+[ADR 0017](./0017-canonical-openapi-contract.md). Generated types constrain gateway signatures,
+while this ADR remains authoritative for the Axios owner, interceptors, Zod parsing, and error
+normalization.

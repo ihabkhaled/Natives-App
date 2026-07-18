@@ -7,10 +7,14 @@ import { practiceQueryKeys } from './practice.keys';
  * keeps the previous page visible while a filter change or "show more" fetches
  * the next window, so the list never collapses into a loading spinner.
  */
-export function buildPracticeSessionsQueryOptions(params: PracticeSessionQueryParams) {
+export function buildPracticeSessionsQueryOptions(
+  teamId: string,
+  params: PracticeSessionQueryParams,
+) {
   return {
-    queryKey: practiceQueryKeys.sessions(params),
-    queryFn: () => listPracticeSessions(params),
+    queryKey: practiceQueryKeys.sessions(teamId, params),
+    queryFn: () => listPracticeSessions(teamId, params),
+    enabled: teamId !== '',
     placeholderData: (previous: PracticeSessionListPage | undefined) => previous,
   };
 }

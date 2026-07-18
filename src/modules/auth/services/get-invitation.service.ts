@@ -5,7 +5,8 @@ import { mapAuthLinkError } from './map-auth-link-error.helper';
 
 /**
  * Use case: look up a pending invitation by its opaque token so the acceptance
- * screen can show who invited the user and to which team.
+ * screen can show the exact role and optional inviter without invented team
+ * context.
  */
 export async function getInvitation(token: string): Promise<InvitationDetails> {
   try {

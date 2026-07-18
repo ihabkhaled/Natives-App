@@ -19,11 +19,19 @@ device-session management.
 - Reset and invitation links carry an opaque token read from the URL through `@/packages/router`
   (`useSearchParam`); a missing, used, or expired link resolves to a single `LinkInvalidOrExpired`
   code via `services/map-auth-link-error.helper.ts`, never a raw backend message.
+- Invitation inspection consumes exactly `{ email, role, inviterName, expiresAt }`. Team context is
+  not invented. A missing inviter renders branded Ultimate Natives copy, and role labels are
+  localized in English and Arabic.
+- Invitation acceptance posts `{ token, password }` to `/invitations/accept`, securely persists the
+  flat session response, then loads `/auth/me`. If that hydration fails, the newly issued tokens are
+  cleared instead of fabricating a user.
 - New passwords use the strong policy in `schemas/set-password-form.schema.ts` (12+ chars, mixed case,
   a digit, matching confirmation), with a visibility toggle, Caps Lock signal, and accessible summary.
 - Forgot-password is enumeration-safe: the backend responds identically whether the account exists.
 - Revoking a device never touches the current session's tokens; signing out the current device stays
   a plain logout.
+- Session list parsing includes the backend `total`, `limit`, and `offset` metadata even though the
+  current screen renders the returned page only.
 
 ## Public surface (`index.ts`)
 

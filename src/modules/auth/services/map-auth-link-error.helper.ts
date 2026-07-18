@@ -4,8 +4,11 @@ import { AppError } from '@/shared/errors/app.errors';
 import { toAppError } from '@/shared/errors/app-error.helper';
 import { mapHttpErrorToAppError } from '@/shared/mappers';
 
-/** Statuses that mean an invitation/reset link is missing, used, or expired. */
-const DEAD_LINK_STATUSES: readonly number[] = [404, 409, 410];
+/**
+ * Statuses used by the live API (400) and compatible deployments to represent
+ * a missing, used, or expired invitation/reset link.
+ */
+const DEAD_LINK_STATUSES: readonly number[] = [400, 404, 409, 410];
 
 /**
  * Convert a failure from a token-scoped link (invitation lookup/accept,

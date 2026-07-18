@@ -3,26 +3,32 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import { HTTP_ERROR_KIND, HttpError } from '@/packages/http';
 import { APP_ERROR_CODE } from '@/shared/errors';
 
-import { buildPracticeSessionDetailDto } from '../../../../tests/factories/practice.factory';
-import { requestPracticeSession } from '../gateways/practice.gateway';
+import {
+  buildPracticeRsvpDto,
+  buildPracticeSessionDto,
+} from '../../../../tests/factories/practice.factory';
+import { requestPracticeRsvp, requestPracticeSession } from '../gateways/practice.gateway';
 import { getPracticeSession } from './get-practice-session.service';
 
-vi.mock('../gateways/practice.gateway', () => ({ requestPracticeSession: vi.fn() }));
-
-const DETAIL = buildPracticeSessionDetailDto();
+vi.mock('../gateways/practice.gateway', () => ({
+  requestPracticeRsvp: vi.fn(),
+  requestPracticeSession: vi.fn(),
+}));
 
 afterEach(() => {
   vi.clearAllMocks();
 });
 
 describe('getPracticeSession', () => {
-  it('maps a successful detail to the domain', async () => {
-    vi.mocked(requestPracticeSession).mockResolvedValue(DETAIL);
+  it('combines the exact session and self-RSVP resources', async () => {
+    vi.mocked(requestPracticeSession).mockResolvedValue(buildPracticeSessionDto());
+    vi.mocked(requestPracticeRsvp).mockResolvedValue(buildPracticeRsvpDto());
 
-    const detail = await getPracticeSession('sess-1');
+    const detail = await getPracticeSession('team-1', 'sess-1');
 
+    expect(requestPracticeSession).toHaveBeenCalledWith('team-1', 'sess-1');
+    expect(requestPracticeRsvp).toHaveBeenCalledWith('team-1', 'sess-1');
     expect(detail.id).toBe('sess-1');
-    expect(detail.venue).toBeNull();
   });
 
   it('maps a not-found failure to an AppError', async () => {
@@ -30,7 +36,7 @@ describe('getPracticeSession', () => {
       new HttpError({ kind: HTTP_ERROR_KIND.NotFound }),
     );
 
-    await expect(getPracticeSession('missing')).rejects.toMatchObject({
+    await expect(getPracticeSession('team-1', 'missing')).rejects.toMatchObject({
       code: APP_ERROR_CODE.NotFound,
     });
   });
@@ -38,7 +44,7 @@ describe('getPracticeSession', () => {
   it('normalizes a non-http failure to an unexpected AppError', async () => {
     vi.mocked(requestPracticeSession).mockRejectedValue('boom');
 
-    await expect(getPracticeSession('sess-1')).rejects.toMatchObject({
+    await expect(getPracticeSession('team-1', 'sess-1')).rejects.toMatchObject({
       code: APP_ERROR_CODE.Unexpected,
     });
   });

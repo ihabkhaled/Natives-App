@@ -2,8 +2,9 @@ import { assert, describe, expect, it } from 'vitest';
 
 import {
   authAckSchema,
+  authUserDtoSchema,
   invitationDetailsDtoSchema,
-  loginResponseSchema,
+  refreshResponseSchema,
   revokeOthersResponseSchema,
   sessionListResponseSchema,
 } from '@/modules/auth';
@@ -32,25 +33,25 @@ function postJson(path: string, body: unknown, bearer?: string): Promise<Respons
 }
 
 describe('auth recovery wire contract (mock mode = remote contract)', () => {
-  it('POST /auth/password/forgot acknowledges', async () => {
-    const response = await postJson('/auth/password/forgot', { email: 'user@example.com' });
+  it('POST /auth/forgot-password acknowledges', async () => {
+    const response = await postJson('/auth/forgot-password', { email: 'user@example.com' });
     expect(response.status).toBe(200);
     expect(safeParseWithSchema(authAckSchema, await response.json()).success).toBe(true);
   });
 
-  it('POST /auth/password/reset accepts a valid token and rejects a dead one', async () => {
-    const ok = await postJson('/auth/password/reset', {
+  it('POST /auth/reset-password accepts a valid token and rejects a dead one', async () => {
+    const ok = await postJson('/auth/reset-password', {
       token: MOCK_RESET.validToken,
       password: MOCK_STRONG_PASSWORD,
     });
     expect(ok.status).toBe(200);
     expect(safeParseWithSchema(authAckSchema, await ok.json()).success).toBe(true);
 
-    const dead = await postJson('/auth/password/reset', {
+    const dead = await postJson('/auth/reset-password', {
       token: MOCK_RESET.expiredToken,
       password: MOCK_STRONG_PASSWORD,
     });
-    expect(dead.status).toBe(410);
+    expect(dead.status).toBe(400);
   });
 
   it('GET /auth/invitations/:token returns the invitation envelope', async () => {
@@ -59,14 +60,32 @@ describe('auth recovery wire contract (mock mode = remote contract)', () => {
     const parsed = safeParseWithSchema(invitationDetailsDtoSchema, await response.json());
     assert(parsed.success, 'the invitation body did not match the wire contract');
     expect(parsed.data.email).toBe(MOCK_INVITATION.email);
+    expect(parsed.data.role).toBe(MOCK_INVITATION.role);
+    expect(parsed.data.inviterName).toBeNull();
   });
 
-  it('POST /auth/invitations/:token/accept returns a login envelope', async () => {
-    const response = await postJson(`/auth/invitations/${MOCK_INVITATION.validToken}/accept`, {
+  it('GET /auth/invitations/:token collapses invalid invitation states to validation errors', async () => {
+    const expired = await fetch(apiUrl(`/auth/invitations/${MOCK_INVITATION.expiredToken}`));
+    const used = await fetch(apiUrl(`/auth/invitations/${MOCK_INVITATION.usedToken}`));
+
+    expect(expired.status).toBe(400);
+    expect(used.status).toBe(400);
+  });
+
+  it('POST /invitations/accept returns a flat session then authenticates /auth/me', async () => {
+    const response = await postJson('/invitations/accept', {
+      token: MOCK_INVITATION.validToken,
       password: MOCK_STRONG_PASSWORD,
     });
-    expect(response.status).toBe(200);
-    expect(safeParseWithSchema(loginResponseSchema, await response.json()).success).toBe(true);
+    expect(response.status).toBe(201);
+    const session = safeParseWithSchema(refreshResponseSchema, await response.json());
+    assert(session.success, 'the accepted session did not match AuthSessionResponseDto');
+
+    const currentUser = await fetch(apiUrl('/auth/me'), {
+      headers: { Authorization: `Bearer ${session.data.accessToken}` },
+    });
+    expect(currentUser.status).toBe(200);
+    expect(safeParseWithSchema(authUserDtoSchema, await currentUser.json()).success).toBe(true);
   });
 
   it('GET /auth/sessions honors the bearer token and rejects anonymous reads', async () => {

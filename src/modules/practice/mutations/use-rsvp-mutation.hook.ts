@@ -6,7 +6,7 @@ import { toAppError } from '@/shared/errors/app-error.helper';
 import { applyOptimisticRsvp } from '../helpers/rsvp-cache.helper';
 import { practiceQueryKeys } from '../queries/practice.keys';
 import { submitRsvp } from '../services/submit-rsvp.service';
-import type { PracticeSessionDetail, RsvpSubmission } from '../types/practice.types';
+import type { PracticeSessionDetail, RsvpSubmission, RsvpUpdate } from '../types/practice.types';
 
 interface RsvpMutationCallbacks {
   readonly onSuccess: () => void;
@@ -32,18 +32,14 @@ export interface RsvpMutationView {
  * authoritative latest state to respond against.
  */
 export function useRsvpMutation(
+  teamId: string,
   sessionId: string,
   callbacks: RsvpMutationCallbacks,
 ): RsvpMutationView {
   const queryClient = useQueryClient();
-  const detailKey = practiceQueryKeys.detail(sessionId);
-  const mutation = useAppMutation<
-    PracticeSessionDetail,
-    RsvpSubmission,
-    unknown,
-    RsvpMutationContext
-  >({
-    mutationFn: (submission) => submitRsvp(sessionId, submission),
+  const detailKey = practiceQueryKeys.detail(teamId, sessionId);
+  const mutation = useAppMutation<RsvpUpdate, RsvpSubmission, unknown, RsvpMutationContext>({
+    mutationFn: (submission) => submitRsvp(teamId, sessionId, submission),
     onMutate: async (submission) => {
       await queryClient.cancelQueries({ queryKey: detailKey });
       const previous = queryClient.getQueryData<PracticeSessionDetail>(detailKey);
@@ -61,8 +57,18 @@ export function useRsvpMutation(
       }
       callbacks.onError(toAppError(error));
     },
-    onSuccess: (detail) => {
-      queryClient.setQueryData<PracticeSessionDetail>(detailKey, detail);
+    onSuccess: (update) => {
+      queryClient.setQueryData<PracticeSessionDetail>(detailKey, (detail) =>
+        detail === undefined
+          ? undefined
+          : {
+              ...detail,
+              rsvp: {
+                ...detail.rsvp,
+                ...update,
+              },
+            },
+      );
       callbacks.onSuccess();
     },
     onSettled: () => {

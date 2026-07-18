@@ -1,104 +1,66 @@
 import { schemaBuilder } from '@/packages/schema';
 
-/**
- * Wire contract for the practice calendar, session detail, and RSVP endpoints,
- * shared by remote NestJS mode and MSW mock mode. Instants are ISO-8601 UTC;
- * numeric projections that may be unknown are nullable and never coerced to
- * zero. Mirrors the backend contract from prompts 200/201.
- */
+/** Exact runtime mirrors of the generated NestJS practice-session DTOs. */
 const isoInstant = schemaBuilder.iso.datetime({ offset: true });
 
-const practiceTypeSchema = schemaBuilder.enum([
-  'practice',
-  'fitness',
-  'scrimmage',
-  'game',
-  'throwing',
-  'running',
-  'gym',
-  'rules',
-  'custom',
+const practiceStatusSchema = schemaBuilder.enum([
+  'draft',
+  'published',
+  'rescheduled',
+  'cancelled',
+  'completed',
+  'archived',
 ]);
-
-const practiceStatusSchema = schemaBuilder.enum(['scheduled', 'rescheduled', 'cancelled']);
 
 const rsvpStatusSchema = schemaBuilder.enum(['going', 'not_going', 'maybe', 'no_response']);
 
 const rsvpReasonSchema = schemaBuilder.enum(['injury', 'travel', 'work', 'personal', 'other']);
 
-const practiceChangeKindSchema = schemaBuilder.enum(['rescheduled', 'venue_changed', 'cancelled']);
+const rsvpSourceSchema = schemaBuilder.enum(['self', 'coach', 'admin', 'import', 'system']);
 
-const venueSchema = schemaBuilder.object({
-  id: schemaBuilder.string().min(1),
-  name: schemaBuilder.string().min(1),
-  addressLine: schemaBuilder.string().nullable(),
-  mapUrl: schemaBuilder.url().nullable(),
-  notes: schemaBuilder.string().nullable(),
-});
-
-const agendaItemSchema = schemaBuilder.object({
-  id: schemaBuilder.string().min(1),
-  labelKey: schemaBuilder.string().min(1),
-  durationMinutes: schemaBuilder.number().int().nonnegative().nullable(),
-});
-
-const sessionCountsSchema = schemaBuilder.object({
-  going: schemaBuilder.number().int().nonnegative(),
-  maybe: schemaBuilder.number().int().nonnegative(),
-  notGoing: schemaBuilder.number().int().nonnegative(),
-  waitlist: schemaBuilder.number().int().nonnegative(),
-});
-
-export const rsvpStateSchema = schemaBuilder.object({
+export const practiceRsvpResponseSchema = schemaBuilder.object({
+  membershipId: schemaBuilder.string().min(1),
+  sessionId: schemaBuilder.string().min(1),
   status: rsvpStatusSchema,
   reasonCategory: rsvpReasonSchema.nullable(),
+  note: schemaBuilder.string().nullable(),
+  noteVisibility: schemaBuilder.enum(['coaches', 'team']).nullable(),
   respondedAt: isoInstant.nullable(),
-  version: schemaBuilder.number().int().nonnegative(),
+  source: rsvpSourceSchema.nullable(),
+  version: schemaBuilder.number().int().nonnegative().nullable(),
   waitlisted: schemaBuilder.boolean(),
-  waitlistPosition: schemaBuilder.number().int().positive().nullable(),
-  deadlineAt: isoInstant.nullable(),
-  canRespond: schemaBuilder.boolean(),
 });
 
-/** Fields shared by the calendar summary and the full detail. */
-const sessionCoreShape = {
+export const practiceSessionResponseSchema = schemaBuilder.object({
+  cancellationReason: schemaBuilder.string().nullable(),
+  capacity: schemaBuilder.number().int().nonnegative().nullable(),
+  createdAt: isoInstant,
+  createdBy: schemaBuilder.string().nullable(),
+  endsAt: isoInstant,
+  field: schemaBuilder.string().nullable(),
   id: schemaBuilder.string().min(1),
-  type: practiceTypeSchema,
-  title: schemaBuilder.string().nullable(),
-  status: practiceStatusSchema,
-  startAt: isoInstant,
-  endAt: isoInstant,
   meetAt: isoInstant.nullable(),
-  rsvpDeadlineAt: isoInstant.nullable(),
-  capacity: schemaBuilder.number().int().positive().nullable(),
-  changeKind: practiceChangeKindSchema.nullable(),
-};
-
-export const practiceSessionSummarySchema = schemaBuilder.object({
-  ...sessionCoreShape,
-  venueName: schemaBuilder.string().nullable(),
-  myRsvpStatus: rsvpStatusSchema,
-  waitlisted: schemaBuilder.boolean(),
+  notes: schemaBuilder.string().nullable(),
+  occurrenceDate: schemaBuilder.string().nullable(),
+  organizerUserId: schemaBuilder.string().nullable(),
+  rsvpCutoffAt: isoInstant.nullable(),
+  scheduleId: schemaBuilder.string().nullable(),
+  seasonId: schemaBuilder.string().nullable(),
+  sessionType: schemaBuilder.string().min(1),
+  startsAt: isoInstant,
+  status: practiceStatusSchema,
+  teamId: schemaBuilder.string().min(1),
+  timezone: schemaBuilder.string().min(1),
+  updatedAt: isoInstant,
+  updatedBy: schemaBuilder.string().nullable(),
+  venueId: schemaBuilder.string().nullable(),
+  version: schemaBuilder.number().int().nonnegative(),
+  visibility: schemaBuilder.enum(['team', 'coaches', 'public']),
 });
 
 export const practiceSessionListResponseSchema = schemaBuilder.object({
-  items: schemaBuilder.array(practiceSessionSummarySchema),
-  page: schemaBuilder.number().int().positive(),
-  pageSize: schemaBuilder.number().int().positive(),
+  items: schemaBuilder.array(practiceSessionResponseSchema),
+  limit: schemaBuilder.number().int().positive(),
+  offset: schemaBuilder.number().int().nonnegative(),
   total: schemaBuilder.number().int().nonnegative(),
-  hasMore: schemaBuilder.boolean(),
-});
-
-export const upcomingPracticesResponseSchema = schemaBuilder.object({
-  items: schemaBuilder.array(practiceSessionSummarySchema),
-});
-
-export const practiceSessionDetailSchema = schemaBuilder.object({
-  ...sessionCoreShape,
-  venue: venueSchema.nullable(),
-  instructions: schemaBuilder.string().nullable(),
-  counts: sessionCountsSchema.nullable(),
-  agenda: schemaBuilder.array(agendaItemSchema),
-  rsvp: rsvpStateSchema,
-  updatedAt: isoInstant,
 });

@@ -25,7 +25,7 @@ afterEach(() => {
 
 describe('revokeSession', () => {
   it('resolves and records the revocation on success', async () => {
-    installTestAppHttpClient([revokeRoute(200, { success: true })]);
+    installTestAppHttpClient([revokeRoute(200, { message: 'identity.session.revoked' })]);
 
     await expect(revokeSession(SESSION_ID)).resolves.toBeUndefined();
     expect(trackEvent).toHaveBeenCalledExactlyOnceWith(AUTH_ANALYTICS_EVENTS.sessionRevoked);

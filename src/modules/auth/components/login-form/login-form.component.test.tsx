@@ -13,6 +13,7 @@ import type { LoginFormProps } from './login-form.types';
 
 const LABELS: LoginScreenLabels = {
   title: 'Sign in',
+  logoLabel: 'Ultimate Natives logo',
   emailLabel: 'Email',
   emailPlaceholder: 'you@example.com',
   passwordLabel: 'Password',

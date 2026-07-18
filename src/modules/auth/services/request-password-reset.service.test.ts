@@ -18,7 +18,7 @@ afterEach(() => {
 
 describe('requestPasswordResetLink', () => {
   it('resolves on the enumeration-safe happy path', async () => {
-    installTestAppHttpClient([forgotRoute(200, { success: true })]);
+    installTestAppHttpClient([forgotRoute(200, { message: 'identity.password.reset.requested' })]);
 
     await expect(requestPasswordResetLink('user@example.com')).resolves.toBeUndefined();
   });

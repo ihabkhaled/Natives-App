@@ -6,6 +6,13 @@ import { installTestAppHttpClient } from '../../../../tests/factories/http.facto
 import { AUTH_API_PATHS } from '../constants/auth-api.constants';
 import { createRefreshExecutor } from './refresh-session.service';
 
+const REFRESH_RESPONSE = {
+  accessToken: 'access-2',
+  refreshToken: 'refresh-2',
+  refreshTokenExpiresAt: '2026-08-18T12:00:00.000Z',
+  userId: 'user-1',
+};
+
 afterEach(() => {
   resetAppHttpClientForTesting();
 });
@@ -18,7 +25,7 @@ describe('createRefreshExecutor', () => {
         url: AUTH_API_PATHS.refresh,
         respond: () => ({
           status: 200,
-          data: { tokens: { accessToken: 'access-2', refreshToken: 'refresh-2' } },
+          data: REFRESH_RESPONSE,
         }),
       },
     ]);
@@ -39,7 +46,7 @@ describe('createRefreshExecutor', () => {
           seenBody = config.data;
           return {
             status: 200,
-            data: { tokens: { accessToken: 'access-2', refreshToken: 'refresh-2' } },
+            data: REFRESH_RESPONSE,
           };
         },
       },
@@ -58,7 +65,7 @@ describe('createRefreshExecutor', () => {
         respond: () => ({
           status: 200,
           data: {
-            tokens: { accessToken: 'access-2', refreshToken: 'refresh-2', scope: 'ignored' },
+            ...REFRESH_RESPONSE,
             issuedAt: '2026-07-16T10:15:00.000Z',
           },
         }),

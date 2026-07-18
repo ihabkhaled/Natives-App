@@ -30,6 +30,7 @@ An ADR is not a tutorial. It explains _why_ the boundary exists. The
 | [0014](./0014-testing-and-per-file-coverage.md)         | Per-file thresholds; four Vitest projects                      | `test:coverage:per-file`                                      |
 | [0015](./0015-generated-ai-knowledge.md)                | Canonical docs are hand-written; `.ai/` is generated           | `knowledge:validate`, `quality:docs`                          |
 | [0016](./0016-mock-api-mode.md)                         | Mock at the network with MSW, never in app code                | environment schema, `test:contract`                           |
+| [0017](./0017-canonical-openapi-contract.md)            | Version backend OpenAPI and generate curated frontend types    | `contract:check`, generated compile contract tests            |
 
 ## Adding a new ADR
 

@@ -1,6 +1,7 @@
 import type { RefreshExecutor } from '@/packages/http';
 
 import { requestTokenRefresh } from '../gateways/auth.gateway';
+import { mapAuthSessionResponseToTokens } from '../mappers/auth.mapper';
 
 /**
  * Use case: exchange a refresh token for a new pair. Wired into the HTTP
@@ -9,9 +10,6 @@ import { requestTokenRefresh } from '../gateways/auth.gateway';
 export function createRefreshExecutor(): RefreshExecutor {
   return async (refreshToken: string) => {
     const response = await requestTokenRefresh(refreshToken);
-    return {
-      accessToken: response.tokens.accessToken,
-      refreshToken: response.tokens.refreshToken,
-    };
+    return mapAuthSessionResponseToTokens(response);
   };
 }

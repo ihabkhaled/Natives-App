@@ -29,5 +29,7 @@ export interface PrimaryNavItem {
 export interface PrimaryNavigationView {
   readonly isVisible: boolean;
   readonly ariaLabel: string;
+  readonly appName: string;
+  readonly logoLabel: string;
   readonly items: readonly PrimaryNavItem[];
 }

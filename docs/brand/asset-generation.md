@@ -18,19 +18,21 @@ Produced by pure, typed generators and committed. Their equality with the genera
 byte-for-byte by the colocated tests, so they cannot silently drift and `npm run test` fails if a token
 changes without refreshing them.
 
-| Output                                                                             | Generator                                                                      | Guard                           |
-| ---------------------------------------------------------------------------------- | ------------------------------------------------------------------------------ | ------------------------------- |
-| [`brand-tokens.generated.css`](../../src/shared/design/brand-tokens.generated.css) | [`brand-css.helper.ts`](../../src/shared/design/brand-css.helper.ts)           | `brand-css.helper.test.ts`      |
-| [`public/favicon.svg`](../../public/favicon.svg)                                   | [`brand-favicon.helper.ts`](../../src/shared/design/brand-favicon.helper.ts)   | `brand-favicon.helper.test.ts`  |
-| [`public/manifest.webmanifest`](../../public/manifest.webmanifest)                 | [`brand-manifest.helper.ts`](../../src/shared/design/brand-manifest.helper.ts) | `brand-manifest.helper.test.ts` |
+| Output                                                                             | Generator                                                                       | Guard                           |
+| ---------------------------------------------------------------------------------- | ------------------------------------------------------------------------------- | ------------------------------- |
+| [`brand-tokens.generated.css`](../../src/shared/design/brand-tokens.generated.css) | [`brand-css.helper.ts`](../../src/shared/design/brand-css.helper.ts)            | `brand-css.helper.test.ts`      |
+| [`public/favicon.svg`](../../public/favicon.svg)                                   | [`brand-favicon.helper.ts`](../../src/shared/design/brand-favicon.helper.ts)    | `brand-favicon.helper.test.ts`  |
+| [`public/manifest.webmanifest`](../../public/manifest.webmanifest)                 | [`brand-manifest.helper.ts`](../../src/shared/design/brand-manifest.helper.ts)  | `brand-manifest.helper.test.ts` |
+| `public/pwa-icon-*.png`                                                            | [`generate-brand-assets.mjs`](../../scripts/branding/generate-brand-assets.mjs) | `npm run pwa:verify`            |
 
 The CSS is imported by [`src/app/styles/app.css`](../../src/app/styles/app.css); the favicon and manifest
 are linked from [`index.html`](../../index.html).
 
 ### Raster and native derivatives (toolchain required)
 
-PNG icon sizes, Android adaptive/legacy launcher icons, Android splash, and the iOS
-`AppIcon.appiconset`/launch assets need an image toolchain (`@capacitor/assets` or `sharp`). Run:
+PWA PNG icons use the exact Playwright/Chromium toolchain already pinned for browser tests. Android
+adaptive/legacy launcher icons, Android splash, and the iOS `AppIcon.appiconset`/launch assets still
+need a native asset toolchain (`@capacitor/assets` or `sharp`). Run:
 
 ```
 npm run brand:generate

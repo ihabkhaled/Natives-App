@@ -23,10 +23,25 @@ describe('buildWebManifest', () => {
     expect(manifest.short_name).toBe('Natives');
   });
 
-  it('references only committed safe source art, including a maskable icon', () => {
+  it('declares installable 192px, 512px, and maskable PNG icons', () => {
     const manifest = buildWebManifest(BRAND_MANIFEST_IDENTITY, BRAND_TOKENS);
-    const sources = manifest.icons.map((icon) => icon.src);
-    expect(new Set(sources)).toEqual(new Set(['/favicon.svg', '/brand-logo.png']));
-    expect(manifest.icons.some((icon) => icon.purpose === 'maskable')).toBe(true);
+    expect(manifest.icons).toContainEqual({
+      src: '/pwa-icon-192.png',
+      sizes: '192x192',
+      type: 'image/png',
+      purpose: 'any',
+    });
+    expect(manifest.icons).toContainEqual({
+      src: '/pwa-icon-512.png',
+      sizes: '512x512',
+      type: 'image/png',
+      purpose: 'any',
+    });
+    expect(manifest.icons).toContainEqual({
+      src: '/pwa-icon-maskable-512.png',
+      sizes: '512x512',
+      type: 'image/png',
+      purpose: 'maskable',
+    });
   });
 });

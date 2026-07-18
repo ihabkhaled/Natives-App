@@ -40,7 +40,7 @@ export interface RsvpState {
   readonly reasonCategory: RsvpReason | null;
   readonly respondedAtIso: string | null;
   /** Optimistic-concurrency version; sent back on the next write. */
-  readonly version: number;
+  readonly version: number | null;
   readonly waitlisted: boolean;
   readonly waitlistPosition: number | null;
   /** RSVP cutoff instant (UTC ISO 8601), or null when there is none. */
@@ -98,7 +98,16 @@ export interface RsvpSubmission {
   readonly status: RsvpStatus;
   readonly reasonCategory: RsvpReason | null;
   /** The version the member last saw; a mismatch is a 409 conflict. */
-  readonly version: number;
+  readonly version: number | null;
+}
+
+/** Authoritative fields returned by PUT .../rsvp. */
+export interface RsvpUpdate {
+  readonly status: RsvpStatus;
+  readonly reasonCategory: RsvpReason | null;
+  readonly respondedAtIso: string | null;
+  readonly version: number | null;
+  readonly waitlisted: boolean;
 }
 
 /** Server query for the calendar list (all fields optional/bounded). */
@@ -107,4 +116,14 @@ export interface PracticeSessionQueryParams {
   readonly type: PracticeType | null;
   readonly rsvp: RsvpStatus | null;
   readonly pageSize: number;
+}
+
+/** Exact query and path inputs accepted by PracticeSessions.list. */
+export interface PracticeSessionRequestParams {
+  readonly teamId: string;
+  readonly from: string | null;
+  readonly to: string | null;
+  readonly sessionType: string | null;
+  readonly limit: number;
+  readonly offset: number;
 }

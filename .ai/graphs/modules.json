@@ -2,14 +2,26 @@
   "generated": true,
   "modules": [
     {
+      "name": "admin",
+      "publicSurface": [
+        "getAdminRouteDefinitions"
+      ]
+    },
+    {
       "name": "auth",
       "publicSurface": [
+        "ACCOUNT_STATE",
+        "AccountState",
+        "AuthMembership",
         "AuthUser",
+        "CurrentUserQueryOptions",
         "CurrentUserQueryView",
+        "EffectivePermissionsView",
         "LogoutMutationView",
         "SESSION_STATUS",
         "SessionStatus",
         "SessionView",
+        "authAckSchema",
         "authQueryKeys",
         "authTokensDtoSchema",
         "authUserDtoSchema",
@@ -20,12 +32,27 @@
         "getAuthRouteDefinitions",
         "getAuthTokenRepository",
         "handleAuthFailure",
+        "invitationDetailsDtoSchema",
         "loginResponseSchema",
         "logoutResponseSchema",
         "refreshResponseSchema",
+        "revokeOthersResponseSchema",
+        "sessionDtoSchema",
+        "sessionListResponseSchema",
         "useCurrentUserQuery",
+        "useEffectivePermissions",
         "useLogoutMutation",
         "useSession"
+      ]
+    },
+    {
+      "name": "dashboard",
+      "publicSurface": [
+        "DASHBOARD_WIDGET_KIND",
+        "DashboardContainer",
+        "DashboardWidgetKind",
+        "dashboardQueryKeys",
+        "dashboardSummaryResponseSchema"
       ]
     },
     {
@@ -43,6 +70,28 @@
         "getNotFoundRouteDefinition",
         "homePath",
         "welcomePath"
+      ]
+    },
+    {
+      "name": "practice",
+      "publicSurface": [
+        "PRACTICE_CHANGE_KIND",
+        "PRACTICE_STATUS",
+        "PRACTICE_TYPE",
+        "PracticeChangeKind",
+        "PracticeStatus",
+        "PracticeType",
+        "RSVP_REASON",
+        "RSVP_STATUS",
+        "RsvpReason",
+        "RsvpStatus",
+        "getPracticeRouteDefinitions",
+        "practiceQueryKeys",
+        "practiceRsvpResponseSchema",
+        "practiceSessionListResponseSchema",
+        "practiceSessionPath",
+        "practiceSessionResponseSchema",
+        "practicesPath"
       ]
     },
     {

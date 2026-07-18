@@ -14,9 +14,12 @@ export interface PracticeSessionsQueryView {
 }
 
 export function usePracticeSessionsQuery(
+  teamId: string,
   params: PracticeSessionQueryParams,
 ): PracticeSessionsQueryView {
-  const query = useAppQuery<PracticeSessionListPage>(buildPracticeSessionsQueryOptions(params));
+  const query = useAppQuery<PracticeSessionListPage>(
+    buildPracticeSessionsQueryOptions(teamId, params),
+  );
   return {
     page: query.data,
     isLoading: query.isPending,

@@ -59,7 +59,8 @@ describe('auth recovery flows (real client + MSW)', () => {
   it('loads a valid invitation and rejects expired or used ones', async () => {
     const invitation = await getInvitation(MOCK_INVITATION.validToken);
     expect(invitation.email).toBe(MOCK_INVITATION.email);
-    expect(invitation.teamName).toBe(MOCK_INVITATION.teamName);
+    expect(invitation.role).toBe(MOCK_INVITATION.role);
+    expect(invitation.inviterName).toBeNull();
 
     const expired = await catchAppError(getInvitation(MOCK_INVITATION.expiredToken));
     expect(expired.code).toBe(APP_ERROR_CODE.LinkInvalidOrExpired);
@@ -72,7 +73,9 @@ describe('auth recovery flows (real client + MSW)', () => {
     const session = await acceptInvitation(MOCK_INVITATION.validToken, MOCK_STRONG_PASSWORD);
 
     expect(session.user.email).toBe(MOCK_INVITATION.email);
-    await expect(getAuthTokenRepository().getAccessToken()).resolves.toBe(MOCK_TOKENS.access);
+    await expect(getAuthTokenRepository().getAccessToken()).resolves.toBe(
+      MOCK_TOKENS.invitedAccess,
+    );
   });
 
   it('lists sessions in a deterministic order and revokes them', async () => {

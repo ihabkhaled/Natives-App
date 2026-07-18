@@ -87,7 +87,7 @@ describe('SettingsContainer', () => {
     );
   });
 
-  it('keeps the page title out of the view, which renders its own sections', () => {
+  it('keeps the page title out of the settings list', () => {
     render(<SettingsContainer />);
 
     expect(getIonList()).not.toHaveTextContent('Settings');

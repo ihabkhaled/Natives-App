@@ -59,6 +59,8 @@ package.json                 quality → validate:web → validate:native → va
 9. **Report only what you executed.** Name the commands, their outcome, and the gaps. "Tests pass"
    is not a report; "`npm run quality` passed; `test:e2e` passed; iOS UNVERIFIED off macOS;
    `security:scan` not run (Trivy unavailable)" is.
+10. **Keep the closeout focused.** Report evidence concisely, avoid unrelated detours, resolve
+    reasonable in-scope issues directly, and never use brevity as a reason to skip a gate.
 
 ## Tests
 

@@ -2,129 +2,178 @@ import { describe, expect, it } from 'vitest';
 
 import type { SchemaOutput } from '@/packages/schema';
 
+import { PRACTICE_TYPE, RSVP_STATUS } from '../constants/practice.constants';
 import type {
-  practiceSessionDetailSchema,
-  practiceSessionSummarySchema,
+  practiceRsvpResponseSchema,
+  practiceSessionResponseSchema,
 } from '../schemas/practice-session.schema';
 import {
+  filterPracticePageByRsvp,
+  filterPracticePageByType,
   mapPracticeSessionDetail,
   mapPracticeSessionListPage,
   mapPracticeSessionSummary,
   mapRsvpState,
-  mapUpcomingPractices,
+  mapRsvpUpdate,
+  toBackendSessionType,
 } from './practice-session.mapper';
 
-type SummaryDto = SchemaOutput<typeof practiceSessionSummarySchema>;
-type DetailDto = SchemaOutput<typeof practiceSessionDetailSchema>;
+type SessionDto = SchemaOutput<typeof practiceSessionResponseSchema>;
+type RsvpDto = SchemaOutput<typeof practiceRsvpResponseSchema>;
 
-const SUMMARY: SummaryDto = {
-  id: 'sess-1',
-  type: 'practice',
-  title: 'Evening practice',
-  status: 'scheduled',
-  startAt: '2026-07-26T15:00:00.000Z',
-  endAt: '2026-07-26T17:00:00.000Z',
-  meetAt: null,
-  rsvpDeadlineAt: '2026-07-25T12:00:00.000Z',
-  venueName: 'Zamalek Club Field',
+const SESSION: SessionDto = {
+  cancellationReason: null,
   capacity: 24,
-  myRsvpStatus: 'no_response',
-  waitlisted: false,
-  changeKind: null,
+  createdAt: '2026-07-18T09:00:00.000Z',
+  createdBy: null,
+  endsAt: '2026-07-26T17:00:00.000Z',
+  field: null,
+  id: 'sess-1',
+  meetAt: null,
+  notes: null,
+  occurrenceDate: '2026-07-26',
+  organizerUserId: null,
+  rsvpCutoffAt: '2026-07-25T12:00:00.000Z',
+  scheduleId: null,
+  seasonId: 'season-1',
+  sessionType: 'practice',
+  startsAt: '2026-07-26T15:00:00.000Z',
+  status: 'published',
+  teamId: 'team-1',
+  timezone: 'Africa/Cairo',
+  updatedAt: '2026-07-18T09:00:00.000Z',
+  updatedBy: null,
+  venueId: null,
+  version: 2,
+  visibility: 'team',
 };
 
-const DETAIL: DetailDto = {
-  id: 'sess-1',
-  type: 'scrimmage',
-  title: null,
-  status: 'rescheduled',
-  startAt: '2026-07-26T15:00:00.000Z',
-  endAt: '2026-07-26T17:00:00.000Z',
-  meetAt: '2026-07-26T14:30:00.000Z',
-  rsvpDeadlineAt: '2026-07-25T12:00:00.000Z',
-  venue: {
-    id: 'venue-1',
-    name: 'Zamalek Club Field',
-    addressLine: '26th of July St',
-    mapUrl: 'https://maps.example.com/?q=zamalek',
-    notes: 'Gate 3',
-  },
-  instructions: 'Bring jerseys',
-  capacity: 20,
-  counts: { going: 12, maybe: 3, notGoing: 2, waitlist: 1 },
-  agenda: [{ id: 'a1', labelKey: 'practice.typeThrowing', durationMinutes: 30 }],
-  rsvp: {
-    status: 'going',
-    reasonCategory: 'travel',
-    respondedAt: '2026-07-24T10:00:00.000Z',
-    version: 2,
-    waitlisted: true,
-    waitlistPosition: 3,
-    deadlineAt: '2026-07-25T12:00:00.000Z',
-    canRespond: true,
-  },
-  changeKind: 'venue_changed',
-  updatedAt: '2026-07-24T09:00:00.000Z',
+const RSVP: RsvpDto = {
+  membershipId: 'membership-1',
+  sessionId: SESSION.id,
+  status: 'going',
+  reasonCategory: 'travel',
+  note: null,
+  noteVisibility: null,
+  respondedAt: '2026-07-24T10:00:00.000Z',
+  source: 'self',
+  version: 2,
+  waitlisted: true,
 };
 
 describe('mapRsvpState', () => {
-  it('renames wire instants to the iso convention', () => {
-    const state = mapRsvpState(DETAIL.rsvp);
+  it('combines the RSVP resource with session response policy', () => {
+    const state = mapRsvpState(RSVP, SESSION.rsvpCutoffAt, true);
 
-    expect(state.respondedAtIso).toBe('2026-07-24T10:00:00.000Z');
-    expect(state.deadlineAtIso).toBe('2026-07-25T12:00:00.000Z');
-    expect(state.waitlistPosition).toBe(3);
+    expect(state.respondedAtIso).toBe(RSVP.respondedAt);
+    expect(state.deadlineAtIso).toBe(SESSION.rsvpCutoffAt);
+    expect(state.waitlistPosition).toBeNull();
+    expect(state.canRespond).toBe(true);
+  });
+});
+
+describe('mapRsvpUpdate', () => {
+  it('keeps only authoritative fields returned by the mutation', () => {
+    expect(mapRsvpUpdate(RSVP)).toEqual({
+      status: 'going',
+      reasonCategory: 'travel',
+      respondedAtIso: RSVP.respondedAt,
+      version: 2,
+      waitlisted: true,
+    });
   });
 });
 
 describe('mapPracticeSessionSummary', () => {
-  it('renames the start and deadline instants', () => {
-    const summary = mapPracticeSessionSummary(SUMMARY);
+  it('maps exact backend names into the calendar domain', () => {
+    const summary = mapPracticeSessionSummary(SESSION, RSVP);
 
-    expect(summary.startAtIso).toBe(SUMMARY.startAt);
-    expect(summary.rsvpDeadlineAtIso).toBe(SUMMARY.rsvpDeadlineAt);
-    expect(summary.meetAtIso).toBeNull();
+    expect(summary.startAtIso).toBe(SESSION.startsAt);
+    expect(summary.myRsvpStatus).toBe(RSVP.status);
+    expect(summary.status).toBe('scheduled');
+    expect(summary.venueName).toBeNull();
+  });
+
+  it('maps unknown backend session types to custom', () => {
+    expect(
+      mapPracticeSessionSummary({ ...SESSION, sessionType: 'beach-ultimate' }, RSVP).type,
+    ).toBe(PRACTICE_TYPE.custom);
+  });
+
+  it.each([
+    ['rescheduled', 'rescheduled', 'rescheduled'],
+    ['cancelled', 'cancelled', 'cancelled'],
+  ] as const)('maps %s lifecycle state', (wireStatus, status, changeKind) => {
+    const summary = mapPracticeSessionSummary({ ...SESSION, status: wireStatus }, RSVP);
+    expect(summary.status).toBe(status);
+    expect(summary.changeKind).toBe(changeKind);
   });
 });
 
 describe('mapPracticeSessionListPage', () => {
-  it('maps items and carries pagination metadata', () => {
-    const page = mapPracticeSessionListPage({
-      items: [SUMMARY],
-      page: 2,
-      pageSize: 20,
-      total: 21,
-      hasMore: true,
-    });
+  it('maps offset pagination and joins RSVP resources by session id', () => {
+    const page = mapPracticeSessionListPage(
+      { items: [SESSION], limit: 20, offset: 20, total: 45 },
+      [RSVP],
+    );
 
     expect(page.items).toHaveLength(1);
+    expect(page.page).toBe(2);
     expect(page.hasMore).toBe(true);
-    expect(page.total).toBe(21);
   });
-});
 
-describe('mapUpcomingPractices', () => {
-  it('maps the bounded upcoming list', () => {
-    expect(mapUpcomingPractices({ items: [SUMMARY] })).toHaveLength(1);
+  it('drops a session that has no matching RSVP resource', () => {
+    const page = mapPracticeSessionListPage(
+      { items: [SESSION], limit: 20, offset: 0, total: 1 },
+      [],
+    );
+    expect(page.items).toEqual([]);
+    expect(page.hasMore).toBe(false);
   });
 });
 
 describe('mapPracticeSessionDetail', () => {
-  it('maps a full detail with venue, counts, and agenda', () => {
-    const detail = mapPracticeSessionDetail(DETAIL);
+  it('combines session and RSVP without inventing unavailable projections', () => {
+    const detail = mapPracticeSessionDetail(SESSION, RSVP);
 
-    expect(detail.venue?.name).toBe('Zamalek Club Field');
-    expect(detail.counts?.going).toBe(12);
-    expect(detail.agenda[0]?.durationMinutes).toBe(30);
     expect(detail.rsvp.status).toBe('going');
-    expect(detail.updatedAtIso).toBe(DETAIL.updatedAt);
-  });
-
-  it('preserves null venue and null counts', () => {
-    const detail = mapPracticeSessionDetail({ ...DETAIL, venue: null, counts: null, agenda: [] });
-
     expect(detail.venue).toBeNull();
     expect(detail.counts).toBeNull();
     expect(detail.agenda).toEqual([]);
+    expect(detail.instructions).toBeNull();
+  });
+
+  it('closes RSVP policy for a completed session', () => {
+    expect(
+      mapPracticeSessionDetail({ ...SESSION, status: 'completed' }, RSVP).rsvp.canRespond,
+    ).toBe(false);
+  });
+});
+
+describe('practice page filters', () => {
+  const page = mapPracticeSessionListPage(
+    {
+      items: [SESSION, { ...SESSION, id: 'sess-2', sessionType: 'fitness' }],
+      limit: 20,
+      offset: 0,
+      total: 2,
+    },
+    [RSVP, { ...RSVP, sessionId: 'sess-2', status: RSVP_STATUS.maybe }],
+  );
+
+  it('keeps the page unchanged when filters are absent', () => {
+    expect(filterPracticePageByRsvp(page, null)).toBe(page);
+    expect(filterPracticePageByType(page, null)).toBe(page);
+  });
+
+  it('filters the joined page by RSVP and mapped type', () => {
+    expect(filterPracticePageByRsvp(page, RSVP_STATUS.maybe).items).toHaveLength(1);
+    expect(filterPracticePageByType(page, PRACTICE_TYPE.fitness).items).toHaveLength(1);
+  });
+
+  it('uses server sessionType except for the custom fallback', () => {
+    expect(toBackendSessionType(PRACTICE_TYPE.practice)).toBe('practice');
+    expect(toBackendSessionType(PRACTICE_TYPE.custom)).toBeNull();
+    expect(toBackendSessionType(null)).toBeNull();
   });
 });

@@ -17,7 +17,13 @@
     "eslint/architecture-plugin/fixtures/*.fixtures.mjs"
   ],
   "project": ["src/**/*.{ts,tsx}", "scripts/**/*.mjs", "eslint/**/*.mjs", "tests/**/*.ts"],
-  "ignore": ["public/mockServiceWorker.js", ".ai/**", "android/**", "ios/**"],
+  "ignore": [
+    "public/mockServiceWorker.js",
+    ".ai/**",
+    "android/**",
+    "ios/**",
+    "src/packages/api-contract/generated/**"
+  ],
   "ignoreDependencies": [
     "@capacitor/android",
     "@capacitor/ios",

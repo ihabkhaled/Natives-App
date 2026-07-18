@@ -93,4 +93,16 @@ describe('PageShell', () => {
 
     expect(screen.queryByTestId('page-banner')).not.toBeInTheDocument();
   });
+
+  it('supports an immersive screen without a duplicate toolbar', () => {
+    render(
+      <PageShell title="Toolbar title" testId="welcome-page" immersive>
+        <h1>Welcome</h1>
+      </PageShell>,
+    );
+
+    expect(screen.queryByText('Toolbar title')).not.toBeInTheDocument();
+    expect(getIonContent()).toHaveClass('app-page--immersive');
+    expect(getIonContent()).not.toHaveClass('ion-padding');
+  });
 });

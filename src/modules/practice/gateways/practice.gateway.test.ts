@@ -2,12 +2,12 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import { getAppHttpClient } from '@/packages/http';
 
-import { PRACTICE_SCOPE, PRACTICE_TYPE, RSVP_STATUS } from '../constants/practice.constants';
+import { RSVP_STATUS } from '../constants/practice.constants';
 import {
+  requestPracticeRsvp,
   requestPracticeSession,
   requestPracticeSessions,
   requestRsvpUpdate,
-  requestUpcomingPractices,
 } from './practice.gateway';
 
 vi.mock('@/packages/http', () => ({ getAppHttpClient: vi.fn() }));
@@ -23,57 +23,97 @@ afterEach(() => {
 });
 
 describe('requestPracticeSessions', () => {
-  it('sends the scope, page size, and set filters only', async () => {
+  it('uses the team-scoped backend route and exact supported query fields', async () => {
     await requestPracticeSessions({
-      scope: PRACTICE_SCOPE.upcoming,
-      type: PRACTICE_TYPE.practice,
-      rsvp: null,
-      pageSize: 20,
+      teamId: 'team/one',
+      from: '2026-07-18T00:00:00.000Z',
+      to: null,
+      sessionType: 'practice',
+      limit: 20,
+      offset: 0,
     });
 
     const [path, , options] = get.mock.calls[0] as [string, unknown, { params: object }];
-    expect(path).toBe('/practices/sessions');
-    expect(options.params).toEqual({ scope: 'upcoming', pageSize: 20, type: 'practice' });
+    expect(path).toBe('/teams/team%2Fone/practice-sessions');
+    expect(options.params).toEqual({
+      from: '2026-07-18T00:00:00.000Z',
+      sessionType: 'practice',
+      limit: 20,
+      offset: 0,
+    });
   });
 
-  it('includes the rsvp filter when present', async () => {
+  it('omits nullable filters the backend contract does not receive', async () => {
     await requestPracticeSessions({
-      scope: PRACTICE_SCOPE.all,
-      type: null,
-      rsvp: RSVP_STATUS.going,
-      pageSize: 40,
+      teamId: 'team-1',
+      from: null,
+      to: null,
+      sessionType: null,
+      limit: 40,
+      offset: 20,
     });
 
     const options = (
       get.mock.calls[0] as [string, unknown, { params: Record<string, unknown> }]
     )[2];
-    expect(options.params).toEqual({ scope: 'all', pageSize: 40, rsvp: 'going' });
+    expect(options.params).toEqual({ limit: 40, offset: 20 });
   });
-});
 
-describe('requestUpcomingPractices', () => {
-  it('hits the upcoming endpoint', async () => {
-    await requestUpcomingPractices();
+  it('includes the supported upper date boundary', async () => {
+    await requestPracticeSessions({
+      teamId: 'team-1',
+      from: null,
+      to: '2026-07-18T00:00:00.000Z',
+      sessionType: null,
+      limit: 20,
+      offset: 0,
+    });
 
-    expect(get.mock.calls[0]?.[0]).toBe('/practices/sessions/upcoming');
+    const options = (
+      get.mock.calls[0] as [string, unknown, { params: Record<string, unknown> }]
+    )[2];
+    expect(options.params).toEqual({
+      to: '2026-07-18T00:00:00.000Z',
+      limit: 20,
+      offset: 0,
+    });
   });
 });
 
 describe('requestPracticeSession', () => {
-  it('hits the detail endpoint for the id', async () => {
-    await requestPracticeSession('sess-7');
+  it('hits the team-scoped detail endpoint', async () => {
+    await requestPracticeSession('team-1', 'sess/7');
 
-    expect(get.mock.calls[0]?.[0]).toBe('/practices/sessions/sess-7');
+    expect(get.mock.calls[0]?.[0]).toBe('/teams/team-1/practice-sessions/sess%2F7');
+  });
+});
+
+describe('requestPracticeRsvp', () => {
+  it('loads the member RSVP from the canonical endpoint', async () => {
+    await requestPracticeRsvp('team-1', 'sess-7');
+
+    expect(get.mock.calls[0]?.[0]).toBe('/teams/team-1/practice-sessions/sess-7/rsvp');
   });
 });
 
 describe('requestRsvpUpdate', () => {
-  it('puts the submission to the rsvp endpoint', async () => {
+  it('maps the app submission to SetRsvpDto', async () => {
     const submission = { status: RSVP_STATUS.going, reasonCategory: null, version: 3 };
-    await requestRsvpUpdate('sess-7', submission);
+    await requestRsvpUpdate('team-1', 'sess-7', submission);
 
     const [path, body] = put.mock.calls[0] as [string, unknown];
-    expect(path).toBe('/practices/sessions/sess-7/rsvp');
-    expect(body).toEqual(submission);
+    expect(path).toBe('/teams/team-1/practice-sessions/sess-7/rsvp');
+    expect(body).toEqual({ status: 'going', expectedVersion: 3 });
+  });
+
+  it('includes optional reason and omits a missing version', async () => {
+    await requestRsvpUpdate('team-1', 'sess-7', {
+      status: RSVP_STATUS.notGoing,
+      reasonCategory: 'work',
+      version: null,
+    });
+
+    const body = (put.mock.calls[0] as [string, unknown])[1];
+    expect(body).toEqual({ status: 'not_going', reasonCategory: 'work' });
   });
 });

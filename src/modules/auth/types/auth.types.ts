@@ -44,11 +44,18 @@ export interface SetPasswordFormValues {
   readonly confirmPassword: string;
 }
 
+export const INVITATION_ROLE = {
+  Admin: 'admin',
+  User: 'user',
+} as const;
+
+export type InvitationRole = (typeof INVITATION_ROLE)[keyof typeof INVITATION_ROLE];
+
 /** Read-only view of a pending invitation, shown before password creation. */
 export interface InvitationDetails {
   readonly email: string;
-  readonly teamName: string;
-  readonly inviterName: string;
+  readonly role: InvitationRole;
+  readonly inviterName: string | null;
   /** Expiry instant in UTC (ISO 8601). */
   readonly expiresAtIso: string;
 }

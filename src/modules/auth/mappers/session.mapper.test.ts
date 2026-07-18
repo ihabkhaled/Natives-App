@@ -31,12 +31,15 @@ describe('mapSessionListResponse', () => {
         dto({ id: 'newer', lastActiveAt: '2026-07-17T00:00:00.000Z', current: false }),
         dto({ id: 'current', lastActiveAt: '2026-07-01T00:00:00.000Z', current: true }),
       ],
+      total: 3,
+      limit: 20,
+      offset: 0,
     });
 
     expect(ordered.map((session) => session.id)).toEqual(['current', 'newer', 'older']);
   });
 
   it('returns an empty list unchanged', () => {
-    expect(mapSessionListResponse({ sessions: [] })).toEqual([]);
+    expect(mapSessionListResponse({ sessions: [], total: 0, limit: 20, offset: 0 })).toEqual([]);
   });
 });

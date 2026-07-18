@@ -10,6 +10,69 @@
   --color-brand: #d4af37;
 }
 
+/* ----------------------------------------------------------------------------
+   App design system — semantic surfaces, elevation, accents and chrome.
+   Derived from the generated brand tokens so the whole app reads as one
+   confident, vibrant sports-team identity: a calm layered page base, brighter
+   softly floating cards, a signature gold accent, and honest depth. Theme
+   invariant aliases live once in :root; only values that flip per theme are
+   restated in the dark block. All spacing/geometry uses logical properties so
+   Arabic (RTL) mirrors perfectly.
+---------------------------------------------------------------------------- */
+:root:root {
+  --app-hairline: var(--un-border);
+  --app-accent: var(--un-brand-gold);
+  --app-accent-strong: var(--ion-color-secondary);
+  --app-accent-text: #684f00;
+  --app-muted-strong: #343333;
+  --app-accent-soft: color-mix(in srgb, var(--un-brand-gold) 16%, transparent);
+  --app-accent-line: color-mix(in srgb, var(--un-brand-gold) 42%, transparent);
+  --app-page-bg: var(--un-surface-elevated);
+  --app-card-bg: var(--un-brand-white);
+  --app-card-hover-bg: color-mix(in srgb, var(--un-brand-gold) 5%, var(--un-brand-white));
+  --app-elevation-card: 0 1px 2px rgba(11, 11, 11, 0.05), 0 8px 24px rgba(11, 11, 11, 0.07);
+  --app-elevation-lift: 0 2px 4px rgba(11, 11, 11, 0.08), 0 18px 40px rgba(11, 11, 11, 0.14);
+  --app-elevation-nav: 0 -1px 2px rgba(11, 11, 11, 0.04), 0 -10px 30px rgba(11, 11, 11, 0.08);
+  --app-elevation-rail: 1px 0 2px rgba(11, 11, 11, 0.04), 12px 0 40px rgba(11, 11, 11, 0.06);
+  --app-toolbar-bg: color-mix(in srgb, var(--un-brand-white) 78%, transparent);
+  --app-surface-bg: var(--un-brand-white);
+  --app-track-bg: color-mix(in srgb, var(--ion-text-color) 6%, var(--un-brand-white));
+  --app-pressed: color-mix(in srgb, var(--ion-text-color) 6%, transparent);
+  --app-skeleton-base: color-mix(in srgb, var(--ion-text-color) 8%, var(--un-brand-white));
+  --app-skeleton-sheen: color-mix(in srgb, var(--ion-text-color) 3%, var(--un-brand-white));
+  --app-hero-glow: radial-gradient(
+    128% 82% at 50% -12%,
+    color-mix(in srgb, var(--un-brand-gold) 20%, var(--app-page-bg)),
+    var(--app-page-bg) 60%
+  );
+  --app-brand-gradient: linear-gradient(
+    135deg,
+    var(--un-brand-gold),
+    color-mix(in srgb, var(--un-brand-gold) 62%, #ffffff)
+  );
+  --app-sidebar-w: 17.5rem;
+  --app-tabbar-h: calc(3.75rem + env(safe-area-inset-bottom));
+}
+
+:root:root.ion-palette-dark {
+  --app-accent-strong: var(--ion-color-secondary);
+  --app-accent-text: var(--ion-color-primary);
+  --app-muted-strong: #d0cec8;
+  --app-page-bg: var(--ion-background-color);
+  --app-card-bg: var(--un-surface-elevated);
+  --app-card-hover-bg: color-mix(in srgb, var(--un-brand-gold) 10%, var(--un-surface-elevated));
+  --app-elevation-card: 0 1px 1px rgba(0, 0, 0, 0.45), 0 10px 28px rgba(0, 0, 0, 0.55);
+  --app-elevation-lift: 0 2px 4px rgba(0, 0, 0, 0.5), 0 20px 44px rgba(0, 0, 0, 0.66);
+  --app-elevation-nav: 0 -1px 2px rgba(0, 0, 0, 0.5), 0 -12px 32px rgba(0, 0, 0, 0.6);
+  --app-elevation-rail: 1px 0 2px rgba(0, 0, 0, 0.5), 14px 0 44px rgba(0, 0, 0, 0.5);
+  --app-toolbar-bg: color-mix(in srgb, var(--ion-background-color) 68%, transparent);
+  --app-surface-bg: var(--un-surface-elevated);
+  --app-track-bg: color-mix(in srgb, var(--un-brand-white) 8%, var(--ion-background-color));
+  --app-pressed: color-mix(in srgb, var(--un-brand-white) 7%, transparent);
+  --app-skeleton-base: color-mix(in srgb, var(--un-brand-white) 9%, var(--un-surface-elevated));
+  --app-skeleton-sheen: color-mix(in srgb, var(--un-brand-white) 4%, var(--un-surface-elevated));
+}
+
 /* Respect reduced-motion preferences globally (WCAG 2.2). */
 @media (prefers-reduced-motion: reduce) {
   *,
@@ -29,8 +92,920 @@
   outline-offset: 2px;
 }
 
-/* Skip link: off-screen until it receives keyboard focus, then pinned to the
-   top-start corner so it is the first thing a keyboard user reaches. */
+/* ----------------------------------------------------------------------------
+   Page canvas + scrolling content
+---------------------------------------------------------------------------- */
+ion-content {
+  --background: var(--app-page-bg);
+}
+
+ion-content.ion-padding {
+  --padding-top: 1.25rem;
+  --padding-bottom: 2rem;
+  --padding-start: 1rem;
+  --padding-end: 1rem;
+}
+
+/* Comfortable, readable centred column once there is room for one. */
+@media (min-width: 900px) {
+  ion-content.ion-padding {
+    --padding-top: 1.75rem;
+    --padding-start: max(1.5rem, calc((100% - 72rem) / 2));
+    --padding-end: max(1.5rem, calc((100% - 72rem) / 2));
+  }
+}
+
+/* ----------------------------------------------------------------------------
+   Header / toolbar — translucent, hairline-separated, confident title with a
+   whisper of gold along its lower edge.
+---------------------------------------------------------------------------- */
+ion-header.header-md::after,
+ion-header.header-ios::after {
+  display: none;
+}
+
+ion-toolbar {
+  --background: var(--app-toolbar-bg);
+  --border-color: var(--app-hairline);
+  --border-width: 0 0 1px;
+  --min-height: 60px;
+  --padding-top: 6px;
+  --padding-bottom: 6px;
+  -webkit-backdrop-filter: saturate(180%) blur(18px);
+  backdrop-filter: saturate(180%) blur(18px);
+}
+
+ion-header {
+  position: relative;
+}
+
+ion-header::after {
+  content: '';
+  position: absolute;
+  inset-block-end: 0;
+  inset-inline: 0;
+  block-size: 2px;
+  background: linear-gradient(90deg, transparent, var(--app-accent-line), transparent);
+  opacity: 0.9;
+  pointer-events: none;
+}
+
+ion-title {
+  font-weight: 700;
+  letter-spacing: var(--un-letter-spacing-tight);
+}
+
+ion-title.title-large {
+  font-size: var(--un-font-size-xxl);
+}
+
+/* ----------------------------------------------------------------------------
+   Cards — the elevated primitive used across dashboards and detail screens
+---------------------------------------------------------------------------- */
+ion-card {
+  margin: 0;
+  border: 1px solid var(--app-hairline);
+  border-radius: var(--un-radius-lg);
+  background: var(--app-card-bg);
+  box-shadow: var(--app-elevation-card);
+  transition:
+    transform var(--un-motion-duration-base) var(--un-motion-easing-standard),
+    box-shadow var(--un-motion-duration-base) var(--un-motion-easing-standard);
+}
+
+ion-card-header {
+  padding: 1.125rem 1.125rem 0.25rem;
+}
+
+ion-card-title {
+  font-weight: 700;
+  letter-spacing: var(--un-letter-spacing-tight);
+}
+
+ion-card-content {
+  padding: 0.75rem 1.125rem 1.125rem;
+  font-size: var(--un-font-size-md);
+}
+
+/* ----------------------------------------------------------------------------
+   Lists + rows
+---------------------------------------------------------------------------- */
+ion-list {
+  padding: 0;
+  background: transparent;
+}
+
+ion-item {
+  --background: transparent;
+  --border-color: var(--app-hairline);
+  --min-height: 52px;
+  --padding-start: 0.5rem;
+  --inner-padding-end: 0.5rem;
+  --transition: background var(--un-motion-duration-fast) var(--un-motion-easing-standard);
+}
+
+ion-item.item-interactive-hover:hover {
+  --background: var(--app-pressed);
+}
+
+/* Inset lists read as one grouped card with hairline-divided rows. */
+ion-list.list-inset {
+  overflow: hidden;
+  margin: 0;
+  border: 1px solid var(--app-hairline);
+  border-radius: var(--un-radius-lg);
+  background: var(--app-card-bg);
+  box-shadow: var(--app-elevation-card);
+}
+
+ion-list.list-inset ion-item {
+  --padding-start: 1.125rem;
+  --inner-padding-end: 1.125rem;
+  --min-height: 56px;
+}
+
+ion-list-header {
+  padding-inline: 0.375rem;
+  min-height: 2.75rem;
+}
+
+ion-list-header ion-label {
+  font-size: var(--un-font-size-sm);
+  font-weight: 700;
+  letter-spacing: var(--un-letter-spacing-wide);
+  text-transform: uppercase;
+  color: var(--un-muted);
+}
+
+/* ----------------------------------------------------------------------------
+   Notes, badges, chips — status colour stays meaningful, never a rainbow
+---------------------------------------------------------------------------- */
+ion-note {
+  color: var(--un-muted);
+  font-size: var(--un-font-size-sm);
+}
+
+ion-badge {
+  --padding-top: 0.25rem;
+  --padding-bottom: 0.25rem;
+  --padding-start: 0.75rem;
+  --padding-end: 0.75rem;
+  border-radius: var(--un-radius-pill);
+  font-size: 0.6875rem;
+  font-weight: 600;
+  line-height: 1.35;
+  letter-spacing: 0.01em;
+  text-transform: none;
+  vertical-align: middle;
+}
+
+/* Coloured badges present as soft tinted chips rather than heavy solid fills so
+   the interface stays calm while status still reads at a glance. */
+ion-badge.ion-color-success,
+ion-badge.ion-color-warning,
+ion-badge.ion-color-danger,
+ion-badge.ion-color-tertiary {
+  --background: color-mix(in srgb, currentColor 16%, transparent);
+}
+
+ion-badge.ion-color-success {
+  color: var(--ion-color-success-shade);
+}
+
+ion-badge.ion-color-warning {
+  color: var(--ion-color-warning-shade);
+}
+
+ion-badge.ion-color-danger {
+  color: var(--ion-color-danger-shade);
+}
+
+.ion-palette-dark ion-badge.ion-color-success {
+  color: var(--ion-color-success-tint);
+}
+
+.ion-palette-dark ion-badge.ion-color-warning {
+  color: var(--ion-color-warning-tint);
+}
+
+.ion-palette-dark ion-badge.ion-color-danger {
+  color: var(--ion-color-danger-tint);
+}
+
+/* Neutral badges read as light outlined chips. */
+ion-badge.ion-color-medium {
+  --background: transparent;
+  --color: var(--un-muted);
+  border: 1px solid var(--app-hairline);
+}
+
+/* ----------------------------------------------------------------------------
+   Segments — brand-tinted, sentence case, generous touch targets
+---------------------------------------------------------------------------- */
+ion-segment {
+  --background: var(--app-track-bg);
+  border-radius: var(--un-radius-pill);
+  padding: 0.2rem;
+}
+
+ion-segment-button {
+  --color: var(--un-muted);
+  --color-checked: var(--ion-color-primary);
+  --background-checked: var(--app-card-bg);
+  --indicator-color: var(--app-card-bg);
+  --border-radius: var(--un-radius-pill);
+  --indicator-box-shadow: var(--app-elevation-card);
+  min-height: 44px;
+  font-weight: 600;
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+/* ----------------------------------------------------------------------------
+   Buttons — rounded, sentence case, tactile press, honest touch targets, a
+   confident gold-forward primary that anchors every call to action.
+---------------------------------------------------------------------------- */
+ion-button {
+  --border-radius: var(--un-radius-md);
+  --box-shadow: none;
+  min-height: 44px;
+  font-weight: 600;
+  letter-spacing: 0;
+  text-transform: none;
+  transition: transform var(--un-motion-duration-fast) var(--un-motion-easing-standard);
+}
+
+ion-button.button-solid {
+  --box-shadow: 0 1px 2px rgba(11, 11, 11, 0.16), 0 6px 18px rgba(11, 11, 11, 0.12);
+}
+
+ion-button.button-solid.ion-color-primary {
+  --background-hover: var(--ion-color-primary-tint);
+  --background-activated: var(--ion-color-primary-shade);
+}
+
+ion-button:active {
+  transform: scale(0.975);
+}
+
+/* ----------------------------------------------------------------------------
+   Inputs
+---------------------------------------------------------------------------- */
+ion-input {
+  --border-radius: var(--un-radius-md);
+}
+
+.input-fill-outline {
+  --border-color: var(--app-hairline);
+  --highlight-color-focused: var(--ion-color-secondary);
+  --padding-top: 0.875rem;
+  --padding-bottom: 0.875rem;
+}
+
+/* ----------------------------------------------------------------------------
+   Spinner + avatar accents
+---------------------------------------------------------------------------- */
+ion-spinner {
+  color: var(--ion-color-secondary);
+  width: 1.75rem;
+  height: 1.75rem;
+}
+
+.ion-palette-dark ion-spinner {
+  color: var(--ion-color-primary);
+}
+
+/* ----------------------------------------------------------------------------
+   Skeleton loaders — a soft shimmering placeholder shown while data streams in.
+   Motion pauses under prefers-reduced-motion via the global rule above.
+---------------------------------------------------------------------------- */
+@keyframes app-skeleton-sheen {
+  from {
+    background-position: 200% 0;
+  }
+  to {
+    background-position: -200% 0;
+  }
+}
+
+.app-skeleton {
+  width: 100%;
+  border-radius: var(--un-radius-md);
+  background-color: var(--app-skeleton-base);
+  background-image: linear-gradient(
+    90deg,
+    transparent 20%,
+    var(--app-skeleton-sheen) 50%,
+    transparent 80%
+  );
+  background-size: 200% 100%;
+  animation: app-skeleton-sheen 1.4s ease-in-out infinite;
+}
+
+.app-skeleton-block {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+  width: 100%;
+  padding: 1.125rem;
+  border: 1px solid var(--app-hairline);
+  border-radius: var(--un-radius-lg);
+  background: var(--app-card-bg);
+  box-shadow: var(--app-elevation-card);
+}
+
+.app-skeleton-line {
+  height: 0.85rem;
+}
+
+.app-skeleton-title {
+  height: 1.15rem;
+  width: 52%;
+}
+
+.app-skeleton-line-sm {
+  width: 40%;
+}
+
+.app-skeleton-line-md {
+  width: 72%;
+}
+
+.app-skeleton-line-lg {
+  width: 88%;
+}
+
+/* Loading state: skeleton scaffold with an accessible, decorative spinner. */
+.app-loading-state {
+  gap: 1rem !important;
+  min-height: 0 !important;
+  padding: 0 !important;
+}
+
+.app-loading-state ion-spinner {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+}
+
+.app-skeleton-layout {
+  display: grid;
+  gap: 0.875rem;
+}
+
+.app-loading-state--card .app-skeleton-block--secondary,
+.app-loading-state--card .app-skeleton-block--tertiary,
+.app-loading-state--detail .app-skeleton-block--tertiary {
+  display: none;
+}
+
+.app-loading-state--list .app-skeleton-block {
+  min-height: 6.25rem;
+}
+
+@media (min-width: 720px) {
+  .app-loading-state--dashboard .app-skeleton-layout {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .app-loading-state--list .app-skeleton-layout {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .app-loading-state--list .app-skeleton-block:first-child {
+    grid-column: 1 / -1;
+  }
+
+  .app-loading-state--detail .app-skeleton-layout {
+    grid-template-columns: minmax(0, 1.6fr) minmax(14rem, 0.8fr);
+  }
+}
+
+/* ----------------------------------------------------------------------------
+   Welcome — a hero with a soft brand-gold glow and an elevated logo lockup
+---------------------------------------------------------------------------- */
+[data-testid='welcome-page'] ion-content {
+  --background: var(--app-hero-glow);
+}
+
+[data-testid='welcome-page'] [data-testid='brand-logo'] {
+  border-radius: var(--un-radius-xl);
+  box-shadow: var(--app-elevation-lift);
+  outline: 1px solid var(--app-accent-line);
+  outline-offset: 0;
+}
+
+[data-testid='welcome-page'] h1 {
+  letter-spacing: var(--un-letter-spacing-tight);
+}
+
+.app-page--immersive {
+  --background: var(--app-hero-glow);
+}
+
+.app-welcome-hero,
+.app-auth-layout {
+  position: relative;
+  isolation: isolate;
+  display: grid;
+  min-height: 100%;
+  place-items: center;
+  overflow: hidden;
+  padding: max(1.5rem, env(safe-area-inset-top)) max(1rem, env(safe-area-inset-right))
+    max(1.5rem, env(safe-area-inset-bottom)) max(1rem, env(safe-area-inset-left));
+}
+
+.app-welcome-hero__mark {
+  position: absolute;
+  z-index: -1;
+  inset-block-start: -9rem;
+  inset-inline-end: -8rem;
+  inline-size: min(32rem, 85vw);
+  aspect-ratio: 1;
+  border: clamp(2.5rem, 9vw, 6rem) solid var(--app-accent-soft);
+  border-radius: 50%;
+  opacity: 0.85;
+  transform: rotate(-14deg);
+}
+
+.app-welcome-hero__content {
+  display: flex;
+  width: min(100%, 34rem);
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1.1rem;
+  padding: clamp(1.5rem, 5vw, 3.25rem);
+  border: 1px solid var(--app-accent-line);
+  border-radius: var(--un-radius-xl);
+  background: color-mix(in srgb, var(--app-card-bg) 88%, transparent);
+  box-shadow: var(--app-elevation-lift);
+  -webkit-backdrop-filter: saturate(150%) blur(20px);
+  backdrop-filter: saturate(150%) blur(20px);
+}
+
+.app-welcome-hero__content ion-button {
+  min-width: min(100%, 13rem);
+  margin-top: 0.35rem;
+}
+
+.app-eyebrow {
+  font-size: var(--un-font-size-xs);
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+[dir='rtl'] .app-eyebrow {
+  letter-spacing: 0;
+}
+
+/* ----------------------------------------------------------------------------
+   Auth forms present as a single elevated card floating on the page base
+---------------------------------------------------------------------------- */
+[data-testid='login-page'] form,
+[data-testid='accept-invitation-page'] form,
+[data-testid='forgot-password-page'] form,
+[data-testid='reset-password-page'] form {
+  padding: 1.5rem;
+  border: 1px solid var(--app-hairline);
+  border-radius: var(--un-radius-xl);
+  background: var(--app-card-bg);
+  box-shadow: var(--app-elevation-lift);
+}
+
+.app-auth-panel {
+  width: min(100%, 31rem);
+  padding: clamp(1.25rem, 5vw, 2.5rem);
+  border: 1px solid var(--app-accent-line);
+  border-radius: var(--un-radius-xl);
+  background: color-mix(in srgb, var(--app-card-bg) 92%, transparent);
+  box-shadow: var(--app-elevation-lift);
+  -webkit-backdrop-filter: saturate(150%) blur(20px);
+  backdrop-filter: saturate(150%) blur(20px);
+}
+
+.app-auth-panel__header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+[data-testid='login-page'] .app-auth-panel form {
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+.app-auth-panel > ion-button:last-child {
+  margin-top: 0.5rem;
+}
+
+/* ----------------------------------------------------------------------------
+   Dashboard — stat values pop in brand gold; widgets breathe
+---------------------------------------------------------------------------- */
+[data-testid='dashboard-metric-value'] {
+  font-variant-numeric: tabular-nums;
+  letter-spacing: var(--un-letter-spacing-tight);
+}
+
+[data-testid='dashboard-view'] > header h2 {
+  letter-spacing: var(--un-letter-spacing-tight);
+}
+
+.app-home-layout {
+  display: grid;
+  gap: 1.25rem;
+}
+
+.app-home-hero {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  overflow: hidden;
+  padding: clamp(1.25rem, 4vw, 2rem);
+  border: 1px solid var(--app-accent-line);
+  border-radius: var(--un-radius-xl);
+  background: linear-gradient(135deg, var(--app-accent-soft), transparent 55%), var(--app-card-bg);
+  box-shadow: var(--app-elevation-card);
+}
+
+.app-home-hero::after {
+  content: '';
+  position: absolute;
+  inset-block-start: -3rem;
+  inset-inline-end: -3rem;
+  inline-size: 9rem;
+  aspect-ratio: 1;
+  border: 1.5rem solid var(--app-accent-soft);
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+.app-home-hero__actions {
+  z-index: 1;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.625rem;
+}
+
+.app-home-health {
+  min-width: 0;
+}
+
+.app-health-status-badge {
+  align-self: flex-start;
+  max-width: 100%;
+  padding: 0.4rem 0.65rem;
+  white-space: normal;
+}
+
+[data-testid='dashboard-view'] {
+  min-width: 0;
+  padding: 1.25rem;
+  border: 1px solid var(--app-hairline);
+  border-radius: var(--un-radius-xl);
+  background: var(--app-card-bg);
+  box-shadow: var(--app-elevation-card);
+}
+
+[data-testid='dashboard-view'] > div:last-child {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 0.875rem;
+}
+
+@media (min-width: 720px) {
+  .app-home-hero {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .app-home-hero__actions {
+    justify-content: flex-end;
+  }
+
+  [data-testid='dashboard-view'] > div:last-child {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1100px) {
+  .app-home-layout {
+    grid-template-columns: minmax(0, 1.7fr) minmax(18rem, 0.7fr);
+    align-items: start;
+  }
+
+  .app-home-hero,
+  .app-home-layout > [data-testid='dashboard-view'] {
+    grid-column: 1;
+  }
+
+  .app-home-health {
+    grid-column: 2;
+    grid-row: 1 / span 2;
+    position: sticky;
+    top: 1rem;
+  }
+
+  .app-home-layout > ion-button {
+    grid-column: 2;
+  }
+}
+
+/* ----------------------------------------------------------------------------
+   Practice calendar — each session becomes a tappable, gold-edged card
+---------------------------------------------------------------------------- */
+[data-testid='practice-day-section'] ion-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.625rem;
+}
+
+[data-testid='practice-session-card'] {
+  --background: var(--app-card-bg);
+  --background-hover: var(--app-card-hover-bg);
+  --border-width: 0;
+  --min-height: 68px;
+  --padding-top: 0.85rem;
+  --padding-bottom: 0.85rem;
+  --padding-start: 1rem;
+  --inner-padding-end: 0.875rem;
+  position: relative;
+  overflow: hidden;
+  border: 1px solid var(--app-hairline);
+  border-radius: var(--un-radius-lg);
+  box-shadow: var(--app-elevation-card);
+  transition:
+    transform var(--un-motion-duration-fast) var(--un-motion-easing-standard),
+    box-shadow var(--un-motion-duration-base) var(--un-motion-easing-standard);
+}
+
+[data-testid='practice-session-card']::before {
+  content: '';
+  position: absolute;
+  inset-block: 0;
+  inset-inline-start: 0;
+  inline-size: 3px;
+  background: var(--app-brand-gradient);
+  opacity: 0;
+  transition: opacity var(--un-motion-duration-base) var(--un-motion-easing-standard);
+}
+
+[data-testid='practice-session-card']:hover {
+  box-shadow: var(--app-elevation-lift);
+}
+
+[data-testid='practice-session-card']:hover::before {
+  opacity: 1;
+}
+
+.app-practice-session-card__content {
+  min-width: 0;
+  margin-inline-end: 0.75rem;
+}
+
+.app-practice-session-card__title {
+  margin-block: 0.15rem 0.2rem;
+  overflow-wrap: anywhere;
+}
+
+.app-practice-session-card__change {
+  display: inline-flex;
+  max-width: 100%;
+  padding: 0.35rem 0.55rem;
+  white-space: normal;
+}
+
+.app-practice-session-card__change[color='warning'],
+.app-practice-session-card__status ion-badge[color='warning'] {
+  color: #1c1500;
+}
+
+.app-practice-session-card__status ion-badge[color='success'] {
+  color: #07180b;
+}
+
+.app-practice-session-card__status ion-badge[color='danger'] {
+  color: #290407;
+}
+
+.ion-palette-dark .app-practice-session-card__change[color='warning'],
+.ion-palette-dark .app-practice-session-card__status ion-badge[color='warning'] {
+  color: #1c1500;
+}
+
+.ion-palette-dark .app-practice-session-card__status ion-badge[color='success'] {
+  color: #07180b;
+}
+
+.ion-palette-dark .app-practice-session-card__status ion-badge[color='danger'] {
+  color: #290407;
+}
+
+.app-practice-session-card__status {
+  flex: 0 0 auto;
+  max-width: 42%;
+}
+
+.app-practice-session-card__status ion-badge {
+  max-width: 100%;
+  padding: 0.35rem 0.55rem;
+  text-align: center;
+  white-space: normal;
+}
+
+.app-screen-intro {
+  padding-inline-start: 1rem;
+  border-inline-start: 3px solid var(--app-accent);
+}
+
+[data-testid='practice-filter-bar'] {
+  padding: 1rem;
+  border: 1px solid var(--app-hairline);
+  border-radius: var(--un-radius-lg);
+  background: var(--app-card-bg);
+  box-shadow: var(--app-elevation-card);
+}
+
+[data-testid='practice-filter-bar'] ion-select {
+  --padding-start: 0.75rem;
+  --padding-end: 0.75rem;
+  min-height: 48px;
+  border: 1px solid var(--app-hairline);
+  border-radius: var(--un-radius-md);
+}
+
+.app-practice-calendar ion-text[color='medium'] {
+  color: var(--app-muted-strong);
+}
+
+[data-testid='practice-filter-bar'] ion-segment-button {
+  --color: var(--app-muted-strong);
+}
+
+.app-practice-calendar > [data-testid='practice-subscription-note'],
+.app-practice-details [data-testid='practice-subscription-note'] {
+  border-color: var(--app-accent-line);
+  background: var(--app-accent-soft);
+}
+
+.app-practice-details > div > header,
+.app-practice-details > div > section,
+.app-practice-details > div > [role='alert'] {
+  padding: 1rem;
+  border: 1px solid var(--app-hairline);
+  border-radius: var(--un-radius-lg);
+  background: var(--app-card-bg);
+  box-shadow: var(--app-elevation-card);
+}
+
+@media (min-width: 720px) {
+  [data-testid='practice-filter-bar'] {
+    display: grid;
+    grid-template-columns: minmax(18rem, 1.5fr) minmax(11rem, 0.75fr) minmax(11rem, 0.75fr);
+    align-items: center;
+  }
+
+  .app-practice-calendar-content {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    align-items: start;
+    gap: 1rem;
+  }
+}
+
+.app-settings-layout {
+  width: 100%;
+  max-width: 64rem;
+  margin-inline: auto;
+}
+
+.app-settings-layout ion-list.list-inset {
+  overflow: hidden;
+  margin: 0;
+  border: 1px solid var(--app-hairline);
+  border-radius: var(--un-radius-xl);
+  background: var(--app-card-bg);
+  box-shadow: var(--app-elevation-card);
+}
+
+.app-settings-layout ion-list-header {
+  min-height: 2.75rem;
+  padding-inline: 1.25rem;
+  border-block-start: 1px solid var(--app-hairline);
+  background: var(--app-accent-soft);
+  color: var(--app-muted-strong);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.app-settings-layout ion-list-header:first-child {
+  border-block-start: 0;
+}
+
+.app-settings-layout ion-list.list-inset ion-item {
+  --min-height: 64px;
+  --padding-start: 1.25rem;
+  --inner-padding-end: 1.25rem;
+  --background: var(--app-card-bg);
+}
+
+.app-settings-layout ion-list.list-inset ion-item > ion-label {
+  color: var(--app-text);
+  font-weight: 600;
+}
+
+.app-settings-layout ion-segment {
+  --background: var(--app-surface-muted);
+  width: min(100%, 27rem);
+  padding: 0.2rem;
+  border-radius: var(--un-radius-md);
+}
+
+.app-settings-layout ion-segment-button {
+  --color: var(--app-muted-strong);
+  --color-checked: var(--app-text);
+  --indicator-color: var(--app-card-bg);
+  min-height: 42px;
+  border-radius: calc(var(--un-radius-md) - 0.15rem);
+}
+
+.app-settings-layout ion-badge {
+  padding: 0.4rem 0.65rem;
+}
+
+.app-settings-status-badge {
+  align-self: flex-start;
+  inline-size: fit-content;
+  max-inline-size: 100%;
+  white-space: normal;
+}
+
+.app-health-status-badge[color='success'],
+.app-settings-status-badge[color='success'] {
+  color: #07180b;
+}
+
+.ion-palette-dark .app-health-status-badge[color='success'],
+.ion-palette-dark .app-settings-status-badge[color='success'] {
+  color: #07180b;
+}
+
+@media (max-width: 620px) {
+  .app-settings-layout ion-list.list-inset {
+    border-radius: var(--un-radius-lg);
+  }
+
+  .app-settings-layout ion-list.list-inset ion-item {
+    --padding-top: 0.75rem;
+    --padding-bottom: 0.75rem;
+  }
+
+  .app-settings-layout ion-item::part(native) {
+    align-items: stretch;
+    flex-direction: column;
+    gap: 0.625rem;
+  }
+
+  .app-settings-layout ion-item > ion-label,
+  .app-settings-layout ion-segment {
+    width: 100%;
+  }
+}
+
+/* Ionic's unlayered typography sizes bare headings larger than the utility
+   classes intend. Restore a calm, consistent rhythm for secondary dividers. */
+[data-testid='practice-day-section'] ion-list-header h2 {
+  font-size: var(--un-font-size-sm);
+  font-weight: 700;
+  color: var(--app-muted-strong);
+}
+
+[data-testid='practice-session-details'] section h2 {
+  font-size: var(--un-font-size-md);
+  font-weight: 600;
+}
+
+[data-testid='practice-session-details'] section h3 {
+  font-size: var(--un-font-size-sm);
+  font-weight: 600;
+}
+
+/* ----------------------------------------------------------------------------
+   Skip link: off-screen until focused, then pinned to the top-start corner.
+---------------------------------------------------------------------------- */
 .app-skip-link {
   position: absolute;
   width: 1px;
@@ -59,8 +1034,12 @@
   color: var(--ion-color-primary-contrast);
 }
 
-/* Primary navigation: a bottom tab bar on compact viewports, a side rail on
-   wider ones. Semantic <nav> with real buttons keeps it keyboard-friendly. */
+/* ----------------------------------------------------------------------------
+   Primary navigation — one adaptive component that becomes a floating, blurred
+   bottom tab bar on compact viewports and a persistent labelled sidebar on wide
+   ones. The routed content reserves room for whichever chrome is showing via
+   :has(), so anonymous / auth screens stay full-bleed.
+---------------------------------------------------------------------------- */
 .app-primary-nav {
   position: fixed;
   inset-inline: 0;
@@ -69,10 +1048,17 @@
   display: flex;
   justify-content: space-around;
   gap: 0.25rem;
-  padding: 0.25rem calc(0.5rem + env(safe-area-inset-right))
-    calc(0.25rem + env(safe-area-inset-bottom)) calc(0.5rem + env(safe-area-inset-left));
-  background: var(--ion-background-color, #fff);
-  border-block-start: 1px solid var(--ion-border-color, rgb(0 0 0 / 12%));
+  padding: 0.4rem calc(0.5rem + env(safe-area-inset-right))
+    calc(0.4rem + env(safe-area-inset-bottom)) calc(0.5rem + env(safe-area-inset-left));
+  background: var(--app-toolbar-bg);
+  border-block-start: 1px solid var(--app-hairline);
+  box-shadow: var(--app-elevation-nav);
+  -webkit-backdrop-filter: saturate(180%) blur(18px);
+  backdrop-filter: saturate(180%) blur(18px);
+}
+
+.app-primary-nav__brand {
+  display: none;
 }
 
 .app-primary-nav__item {
@@ -80,38 +1066,124 @@
   flex: 1 1 0;
   flex-direction: column;
   align-items: center;
-  gap: 0.125rem;
-  min-height: 48px;
-  padding: 0.375rem 0.25rem;
-  border-radius: 0.5rem;
+  justify-content: center;
+  gap: 0.2rem;
+  min-height: 52px;
+  padding: 0.25rem;
+  border: none;
+  border-radius: var(--un-radius-md);
   background: transparent;
-  color: var(--ion-color-medium, #6b7280);
-  font-size: 0.75rem;
+  color: var(--un-muted);
+  font-size: var(--un-font-size-xs);
+  font-weight: 500;
   cursor: pointer;
-}
-
-.app-primary-nav__item[aria-current='page'] {
-  color: var(--ion-color-primary);
-  font-weight: 600;
+  transition: color var(--un-motion-duration-fast) var(--un-motion-easing-standard);
 }
 
 .app-primary-nav__icon {
-  font-size: 1.5rem;
+  padding: 0.25rem 1.125rem;
+  border-radius: var(--un-radius-pill);
+  font-size: 1.4rem;
+  transition:
+    background var(--un-motion-duration-base) var(--un-motion-easing-standard),
+    color var(--un-motion-duration-fast) var(--un-motion-easing-standard);
 }
 
+.app-primary-nav__item:hover {
+  color: var(--ion-color-primary);
+}
+
+.app-primary-nav__item[aria-current='page'] {
+  color: var(--app-accent-text);
+  font-weight: 700;
+}
+
+.app-primary-nav__item[aria-current='page'] .app-primary-nav__icon {
+  background: var(--app-accent-soft);
+  color: var(--app-accent-strong);
+}
+
+.ion-palette-dark .app-primary-nav__item[aria-current='page'] .app-primary-nav__icon {
+  color: var(--ion-color-primary);
+}
+
+/* Reserve room for the bottom tab bar so content never hides behind it. */
+#main-content:has(> .app-primary-nav) > ion-router-outlet {
+  inset-block-end: var(--app-tabbar-h);
+}
+
+/* Wide viewports: a persistent, labelled left sidebar with a branded cap. */
 @media (min-width: 768px) {
   .app-primary-nav {
     inset-block: 0 auto;
     inset-inline-end: auto;
     flex-direction: column;
     justify-content: flex-start;
-    inline-size: 6rem;
+    gap: 0.25rem;
+    inline-size: var(--app-sidebar-w);
     block-size: 100%;
+    padding: 1.25rem 0.75rem calc(1rem + env(safe-area-inset-bottom));
     border-block-start: none;
-    border-inline-end: 1px solid var(--ion-border-color, rgb(0 0 0 / 12%));
+    border-inline-end: 1px solid var(--app-hairline);
+    box-shadow: var(--app-elevation-rail);
+  }
+
+  .app-primary-nav::before {
+    content: none;
+  }
+
+  .app-primary-nav__brand {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin: 0 0.25rem 1.1rem;
+    padding: 0.45rem 0.5rem 1rem;
+    border-block-end: 2px solid var(--app-accent-line);
+    color: var(--ion-text-color);
+    font-size: var(--un-font-size-lg);
+    font-weight: 800;
+    letter-spacing: var(--un-letter-spacing-tight);
+  }
+
+  .app-primary-nav__brand [data-testid='brand-logo'] {
+    flex: 0 0 auto;
+    border-radius: var(--un-radius-md);
+    box-shadow: var(--app-elevation-card);
   }
 
   .app-primary-nav__item {
     flex: 0 0 auto;
+    flex-direction: row;
+    justify-content: flex-start;
+    gap: 0.85rem;
+    width: 100%;
+    min-height: 48px;
+    padding-inline: 0.75rem;
+    font-size: var(--un-font-size-md);
+    font-weight: 600;
+    text-align: start;
+  }
+
+  .app-primary-nav__icon {
+    padding: 0;
+    font-size: 1.4rem;
+  }
+
+  .app-primary-nav__item[aria-current='page'] {
+    background: var(--app-accent-soft);
+    color: var(--app-accent-text);
+  }
+
+  .ion-palette-dark .app-primary-nav__item[aria-current='page'] {
+    color: var(--ion-color-primary);
+  }
+
+  .app-primary-nav__item[aria-current='page'] .app-primary-nav__icon {
+    background: transparent;
+  }
+
+  #main-content:has(> .app-primary-nav) > ion-router-outlet {
+    inset-block-end: 0;
+    inset-inline-start: var(--app-sidebar-w);
   }
 }

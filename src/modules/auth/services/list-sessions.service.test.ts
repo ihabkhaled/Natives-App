@@ -29,6 +29,9 @@ const PAYLOAD = {
       current: true,
     },
   ],
+  total: 2,
+  limit: 20,
+  offset: 0,
 };
 
 afterEach(() => {

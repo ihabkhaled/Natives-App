@@ -1,6 +1,10 @@
 import { describe, expect, it } from 'vitest';
 
-import { mapLoginResponseToSession, mapUserDtoToAuthUser } from './auth.mapper';
+import {
+  mapAuthSessionResponseToTokens,
+  mapLoginResponseToSession,
+  mapUserDtoToAuthUser,
+} from './auth.mapper';
 
 const membership = {
   teamId: 'team-1',
@@ -83,5 +87,21 @@ describe('mapLoginResponseToSession', () => {
     expect(Object.keys(session.tokens)).toEqual(['accessToken', 'refreshToken']);
     expect(session.tokens.accessToken).toBe('access-9');
     expect(session.tokens.refreshToken).toBe('refresh-9');
+  });
+});
+
+describe('mapAuthSessionResponseToTokens', () => {
+  it('keeps only the access and refresh tokens from a flat session response', () => {
+    expect(
+      mapAuthSessionResponseToTokens({
+        accessToken: 'access-2',
+        refreshToken: 'refresh-2',
+        refreshTokenExpiresAt: '2026-08-18T12:00:00.000Z',
+        userId: 'user-2',
+      }),
+    ).toEqual({
+      accessToken: 'access-2',
+      refreshToken: 'refresh-2',
+    });
   });
 });

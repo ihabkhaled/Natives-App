@@ -29,6 +29,7 @@ export default tseslint.config(
       'public/mockServiceWorker.js',
       'playwright-report/**',
       'test-results/**',
+      'src/packages/api-contract/generated/**',
       '.husky/**',
       '.ai/graphs/**',
       '.ai/packs/**',

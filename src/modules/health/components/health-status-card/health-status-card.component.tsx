@@ -29,6 +29,7 @@ export function HealthStatusCard(props: HealthStatusCardProps): React.JSX.Elemen
         {!props.isLoading && props.errorMessage === undefined ? (
           <div className="flex flex-col gap-2">
             <IonBadge
+              className="app-health-status-badge"
               color={props.isHealthy ? 'success' : 'danger'}
               data-testid={HEALTH_CARD_TEST_IDS.status}
             >

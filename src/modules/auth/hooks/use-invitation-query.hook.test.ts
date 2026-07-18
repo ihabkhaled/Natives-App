@@ -12,8 +12,8 @@ vi.mock('../services/get-invitation.service', () => ({ getInvitation: vi.fn() })
 
 const DETAILS = {
   email: 'invitee@example.com',
-  teamName: 'Cairo Natives',
-  inviterName: 'Coach Nadia',
+  role: 'user' as const,
+  inviterName: null,
   expiresAtIso: '2026-08-01T12:00:00.000Z',
 };
 

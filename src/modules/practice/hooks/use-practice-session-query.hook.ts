@@ -12,8 +12,13 @@ export interface PracticeSessionQueryView {
   readonly refetch: () => void;
 }
 
-export function usePracticeSessionQuery(sessionId: string): PracticeSessionQueryView {
-  const query = useAppQuery<PracticeSessionDetail>(buildPracticeSessionQueryOptions(sessionId));
+export function usePracticeSessionQuery(
+  teamId: string,
+  sessionId: string,
+): PracticeSessionQueryView {
+  const query = useAppQuery<PracticeSessionDetail>(
+    buildPracticeSessionQueryOptions(teamId, sessionId),
+  );
   return {
     session: query.data,
     isLoading: query.isPending,

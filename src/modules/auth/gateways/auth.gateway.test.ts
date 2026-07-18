@@ -11,7 +11,6 @@ import {
 import { buildTokenPair, createMemoryTokenStore } from '../../../../tests/factories/http.factory';
 import {
   AUTH_API_PATHS,
-  invitationAcceptPath,
   invitationDetailPath,
   sessionRevokePath,
 } from '../constants/auth-api.constants';
@@ -49,8 +48,8 @@ const USER_DTO = {
 const TOKENS_DTO = { accessToken: 'access-2', refreshToken: 'refresh-2' };
 const INVITATION_DTO = {
   email: 'invitee@example.com',
-  teamName: 'Cairo Natives',
-  inviterName: 'Coach Nadia',
+  role: 'user',
+  inviterName: null,
   expiresAt: '2026-08-01T12:00:00.000Z',
 };
 const SESSION_DTO = {
@@ -89,18 +88,36 @@ beforeEach(() => {
       tokenStore: createMemoryTokenStore(buildTokenPair()),
       adapter: createTestAdapter([
         recordingRoute('POST', AUTH_API_PATHS.login, { tokens: TOKENS_DTO, user: USER_DTO }),
-        recordingRoute('POST', AUTH_API_PATHS.refresh, { tokens: TOKENS_DTO }),
-        recordingRoute('POST', AUTH_API_PATHS.logout, { success: true }),
-        recordingRoute('GET', AUTH_API_PATHS.currentUser, USER_DTO),
-        recordingRoute('POST', AUTH_API_PATHS.passwordForgot, { success: true }),
-        recordingRoute('POST', AUTH_API_PATHS.passwordReset, { success: true }),
-        recordingRoute('GET', invitationDetailPath(INVITE_TOKEN), INVITATION_DTO),
-        recordingRoute('POST', invitationAcceptPath(INVITE_TOKEN), {
-          tokens: TOKENS_DTO,
-          user: USER_DTO,
+        recordingRoute('POST', AUTH_API_PATHS.refresh, {
+          ...TOKENS_DTO,
+          refreshTokenExpiresAt: '2026-08-18T12:00:00.000Z',
+          userId: 'user-1',
         }),
-        recordingRoute('GET', AUTH_API_PATHS.sessions, { sessions: [SESSION_DTO] }),
-        recordingRoute('POST', sessionRevokePath('session-2'), { success: true }),
+        recordingRoute('POST', AUTH_API_PATHS.logout, {
+          message: 'identity.session.revoked',
+        }),
+        recordingRoute('GET', AUTH_API_PATHS.currentUser, USER_DTO),
+        recordingRoute('POST', AUTH_API_PATHS.passwordForgot, {
+          message: 'identity.password.reset.requested',
+        }),
+        recordingRoute('POST', AUTH_API_PATHS.passwordReset, {
+          message: 'identity.password.reset.completed',
+        }),
+        recordingRoute('GET', invitationDetailPath(INVITE_TOKEN), INVITATION_DTO),
+        recordingRoute('POST', AUTH_API_PATHS.invitationAccept, {
+          ...TOKENS_DTO,
+          refreshTokenExpiresAt: '2026-08-18T12:00:00.000Z',
+          userId: 'user-1',
+        }),
+        recordingRoute('GET', AUTH_API_PATHS.sessions, {
+          sessions: [SESSION_DTO],
+          total: 1,
+          limit: 20,
+          offset: 0,
+        }),
+        recordingRoute('POST', sessionRevokePath('session-2'), {
+          message: 'identity.session.revoked',
+        }),
         recordingRoute('POST', AUTH_API_PATHS.sessionsRevokeOthers, { revokedCount: 2 }),
       ]),
     }),
@@ -139,7 +156,11 @@ describe('requestTokenRefresh', () => {
   it('posts the refresh token and returns the rotated pair', async () => {
     const response = await requestTokenRefresh('refresh-1');
 
-    expect(response).toEqual({ tokens: TOKENS_DTO });
+    expect(response).toEqual({
+      ...TOKENS_DTO,
+      refreshTokenExpiresAt: '2026-08-18T12:00:00.000Z',
+      userId: 'user-1',
+    });
     expect(seenFor(AUTH_API_PATHS.refresh).data).toEqual({ refreshToken: 'refresh-1' });
   });
 
@@ -151,11 +172,13 @@ describe('requestTokenRefresh', () => {
 });
 
 describe('requestLogout', () => {
-  it('posts an empty body to the logout endpoint with the bearer token', async () => {
-    const response = await requestLogout();
+  it('posts the refresh token to the logout endpoint with the bearer token', async () => {
+    const response = await requestLogout('refresh-1');
 
-    expect(response).toEqual({ success: true });
-    expect(seenFor(AUTH_API_PATHS.logout).data).toEqual({});
+    expect(response).toEqual({ message: 'identity.session.revoked' });
+    expect(seenFor(AUTH_API_PATHS.logout).data).toEqual({
+      refreshToken: 'refresh-1',
+    });
     expect(seenFor(AUTH_API_PATHS.logout).headers['Authorization']).toBe('Bearer access-1');
   });
 });
@@ -188,7 +211,9 @@ describe('requestPasswordForgot', () => {
   it('posts the email without a bearer token and returns the acknowledgement', async () => {
     const response = await requestPasswordForgot('user@example.com');
 
-    expect(response).toEqual({ success: true });
+    expect(response).toEqual({
+      message: 'identity.password.reset.requested',
+    });
     const request = seenFor(AUTH_API_PATHS.passwordForgot);
     expect(request.data).toEqual({ email: 'user@example.com' });
     expect(request.headers['Authorization']).toBeUndefined();
@@ -199,7 +224,9 @@ describe('requestPasswordReset', () => {
   it('posts the token and new password without a bearer token', async () => {
     const response = await requestPasswordReset('reset-token', 'Ranger#Strong1234');
 
-    expect(response).toEqual({ success: true });
+    expect(response).toEqual({
+      message: 'identity.password.reset.completed',
+    });
     const request = seenFor(AUTH_API_PATHS.passwordReset);
     expect(request.data).toEqual({ token: 'reset-token', password: 'Ranger#Strong1234' });
     expect(request.headers['Authorization']).toBeUndefined();
@@ -216,12 +243,19 @@ describe('requestInvitationDetails', () => {
 });
 
 describe('requestInvitationAccept', () => {
-  it('posts the chosen password and returns the login envelope', async () => {
+  it('posts the token and chosen password and returns the flat session response', async () => {
     const response = await requestInvitationAccept(INVITE_TOKEN, 'Ranger#Strong1234');
 
-    expect(response).toEqual({ tokens: TOKENS_DTO, user: USER_DTO });
-    const request = seenFor(invitationAcceptPath(INVITE_TOKEN));
-    expect(request.data).toEqual({ password: 'Ranger#Strong1234' });
+    expect(response).toEqual({
+      ...TOKENS_DTO,
+      refreshTokenExpiresAt: '2026-08-18T12:00:00.000Z',
+      userId: 'user-1',
+    });
+    const request = seenFor(AUTH_API_PATHS.invitationAccept);
+    expect(request.data).toEqual({
+      token: INVITE_TOKEN,
+      password: 'Ranger#Strong1234',
+    });
     expect(request.headers['Authorization']).toBeUndefined();
   });
 });
@@ -230,14 +264,19 @@ describe('session gateways', () => {
   it('lists sessions with the bearer token', async () => {
     const response = await requestSessionList();
 
-    expect(response).toEqual({ sessions: [SESSION_DTO] });
+    expect(response).toEqual({
+      sessions: [SESSION_DTO],
+      total: 1,
+      limit: 20,
+      offset: 0,
+    });
     expect(seenFor(AUTH_API_PATHS.sessions).headers['Authorization']).toBe('Bearer access-1');
   });
 
   it('revokes a single session with the bearer token', async () => {
     const response = await requestSessionRevoke('session-2');
 
-    expect(response).toEqual({ success: true });
+    expect(response).toEqual({ message: 'identity.session.revoked' });
     expect(seenFor(sessionRevokePath('session-2')).headers['Authorization']).toBe(
       'Bearer access-1',
     );

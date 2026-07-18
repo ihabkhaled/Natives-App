@@ -24,7 +24,11 @@ export function DashboardView(props: DashboardViewProps): React.JSX.Element {
         {props.updatedLabel === null ? null : <IonNote>{props.updatedLabel}</IonNote>}
       </header>
       {props.status === 'loading' ? (
-        <LoadingState label={props.loadingLabel} testId={DASHBOARD_VIEW_TEST_IDS.loading} />
+        <LoadingState
+          label={props.loadingLabel}
+          testId={DASHBOARD_VIEW_TEST_IDS.loading}
+          variant="dashboard"
+        />
       ) : null}
       {props.status === 'error' ? (
         <ErrorState

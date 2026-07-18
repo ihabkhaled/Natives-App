@@ -6,16 +6,20 @@ import type { PageShellProps } from './page-shell.types';
 export function PageShell(props: PageShellProps): React.JSX.Element {
   return (
     <IonPage data-testid={props.testId}>
-      <IonHeader>
-        <IonToolbar>
-          <IonTitle>{props.title}</IonTitle>
-          {props.headerEnd === undefined ? null : (
-            <IonButtons slot="end">{props.headerEnd}</IonButtons>
-          )}
-        </IonToolbar>
-      </IonHeader>
+      {props.immersive === true ? null : (
+        <IonHeader>
+          <IonToolbar>
+            <IonTitle>{props.title}</IonTitle>
+            {props.headerEnd === undefined ? null : (
+              <IonButtons slot="end">{props.headerEnd}</IonButtons>
+            )}
+          </IonToolbar>
+        </IonHeader>
+      )}
       {props.banner}
-      <IonContent className="ion-padding">{props.children}</IonContent>
+      <IonContent className={props.immersive === true ? 'app-page--immersive' : 'ion-padding'}>
+        {props.children}
+      </IonContent>
     </IonPage>
   );
 }

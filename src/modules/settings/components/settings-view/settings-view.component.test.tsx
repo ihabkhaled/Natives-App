@@ -10,6 +10,7 @@ import type { SettingsViewProps } from './settings-view.types';
 
 function buildProps(overrides: Partial<SettingsViewProps> = {}): SettingsViewProps {
   return {
+    title: 'Settings',
     appearanceLabel: 'Appearance',
     themeLabel: 'Theme',
     themeChoices: [

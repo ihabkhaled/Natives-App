@@ -12,6 +12,8 @@ export const APP_ROUTES = {
   welcome: '/welcome',
   login: '/login',
   home: '/home',
+  practices: '/practices',
+  attendance: '/practices/sess-evening/attendance',
   admin: '/admin',
   settings: '/settings',
   workbench: '/workbench',
@@ -34,6 +36,13 @@ export async function gotoApp(page: Page, path: string): Promise<void> {
  */
 export async function expectPresentedPage(page: Page, testId: string): Promise<void> {
   await expect(page.locator(`[data-testid="${testId}"]:not(.ion-page-invisible)`)).toBeVisible();
+}
+
+/** Wait until Ionic route transitions have settled before visual or accessibility assertions. */
+export async function waitForAppAnimations(page: Page): Promise<void> {
+  await page.waitForFunction(() =>
+    globalThis.document.getAnimations().every((animation) => animation.playState === 'finished'),
+  );
 }
 
 export async function fillIonInput(page: Page, testId: string, value: string): Promise<void> {

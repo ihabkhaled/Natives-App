@@ -14,9 +14,9 @@ export { practiceQueryKeys } from './queries/practice.keys';
 export { getPracticeRouteDefinitions } from './routes/practice.routes';
 export { practicesPath, practiceSessionPath } from './routes/practice.paths';
 export {
-  practiceSessionDetailSchema,
+  practiceRsvpResponseSchema,
   practiceSessionListResponseSchema,
-  upcomingPracticesResponseSchema,
+  practiceSessionResponseSchema,
 } from './schemas/practice-session.schema';
 export type {
   PracticeSessionDetail,

@@ -6,4 +6,5 @@ export interface PageShellProps {
   readonly testId?: string;
   readonly headerEnd?: ReactNode;
   readonly banner?: ReactNode;
+  readonly immersive?: boolean;
 }

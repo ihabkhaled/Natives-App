@@ -101,56 +101,85 @@ describe('loginResponseSchema', () => {
 });
 
 describe('refreshResponseSchema', () => {
-  it('accepts a rotated token envelope', () => {
-    expect(safeParseWithSchema(refreshResponseSchema, { tokens: validTokens })).toEqual({
+  const validRefresh = {
+    ...validTokens,
+    refreshTokenExpiresAt: '2026-08-18T12:00:00.000Z',
+    userId: 'user-1',
+  };
+
+  it('accepts a rotated session response', () => {
+    expect(safeParseWithSchema(refreshResponseSchema, validRefresh)).toEqual({
       success: true,
-      data: { tokens: validTokens },
+      data: validRefresh,
     });
   });
 
-  it('rejects an envelope without tokens', () => {
+  it('rejects a response without the rotated tokens', () => {
     expect(safeParseWithSchema(refreshResponseSchema, {}).success).toBe(false);
+  });
+
+  it('rejects a malformed refresh expiry', () => {
+    expect(
+      safeParseWithSchema(refreshResponseSchema, {
+        ...validRefresh,
+        refreshTokenExpiresAt: 'tomorrow',
+      }).success,
+    ).toBe(false);
   });
 });
 
 describe('logoutResponseSchema', () => {
   it('accepts the acknowledgement envelope', () => {
-    expect(safeParseWithSchema(logoutResponseSchema, { success: true })).toEqual({
+    expect(
+      safeParseWithSchema(logoutResponseSchema, {
+        message: 'identity.session.revoked',
+      }),
+    ).toEqual({
       success: true,
-      data: { success: true },
+      data: { message: 'identity.session.revoked' },
     });
   });
 
-  it('rejects a non-boolean acknowledgement', () => {
-    expect(safeParseWithSchema(logoutResponseSchema, { success: 'yes' }).success).toBe(false);
+  it('rejects an empty acknowledgement', () => {
+    expect(safeParseWithSchema(logoutResponseSchema, { message: '' }).success).toBe(false);
   });
 });
 
 describe('authAckSchema', () => {
-  it('accepts a boolean acknowledgement and rejects a non-boolean one', () => {
-    expect(safeParseWithSchema(authAckSchema, { success: true }).success).toBe(true);
-    expect(safeParseWithSchema(authAckSchema, { success: 1 }).success).toBe(false);
+  it('accepts a message acknowledgement and rejects an empty one', () => {
+    expect(
+      safeParseWithSchema(authAckSchema, {
+        message: 'identity.password.reset.requested',
+      }).success,
+    ).toBe(true);
+    expect(safeParseWithSchema(authAckSchema, { message: '' }).success).toBe(false);
   });
 });
 
 describe('invitationDetailsDtoSchema', () => {
   const valid = {
     email: 'invitee@example.com',
-    teamName: 'Cairo Natives',
-    inviterName: 'Coach Nadia',
+    role: 'user',
+    inviterName: null,
     expiresAt: '2026-08-01T12:00:00.000Z',
   };
 
-  it('accepts a well-formed invitation payload', () => {
-    expect(safeParseWithSchema(invitationDetailsDtoSchema, valid).success).toBe(true);
+  it('accepts the exact public invitation projection including a missing inviter', () => {
+    expect(safeParseWithSchema(invitationDetailsDtoSchema, valid)).toEqual({
+      success: true,
+      data: valid,
+    });
   });
 
-  it('rejects an invalid email and an empty team name', () => {
+  it('rejects an invalid email, role, and expiry instant', () => {
     expect(safeParseWithSchema(invitationDetailsDtoSchema, { ...valid, email: 'x' }).success).toBe(
       false,
     );
     expect(
-      safeParseWithSchema(invitationDetailsDtoSchema, { ...valid, teamName: '' }).success,
+      safeParseWithSchema(invitationDetailsDtoSchema, { ...valid, role: 'coach' }).success,
+    ).toBe(false);
+    expect(
+      safeParseWithSchema(invitationDetailsDtoSchema, { ...valid, expiresAt: 'tomorrow' }).success,
     ).toBe(false);
   });
 });
@@ -166,13 +195,24 @@ describe('session schemas', () => {
 
   it('accepts a session and a session list', () => {
     expect(safeParseWithSchema(sessionDtoSchema, session).success).toBe(true);
-    expect(safeParseWithSchema(sessionListResponseSchema, { sessions: [session] }).success).toBe(
-      true,
-    );
+    expect(
+      safeParseWithSchema(sessionListResponseSchema, {
+        sessions: [session],
+        total: 1,
+        limit: 20,
+        offset: 0,
+      }).success,
+    ).toBe(true);
   });
 
   it('rejects a session without an id', () => {
     expect(safeParseWithSchema(sessionDtoSchema, { ...session, id: '' }).success).toBe(false);
+  });
+
+  it('rejects a list without the backend pagination metadata', () => {
+    expect(safeParseWithSchema(sessionListResponseSchema, { sessions: [session] }).success).toBe(
+      false,
+    );
   });
 
   it('accepts a non-negative revoked count and rejects a negative one', () => {

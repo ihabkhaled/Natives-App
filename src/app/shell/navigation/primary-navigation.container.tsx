@@ -8,8 +8,5 @@ import { usePrimaryNavigation } from './use-primary-navigation.hook';
  */
 export function PrimaryNavigationContainer(): React.JSX.Element | null {
   const view = usePrimaryNavigation();
-  if (!view.isVisible) {
-    return null;
-  }
-  return <PrimaryNavigation ariaLabel={view.ariaLabel} items={view.items} />;
+  return <PrimaryNavigation {...view} />;
 }

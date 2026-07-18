@@ -5,6 +5,8 @@
  */
 export const BRAND_LOGO_ASSET = '/brand-logo.png';
 export const BRAND_FAVICON_ASSET = '/favicon.svg';
-export const BRAND_LOGO_SIZE = '1152x1152';
+export const BRAND_PWA_ICON_192_ASSET = '/pwa-icon-192.png';
+export const BRAND_PWA_ICON_512_ASSET = '/pwa-icon-512.png';
+export const BRAND_PWA_MASKABLE_ICON_512_ASSET = '/pwa-icon-maskable-512.png';
 /** Root URL used for the manifest id, start_url, and scope. */
 export const BRAND_MANIFEST_ROOT = '/';

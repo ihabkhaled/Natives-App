@@ -1,7 +1,8 @@
 import {
   PRACTICE_STATUS,
   PRACTICE_TYPE,
-  type practiceSessionDetailSchema,
+  type practiceRsvpResponseSchema,
+  type practiceSessionResponseSchema,
   RSVP_STATUS,
   type PracticeSessionDetail,
   type PracticeSessionListPage,
@@ -10,38 +11,55 @@ import {
 import type { RsvpState } from '@/modules/practice/types/practice.types';
 import type { SchemaOutput } from '@/packages/schema';
 
-type PracticeSessionDetailDto = SchemaOutput<typeof practiceSessionDetailSchema>;
+type PracticeSessionDto = SchemaOutput<typeof practiceSessionResponseSchema>;
+type PracticeRsvpDto = SchemaOutput<typeof practiceRsvpResponseSchema>;
 
-/** Synthetic wire-shape session detail (for gateway/service tests). */
-export function buildPracticeSessionDetailDto(
-  overrides: Partial<PracticeSessionDetailDto> = {},
-): PracticeSessionDetailDto {
+/** Synthetic exact SessionResponseDto (for gateway/service tests). */
+export function buildPracticeSessionDto(
+  overrides: Partial<PracticeSessionDto> = {},
+): PracticeSessionDto {
   return {
-    id: 'sess-1',
-    type: 'practice',
-    title: null,
-    status: 'scheduled',
-    startAt: '2026-07-26T15:00:00.000Z',
-    endAt: '2026-07-26T17:00:00.000Z',
-    meetAt: null,
-    rsvpDeadlineAt: null,
-    venue: null,
-    instructions: null,
+    cancellationReason: null,
     capacity: null,
-    counts: null,
-    agenda: [],
-    rsvp: {
-      status: 'no_response',
-      reasonCategory: null,
-      respondedAt: null,
-      version: 1,
-      waitlisted: false,
-      waitlistPosition: null,
-      deadlineAt: null,
-      canRespond: true,
-    },
-    changeKind: null,
+    createdAt: '2026-07-24T09:00:00.000Z',
+    createdBy: null,
+    endsAt: '2026-07-26T17:00:00.000Z',
+    field: null,
+    id: 'sess-1',
+    meetAt: null,
+    notes: null,
+    occurrenceDate: '2026-07-26',
+    organizerUserId: null,
+    rsvpCutoffAt: null,
+    scheduleId: null,
+    seasonId: 'season-1',
+    sessionType: 'practice',
+    startsAt: '2026-07-26T15:00:00.000Z',
+    status: 'published',
+    teamId: 'team-1',
+    timezone: 'Africa/Cairo',
     updatedAt: '2026-07-24T09:00:00.000Z',
+    updatedBy: null,
+    venueId: null,
+    version: 1,
+    visibility: 'team',
+    ...overrides,
+  };
+}
+
+/** Synthetic exact RsvpResponseDto. */
+export function buildPracticeRsvpDto(overrides: Partial<PracticeRsvpDto> = {}): PracticeRsvpDto {
+  return {
+    membershipId: 'membership-1',
+    sessionId: 'sess-1',
+    status: 'no_response',
+    reasonCategory: null,
+    note: null,
+    noteVisibility: null,
+    respondedAt: null,
+    source: null,
+    version: 1,
+    waitlisted: false,
     ...overrides,
   };
 }

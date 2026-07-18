@@ -1,6 +1,7 @@
 import { act, renderHook } from '@testing-library/react';
-import { afterEach, beforeAll, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
 
+import { useAppNavigation } from '@/packages/router';
 import { APP_ERROR_CODE } from '@/shared/errors';
 import { AppError } from '@/shared/errors/app.errors';
 
@@ -10,8 +11,10 @@ import { useLoginMutation, type LoginMutationView } from '../mutations/use-login
 import { useLoginScreen } from './use-login-screen.hook';
 
 vi.mock('../mutations/use-login-mutation.hook', () => ({ useLoginMutation: vi.fn() }));
+vi.mock('@/packages/router', () => ({ useAppNavigation: vi.fn() }));
 
 const VALID = { email: 'ranger@example.com', password: 'Sup3rSecret!' };
+const push = vi.fn();
 
 function mockLoginMutation(overrides: Partial<LoginMutationView> = {}): LoginMutationView['login'] {
   const login = vi.fn();
@@ -28,6 +31,15 @@ beforeAll(async () => {
   await initTestI18n();
 });
 
+beforeEach(() => {
+  vi.mocked(useAppNavigation).mockReturnValue({
+    push,
+    replace: vi.fn(),
+    goBack: vi.fn(),
+    currentPath: '/login',
+  });
+});
+
 afterEach(() => {
   vi.clearAllMocks();
 });
@@ -40,6 +52,7 @@ describe('useLoginScreen', () => {
 
     expect(result.current.labels).toEqual({
       title: 'Sign in',
+      logoLabel: 'Ultimate Natives logo',
       emailLabel: 'Email',
       emailPlaceholder: 'you@example.com',
       passwordLabel: 'Password',
@@ -50,6 +63,15 @@ describe('useLoginScreen', () => {
       submitting: 'Signing in…',
       forgotPassword: 'Forgot your password?',
     });
+  });
+
+  it('navigates to password recovery through its prepared callback', () => {
+    mockLoginMutation();
+
+    const { result } = renderHook(() => useLoginScreen());
+    result.current.onForgotPassword();
+
+    expect(push).toHaveBeenCalledExactlyOnceWith('/forgot-password');
   });
 
   it('exposes the login form view model', () => {

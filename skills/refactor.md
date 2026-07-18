@@ -54,6 +54,8 @@ src/modules/*/README.md     edit when the anatomy or surface changes
    coupling; `knip` will tell you which are unused.
 8. **Run the suite after each step**, not at the end. The step that broke it is the step you can
    still remember.
+9. **Stay focused.** Communicate concisely, avoid unrelated cleanup and speculative design, decide
+   reasonable in-scope details promptly, and continue through the required verification gates.
 
 ## Tests
 

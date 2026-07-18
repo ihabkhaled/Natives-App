@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#0b0b0b" />
+    <title>Ultimate Natives · Offline</title>
+    <style>
+      :root {
+        color-scheme: dark;
+        font-family:
+          Inter,
+          ui-sans-serif,
+          system-ui,
+          -apple-system,
+          BlinkMacSystemFont,
+          'Segoe UI',
+          sans-serif;
+        background: #0b0b0b;
+        color: #fffdf5;
+      }
+
+      body {
+        display: grid;
+        min-height: 100vh;
+        min-height: 100dvh;
+        margin: 0;
+        place-items: center;
+        background:
+          radial-gradient(circle at 50% 20%, rgb(245 179 1 / 18%), transparent 38rem), #0b0b0b;
+      }
+
+      main {
+        width: min(34rem, calc(100% - 3rem));
+        text-align: center;
+      }
+
+      h1 {
+        margin: 1.5rem 0 0.75rem;
+        color: #f5b301;
+        font-size: clamp(2rem, 8vw, 3.5rem);
+        line-height: 1;
+      }
+
+      p {
+        margin: 0.75rem auto;
+        color: #d5d1c7;
+        font-size: 1.05rem;
+        line-height: 1.65;
+      }
+
+      a {
+        display: inline-grid;
+        min-height: 3rem;
+        margin-top: 1.25rem;
+        padding: 0 1.25rem;
+        place-items: center;
+        border-radius: 999px;
+        background: #f5b301;
+        color: #0b0b0b;
+        font-weight: 800;
+        text-decoration: none;
+      }
+
+      a:focus-visible {
+        outline: 3px solid #fffdf5;
+        outline-offset: 4px;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>You’re offline</h1>
+      <p>Reconnect, then try again. Private team data is never stored in this offline page.</p>
+      <p lang="ar" dir="rtl">أنت غير متصل. أعد الاتصال ثم حاول مرة أخرى.</p>
+      <a href="/">Try again · حاول مرة أخرى</a>
+    </main>
+  </body>
+</html>

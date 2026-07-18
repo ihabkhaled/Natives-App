@@ -113,5 +113,7 @@ describe('usePrimaryNavigation', () => {
     });
 
     expect(result.current.ariaLabel).toBe('Primary');
+    expect(result.current.appName).toBe('Ultimate Natives');
+    expect(result.current.logoLabel).toBe('Ultimate Natives logo');
   });
 });

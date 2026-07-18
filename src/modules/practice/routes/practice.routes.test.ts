@@ -17,9 +17,20 @@ describe('getPracticeRouteDefinitions', () => {
     for (const definition of getPracticeRouteDefinitions()) {
       expect(definition.access).toBe(ROUTE_ACCESS.Protected);
       expect(definition.meta?.permissions).toEqual([PERMISSIONS.practicesRead]);
+      expect(definition.meta?.requiresTeamContext).toBe(true);
       expect(definition.meta?.offline).toBe(true);
-      expect(definition.meta?.nav).toBeNull();
     }
+  });
+
+  it('exposes only the calendar as a permission-aware primary destination', () => {
+    const [calendar, detail] = getPracticeRouteDefinitions();
+
+    expect(calendar?.meta?.nav).toEqual({
+      order: 10,
+      iconName: 'calendar',
+      labelKey: 'practice.calendarTitle',
+    });
+    expect(detail?.meta?.nav).toBeNull();
   });
 
   it('renders a component for each route', () => {

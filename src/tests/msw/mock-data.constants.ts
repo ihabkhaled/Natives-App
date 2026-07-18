@@ -31,11 +31,32 @@ export const MOCK_TOKENS = {
   refresh: 'mock-refresh-token',
   rotatedAccess: 'mock-access-token-rotated',
   rotatedRefresh: 'mock-refresh-token-rotated',
+  rotatedRefreshExpiresAt: '2026-08-18T12:00:00.000Z',
+  invitedAccess: 'mock-access-user-invited',
+  invitedRefresh: 'mock-refresh-user-invited',
+  invitedRefreshExpiresAt: '2026-08-18T12:00:00.000Z',
 } as const;
 
 export const MOCK_HEALTH = {
   version: '1.0.0-mock',
   timestamp: '2026-07-16T12:00:00.000Z',
+} as const;
+
+/** Canonical team-scoped practice contract identifiers. */
+export const MOCK_PRACTICE = {
+  teamId: 'team-natives',
+  sessionId: 'sess-evening',
+  conflictSessionId: 'sess-conflict',
+  closedSessionId: 'sess-throwing',
+} as const;
+
+export const MOCK_ATTENDANCE = {
+  teamId: MOCK_PRACTICE.teamId,
+  sessionId: MOCK_PRACTICE.sessionId,
+  presentMembershipId: '10000000-0000-4000-8000-000000000001',
+  lateMembershipId: '10000000-0000-4000-8000-000000000002',
+  conflictMembershipId: '10000000-0000-4000-8000-000000000003',
+  historicalMembershipId: '10000000-0000-4000-8000-000000000004',
 } as const;
 
 /**
@@ -47,8 +68,8 @@ export const MOCK_INVITATION = {
   expiredToken: 'invite-expired-token',
   usedToken: 'invite-used-token',
   email: 'invitee@example.com',
-  teamName: 'Cairo Natives',
-  inviterName: 'Coach Nadia',
+  role: 'user',
+  inviterName: null,
   expiresAt: '2026-08-01T12:00:00.000Z',
 } as const;
 

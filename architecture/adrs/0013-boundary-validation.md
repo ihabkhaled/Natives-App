@@ -60,5 +60,6 @@ under the pure-file policy; `npm run test:contract` proves the schemas match the
 
 ## Supersession
 
-Revisit if a generated client (ADR 0007's supersession path) produces validators from a published
-contract; the four boundaries would remain, only their schema authorship would change.
+[ADR 0017](./0017-canonical-openapi-contract.md) now generates TypeScript declarations from the
+published contract. It does not generate runtime validators, so all four parsing boundaries and the
+Zod ownership decision remain unchanged.

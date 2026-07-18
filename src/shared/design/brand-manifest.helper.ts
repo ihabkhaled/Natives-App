@@ -1,8 +1,9 @@
 import {
   BRAND_FAVICON_ASSET,
-  BRAND_LOGO_ASSET,
-  BRAND_LOGO_SIZE,
   BRAND_MANIFEST_ROOT,
+  BRAND_PWA_ICON_192_ASSET,
+  BRAND_PWA_ICON_512_ASSET,
+  BRAND_PWA_MASKABLE_ICON_512_ASSET,
 } from './brand-assets.constants';
 import type { BrandTokens } from './brand-tokens.constants';
 
@@ -11,9 +12,9 @@ import type { BrandTokens } from './brand-tokens.constants';
  * The committed public/manifest.webmanifest is this output; equality is proven
  * by the colocated test so the manifest cannot silently drift from the brand.
  *
- * Icons reference only committed, safe source art: the scalable brand favicon
- * (used for the `any` and `maskable` purposes, since it carries a centred mark
- * with safe-area padding) and the raster brand logo as a fallback.
+ * Install icons are reproducible raster derivatives of the checksum-pinned
+ * source logo. The maskable derivative adds a brand-black safe area so launchers
+ * may crop it without cutting the mark.
  */
 interface WebManifestIcon {
   readonly src: string;
@@ -68,8 +69,14 @@ export function buildWebManifest(
     categories: ['sports'],
     icons: [
       { src: BRAND_FAVICON_ASSET, sizes: 'any', type: 'image/svg+xml', purpose: 'any' },
-      { src: BRAND_FAVICON_ASSET, sizes: 'any', type: 'image/svg+xml', purpose: 'maskable' },
-      { src: BRAND_LOGO_ASSET, sizes: BRAND_LOGO_SIZE, type: 'image/png', purpose: 'any' },
+      { src: BRAND_PWA_ICON_192_ASSET, sizes: '192x192', type: 'image/png', purpose: 'any' },
+      { src: BRAND_PWA_ICON_512_ASSET, sizes: '512x512', type: 'image/png', purpose: 'any' },
+      {
+        src: BRAND_PWA_MASKABLE_ICON_512_ASSET,
+        sizes: '512x512',
+        type: 'image/png',
+        purpose: 'maskable',
+      },
     ],
   };
 }

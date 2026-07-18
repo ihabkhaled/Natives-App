@@ -3,8 +3,8 @@ import { toAppError } from '@/shared/errors/app-error.helper';
 import { mapHttpErrorToAppError } from '@/shared/mappers';
 
 import { requestRsvpUpdate } from '../gateways/practice.gateway';
-import { mapPracticeSessionDetail } from '../mappers/practice-session.mapper';
-import type { PracticeSessionDetail, RsvpSubmission } from '../types/practice.types';
+import { mapRsvpUpdate } from '../mappers/practice-session.mapper';
+import type { RsvpSubmission, RsvpUpdate } from '../types/practice.types';
 
 /**
  * Use case: submit or change the member's own RSVP. The server re-checks the
@@ -12,12 +12,13 @@ import type { PracticeSessionDetail, RsvpSubmission } from '../types/practice.ty
  * AppError so the UI can recover with the authoritative latest state.
  */
 export async function submitRsvp(
+  teamId: string,
   sessionId: string,
   submission: RsvpSubmission,
-): Promise<PracticeSessionDetail> {
+): Promise<RsvpUpdate> {
   try {
-    const dto = await requestRsvpUpdate(sessionId, submission);
-    return mapPracticeSessionDetail(dto);
+    const dto = await requestRsvpUpdate(teamId, sessionId, submission);
+    return mapRsvpUpdate(dto);
   } catch (error) {
     throw isHttpError(error) ? mapHttpErrorToAppError(error) : toAppError(error);
   }

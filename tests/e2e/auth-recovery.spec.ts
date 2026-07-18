@@ -56,6 +56,7 @@ test.describe('invitation acceptance', () => {
     await expect(page.getByTestId(TEST_IDS.acceptInvitationEmail)).toContainText(
       MOCK_INVITATION.email,
     );
+    await expect(page.getByText(/Ultimate Natives team invited you/u)).toContainText('member');
 
     await fillIonInput(page, TEST_IDS.setPasswordInput, MOCK_STRONG_PASSWORD);
     await fillIonInput(page, TEST_IDS.setPasswordConfirmInput, MOCK_STRONG_PASSWORD);
@@ -69,6 +70,24 @@ test.describe('invitation acceptance', () => {
 
     await expect(page.getByTestId(TEST_IDS.acceptInvitationStatus)).toContainText(
       'Invitation unavailable',
+    );
+  });
+
+  test('@rtl renders the localized branded invitation right-to-left', async ({ page }) => {
+    await gotoApp(page, '/settings');
+    await page
+      .getByTestId(TEST_IDS.settingsLocaleSelect)
+      .locator('ion-segment-button[value="ar"]')
+      .click();
+    await expect(page.locator('html')).toHaveAttribute('dir', 'rtl');
+
+    await gotoApp(page, `/accept-invitation?token=${MOCK_INVITATION.validToken}`);
+
+    await expect(page.locator('html')).toHaveAttribute('lang', 'ar');
+    await expect(page.locator('html')).toHaveAttribute('dir', 'rtl');
+    await expect(page.getByTestId(TEST_IDS.acceptInvitationPage)).toContainText('Ultimate Natives');
+    await expect(page.getByTestId(TEST_IDS.acceptInvitationEmail)).toContainText(
+      MOCK_INVITATION.email,
     );
   });
 });

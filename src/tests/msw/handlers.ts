@@ -5,9 +5,12 @@ import { getEnvironment } from '@/packages/environment';
 import { PERMISSIONS } from '@/shared/security';
 
 import { buildDashboardSummaryResponse } from './dashboard-summary.fixture';
+import { attendanceHandlers } from './attendance-handlers';
+import { resetMockAttendanceState } from './attendance.fixture';
 import {
   MOCK_CREDENTIALS,
   MOCK_HEALTH,
+  MOCK_INVITATION,
   MOCK_PERSONA_EMAILS,
   MOCK_SCENARIO_EMAILS,
   MOCK_TIMEOUT_DELAY_MS,
@@ -35,9 +38,17 @@ const MEMBER_PERMISSIONS = [
   PERMISSIONS.leaderboardsRead,
 ];
 
+const ADMIN_PERSONA = buildAuthUser();
+const INVITED_PERSONA = buildAuthUser({
+  id: 'user-invited',
+  email: MOCK_INVITATION.email,
+  displayName: 'Invited Ranger',
+  permissions: MEMBER_PERMISSIONS,
+});
+
 /** Deterministic persona directory keyed by login email. */
 const PERSONA_USERS: Record<string, AuthUser> = {
-  [MOCK_PERSONA_EMAILS.admin]: buildAuthUser(),
+  [MOCK_PERSONA_EMAILS.admin]: ADMIN_PERSONA,
   [MOCK_PERSONA_EMAILS.coach]: buildAuthUser({
     id: 'user-coach',
     email: MOCK_PERSONA_EMAILS.coach,
@@ -71,6 +82,7 @@ const PERSONA_USERS: Record<string, AuthUser> = {
     permissions: MEMBER_PERMISSIONS,
     memberships: [],
   }),
+  [MOCK_INVITATION.email]: INVITED_PERSONA,
 };
 
 const PERSONA_TOKEN_PREFIX = 'mock-access-';
@@ -82,6 +94,7 @@ export function resetMockAuthState(): void {
   issuedTokenEmails.clear();
   resetMockRecoveryState();
   resetMockPracticeState();
+  resetMockAttendanceState();
 }
 
 function apiUrl(path: string): string {
@@ -237,10 +250,15 @@ export const mockApiHandlers = [
     }
     issuedTokenEmails.set(MOCK_TOKENS.rotatedAccess, MOCK_PERSONA_EMAILS.admin);
     return HttpResponse.json({
-      tokens: { accessToken: MOCK_TOKENS.rotatedAccess, refreshToken: MOCK_TOKENS.rotatedRefresh },
+      accessToken: MOCK_TOKENS.rotatedAccess,
+      refreshToken: MOCK_TOKENS.rotatedRefresh,
+      refreshTokenExpiresAt: MOCK_TOKENS.rotatedRefreshExpiresAt,
+      userId: ADMIN_PERSONA.id,
     });
   }),
-  http.post(apiUrl('/auth/logout'), () => HttpResponse.json({ success: true })),
+  http.post(apiUrl('/auth/logout'), () =>
+    HttpResponse.json({ message: 'identity.session.revoked' }),
+  ),
   http.get(apiUrl('/auth/me'), ({ request }) => {
     const persona = personaFromToken(request);
     if (persona === null) {
@@ -266,5 +284,6 @@ export const mockApiHandlers = [
     return HttpResponse.json(buildDashboardSummaryResponse(persona));
   }),
   ...practiceHandlers,
+  ...attendanceHandlers,
   ...recoveryHandlers,
 ];

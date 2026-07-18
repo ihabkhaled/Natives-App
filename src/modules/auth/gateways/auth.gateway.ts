@@ -1,9 +1,13 @@
 import { getAppHttpClient } from '@/packages/http';
+import type {
+  LoginRequestContract,
+  LogoutRequestContract,
+  RefreshRequestContract,
+} from '@/packages/api-contract';
 import type { SchemaOutput } from '@/packages/schema';
 
 import {
   AUTH_API_PATHS,
-  invitationAcceptPath,
   invitationDetailPath,
   sessionRevokePath,
 } from '../constants/auth-api.constants';
@@ -26,7 +30,8 @@ import type { LoginCredentials } from '../types/auth.types';
 export function requestLogin(
   credentials: LoginCredentials,
 ): Promise<SchemaOutput<typeof loginResponseSchema>> {
-  return getAppHttpClient().post(AUTH_API_PATHS.login, credentials, loginResponseSchema, {
+  const request: LoginRequestContract = credentials;
+  return getAppHttpClient().post(AUTH_API_PATHS.login, request, loginResponseSchema, {
     skipAuth: true,
     skipRetryOnUnauthorized: true,
   });
@@ -35,14 +40,18 @@ export function requestLogin(
 export function requestTokenRefresh(
   refreshToken: string,
 ): Promise<SchemaOutput<typeof refreshResponseSchema>> {
-  return getAppHttpClient().post(AUTH_API_PATHS.refresh, { refreshToken }, refreshResponseSchema, {
+  const request: RefreshRequestContract = { refreshToken };
+  return getAppHttpClient().post(AUTH_API_PATHS.refresh, request, refreshResponseSchema, {
     skipAuth: true,
     skipRetryOnUnauthorized: true,
   });
 }
 
-export function requestLogout(): Promise<SchemaOutput<typeof logoutResponseSchema>> {
-  return getAppHttpClient().post(AUTH_API_PATHS.logout, {}, logoutResponseSchema, {
+export function requestLogout(
+  refreshToken: string,
+): Promise<SchemaOutput<typeof logoutResponseSchema>> {
+  const request: LogoutRequestContract = { refreshToken };
+  return getAppHttpClient().post(AUTH_API_PATHS.logout, request, logoutResponseSchema, {
     skipRetryOnUnauthorized: true,
   });
 }
@@ -78,11 +87,16 @@ export function requestInvitationDetails(
 export function requestInvitationAccept(
   token: string,
   password: string,
-): Promise<SchemaOutput<typeof loginResponseSchema>> {
-  return getAppHttpClient().post(invitationAcceptPath(token), { password }, loginResponseSchema, {
-    skipAuth: true,
-    skipRetryOnUnauthorized: true,
-  });
+): Promise<SchemaOutput<typeof refreshResponseSchema>> {
+  return getAppHttpClient().post(
+    AUTH_API_PATHS.invitationAccept,
+    { token, password },
+    refreshResponseSchema,
+    {
+      skipAuth: true,
+      skipRetryOnUnauthorized: true,
+    },
+  );
 }
 
 export function requestSessionList(): Promise<SchemaOutput<typeof sessionListResponseSchema>> {

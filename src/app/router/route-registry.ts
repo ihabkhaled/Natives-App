@@ -1,4 +1,5 @@
 import { getAdminRouteDefinitions } from '@/modules/admin';
+import { getAttendanceRouteDefinitions } from '@/modules/attendance';
 import { getAuthRouteDefinitions } from '@/modules/auth';
 import { getHomeRouteDefinitions, getNotFoundRouteDefinition } from '@/modules/home';
 import { getPracticeRouteDefinitions } from '@/modules/practice';
@@ -12,6 +13,7 @@ export function getAppRouteDefinitions(): readonly AppRouteDefinition[] {
     ...getAuthRouteDefinitions(),
     ...getHomeRouteDefinitions(),
     ...getPracticeRouteDefinitions(),
+    ...getAttendanceRouteDefinitions(),
     ...getAdminRouteDefinitions(),
     ...getSettingsRouteDefinitions(),
     ...getWorkbenchRouteDefinitions(),

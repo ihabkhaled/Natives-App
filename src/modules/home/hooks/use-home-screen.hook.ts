@@ -1,5 +1,8 @@
 import { useCurrentUserQuery, useLogoutMutation } from '@/modules/auth';
+import { practicesPath } from '@/modules/practice';
 import { useAppTranslation } from '@/packages/i18n';
+import { useAppNavigation } from '@/packages/router';
+import { APP_PATHS } from '@/shared/config';
 import { I18N_KEYS } from '@/shared/i18n';
 
 export interface HomeScreenView {
@@ -12,12 +15,15 @@ export interface HomeScreenView {
   readonly practiceCalendarLabel: string;
   readonly isLoggingOut: boolean;
   readonly onLogout: () => void;
+  readonly onManageSessions: () => void;
+  readonly onOpenPracticeCalendar: () => void;
 }
 
 export function useHomeScreen(): HomeScreenView {
   const { t } = useAppTranslation();
   const currentUser = useCurrentUserQuery();
   const logoutMutation = useLogoutMutation();
+  const navigation = useAppNavigation();
   return {
     title: t(I18N_KEYS.home.title),
     greeting: t(I18N_KEYS.home.greeting, { name: currentUser.user?.displayName ?? '' }),
@@ -28,5 +34,11 @@ export function useHomeScreen(): HomeScreenView {
     practiceCalendarLabel: t(I18N_KEYS.practice.entryLink),
     isLoggingOut: logoutMutation.isLoggingOut,
     onLogout: logoutMutation.logout,
+    onManageSessions: () => {
+      navigation.push(APP_PATHS.sessions);
+    },
+    onOpenPracticeCalendar: () => {
+      navigation.push(practicesPath());
+    },
   };
 }

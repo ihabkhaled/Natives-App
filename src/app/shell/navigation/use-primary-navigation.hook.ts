@@ -27,6 +27,8 @@ export function usePrimaryNavigation(): PrimaryNavigationView {
   return {
     isVisible: isReady && items.length > 0,
     ariaLabel: t(I18N_KEYS.nav.primaryLabel),
+    appName: t(I18N_KEYS.common.appName),
+    logoLabel: t(I18N_KEYS.brand.logoAlt),
     items: items.map((item) => ({
       key: item.key,
       label: t(item.labelKey),

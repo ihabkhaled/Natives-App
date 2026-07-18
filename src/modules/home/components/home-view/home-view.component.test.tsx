@@ -10,12 +10,17 @@ import type { HomeViewProps } from './home-view.types';
 
 function buildProps(overrides: Partial<HomeViewProps> = {}): HomeViewProps {
   return {
+    title: 'Home',
     greeting: 'Hello, Ranger Rick',
     isLoadingUser: false,
     loadingLabel: 'Loading…',
     logoutLabel: 'Sign out',
+    manageSessionsLabel: 'Manage your devices',
+    practiceCalendarLabel: 'Open the practice calendar',
     isLoggingOut: false,
     onLogout: vi.fn(),
+    onManageSessions: vi.fn(),
+    onOpenPracticeCalendar: vi.fn(),
     dashboardSlot: <div data-testid={TEST_IDS.dashboardView}>Dashboard</div>,
     healthSlot: <div data-testid={TEST_IDS.healthCard}>Health</div>,
     ...overrides,
@@ -78,6 +83,24 @@ describe('HomeView', () => {
     await userEvent.click(screen.getByTestId(HOME_VIEW_TEST_IDS.logout));
 
     expect(props.onLogout).toHaveBeenCalledOnce();
+  });
+
+  it('opens the practice calendar from the hero action', async () => {
+    const props = buildProps();
+    mountHome(props);
+
+    await userEvent.click(screen.getByTestId(HOME_VIEW_TEST_IDS.practice));
+
+    expect(props.onOpenPracticeCalendar).toHaveBeenCalledOnce();
+  });
+
+  it('opens device management from the hero action', async () => {
+    const props = buildProps();
+    mountHome(props);
+
+    await userEvent.click(screen.getByTestId(HOME_VIEW_TEST_IDS.sessions));
+
+    expect(props.onManageSessions).toHaveBeenCalledOnce();
   });
 
   it('blocks a second sign-out while one is in flight', () => {

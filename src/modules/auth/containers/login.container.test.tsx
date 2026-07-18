@@ -14,6 +14,7 @@ vi.mock('../hooks/use-login-screen.hook', () => ({ useLoginScreen: vi.fn() }));
 // assertions prove the shell title comes from the view model rather than the button.
 const LABELS = {
   title: 'Sign in to Ranger',
+  logoLabel: 'Ultimate Natives logo',
   emailLabel: 'Email',
   emailPlaceholder: 'you@example.com',
   passwordLabel: 'Password',
@@ -41,6 +42,7 @@ function mockLoginScreen(overrides: Partial<LoginScreenView> = {}): LoginScreenV
     },
     isSubmitting: false,
     submitErrorMessage: undefined,
+    onForgotPassword: vi.fn(),
     ...overrides,
   };
   vi.mocked(useLoginScreen).mockReturnValue(view);
@@ -100,12 +102,13 @@ describe('LoginContainer', () => {
   });
 
   it('offers a forgot-password link that navigates to the recovery flow', () => {
-    mockLoginScreen();
+    const view = mockLoginScreen();
 
     renderWithProviders(<LoginContainer />);
 
     const link = screen.getByTestId(TEST_IDS.loginForgotPasswordLink);
     expect(link).toHaveTextContent(LABELS.forgotPassword);
     fireEvent.click(link);
+    expect(view.onForgotPassword).toHaveBeenCalledOnce();
   });
 });

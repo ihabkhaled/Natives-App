@@ -14,6 +14,8 @@ function mockView(view: Partial<PrimaryNavigationView>): void {
   vi.mocked(usePrimaryNavigation).mockReturnValue({
     isVisible: false,
     ariaLabel: 'Primary',
+    appName: 'Ultimate Natives',
+    logoLabel: 'Ultimate Natives logo',
     items: [],
     ...view,
   });

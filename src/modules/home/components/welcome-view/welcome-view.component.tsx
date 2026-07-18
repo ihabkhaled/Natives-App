@@ -1,27 +1,33 @@
 import { IonText } from '@/packages/ionic';
-import { AppButton, BrandLogo } from '@/shared/ui';
+import { TEST_IDS } from '@/shared/config';
+import { AppButton, BrandLogo, PageShell } from '@/shared/ui';
 
 import { WELCOME_VIEW_TEST_IDS } from './welcome-view.constants';
 import type { WelcomeViewProps } from './welcome-view.types';
 
 export function WelcomeView(props: WelcomeViewProps): React.JSX.Element {
   return (
-    <div className="flex min-h-full flex-col items-center justify-center gap-4 p-6 text-center">
-      <BrandLogo label={props.logoLabel} size="lg" />
-      <IonText>
-        <h1 className="m-0 text-2xl font-bold">{props.title}</h1>
-      </IonText>
-      <IonText color="secondary">
-        <p className="m-0 text-sm font-semibold tracking-wide uppercase">{props.tagline}</p>
-      </IonText>
-      <IonText color="medium">
-        <p className="m-0 max-w-md text-base">{props.subtitle}</p>
-      </IonText>
-      <AppButton
-        label={props.loginCta}
-        onClick={props.onLoginClick}
-        testId={WELCOME_VIEW_TEST_IDS.loginCta}
-      />
-    </div>
+    <PageShell title={props.title} testId={TEST_IDS.welcomePage} immersive>
+      <main className="app-welcome-hero">
+        <div className="app-welcome-hero__mark" aria-hidden="true" />
+        <div className="app-welcome-hero__content">
+          <BrandLogo label={props.logoLabel} size="lg" />
+          <IonText color="secondary">
+            <p className="app-eyebrow m-0">{props.tagline}</p>
+          </IonText>
+          <IonText>
+            <h1 className="m-0 text-3xl font-bold">{props.title}</h1>
+          </IonText>
+          <IonText color="medium">
+            <p className="m-0 max-w-md text-base">{props.subtitle}</p>
+          </IonText>
+          <AppButton
+            label={props.loginCta}
+            onClick={props.onLoginClick}
+            testId={WELCOME_VIEW_TEST_IDS.loginCta}
+          />
+        </div>
+      </main>
+    </PageShell>
   );
 }

@@ -24,7 +24,10 @@ describe('PrimaryNavigation', () => {
   it('renders a labelled navigation region with one button per item', () => {
     render(
       <PrimaryNavigation
+        isVisible
         ariaLabel="Primary"
+        appName="Ultimate Natives"
+        logoLabel="Ultimate Natives logo"
         items={[
           item(),
           item({ key: 'settings', label: 'Settings', testId: 'primary-nav-item-settings' }),
@@ -41,7 +44,10 @@ describe('PrimaryNavigation', () => {
   it('marks the active item with aria-current and leaves the others unset', () => {
     render(
       <PrimaryNavigation
+        isVisible
         ariaLabel="Primary"
+        appName="Ultimate Natives"
+        logoLabel="Ultimate Natives logo"
         items={[
           item({ isActive: true }),
           item({ key: 'settings', label: 'Settings', testId: 'primary-nav-item-settings' }),
@@ -55,10 +61,32 @@ describe('PrimaryNavigation', () => {
 
   it('invokes the item handler on activation', async () => {
     const onSelect = vi.fn();
-    render(<PrimaryNavigation ariaLabel="Primary" items={[item({ onSelect })]} />);
+    render(
+      <PrimaryNavigation
+        isVisible
+        ariaLabel="Primary"
+        appName="Ultimate Natives"
+        logoLabel="Ultimate Natives logo"
+        items={[item({ onSelect })]}
+      />,
+    );
 
     await userEvent.click(screen.getByRole('button', { name: 'Home' }));
 
     expect(onSelect).toHaveBeenCalledOnce();
+  });
+
+  it('renders no navigation landmark before the session is ready', () => {
+    render(
+      <PrimaryNavigation
+        isVisible={false}
+        ariaLabel="Primary"
+        appName="Ultimate Natives"
+        logoLabel="Ultimate Natives logo"
+        items={[]}
+      />,
+    );
+
+    expect(screen.queryByRole('navigation')).not.toBeInTheDocument();
   });
 });
