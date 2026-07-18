@@ -1,17 +1,8 @@
 import type { ReactNode } from 'react';
 
-export interface HomeViewProps {
-  readonly title: string;
-  readonly greeting: string;
-  readonly isLoadingUser: boolean;
-  readonly loadingLabel: string;
-  readonly logoutLabel: string;
-  readonly manageSessionsLabel: string;
-  readonly practiceCalendarLabel: string;
-  readonly isLoggingOut: boolean;
-  readonly onLogout: () => void;
-  readonly onManageSessions: () => void;
-  readonly onOpenPracticeCalendar: () => void;
+import type { HomeScreenView } from '../../hooks/use-home-screen.hook';
+
+export interface HomeViewProps extends HomeScreenView {
   readonly dashboardSlot: ReactNode;
   readonly healthSlot: ReactNode;
 }

@@ -17,6 +17,7 @@ describe('APP_PATHS', () => {
       home: '/home',
       practices: '/practices',
       practiceSession: '/practices/:sessionId',
+      attendance: '/practices/:sessionId/attendance',
       admin: '/admin',
       settings: '/settings',
       workbench: '/workbench',

@@ -30,6 +30,7 @@ describe('APP_DEEP_LINK_POLICY', () => {
       '/login',
       '/practices',
       '/practices/:sessionId',
+      '/practices/:sessionId/attendance',
       '/reset-password',
       '/sessions',
       '/settings',

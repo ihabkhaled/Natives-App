@@ -47,7 +47,7 @@ describe('attendance coach flow (real client + MSW)', () => {
     expect(screen.getAllByTestId(TEST_IDS.attendanceRosterRow)).toHaveLength(4);
     expect(screen.getByText(/3 of 4 marked/u)).toBeVisible();
     expect(screen.getAllByText(/RSVP is not shared/u)).toHaveLength(4);
-    expect(screen.getByText(/Historical member/u)).toBeVisible();
+    expect(screen.getByText(/Historical player/u)).toBeVisible();
 
     const submit = screen.getByTestId(TEST_IDS.attendanceSubmit);
     expect(submit).toBeDisabled();

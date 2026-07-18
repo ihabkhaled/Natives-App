@@ -52,7 +52,17 @@ export interface AttendanceRevisionView {
   readonly reason: string | null;
 }
 
-export interface AttendanceScreenView {
+export interface AttendanceScreenActions {
+  readonly onRetry: () => void;
+  readonly onSubmit: () => void;
+  readonly onFinalize: () => void;
+  readonly onRetryQueue: () => void;
+  readonly onResolveConflict: (membershipId: string) => void;
+  readonly onShowHistory: (membershipId: string) => void;
+  readonly onSaveCorrection: (membershipId: string) => void;
+}
+
+export interface AttendanceScreenView extends AttendanceScreenActions {
   readonly title: string;
   readonly status: AttendanceScreenStatus;
   readonly loadingLabel: string;
@@ -109,7 +119,6 @@ export interface AttendanceScreenView {
   readonly historyMembershipId: string | null;
   readonly historyItems: readonly AttendanceRevisionView[];
   readonly isHistoryLoading: boolean;
-  readonly onRetry: () => void;
   readonly onSearchChange: (value: string) => void;
   readonly onFilterChange: (value: AttendanceStatus | null) => void;
   readonly onToggleMember: (membershipId: string) => void;
@@ -122,10 +131,4 @@ export interface AttendanceScreenView {
   readonly onMarkSelectedPresent: () => void;
   readonly onMarkSelectedAbsent: () => void;
   readonly onUndo: () => void;
-  readonly onSubmit: () => void;
-  readonly onFinalize: () => void;
-  readonly onRetryQueue: () => void;
-  readonly onResolveConflict: (membershipId: string) => void;
-  readonly onShowHistory: (membershipId: string) => void;
-  readonly onSaveCorrection: (membershipId: string) => void;
 }

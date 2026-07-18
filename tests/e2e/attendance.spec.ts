@@ -1,10 +1,7 @@
 import { expect, test } from '@playwright/test';
 
 import { TEST_IDS } from '@/shared/config';
-import {
-  MOCK_CREDENTIALS,
-  MOCK_PERSONA_EMAILS,
-} from '@/tests/msw/mock-data.constants';
+import { MOCK_CREDENTIALS, MOCK_PERSONA_EMAILS } from '@/tests/msw/mock-data.constants';
 
 import {
   APP_ROUTES,
