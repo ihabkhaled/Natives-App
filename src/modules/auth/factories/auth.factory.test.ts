@@ -1,21 +1,40 @@
 import { describe, expect, it } from 'vitest';
 
+import { PERMISSIONS } from '@/shared/security';
+
 import { buildAuthUser } from './auth.factory';
 
 describe('buildAuthUser', () => {
-  it('builds the deterministic default user', () => {
-    expect(buildAuthUser()).toEqual({
-      id: 'user-1',
-      email: 'ranger@example.com',
-      displayName: 'Ranger One',
-    });
+  it('builds the deterministic default admin persona', () => {
+    const user = buildAuthUser();
+
+    expect(user.id).toBe('user-1');
+    expect(user.email).toBe('ranger@example.com');
+    expect(user.displayName).toBe('Ranger One');
+    expect(user.accountState).toBe('active');
+    expect(user.onboardingComplete).toBe(true);
+    expect(user.permissions).toEqual(Object.values(PERMISSIONS));
+    expect(user.memberships).toHaveLength(1);
+  });
+
+  it('grants the default persona the manage-users capability', () => {
+    expect(buildAuthUser().permissions).toContain(PERMISSIONS.usersManage);
   });
 
   it('applies overrides on top of the defaults', () => {
-    expect(buildAuthUser({ id: 'user-2', displayName: 'Ranger Two' })).toEqual({
+    const user = buildAuthUser({
       id: 'user-2',
-      email: 'ranger@example.com',
       displayName: 'Ranger Two',
+      permissions: [PERMISSIONS.membersRead],
+      onboardingComplete: false,
+      memberships: [],
     });
+
+    expect(user.id).toBe('user-2');
+    expect(user.displayName).toBe('Ranger Two');
+    expect(user.permissions).toEqual([PERMISSIONS.membersRead]);
+    expect(user.onboardingComplete).toBe(false);
+    expect(user.memberships).toEqual([]);
+    expect(user.email).toBe('ranger@example.com');
   });
 });

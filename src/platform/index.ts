@@ -17,7 +17,12 @@ export { getDeviceInformation, type DeviceInformation } from './device/device.fa
 export { getExecutionContext, type ExecutionContext } from './environment/execution-context.facade';
 export { openExternalUrl } from './external-navigation/external-navigation.facade';
 export { reloadApplication } from './lifecycle/app-reload.facade';
-export { applyDocumentLocale, applyDocumentTheme } from './lifecycle/document-chrome.facade';
+export {
+  applyDocumentLocale,
+  applyDocumentTheme,
+  applyDocumentTitle,
+  focusElementById,
+} from './lifecycle/document-chrome.facade';
 export { applyNativeChrome } from './lifecycle/native-chrome.facade';
 export { getPlatformLogger } from './logging/platform-logger.facade';
 export { useNetworkStatus, type NetworkStatus } from './network/hooks/use-network-status.hook';

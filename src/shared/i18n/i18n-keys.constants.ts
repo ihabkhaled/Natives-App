@@ -113,6 +113,28 @@ export const I18N_KEYS = {
     message: 'notFound.message',
     goHome: 'notFound.goHome',
   },
+  nav: {
+    primaryLabel: 'nav.primaryLabel',
+    skipToContent: 'nav.skipToContent',
+    home: 'nav.home',
+    admin: 'nav.admin',
+    settings: 'nav.settings',
+  },
+  admin: {
+    title: 'admin.title',
+    heading: 'admin.heading',
+    description: 'admin.description',
+  },
+  guard: {
+    forbiddenTitle: 'guard.forbiddenTitle',
+    forbiddenMessage: 'guard.forbiddenMessage',
+    onboardingTitle: 'guard.onboardingTitle',
+    onboardingMessage: 'guard.onboardingMessage',
+    accountBlockedTitle: 'guard.accountBlockedTitle',
+    accountBlockedMessage: 'guard.accountBlockedMessage',
+    teamRequiredTitle: 'guard.teamRequiredTitle',
+    teamRequiredMessage: 'guard.teamRequiredMessage',
+  },
 } as const;
 
 type Leaves<T> = T extends string ? T : { [K in keyof T]: Leaves<T[K]> }[keyof T];

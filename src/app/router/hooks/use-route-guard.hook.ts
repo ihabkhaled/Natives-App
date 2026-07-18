@@ -1,19 +1,36 @@
-import { useSession } from '@/modules/auth';
+import { useEffectivePermissions, useSession } from '@/modules/auth';
 import { useAppTranslation } from '@/packages/i18n';
-import { I18N_KEYS } from '@/shared/i18n';
+import { hasAllPermissions } from '@/shared/security';
+import type { AppRouteDefinition } from '@/shared/types';
 
-export interface RouteGuardView {
-  readonly isResolved: boolean;
-  readonly isAuthenticated: boolean;
-  readonly loadingLabel: string;
-}
+import { presentGuardStatus } from '../guard-presentation.helper';
+import { toGuardInstruction } from '../guard-instruction.helper';
+import type { GuardInstruction } from '../guarded-route.types';
+import { resolveRouteAccess } from '../route-access.helper';
+import { normalizeRouteMeta } from '../route-meta.helper';
 
-export function useRouteGuard(): RouteGuardView {
+/**
+ * Resolves a route into a render instruction. Waits for the restored session
+ * and effective permissions before deciding, so a protected screen never
+ * flashes before its guard has the facts.
+ */
+export function useRouteGuard(definition: AppRouteDefinition): GuardInstruction {
   const session = useSession();
+  const effective = useEffectivePermissions();
   const { t } = useAppTranslation();
-  return {
-    isResolved: session.isResolved,
+  const meta = normalizeRouteMeta(definition.meta);
+  const status = resolveRouteAccess({
+    access: definition.access,
+    isSessionResolved: session.isResolved,
     isAuthenticated: session.isAuthenticated,
-    loadingLabel: t(I18N_KEYS.common.loading),
-  };
+    isProfileReady: !session.isAuthenticated || !effective.isLoading,
+    isProfileErrored: effective.isError,
+    featureEnabled: meta.featureEnabled,
+    accountActive: effective.accountActive,
+    onboardingComplete: effective.onboardingComplete,
+    requiresTeamContext: meta.requiresTeamContext,
+    hasTeamContext: effective.hasTeamContext,
+    hasRequiredPermissions: hasAllPermissions(effective.permissions, meta.requiredPermissions),
+  });
+  return toGuardInstruction(presentGuardStatus(status), definition.component, t);
 }

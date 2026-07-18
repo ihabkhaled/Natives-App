@@ -20,6 +20,7 @@ describe('APP_ICONS', () => {
       'person',
       'refresh',
       'settings',
+      'shield',
       'warning',
     ]);
   });

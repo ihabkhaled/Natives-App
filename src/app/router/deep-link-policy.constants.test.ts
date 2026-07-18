@@ -23,6 +23,7 @@ describe('APP_DEEP_LINK_POLICY', () => {
     expect(APP_DEEP_LINK_POLICY.allowedPathPrefixes).toEqual(Object.values(APP_PATHS));
     expect([...APP_DEEP_LINK_POLICY.allowedPathPrefixes].sort()).toEqual([
       '/',
+      '/admin',
       '/home',
       '/login',
       '/settings',

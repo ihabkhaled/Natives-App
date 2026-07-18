@@ -5,9 +5,18 @@
  */
 export const TEST_IDS = {
   appShell: 'app-shell',
+  skipLink: 'skip-link',
+  mainContent: 'main-content',
+  primaryNav: 'primary-nav',
+  primaryNavItem: 'primary-nav-item',
   offlineBanner: 'offline-banner',
   globalLoading: 'global-loading',
   errorBoundaryFallback: 'error-boundary-fallback',
+  guardForbidden: 'guard-forbidden',
+  guardOnboarding: 'guard-onboarding',
+  guardAccountBlocked: 'guard-account-blocked',
+  guardTeamRequired: 'guard-team-required',
+  adminPage: 'admin-page',
   welcomePage: 'welcome-page',
   welcomeLoginCta: 'welcome-login-cta',
   loginPage: 'login-page',

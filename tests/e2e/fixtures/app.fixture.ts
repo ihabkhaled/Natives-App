@@ -12,6 +12,7 @@ export const APP_ROUTES = {
   welcome: '/welcome',
   login: '/login',
   home: '/home',
+  admin: '/admin',
   settings: '/settings',
   workbench: '/workbench',
 } as const;

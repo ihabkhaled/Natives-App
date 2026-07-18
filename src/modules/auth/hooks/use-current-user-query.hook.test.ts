@@ -36,6 +36,15 @@ describe('useCurrentUserQuery', () => {
     expect(result.current).toEqual({ user, isLoading: false, isError: false });
   });
 
+  it('does not fetch while disabled and stays pending', () => {
+    vi.mocked(getCurrentUser).mockResolvedValue(buildAuthUser());
+
+    const { result } = renderHookWithProviders(() => useCurrentUserQuery({ enabled: false }));
+
+    expect(result.current).toEqual({ user: undefined, isLoading: true, isError: false });
+    expect(getCurrentUser).not.toHaveBeenCalled();
+  });
+
   it('flags the error branch and keeps the user undefined', async () => {
     vi.mocked(getCurrentUser).mockRejectedValue(
       new AppError({ code: APP_ERROR_CODE.Unauthorized }),

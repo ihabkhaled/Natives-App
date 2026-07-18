@@ -14,6 +14,7 @@ import {
   personCircleOutline,
   refreshOutline,
   settingsOutline,
+  shieldCheckmarkOutline,
   warningOutline,
 } from 'ionicons/icons';
 
@@ -34,6 +35,7 @@ export const APP_ICONS = {
   person: personCircleOutline,
   refresh: refreshOutline,
   settings: settingsOutline,
+  shield: shieldCheckmarkOutline,
   warning: warningOutline,
 } as const;
 

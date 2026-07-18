@@ -1,3 +1,4 @@
+import { getAdminRouteDefinitions } from '@/modules/admin';
 import { getAuthRouteDefinitions } from '@/modules/auth';
 import { getHomeRouteDefinitions, getNotFoundRouteDefinition } from '@/modules/home';
 import { getSettingsRouteDefinitions } from '@/modules/settings';
@@ -9,6 +10,7 @@ export function getAppRouteDefinitions(): readonly AppRouteDefinition[] {
   return [
     ...getAuthRouteDefinitions(),
     ...getHomeRouteDefinitions(),
+    ...getAdminRouteDefinitions(),
     ...getSettingsRouteDefinitions(),
     ...getWorkbenchRouteDefinitions(),
   ];

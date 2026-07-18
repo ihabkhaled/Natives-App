@@ -23,7 +23,17 @@ interface SeenRequest {
   readonly headers: Record<string, unknown>;
 }
 
-const USER_DTO = { id: 'user-1', email: 'ranger@example.com', displayName: 'Ranger One' };
+const USER_DTO = {
+  id: 'user-1',
+  email: 'ranger@example.com',
+  displayName: 'Ranger One',
+  permissions: ['members.read'],
+  accountState: 'active',
+  onboardingComplete: true,
+  memberships: [
+    { teamId: 'team-1', teamName: 'Team One', seasonId: 'season-1', seasonName: 'Season One' },
+  ],
+};
 const TOKENS_DTO = { accessToken: 'access-2', refreshToken: 'refresh-2' };
 
 let seen: SeenRequest[] = [];

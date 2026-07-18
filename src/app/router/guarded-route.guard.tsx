@@ -1,26 +1,34 @@
 import { Redirect } from '@/packages/router';
-import { APP_PATHS, TEST_IDS } from '@/shared/config';
-import { ROUTE_ACCESS } from '@/shared/types';
-import { LoadingState } from '@/shared/ui';
+import { TEST_IDS } from '@/shared/config';
+import { LoadingState, StatusView } from '@/shared/ui';
 
 import { useRouteGuard } from './hooks/use-route-guard.hook';
 import type { GuardedRouteProps } from './guarded-route.types';
 
 /**
- * Session-aware route gate. Ownership of post-auth transitions lives here:
- * modules never navigate across module boundaries themselves.
+ * Session- and permission-aware route gate. All post-auth transitions live
+ * here: modules never navigate across module boundaries themselves, and a
+ * blocked route resolves to a redirect or a state — never the screen.
  */
 export function GuardedRoute(props: GuardedRouteProps): React.JSX.Element {
-  const guard = useRouteGuard();
-  if (!guard.isResolved) {
-    return <LoadingState label={guard.loadingLabel} testId={TEST_IDS.globalLoading} />;
+  const instruction = useRouteGuard(props.definition);
+  if (instruction.kind === 'loading') {
+    return <LoadingState label={instruction.label} testId={TEST_IDS.globalLoading} />;
   }
-  if (props.definition.access === ROUTE_ACCESS.Protected && !guard.isAuthenticated) {
-    return <Redirect to={APP_PATHS.login} />;
+  if (instruction.kind === 'redirect') {
+    return <Redirect to={instruction.to} />;
   }
-  if (props.definition.access === ROUTE_ACCESS.PublicOnly && guard.isAuthenticated) {
-    return <Redirect to={APP_PATHS.home} />;
+  if (instruction.kind === 'state') {
+    return (
+      <StatusView
+        icon={instruction.icon}
+        tone={instruction.tone}
+        title={instruction.title}
+        message={instruction.message}
+        testId={instruction.testId}
+      />
+    );
   }
-  const Screen = props.definition.component;
+  const Screen = instruction.Screen;
   return <Screen />;
 }

@@ -19,6 +19,8 @@ vi.mock('./offline-banner/offline-banner.container', () => ({
   OfflineBannerContainer: () => <div data-testid="offline-banner" />,
 }));
 
+vi.mock('./skip-link.container', () => ({ SkipLink: () => null }));
+
 function queryIonApp(): Element | null {
   return document.body.querySelector('ion-app');
 }

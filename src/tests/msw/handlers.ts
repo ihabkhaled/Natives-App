@@ -1,21 +1,79 @@
 import { delay, http, HttpResponse } from 'msw';
 
-import { buildAuthUser } from '@/modules/auth';
+import { buildAuthUser, type AuthUser } from '@/modules/auth';
 import { getEnvironment } from '@/packages/environment';
+import { PERMISSIONS } from '@/shared/security';
 
 import {
   MOCK_CREDENTIALS,
   MOCK_HEALTH,
+  MOCK_PERSONA_EMAILS,
   MOCK_SCENARIO_EMAILS,
   MOCK_TIMEOUT_DELAY_MS,
   MOCK_TOKENS,
 } from './mock-data.constants';
 import { nestErrorResponse } from './nest-error.helper';
 
-const issuedAccessTokens = new Set<string>();
+const COACH_PERMISSIONS = [
+  PERMISSIONS.membersRead,
+  PERMISSIONS.practicesRead,
+  PERMISSIONS.practicesManage,
+  PERMISSIONS.attendanceMark,
+  PERMISSIONS.assessmentsManage,
+  PERMISSIONS.leaderboardsRead,
+];
+
+const MEMBER_PERMISSIONS = [
+  PERMISSIONS.membersRead,
+  PERMISSIONS.practicesRead,
+  PERMISSIONS.leaderboardsRead,
+];
+
+/** Deterministic persona directory keyed by login email. */
+const PERSONA_USERS: Record<string, AuthUser> = {
+  [MOCK_PERSONA_EMAILS.admin]: buildAuthUser(),
+  [MOCK_PERSONA_EMAILS.coach]: buildAuthUser({
+    id: 'user-coach',
+    email: MOCK_PERSONA_EMAILS.coach,
+    displayName: 'Coach Nadia',
+    permissions: COACH_PERMISSIONS,
+  }),
+  [MOCK_PERSONA_EMAILS.member]: buildAuthUser({
+    id: 'user-member',
+    email: MOCK_PERSONA_EMAILS.member,
+    displayName: 'Member Omar',
+    permissions: MEMBER_PERMISSIONS,
+  }),
+  [MOCK_PERSONA_EMAILS.pending]: buildAuthUser({
+    id: 'user-pending',
+    email: MOCK_PERSONA_EMAILS.pending,
+    displayName: 'Pending Sara',
+    permissions: MEMBER_PERMISSIONS,
+    onboardingComplete: false,
+  }),
+  [MOCK_PERSONA_EMAILS.suspended]: buildAuthUser({
+    id: 'user-suspended',
+    email: MOCK_PERSONA_EMAILS.suspended,
+    displayName: 'Suspended Ali',
+    permissions: MEMBER_PERMISSIONS,
+    accountState: 'suspended',
+  }),
+  [MOCK_PERSONA_EMAILS.noTeam]: buildAuthUser({
+    id: 'user-noteam',
+    email: MOCK_PERSONA_EMAILS.noTeam,
+    displayName: 'Newcomer Lina',
+    permissions: MEMBER_PERMISSIONS,
+    memberships: [],
+  }),
+};
+
+const PERSONA_TOKEN_PREFIX = 'mock-access-';
+const PERSONA_BY_ID = new Map(Object.values(PERSONA_USERS).map((persona) => [persona.id, persona]));
+
+const issuedTokenEmails = new Map<string, string>();
 
 export function resetMockAuthState(): void {
-  issuedAccessTokens.clear();
+  issuedTokenEmails.clear();
 }
 
 function apiUrl(path: string): string {
@@ -73,18 +131,48 @@ function scenarioResponseForEmail(email: string): Response | Promise<Response> |
   return null;
 }
 
-function issueTokens(
-  access: string,
-  refresh: string,
-): { accessToken: string; refreshToken: string } {
-  issuedAccessTokens.add(access);
-  return { accessToken: access, refreshToken: refresh };
+function tokensForUser(user: AuthUser): { accessToken: string; refreshToken: string } {
+  if (user.email === MOCK_PERSONA_EMAILS.admin) {
+    return { accessToken: MOCK_TOKENS.access, refreshToken: MOCK_TOKENS.refresh };
+  }
+  return {
+    accessToken: `${PERSONA_TOKEN_PREFIX}${user.id}`,
+    refreshToken: `mock-refresh-${user.id}`,
+  };
 }
 
-function isAuthorized(request: Request): boolean {
-  const header = request.headers.get('Authorization') ?? '';
-  const token = header.replace('Bearer ', '');
-  return issuedAccessTokens.has(token);
+function issueTokensForUser(user: AuthUser): { accessToken: string; refreshToken: string } {
+  const tokens = tokensForUser(user);
+  issuedTokenEmails.set(tokens.accessToken, user.email);
+  return tokens;
+}
+
+/** Cold-start resolution: derive the persona from the deterministic token shape. */
+function personaForDeterministicToken(token: string): AuthUser | null {
+  if (token === MOCK_TOKENS.access || token === MOCK_TOKENS.rotatedAccess) {
+    return PERSONA_USERS[MOCK_PERSONA_EMAILS.admin] ?? null;
+  }
+  if (token.startsWith(PERSONA_TOKEN_PREFIX)) {
+    return PERSONA_BY_ID.get(token.slice(PERSONA_TOKEN_PREFIX.length)) ?? null;
+  }
+  return null;
+}
+
+/**
+ * Resolve the persona for a bearer token. Deterministic so a cold-start deep
+ * link (which reloads the app and clears the issued-token map) still resolves
+ * the stored token to its persona instead of a spurious 401.
+ */
+function personaFromToken(request: Request): AuthUser | null {
+  const token = (request.headers.get('Authorization') ?? '').replace('Bearer ', '');
+  if (token === '') {
+    return null;
+  }
+  const issuedEmail = issuedTokenEmails.get(token);
+  if (issuedEmail !== undefined) {
+    return PERSONA_USERS[issuedEmail] ?? null;
+  }
+  return personaForDeterministicToken(token);
 }
 
 /**
@@ -114,7 +202,8 @@ export const mockApiHandlers = [
     if (scenario !== null) {
       return scenario;
     }
-    if (body.email !== MOCK_CREDENTIALS.email || body.password !== MOCK_CREDENTIALS.password) {
+    const persona = PERSONA_USERS[body.email];
+    if (persona === undefined || body.password !== MOCK_CREDENTIALS.password) {
       return nestErrorResponse({
         statusCode: 401,
         code: 'INVALID_CREDENTIALS',
@@ -122,10 +211,7 @@ export const mockApiHandlers = [
         path: '/api/v1/auth/login',
       });
     }
-    return HttpResponse.json({
-      tokens: issueTokens(MOCK_TOKENS.access, MOCK_TOKENS.refresh),
-      user: buildAuthUser(),
-    });
+    return HttpResponse.json({ tokens: issueTokensForUser(persona), user: persona });
   }),
   http.post(apiUrl('/auth/refresh'), async ({ request }) => {
     const body = (await request.json().catch(() => ({}))) as { refreshToken?: string };
@@ -140,13 +226,15 @@ export const mockApiHandlers = [
         path: '/api/v1/auth/refresh',
       });
     }
+    issuedTokenEmails.set(MOCK_TOKENS.rotatedAccess, MOCK_PERSONA_EMAILS.admin);
     return HttpResponse.json({
-      tokens: issueTokens(MOCK_TOKENS.rotatedAccess, MOCK_TOKENS.rotatedRefresh),
+      tokens: { accessToken: MOCK_TOKENS.rotatedAccess, refreshToken: MOCK_TOKENS.rotatedRefresh },
     });
   }),
   http.post(apiUrl('/auth/logout'), () => HttpResponse.json({ success: true })),
   http.get(apiUrl('/auth/me'), ({ request }) => {
-    if (!isAuthorized(request)) {
+    const persona = personaFromToken(request);
+    if (persona === null) {
       return nestErrorResponse({
         statusCode: 401,
         code: 'UNAUTHORIZED',
@@ -154,6 +242,6 @@ export const mockApiHandlers = [
         path: '/api/v1/auth/me',
       });
     }
-    return HttpResponse.json(buildAuthUser());
+    return HttpResponse.json(persona);
   }),
 ];

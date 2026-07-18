@@ -21,6 +21,18 @@ vi.mock('@/packages/secure-storage', async () => {
 });
 
 const CREDENTIALS = { email: 'ranger@example.com', password: 'Sup3rSecret!' };
+const MEMBERSHIP = {
+  teamId: 'team-1',
+  teamName: 'Team One',
+  seasonId: 'season-1',
+  seasonName: 'Season One',
+};
+const USER_EXTRA = {
+  permissions: ['members.read'],
+  accountState: 'active' as const,
+  onboardingComplete: true,
+  memberships: [MEMBERSHIP],
+};
 
 function loginRoute(status: number, data: unknown): TestRoute {
   return { method: 'POST', url: AUTH_API_PATHS.login, respond: () => ({ status, data }) };
@@ -42,14 +54,27 @@ describe('loginUser', () => {
     installTestAppHttpClient([
       loginRoute(200, {
         tokens: { accessToken: 'access-9', refreshToken: 'refresh-9' },
-        user: { id: 'user-1', email: 'Ranger@Example.com', displayName: ' Ranger One ' },
+        user: {
+          id: 'user-1',
+          email: 'Ranger@Example.com',
+          displayName: ' Ranger One ',
+          ...USER_EXTRA,
+        },
       }),
     ]);
 
     const session = await loginUser(CREDENTIALS);
 
     expect(session).toEqual({
-      user: { id: 'user-1', email: 'ranger@example.com', displayName: 'Ranger One' },
+      user: {
+        id: 'user-1',
+        email: 'ranger@example.com',
+        displayName: 'Ranger One',
+        permissions: ['members.read'],
+        accountState: 'active',
+        onboardingComplete: true,
+        memberships: [MEMBERSHIP],
+      },
       tokens: { accessToken: 'access-9', refreshToken: 'refresh-9' },
     });
   });
@@ -58,7 +83,12 @@ describe('loginUser', () => {
     installTestAppHttpClient([
       loginRoute(200, {
         tokens: { accessToken: 'access-9', refreshToken: 'refresh-9' },
-        user: { id: 'user-1', email: 'ranger@example.com', displayName: 'Ranger One' },
+        user: {
+          id: 'user-1',
+          email: 'ranger@example.com',
+          displayName: 'Ranger One',
+          ...USER_EXTRA,
+        },
       }),
     ]);
 
@@ -72,7 +102,12 @@ describe('loginUser', () => {
     installTestAppHttpClient([
       loginRoute(200, {
         tokens: { accessToken: 'access-9', refreshToken: 'refresh-9' },
-        user: { id: 'user-1', email: 'ranger@example.com', displayName: 'Ranger One' },
+        user: {
+          id: 'user-1',
+          email: 'ranger@example.com',
+          displayName: 'Ranger One',
+          ...USER_EXTRA,
+        },
       }),
     ]);
 

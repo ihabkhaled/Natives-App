@@ -10,3 +10,16 @@ export function applyDocumentLocale(locale: string, direction: 'ltr' | 'rtl'): v
   document.documentElement.lang = locale;
   document.documentElement.dir = direction;
 }
+
+/** Set the document (browser tab) title for the active screen. */
+export function applyDocumentTitle(title: string): void {
+  document.title = title;
+}
+
+/** Move keyboard focus to an element by id, if it is present. */
+export function focusElementById(elementId: string): void {
+  const element = document.getElementById(elementId);
+  if (element !== null) {
+    element.focus();
+  }
+}

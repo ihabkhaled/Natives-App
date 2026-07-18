@@ -1,6 +1,11 @@
 import { afterEach, describe, expect, it } from 'vitest';
 
-import { applyDocumentLocale, applyDocumentTheme } from './document-chrome.facade';
+import {
+  applyDocumentLocale,
+  applyDocumentTheme,
+  applyDocumentTitle,
+  focusElementById,
+} from './document-chrome.facade';
 
 const DARK_PALETTE_CLASS = 'ion-palette-dark';
 
@@ -8,6 +13,7 @@ afterEach(() => {
   document.documentElement.className = '';
   document.documentElement.removeAttribute('lang');
   document.documentElement.removeAttribute('dir');
+  document.body.innerHTML = '';
 });
 
 describe('applyDocumentTheme', () => {
@@ -66,5 +72,31 @@ describe('applyDocumentLocale', () => {
 
     expect(document.documentElement.lang).toBe('en');
     expect(document.documentElement.dir).toBe('ltr');
+  });
+});
+
+describe('applyDocumentTitle', () => {
+  it('sets the document title', () => {
+    applyDocumentTitle('Admin · Ultimate Natives');
+
+    expect(document.title).toBe('Admin · Ultimate Natives');
+  });
+});
+
+describe('focusElementById', () => {
+  it('moves focus to a present, focusable element', () => {
+    const input = document.createElement('input');
+    input.id = 'main-content';
+    document.body.append(input);
+
+    focusElementById('main-content');
+
+    expect(document.activeElement).toBe(input);
+  });
+
+  it('does nothing when no element matches the id', () => {
+    expect(() => {
+      focusElementById('missing-element');
+    }).not.toThrow();
   });
 });

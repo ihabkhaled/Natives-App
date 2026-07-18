@@ -40,6 +40,10 @@ vi.mock('./guarded-route.guard', () => ({
 }));
 
 vi.mock('../lifecycle/app-lifecycle.provider', () => ({ AppLifecycle: () => null }));
+vi.mock('./route-chrome.provider', () => ({ RouteChrome: () => null }));
+vi.mock('../shell/navigation/primary-navigation.container', () => ({
+  PrimaryNavigationContainer: () => null,
+}));
 
 /** IonReactRouter owns its own browser history, so drive the real URL. */
 function visit(path: string): void {

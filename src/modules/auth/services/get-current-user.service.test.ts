@@ -40,11 +40,21 @@ afterEach(() => {
 
 describe('getCurrentUser', () => {
   it('returns the normalized profile on success', async () => {
+    const membership = {
+      teamId: 'team-1',
+      teamName: 'Team One',
+      seasonId: 'season-1',
+      seasonName: 'Season One',
+    };
     wireClient([
       currentUserRoute(200, {
         id: 'user-1',
         email: 'Ranger@Example.com',
         displayName: ' Ranger One ',
+        permissions: ['members.read'],
+        accountState: 'active',
+        onboardingComplete: true,
+        memberships: [membership],
       }),
     ]);
 
@@ -52,6 +62,10 @@ describe('getCurrentUser', () => {
       id: 'user-1',
       email: 'ranger@example.com',
       displayName: 'Ranger One',
+      permissions: ['members.read'],
+      accountState: 'active',
+      onboardingComplete: true,
+      memberships: [membership],
     });
   });
 

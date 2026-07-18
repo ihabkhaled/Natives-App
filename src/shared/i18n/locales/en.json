@@ -107,5 +107,27 @@
     "title": "Page not found",
     "message": "The page you are looking for does not exist.",
     "goHome": "Go home"
+  },
+  "nav": {
+    "primaryLabel": "Primary",
+    "skipToContent": "Skip to main content",
+    "home": "Home",
+    "admin": "Admin",
+    "settings": "Settings"
+  },
+  "admin": {
+    "title": "Admin",
+    "heading": "Admin console",
+    "description": "Manage users, roles, and team settings. Only members with the manage-users permission can open this area."
+  },
+  "guard": {
+    "forbiddenTitle": "You do not have access",
+    "forbiddenMessage": "This area needs a permission your account has not been granted.",
+    "onboardingTitle": "Finish setting up your account",
+    "onboardingMessage": "Complete onboarding to continue to this area.",
+    "accountBlockedTitle": "Account unavailable",
+    "accountBlockedMessage": "Your account is not active. Contact an administrator for help.",
+    "teamRequiredTitle": "Select a team",
+    "teamRequiredMessage": "This area needs an active team and season. Ask an administrator to add you to a team."
   }
 }

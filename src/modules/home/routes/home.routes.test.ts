@@ -34,6 +34,13 @@ describe('getHomeRouteDefinitions', () => {
     expect(home!.component).toBe(HomeContainer);
   });
 
+  it('is a permission-free primary navigation destination', () => {
+    const [, home] = getHomeRouteDefinitions();
+
+    expect(home!.meta?.permissions).toEqual([]);
+    expect(home!.meta?.nav).toEqual({ order: 0, iconName: 'home', labelKey: 'nav.home' });
+  });
+
   it('never includes the catch-all, which the app router appends last', () => {
     expect(getHomeRouteDefinitions().map((definition) => definition.path)).not.toContain('*');
   });

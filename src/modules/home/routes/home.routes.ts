@@ -1,3 +1,4 @@
+import { I18N_KEYS } from '@/shared/i18n';
 import { ROUTE_ACCESS, type AppRouteDefinition } from '@/shared/types';
 
 import { HomeContainer } from '../containers/home.container';
@@ -18,6 +19,16 @@ export function getHomeRouteDefinitions(): readonly AppRouteDefinition[] {
       exact: true,
       access: ROUTE_ACCESS.Protected,
       component: HomeContainer,
+      meta: {
+        key: 'home',
+        titleKey: I18N_KEYS.home.title,
+        permissions: [],
+        requiresTeamContext: false,
+        offline: true,
+        preload: true,
+        featureFlag: null,
+        nav: { order: 0, iconName: 'home', labelKey: I18N_KEYS.nav.home },
+      },
     },
   ];
 }

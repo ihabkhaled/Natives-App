@@ -4,6 +4,20 @@ export const MOCK_CREDENTIALS = {
   password: 'Ranger#1234',
 } as const;
 
+/**
+ * Persona logins. Every persona shares MOCK_CREDENTIALS.password; the email
+ * selects the effective permissions, account state, and team scope so the
+ * shell can be exercised for admins, coaches, members, and edge accounts.
+ */
+export const MOCK_PERSONA_EMAILS = {
+  admin: MOCK_CREDENTIALS.email,
+  coach: 'coach@example.com',
+  member: 'member@example.com',
+  pending: 'pending@example.com',
+  suspended: 'suspended@example.com',
+  noTeam: 'newcomer@example.com',
+} as const;
+
 /** Special emails that trigger deterministic failure scenarios. */
 export const MOCK_SCENARIO_EMAILS = {
   forbidden: 'locked@example.com',

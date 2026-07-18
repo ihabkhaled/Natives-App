@@ -10,7 +10,17 @@ import {
   refreshResponseSchema,
 } from './auth.schema';
 
-const validUser = { id: 'user-1', email: 'ranger@example.com', displayName: 'Ranger One' };
+const validUser = {
+  id: 'user-1',
+  email: 'ranger@example.com',
+  displayName: 'Ranger One',
+  permissions: ['members.read', 'users.manage'],
+  accountState: 'active',
+  onboardingComplete: true,
+  memberships: [
+    { teamId: 'team-1', teamName: 'Team One', seasonId: 'season-1', seasonName: 'Season One' },
+  ],
+};
 const validTokens = { accessToken: 'access-1', refreshToken: 'refresh-1' };
 
 describe('authUserDtoSchema', () => {
@@ -31,6 +41,21 @@ describe('authUserDtoSchema', () => {
     expect(safeParseWithSchema(authUserDtoSchema, { ...validUser, displayName: '' }).success).toBe(
       false,
     );
+  });
+
+  it('rejects an account state outside the canonical set', () => {
+    expect(
+      safeParseWithSchema(authUserDtoSchema, { ...validUser, accountState: 'banned' }).success,
+    ).toBe(false);
+  });
+
+  it('rejects a membership missing its season scope', () => {
+    expect(
+      safeParseWithSchema(authUserDtoSchema, {
+        ...validUser,
+        memberships: [{ teamId: 'team-1', teamName: 'Team One' }],
+      }).success,
+    ).toBe(false);
   });
 });
 

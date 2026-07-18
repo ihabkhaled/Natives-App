@@ -53,6 +53,9 @@ describe('I18N_KEYS', () => {
       'settings',
       'workbench',
       'notFound',
+      'nav',
+      'admin',
+      'guard',
     ]);
     expect(LEAVES.length).toBeGreaterThan(0);
   });

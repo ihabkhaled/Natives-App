@@ -11,6 +11,7 @@ describe('APP_PATHS', () => {
       welcome: '/welcome',
       login: '/login',
       home: '/home',
+      admin: '/admin',
       settings: '/settings',
       workbench: '/workbench',
     });

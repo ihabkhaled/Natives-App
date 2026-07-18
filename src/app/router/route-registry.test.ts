@@ -16,6 +16,7 @@ describe('getAppRouteDefinitions', () => {
       APP_PATHS.login,
       APP_PATHS.welcome,
       APP_PATHS.home,
+      APP_PATHS.admin,
       APP_PATHS.settings,
       APP_PATHS.workbench,
     ]);

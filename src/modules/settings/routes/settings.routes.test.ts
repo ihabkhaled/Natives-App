@@ -28,4 +28,15 @@ describe('getSettingsRouteDefinitions', () => {
 
     expect(settings!.component).toBe(SettingsContainer);
   });
+
+  it('is a permission-free primary navigation destination', () => {
+    const [settings] = getSettingsRouteDefinitions();
+
+    expect(settings!.meta?.permissions).toEqual([]);
+    expect(settings!.meta?.nav).toEqual({
+      order: 30,
+      iconName: 'settings',
+      labelKey: 'nav.settings',
+    });
+  });
 });

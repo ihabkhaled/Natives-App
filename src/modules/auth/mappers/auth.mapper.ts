@@ -14,6 +14,10 @@ export function mapUserDtoToAuthUser(dto: SchemaOutput<typeof authUserDtoSchema>
     id: dto.id,
     email: dto.email.toLowerCase(),
     displayName: dto.displayName.trim(),
+    permissions: dto.permissions,
+    accountState: dto.accountState,
+    onboardingComplete: dto.onboardingComplete,
+    memberships: dto.memberships,
   };
 }
 
