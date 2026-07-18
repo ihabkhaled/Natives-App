@@ -6,6 +6,7 @@ describe('APP_ICONS', () => {
   it('exposes the approved icon set', () => {
     expect(Object.keys(APP_ICONS).sort()).toEqual([
       'alert',
+      'calendar',
       'checkmark',
       'dot',
       'empty',
@@ -14,13 +15,16 @@ describe('APP_ICONS', () => {
       'flask',
       'home',
       'information',
+      'location',
       'lock',
       'logOut',
       'offline',
+      'people',
       'person',
       'refresh',
       'settings',
       'shield',
+      'time',
       'warning',
     ]);
   });

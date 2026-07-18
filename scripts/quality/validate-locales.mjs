@@ -4,12 +4,20 @@
  * 2. Every I18N_KEYS leaf exists in both catalogs.
  * 3. Every catalog key is declared in I18N_KEYS (no orphan copy).
  */
-import { readFileSync } from 'node:fs';
+import { readdirSync, readFileSync } from 'node:fs';
 import process from 'node:process';
 
-const enCatalog = JSON.parse(readFileSync('src/shared/i18n/locales/en.json', 'utf8'));
-const arCatalog = JSON.parse(readFileSync('src/shared/i18n/locales/ar.json', 'utf8'));
-const constantsSource = readFileSync('src/shared/i18n/i18n-keys.constants.ts', 'utf8');
+const I18N_DIR = 'src/shared/i18n';
+const enCatalog = JSON.parse(readFileSync(`${I18N_DIR}/locales/en.json`, 'utf8'));
+const arCatalog = JSON.parse(readFileSync(`${I18N_DIR}/locales/ar.json`, 'utf8'));
+
+// Key declarations may be split across module-scoped `*keys.constants.ts` files
+// (e.g. practice-keys.constants.ts) so the aggregate catalog stays within its
+// size budget; every such file counts as a source of declared keys.
+const constantsSource = readdirSync(I18N_DIR)
+  .filter((file) => file.endsWith('keys.constants.ts') && !file.endsWith('.test.ts'))
+  .map((file) => readFileSync(`${I18N_DIR}/${file}`, 'utf8'))
+  .join('\n');
 
 function flattenKeys(tree, prefix = '') {
   const keys = [];

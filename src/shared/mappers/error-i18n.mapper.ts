@@ -7,6 +7,7 @@ const ERROR_CODE_TO_I18N_KEY: Record<AppErrorCode, I18nKey> = {
   [APP_ERROR_CODE.Unauthorized]: I18N_KEYS.errors.unauthorized,
   [APP_ERROR_CODE.Forbidden]: I18N_KEYS.errors.forbidden,
   [APP_ERROR_CODE.NotFound]: I18N_KEYS.errors.notFound,
+  [APP_ERROR_CODE.Conflict]: I18N_KEYS.errors.conflict,
   [APP_ERROR_CODE.RateLimited]: I18N_KEYS.errors.rateLimited,
   [APP_ERROR_CODE.Validation]: I18N_KEYS.errors.validation,
   [APP_ERROR_CODE.Server]: I18N_KEYS.errors.server,

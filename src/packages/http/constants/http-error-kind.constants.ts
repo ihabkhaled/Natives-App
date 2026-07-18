@@ -5,6 +5,7 @@ export const HTTP_ERROR_KIND = {
   Unauthorized: 'unauthorized',
   Forbidden: 'forbidden',
   NotFound: 'not-found',
+  Conflict: 'conflict',
   RateLimited: 'rate-limited',
   Validation: 'validation',
   Server: 'server',

@@ -9,6 +9,7 @@ export const APP_ERROR_CODE = {
   Unauthorized: 'UNAUTHORIZED',
   Forbidden: 'FORBIDDEN',
   NotFound: 'NOT_FOUND',
+  Conflict: 'CONFLICT',
   RateLimited: 'RATE_LIMITED',
   Validation: 'VALIDATION_ERROR',
   Server: 'SERVER_ERROR',

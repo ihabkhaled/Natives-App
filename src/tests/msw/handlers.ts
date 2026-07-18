@@ -14,12 +14,15 @@ import {
   MOCK_TOKENS,
 } from './mock-data.constants';
 import { nestErrorResponse } from './nest-error.helper';
+import { practiceHandlers } from './practice-handlers';
+import { resetMockPracticeState } from './practice.fixture';
 import { recoveryHandlers, resetMockRecoveryState } from './recovery-handlers';
 
 const COACH_PERMISSIONS = [
   PERMISSIONS.membersRead,
   PERMISSIONS.practicesRead,
   PERMISSIONS.practicesManage,
+  PERMISSIONS.practicesRsvpSelf,
   PERMISSIONS.attendanceMark,
   PERMISSIONS.assessmentsManage,
   PERMISSIONS.leaderboardsRead,
@@ -28,6 +31,7 @@ const COACH_PERMISSIONS = [
 const MEMBER_PERMISSIONS = [
   PERMISSIONS.membersRead,
   PERMISSIONS.practicesRead,
+  PERMISSIONS.practicesRsvpSelf,
   PERMISSIONS.leaderboardsRead,
 ];
 
@@ -77,6 +81,7 @@ const issuedTokenEmails = new Map<string, string>();
 export function resetMockAuthState(): void {
   issuedTokenEmails.clear();
   resetMockRecoveryState();
+  resetMockPracticeState();
 }
 
 function apiUrl(path: string): string {
@@ -260,5 +265,6 @@ export const mockApiHandlers = [
     }
     return HttpResponse.json(buildDashboardSummaryResponse(persona));
   }),
+  ...practiceHandlers,
   ...recoveryHandlers,
 ];

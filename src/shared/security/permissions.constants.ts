@@ -12,6 +12,7 @@ export const PERMISSIONS = {
   membersManage: 'members.manage',
   practicesRead: 'practices.read',
   practicesManage: 'practices.manage',
+  practicesRsvpSelf: 'practices.rsvp.self',
   attendanceMark: 'attendance.mark',
   assessmentsManage: 'assessments.manage',
   leaderboardsRead: 'leaderboards.read',

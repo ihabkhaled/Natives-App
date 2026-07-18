@@ -12,6 +12,8 @@ export const APP_PATHS = {
   acceptInvitation: '/accept-invitation',
   sessions: '/sessions',
   home: '/home',
+  practices: '/practices',
+  practiceSession: '/practices/:sessionId',
   admin: '/admin',
   settings: '/settings',
   workbench: '/workbench',

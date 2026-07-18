@@ -1,3 +1,5 @@
+import type { AsyncViewCopy } from '@/shared/types';
+
 /**
  * Prepared, fully-translated view models handed to the presentational
  * dashboard components. Every label is resolved and every instant formatted
@@ -59,19 +61,10 @@ export interface DashboardTasksWidgetView extends DashboardWidgetViewShared {
 export type DashboardWidgetView =
   DashboardMetricWidgetView | DashboardBreakdownWidgetView | DashboardTasksWidgetView;
 
-export interface DashboardView {
+export interface DashboardView extends AsyncViewCopy {
   readonly title: string;
   readonly updatedLabel: string | null;
   readonly status: DashboardStatus;
-  readonly loadingLabel: string;
-  readonly errorTitle: string;
-  readonly errorMessage: string;
-  readonly retryLabel: string;
-  readonly onRetry: () => void;
-  readonly offlineTitle: string;
-  readonly offlineMessage: string;
-  readonly offlineNoticeLabel: string;
-  readonly isOffline: boolean;
   readonly emptyTitle: string;
   readonly emptyMessage: string;
   readonly widgets: readonly DashboardWidgetView[];

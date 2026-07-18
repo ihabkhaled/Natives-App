@@ -29,6 +29,7 @@ describe('mapResponseToHttpError', () => {
     [401, HTTP_ERROR_KIND.Unauthorized],
     [403, HTTP_ERROR_KIND.Forbidden],
     [404, HTTP_ERROR_KIND.NotFound],
+    [409, HTTP_ERROR_KIND.Conflict],
     [429, HTTP_ERROR_KIND.RateLimited],
     [400, HTTP_ERROR_KIND.Validation],
     [422, HTTP_ERROR_KIND.Validation],

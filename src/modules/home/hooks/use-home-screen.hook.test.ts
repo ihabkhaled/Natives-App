@@ -55,6 +55,7 @@ describe('useHomeScreen', () => {
     expect(result.current.loadingLabel).toBe('Loading…');
     expect(result.current.logoutLabel).toBe('Sign out');
     expect(result.current.manageSessionsLabel).toBe('Manage your devices');
+    expect(result.current.practiceCalendarLabel).toBe('Open the practice calendar');
   });
 
   it('interpolates the display name into the greeting', () => {
@@ -115,6 +116,7 @@ describe('useHomeScreen', () => {
       'logoutLabel',
       'manageSessionsLabel',
       'onLogout',
+      'practiceCalendarLabel',
       'title',
     ]);
   });

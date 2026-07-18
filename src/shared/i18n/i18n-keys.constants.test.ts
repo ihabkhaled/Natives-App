@@ -51,6 +51,7 @@ describe('I18N_KEYS', () => {
       'sessions',
       'home',
       'dashboard',
+      'practice',
       'health',
       'settings',
       'workbench',

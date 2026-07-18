@@ -1,3 +1,5 @@
+import { PRACTICE_I18N_KEYS } from './practice-keys.constants';
+
 /**
  * Every user-visible translation key. Raw copy is forbidden in feature code
  * (ESLint: architecture/no-raw-i18n-text). Catalog parity between locales is
@@ -20,6 +22,7 @@ export const I18N_KEYS = {
     unauthorized: 'errors.unauthorized',
     forbidden: 'errors.forbidden',
     notFound: 'errors.notFound',
+    conflict: 'errors.conflict',
     rateLimited: 'errors.rateLimited',
     validation: 'errors.validation',
     server: 'errors.server',
@@ -168,6 +171,7 @@ export const I18N_KEYS = {
     taskReviewAudit: 'dashboard.taskReviewAudit',
     taskPostMaintenance: 'dashboard.taskPostMaintenance',
   },
+  practice: PRACTICE_I18N_KEYS,
   health: {
     title: 'health.title',
     statusUp: 'health.statusUp',

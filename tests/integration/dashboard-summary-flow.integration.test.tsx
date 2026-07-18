@@ -2,25 +2,17 @@ import { screen, waitFor } from '@testing-library/react';
 import { http, HttpResponse } from 'msw';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
-import {
-  createRefreshExecutor,
-  getAuthTokenRepository,
-  handleAuthFailure,
-  SESSION_STATUS,
-} from '@/modules/auth';
-import { loginUser } from '@/modules/auth/services/login.service';
-import { useSessionStore } from '@/modules/auth/store/session.store';
 import { DashboardContainer } from '@/modules/dashboard';
 import { getEnvironment } from '@/packages/environment';
-import {
-  configureAppHttpClient,
-  createHttpClient,
-  resetAppHttpClientForTesting,
-} from '@/packages/http';
 import { TEST_IDS } from '@/shared/config';
-import { MOCK_CREDENTIALS, MOCK_PERSONA_EMAILS } from '@/tests/msw/mock-data.constants';
+import { MOCK_PERSONA_EMAILS } from '@/tests/msw/mock-data.constants';
 
 import { initTestI18n } from '../setup/i18n-test.helper';
+import {
+  clearSessionAfterTest,
+  resetSessionForTest,
+  signInAs,
+} from '../setup/integration-session.helper';
 import { mockApiServer } from '../setup/msw-server.setup';
 import { renderWithProviders } from '../setup/render-with-providers.helper';
 
@@ -30,38 +22,18 @@ function widgetTestId(kind: string): string {
   return `${TEST_IDS.dashboardWidget}-${kind}`;
 }
 
-function wireRealHttpClient(): void {
-  configureAppHttpClient(
-    createHttpClient({
-      config: { baseUrl: getEnvironment().apiBaseUrl, timeoutMs: 2000 },
-      tokenStore: getAuthTokenRepository(),
-      refreshExecutor: createRefreshExecutor(),
-      onAuthFailure: handleAuthFailure,
-    }),
-  );
-}
-
-async function signIn(email: string): Promise<void> {
-  await loginUser({ email, password: MOCK_CREDENTIALS.password });
-  useSessionStore.setState({ status: SESSION_STATUS.Authenticated });
-}
-
 beforeEach(async () => {
   await initTestI18n();
-  resetAppHttpClientForTesting();
-  wireRealHttpClient();
-  await getAuthTokenRepository().clearTokens();
-  useSessionStore.setState({ status: SESSION_STATUS.Unknown });
+  await resetSessionForTest();
 });
 
 afterEach(async () => {
-  await getAuthTokenRepository().clearTokens();
-  useSessionStore.setState({ status: SESSION_STATUS.Unknown });
+  await clearSessionAfterTest();
 });
 
 describe('dashboard summary flow (real client + MSW)', () => {
   it('renders the member persona dashboard and hides administrator widgets', async () => {
-    await signIn(MOCK_PERSONA_EMAILS.member);
+    await signInAs(MOCK_PERSONA_EMAILS.member);
 
     renderWithProviders(<DashboardContainer />);
 
@@ -76,7 +48,7 @@ describe('dashboard summary flow (real client + MSW)', () => {
   });
 
   it('renders the administrator persona dashboard and hides member-only widgets', async () => {
-    await signIn(MOCK_PERSONA_EMAILS.admin);
+    await signInAs(MOCK_PERSONA_EMAILS.admin);
 
     renderWithProviders(<DashboardContainer />);
 
@@ -90,7 +62,7 @@ describe('dashboard summary flow (real client + MSW)', () => {
   });
 
   it('renders sanitized copy and never leaks the backend message on failure', async () => {
-    await signIn(MOCK_PERSONA_EMAILS.member);
+    await signInAs(MOCK_PERSONA_EMAILS.member);
     mockApiServer.use(
       http.get(`${getEnvironment().apiBaseUrl}/dashboard/summary`, () =>
         HttpResponse.json(

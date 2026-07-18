@@ -1,9 +1,9 @@
 import { http, HttpResponse } from 'msw';
 
 import { buildAuthUser } from '@/modules/auth';
-import { getEnvironment } from '@/packages/environment';
 
 import { MOCK_INVITATION, MOCK_RESET, MOCK_SESSIONS, MOCK_TOKENS } from './mock-data.constants';
+import { apiUrl, isAuthorized } from './mock-request.helper';
 import { nestErrorResponse } from './nest-error.helper';
 
 const API_PREFIX = '/api/v1';
@@ -15,18 +15,8 @@ export function resetMockRecoveryState(): void {
   revokedSessionIds.clear();
 }
 
-function apiUrl(path: string): string {
-  return `${getEnvironment().apiBaseUrl}${path}`;
-}
-
 async function readJsonBody<T>(request: Request): Promise<T> {
   return (await request.json().catch(() => ({}))) as T;
-}
-
-/** Bearer presence is enough for the mock; the real API verifies the JWT. */
-function isAuthorized(request: Request): boolean {
-  const header = request.headers.get('Authorization') ?? '';
-  return header.startsWith('Bearer ') && header.length > 'Bearer '.length;
 }
 
 function unauthorized(path: string): Response {

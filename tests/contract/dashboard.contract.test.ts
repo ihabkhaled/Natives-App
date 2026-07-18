@@ -1,23 +1,10 @@
 import { assert, describe, expect, it } from 'vitest';
 
 import { dashboardSummaryResponseSchema } from '@/modules/dashboard';
-import { getEnvironment } from '@/packages/environment';
 import { safeParseWithSchema } from '@/packages/schema';
-import { MOCK_CREDENTIALS, MOCK_PERSONA_EMAILS } from '@/tests/msw/mock-data.constants';
+import { MOCK_PERSONA_EMAILS } from '@/tests/msw/mock-data.constants';
 
-function apiUrl(path: string): string {
-  return `${getEnvironment().apiBaseUrl}${path}`;
-}
-
-async function loginAs(email: string): Promise<string> {
-  const response = await fetch(apiUrl('/auth/login'), {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ email, password: MOCK_CREDENTIALS.password }),
-  });
-  const body = (await response.json()) as { tokens: { accessToken: string } };
-  return body.tokens.accessToken;
-}
+import { apiUrl, loginAs } from '../setup/contract-api.helper';
 
 describe('dashboard summary wire contract (mock mode = remote contract)', () => {
   it.each([

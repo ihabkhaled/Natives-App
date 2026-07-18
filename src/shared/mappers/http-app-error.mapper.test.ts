@@ -19,6 +19,7 @@ const KIND_EXPECTATIONS: [HttpErrorKind, AppErrorCode][] = [
   [HTTP_ERROR_KIND.Unauthorized, APP_ERROR_CODE.Unauthorized],
   [HTTP_ERROR_KIND.Forbidden, APP_ERROR_CODE.Forbidden],
   [HTTP_ERROR_KIND.NotFound, APP_ERROR_CODE.NotFound],
+  [HTTP_ERROR_KIND.Conflict, APP_ERROR_CODE.Conflict],
   [HTTP_ERROR_KIND.RateLimited, APP_ERROR_CODE.RateLimited],
   [HTTP_ERROR_KIND.Validation, APP_ERROR_CODE.Validation],
   [HTTP_ERROR_KIND.Server, APP_ERROR_CODE.Server],

@@ -10,21 +10,20 @@ import type { HttpFieldError } from './types/http.types';
 
 const TIMEOUT_CODES: readonly string[] = ['ECONNABORTED', 'ETIMEDOUT'];
 
+const STATUS_TO_KIND: Readonly<Record<number, HttpErrorKind>> = {
+  [HTTP_STATUS.Unauthorized]: HTTP_ERROR_KIND.Unauthorized,
+  [HTTP_STATUS.Forbidden]: HTTP_ERROR_KIND.Forbidden,
+  [HTTP_STATUS.NotFound]: HTTP_ERROR_KIND.NotFound,
+  [HTTP_STATUS.Conflict]: HTTP_ERROR_KIND.Conflict,
+  [HTTP_STATUS.TooManyRequests]: HTTP_ERROR_KIND.RateLimited,
+  [HTTP_STATUS.BadRequest]: HTTP_ERROR_KIND.Validation,
+  [HTTP_STATUS.UnprocessableEntity]: HTTP_ERROR_KIND.Validation,
+};
+
 function kindFromStatus(status: number): HttpErrorKind {
-  if (status === HTTP_STATUS.Unauthorized) {
-    return HTTP_ERROR_KIND.Unauthorized;
-  }
-  if (status === HTTP_STATUS.Forbidden) {
-    return HTTP_ERROR_KIND.Forbidden;
-  }
-  if (status === HTTP_STATUS.NotFound) {
-    return HTTP_ERROR_KIND.NotFound;
-  }
-  if (status === HTTP_STATUS.TooManyRequests) {
-    return HTTP_ERROR_KIND.RateLimited;
-  }
-  if (status === HTTP_STATUS.BadRequest || status === HTTP_STATUS.UnprocessableEntity) {
-    return HTTP_ERROR_KIND.Validation;
+  const mapped = STATUS_TO_KIND[status];
+  if (mapped !== undefined) {
+    return mapped;
   }
   if (status >= HTTP_STATUS.InternalServerError) {
     return HTTP_ERROR_KIND.Server;

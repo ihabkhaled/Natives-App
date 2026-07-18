@@ -1,5 +1,6 @@
 import { DashboardContainer } from '@/modules/dashboard';
 import { HealthCardContainer } from '@/modules/health';
+import { practicesPath } from '@/modules/practice';
 import { IonButton } from '@/packages/ionic';
 import { useAppNavigation } from '@/packages/router';
 import { APP_PATHS, TEST_IDS } from '@/shared/config';
@@ -23,6 +24,17 @@ export function HomeContainer(): React.JSX.Element {
         dashboardSlot={<DashboardContainer />}
         healthSlot={<HealthCardContainer />}
       />
+      <IonButton
+        fill="solid"
+        expand="block"
+        className="mt-2"
+        onClick={() => {
+          navigation.push(practicesPath());
+        }}
+        data-testid={TEST_IDS.homePracticeLink}
+      >
+        {screen.practiceCalendarLabel}
+      </IonButton>
       <IonButton
         fill="clear"
         expand="block"

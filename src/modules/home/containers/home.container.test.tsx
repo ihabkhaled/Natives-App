@@ -16,6 +16,7 @@ vi.mock('@/modules/health', () => ({
 vi.mock('@/modules/dashboard', () => ({
   DashboardContainer: () => <div data-testid="dashboard-view">Dashboard</div>,
 }));
+vi.mock('@/modules/practice', () => ({ practicesPath: () => '/practices' }));
 
 const onLogout = vi.fn();
 
@@ -27,6 +28,7 @@ function mockScreen(overrides: Partial<HomeScreenView> = {}): void {
     loadingLabel: 'Loading…',
     logoutLabel: 'Sign out',
     manageSessionsLabel: 'Manage your devices',
+    practiceCalendarLabel: 'Open the practice calendar',
     isLoggingOut: false,
     onLogout,
     ...overrides,
@@ -101,6 +103,14 @@ describe('HomeContainer', () => {
 
     const link = screen.getByTestId(TEST_IDS.homeSessionsLink);
     expect(link).toHaveTextContent('Manage your devices');
+    await userEvent.click(link);
+  });
+
+  it('offers a link to the practice calendar', async () => {
+    renderWithProviders(<HomeContainer />);
+
+    const link = screen.getByTestId(TEST_IDS.homePracticeLink);
+    expect(link).toHaveTextContent('Open the practice calendar');
     await userEvent.click(link);
   });
 });
