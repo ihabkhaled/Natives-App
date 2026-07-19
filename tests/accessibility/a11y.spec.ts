@@ -61,6 +61,9 @@ test.describe('accessibility (WCAG 2.2 AA)', () => {
     await expect(page.getByTestId(TEST_IDS.homePage)).toBeVisible();
     await page.getByTestId(TEST_IDS.homeSessionsLink).click();
     await expect(page.getByTestId(TEST_IDS.sessionsPage)).toBeVisible();
+    // Let the route transition settle so axe audits the resting danger buttons,
+    // not their lighter mid-fade opacity.
+    await waitForAppAnimations(page);
     expect((await analyze(page)).violations).toEqual([]);
   });
 
@@ -85,7 +88,8 @@ test.describe('accessibility (WCAG 2.2 AA)', () => {
 
     await page
       .getByTestId(TEST_IDS.practiceSessionCard)
-      .filter({ hasText: 'Evening practice' })
+      .filter({ hasText: 'Practice' })
+      .first()
       .click();
     await expect(page.getByTestId(TEST_IDS.rsvpControl)).toBeVisible();
     await waitForAppAnimations(page);

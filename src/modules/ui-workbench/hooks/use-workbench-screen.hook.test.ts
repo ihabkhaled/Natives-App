@@ -1,11 +1,10 @@
 import { act, renderHook } from '@testing-library/react';
-import { afterEach, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 
 import type * as SharedUiModule from '@/shared/ui';
-import { useAppToast } from '@/shared/ui';
 
 import { buildSubmitEvent, flushAsyncWork } from '../../../../tests/setup/form-test.helper';
-import { initTestI18n } from '../../../../tests/setup/i18n-test.helper';
+import { setupToastHarness } from '../../../../tests/setup/toast-test.helper';
 import { WORKBENCH_LIST_SIZE } from '../constants/workbench.constants';
 import { useWorkbenchScreen, type WorkbenchScreenView } from './use-workbench-screen.hook';
 
@@ -16,7 +15,7 @@ vi.mock('@/shared/ui', async (importOriginal) => ({
 
 const VALID = { name: 'Ranger', email: 'ranger@example.com' };
 
-const showToast = vi.fn<() => Promise<void>>();
+const { showToast } = setupToastHarness();
 
 async function submitValidForm(result: { current: WorkbenchScreenView }): Promise<void> {
   act(() => {
@@ -30,19 +29,6 @@ async function submitValidForm(result: { current: WorkbenchScreenView }): Promis
     await flushAsyncWork();
   });
 }
-
-beforeAll(async () => {
-  await initTestI18n();
-});
-
-beforeEach(() => {
-  showToast.mockResolvedValue();
-  vi.mocked(useAppToast).mockReturnValue({ showToast });
-});
-
-afterEach(() => {
-  vi.clearAllMocks();
-});
 
 describe('useWorkbenchScreen', () => {
   it('exposes the screen and section headings as translated English copy', () => {

@@ -1,9 +1,9 @@
-import { act, waitFor } from '@testing-library/react';
+import { waitFor } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import { APP_ERROR_CODE, AppError } from '@/shared/errors';
 
-import { renderHookWithProviders } from '../../../../tests/setup/render-with-providers.helper';
+import { actOnHook } from '../../../../tests/setup/render-with-providers.helper';
 import type { AttendanceCorrection, AttendanceRecord } from '../types/attendance.types';
 import { correctAttendance } from '../services/correct-attendance.service';
 import { useCorrectAttendanceMutation } from './use-correct-attendance-mutation.hook';
@@ -26,6 +26,18 @@ const RECORD: AttendanceRecord = {
   recordedAtIso: '2026-07-26T15:05:00.000Z',
 };
 
+function renderCorrect() {
+  const onSuccess = vi.fn();
+  const onError = vi.fn();
+  actOnHook(
+    () => useCorrectAttendanceMutation('team-1', 'sess-1', { onSuccess, onError }),
+    (api) => {
+      api.correct(CORRECTION);
+    },
+  );
+  return { onSuccess, onError };
+}
+
 afterEach(() => {
   vi.clearAllMocks();
 });
@@ -33,15 +45,8 @@ afterEach(() => {
 describe('useCorrectAttendanceMutation', () => {
   it('submits the correction and invokes the success callback', async () => {
     vi.mocked(correctAttendance).mockResolvedValue(RECORD);
-    const onSuccess = vi.fn();
-    const onError = vi.fn();
 
-    const { result } = renderHookWithProviders(() =>
-      useCorrectAttendanceMutation('team-1', 'sess-1', { onSuccess, onError }),
-    );
-    act(() => {
-      result.current.correct(CORRECTION);
-    });
+    const { onSuccess } = renderCorrect();
 
     await waitFor(() => {
       expect(onSuccess).toHaveBeenCalledOnce();
@@ -51,15 +56,8 @@ describe('useCorrectAttendanceMutation', () => {
 
   it('routes a rejected correction to the error callback', async () => {
     vi.mocked(correctAttendance).mockRejectedValue(new AppError({ code: APP_ERROR_CODE.Conflict }));
-    const onSuccess = vi.fn();
-    const onError = vi.fn();
 
-    const { result } = renderHookWithProviders(() =>
-      useCorrectAttendanceMutation('team-1', 'sess-1', { onSuccess, onError }),
-    );
-    act(() => {
-      result.current.correct(CORRECTION);
-    });
+    const { onSuccess, onError } = renderCorrect();
 
     await waitFor(() => {
       expect(onError).toHaveBeenCalled();

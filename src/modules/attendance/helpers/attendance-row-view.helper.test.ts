@@ -32,7 +32,11 @@ describe('buildAttendanceRows', () => {
       sheet: makeAttendanceSheet({
         items: [
           makeRosterEntry({ membershipId: 'm-late', status: 'present_late', latenessMinutes: 8 }),
-          makeRosterEntry({ membershipId: 'm-excused', status: 'excused', excuseCategory: 'travel' }),
+          makeRosterEntry({
+            membershipId: 'm-excused',
+            status: 'excused',
+            excuseCategory: 'travel',
+          }),
         ],
       }),
       editor: buildAttendanceEditorStub(),

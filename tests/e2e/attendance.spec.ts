@@ -31,15 +31,28 @@ test.describe('coach attendance experience', () => {
     await expect(page.getByTestId(TEST_IDS.attendancePrivacyNotice)).toBeVisible();
 
     await page.getByTestId(TEST_IDS.attendanceMarkAllPresent).click();
-    await expect(page.getByTestId(TEST_IDS.attendanceSubmit)).toBeEnabled();
+    // Ionic reflects the disabled state through aria-disabled; ion-button is a
+    // custom element, so Playwright's toBeDisabled/toBeEnabled never fire here.
+    await expect(page.getByTestId(TEST_IDS.attendanceSubmit)).not.toHaveAttribute(
+      'aria-disabled',
+      'true',
+    );
     await page.getByTestId(TEST_IDS.attendanceSubmit).click();
 
     await expect(page.getByText('4 of 4 marked')).toBeVisible();
-    await expect(page.getByTestId(TEST_IDS.attendanceSubmit)).toBeDisabled();
-    await expect(page.getByTestId(TEST_IDS.attendanceFinalize)).toBeEnabled();
+    await expect(page.getByTestId(TEST_IDS.attendanceSubmit)).toHaveAttribute(
+      'aria-disabled',
+      'true',
+    );
+    await expect(page.getByTestId(TEST_IDS.attendanceFinalize)).not.toHaveAttribute(
+      'aria-disabled',
+      'true',
+    );
     await page.getByTestId(TEST_IDS.attendanceFinalize).click();
 
-    const confirm = page.locator('ion-alert').getByRole('button', { name: 'Confirm' });
+    const confirm = page
+      .locator('ion-alert')
+      .getByRole('button', { name: 'Finalize', exact: true });
     await expect(confirm).toBeVisible();
     await confirm.click();
 
@@ -52,6 +65,9 @@ test.describe('coach attendance experience', () => {
   }) => {
     await openCoachAttendance(page);
     await setOffline(page, true);
+    // Wait until the screen has registered the offline transition before marking,
+    // so the submit is queued deliberately rather than racing a live request.
+    await expect(page.getByText(/Offline changes are safely queued/u)).toBeVisible();
 
     await page.getByTestId(TEST_IDS.attendanceMarkAllPresent).click();
     await page.getByTestId(TEST_IDS.attendanceSubmit).click();
@@ -78,6 +94,15 @@ test.describe('coach attendance experience', () => {
   });
 
   test('renders the complete workflow in Arabic RTL @rtl', async ({ page }) => {
+    // Direction follows the persisted locale, not the Playwright project locale,
+    // so switch to Arabic before opening attendance.
+    await gotoApp(page, APP_ROUTES.settings);
+    await page
+      .getByTestId(TEST_IDS.settingsLocaleSelect)
+      .locator('ion-segment-button[value="ar"]')
+      .click();
+    await expect(page.locator('html')).toHaveAttribute('dir', 'rtl');
+
     await openCoachAttendance(page);
 
     await expect(page.locator('html')).toHaveAttribute('dir', 'rtl');

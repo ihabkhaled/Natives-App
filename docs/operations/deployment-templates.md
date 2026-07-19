@@ -42,8 +42,11 @@ on should be a decision with a name attached, not something inherited from a sta
 #         run: echo "Add your host's CLI here"
 ```
 
-Serve `dist/` with SPA fallback to `index.html`, or client routes 404 on refresh. Add a strict CSP
-— it is the main compensating control for the web token-storage tradeoff described in
+Serve `dist/` with SPA fallback to `index.html`, or client routes 404 on refresh. This repo ships
+[`vercel.json`](../../vercel.json) at the root: every non-file path rewrites to `/index.html` while
+real assets, the manifest, icons, `offline.html`, and `service-worker.js` are served untouched. On
+other static hosts add the equivalent single-page fallback. Add a strict CSP — it is the main
+compensating control for the web token-storage tradeoff described in
 [`docs/security/token-storage.md`](../security/token-storage.md).
 
 ## Android

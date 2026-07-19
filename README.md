@@ -52,6 +52,11 @@ npm run dev          # http://localhost:5173 — sign in as ranger@example.com /
 - **Sanitized errors.** Backend messages never reach users — proven by an integration test that
   asserts the raw string is absent from the DOM.
 - **Honest gates.** `ios:verify` reports UNVERIFIED off macOS instead of faking a pass.
+- **UI/UX Quality Mandate.** Every UI must be cool, clear, vibrant, catchy and UX-perfect on web and
+  mobile — responsive (desktop sidebar+navbar, mobile tab bar+drawer), polished loaders and skeletons
+  for all async states, first-class dark + light mode, perfect RTL + LTR, accessible (WCAG AA),
+  refined components and tasteful motion. Plain/default styling is not acceptable. See
+  [`rules/ui-ux-quality-mandate.md`](./rules/ui-ux-quality-mandate.md).
 
 ## Layout
 

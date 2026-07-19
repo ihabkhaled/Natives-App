@@ -11,6 +11,11 @@
   catches the usual mistake.
 - [Health status card](../src/modules/health/components/health-status-card/) — a component folder
   with loading, error and ready branches and zero logic.
+- [rules/UI/UX Quality Mandate](../rules/ui-ux-quality-mandate.md) — every UI must be cool, clear,
+  vibrant, catchy and UX-perfect on web and mobile: responsive (desktop sidebar+navbar, mobile tab
+  bar+drawer), polished loaders and skeletons for all async states, first-class dark + light mode,
+  perfect RTL + LTR, accessible (WCAG AA), refined components and tasteful motion. Plain/default
+  styling is not acceptable.
 
 ## Preconditions
 
@@ -98,4 +103,7 @@ npm run test:a11y
 - [ ] Props, constants, and the component live in their own files inside the named folder.
 - [ ] Test ids resolve through `TEST_IDS`; new ids are declared centrally.
 - [ ] Every branch is covered; the file clears the 95% per-file threshold.
+- [ ] The result meets the [UI/UX Quality Mandate](../rules/ui-ux-quality-mandate.md): responsive,
+      polished skeletons for every async state, dark + light, RTL + LTR, refined and catchy — never
+      plain default styling.
 - [ ] `npm run lint` and `npx vitest run --project unit` pass.

@@ -1,6 +1,6 @@
 # Universal Agent Entrypoint
 
-Governance-Version: 1
+Governance-Version: 2
 
 Capacitor Ranger is a strict Ionic React + Capacitor engineering system. Guardrails here are
 mechanical: when one blocks you, the code is in the wrong layer. Move the code — never weaken
@@ -36,6 +36,11 @@ npm run knowledge:context -- --task="<exact task>"
 - Per-file coverage is 95%; pure logic is 100%. Lint runs at zero warnings.
 - Suppressions require a documented `EXC-nnnn` exception.
 - `.ai/` is generated output, never canonical truth.
+- **UI/UX Quality Mandate**: every UI must be cool, clear, vibrant, catchy and UX-perfect on web and
+  mobile — responsive (desktop sidebar+navbar, mobile tab bar+drawer), polished loaders and skeletons
+  for all async states, first-class dark + light mode, perfect RTL + LTR, accessible (WCAG AA),
+  refined components and tasteful motion. Plain/default styling is not acceptable. See
+  [`rules/ui-ux-quality-mandate.md`](rules/ui-ux-quality-mandate.md).
 - Execute with focus: communicate concisely, avoid unrelated detours and speculative work, make
   reasonable in-scope decisions promptly, and continue through verification. This never permits
   skipping an architecture, security, accessibility, testing, documentation, or release gate.

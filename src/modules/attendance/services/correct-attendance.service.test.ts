@@ -38,7 +38,9 @@ describe('correctAttendance', () => {
       new HttpError({ kind: HTTP_ERROR_KIND.Conflict }),
     );
 
-    await expect(correctAttendance('team-1', 'sess-1', CORRECTION)).rejects.toBeInstanceOf(AppError);
+    await expect(correctAttendance('team-1', 'sess-1', CORRECTION)).rejects.toBeInstanceOf(
+      AppError,
+    );
   });
 
   it('wraps a non-transport failure as unexpected', async () => {

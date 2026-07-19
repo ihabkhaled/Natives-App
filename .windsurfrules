@@ -5,3 +5,7 @@ outside their owner package in src/packages. Components are UI-only; hooks live 
 Cross-module imports use @/modules/<feature> public surfaces only.
 Per-file coverage is 95% (100% for pure logic); lint runs at zero warnings.
 Do not edit generated .ai files; rebuild them with `npm run knowledge:build`.
+UI/UX Quality Mandate: every UI must be cool, clear, vibrant, catchy and UX-perfect on web and
+mobile — responsive (desktop sidebar+navbar, mobile tab bar+drawer), polished loaders and skeletons
+for all async states, first-class dark + light mode, perfect RTL + LTR, accessible (WCAG AA), refined
+components and tasteful motion. Plain/default styling is not acceptable.

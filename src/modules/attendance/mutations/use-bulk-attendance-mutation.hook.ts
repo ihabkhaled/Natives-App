@@ -59,6 +59,10 @@ export function useBulkAttendanceMutation(
 ): BulkAttendanceMutationView {
   const queryClient = useQueryClient();
   const mutation = useAppMutation<BulkMutationResult, readonly AttendanceMark[]>({
+    // Offline is a first-class path here: the mutation function itself queues
+    // when offline, so it must run even when the browser is offline instead of
+    // being paused by TanStack's default online-only network mode.
+    networkMode: 'always',
     mutationFn: (marks) => submitOrQueue(teamId, sessionId, isOnline, marks),
     onSuccess: (result) => {
       if (result.mode === 'queued') {

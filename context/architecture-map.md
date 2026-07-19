@@ -44,6 +44,16 @@ The direction has one consequence worth stating: a package owner cannot import `
 why `src/packages/http` depends on its own `TokenStore` interface rather than on the auth module —
 the auth repository implements the interface, and `src/app/startup/start-app.ts` connects them.
 
+## Cross-cutting: UI/UX Quality Mandate
+
+Every screen this map wires together must satisfy the
+[UI/UX Quality Mandate](../rules/ui-ux-quality-mandate.md): cool, clear, vibrant, catchy and
+UX-perfect on web and mobile — responsive (desktop sidebar+navbar, mobile tab bar+drawer), polished
+loaders and skeletons for all async states, first-class dark + light mode, perfect RTL + LTR,
+accessible (WCAG AA), refined components and tasteful motion. Plain/default styling is not
+acceptable. The `src/app` shell owns the responsive frame; `src/shared/ui` owns the skeletons, state
+components, and themed primitives that keep every async state polished across modules.
+
 ## What lives where
 
 - **`src/app/`** — `startup/start-app.ts` (composition root), `router/` (route registry, guard,

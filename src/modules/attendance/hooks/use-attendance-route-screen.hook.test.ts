@@ -23,7 +23,7 @@ describe('useAttendanceRouteScreen', () => {
   });
 
   it('defaults to an empty session id when the param is missing', () => {
-    vi.mocked(useRouteParam).mockReturnValue(undefined);
+    vi.mocked(useRouteParam).mockReturnValue(null);
 
     renderHook(() => useAttendanceRouteScreen());
 

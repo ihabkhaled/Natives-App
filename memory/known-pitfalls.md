@@ -87,3 +87,13 @@ Program 'jscpd.exe' failed to run: An Application Control policy has blocked thi
 This is the host's policy, not a repository defect — the gate runs normally on the Linux CI runner.
 If your workstation blocks it too, rely on the CI `static-analysis` job rather than pinning jscpd
 back to v4. Do not report the gate as passing on a machine where it could not execute.
+
+## 11. Default framework styling silently fails the UI/UX Quality Mandate
+
+A screen can pass lint, types, and tests while still shipping plain, framework-default styling — and
+that violates [`rules/ui-ux-quality-mandate.md`](../rules/ui-ux-quality-mandate.md). Every UI must be
+cool, clear, vibrant, catchy and UX-perfect on web and mobile: responsive (desktop sidebar+navbar,
+mobile tab bar+drawer), polished loaders and skeletons for all async states, first-class dark + light
+mode, perfect RTL + LTR, accessible (WCAG AA), refined components and tasteful motion. Plain/default
+styling is not acceptable. Design every async state with the shared skeleton/state components, verify
+both themes and both directions, and let a human confirm the result is refined, not merely unbroken.

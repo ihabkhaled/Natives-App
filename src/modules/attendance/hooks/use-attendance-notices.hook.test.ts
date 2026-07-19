@@ -1,10 +1,9 @@
 import { renderHook } from '@testing-library/react';
-import { afterEach, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 
 import type * as SharedUiModule from '@/shared/ui';
-import { useAppToast } from '@/shared/ui';
 
-import { initTestI18n } from '../../../../tests/setup/i18n-test.helper';
+import { setupToastHarness } from '../../../../tests/setup/toast-test.helper';
 import { useAttendanceNotices } from './use-attendance-notices.hook';
 
 vi.mock('@/shared/ui', async (importOriginal) => ({
@@ -12,20 +11,7 @@ vi.mock('@/shared/ui', async (importOriginal) => ({
   useAppToast: vi.fn(),
 }));
 
-const showToast = vi.fn<() => Promise<void>>();
-
-beforeAll(async () => {
-  await initTestI18n();
-});
-
-beforeEach(() => {
-  showToast.mockResolvedValue();
-  vi.mocked(useAppToast).mockReturnValue({ showToast });
-});
-
-afterEach(() => {
-  vi.clearAllMocks();
-});
+const { showToast } = setupToastHarness();
 
 describe('useAttendanceNotices', () => {
   it('raises a toned toast for each attendance outcome', () => {

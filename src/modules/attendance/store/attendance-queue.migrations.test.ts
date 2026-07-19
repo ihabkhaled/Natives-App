@@ -41,7 +41,10 @@ describe('migratePersistedAttendanceQueue', () => {
 
   it('resets to an empty queue when the persisted shape is invalid', () => {
     expect(
-      migratePersistedAttendanceQueue({ operations: [{ broken: true }] }, ATTENDANCE_QUEUE_STORE_VERSION),
+      migratePersistedAttendanceQueue(
+        { operations: [{ broken: true }] },
+        ATTENDANCE_QUEUE_STORE_VERSION,
+      ),
     ).toEqual({ operations: [] });
     expect(migratePersistedAttendanceQueue(null, ATTENDANCE_QUEUE_STORE_VERSION)).toEqual({
       operations: [],

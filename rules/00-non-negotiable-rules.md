@@ -68,6 +68,11 @@
 35. Agents MUST communicate concisely, avoid unrelated detours and speculative work, make reasonable
     in-scope decisions promptly, and continue through verification; focus MUST NOT bypass any
     architecture, security, accessibility, testing, documentation, or release gate.
+36. Every UI MUST satisfy the UI/UX Quality Mandate — cool, clear, vibrant, catchy and UX-perfect on
+    web and mobile: responsive (desktop sidebar+navbar, mobile tab bar+drawer), polished loaders and
+    skeletons for all async states, first-class dark + light mode, perfect RTL + LTR, accessible
+    (WCAG AA), refined components and tasteful motion; plain/default styling is unacceptable.
+    [ui-ux-quality-mandate](ui-ux-quality-mandate.md)
 
 ## Forbidden
 
@@ -122,6 +127,6 @@ index at all, and whether an invariant has quietly stopped matching the code it 
 
 ## Definition of done
 
-- [ ] The change violates none of the 35 invariants above.
+- [ ] The change violates none of the 36 invariants above.
 - [ ] Any new invariant is listed here, defined in a rule file, and enforced by a named mechanism.
 - [ ] No gate was weakened, skipped, or scoped away to land the change.

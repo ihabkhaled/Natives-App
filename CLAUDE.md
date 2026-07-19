@@ -1,6 +1,6 @@
 # Claude Agent Entrypoint
 
-Governance-Version: 1
+Governance-Version: 2
 
 This file is a pointer. The canonical contract is [`AGENTS.md`](AGENTS.md) — read it first, then:
 
@@ -28,6 +28,10 @@ npm run knowledge:context -- --task="<exact task>"
 - Per-file coverage is 95% (100% for pure logic); lint runs at zero warnings.
 - Suppressions need a documented `EXC-nnnn` exception.
 - `.ai` is generated: update canonical knowledge, then `npm run knowledge:build`.
+- UI/UX Quality Mandate: every UI must be cool, clear, vibrant, catchy and UX-perfect on web and
+  mobile — responsive (desktop sidebar+navbar, mobile tab bar+drawer), polished loaders and skeletons
+  for all async states, first-class dark + light mode, perfect RTL + LTR, accessible (WCAG AA),
+  refined components and tasteful motion. Plain/default styling is not acceptable.
 - Report only gates you actually ran. iOS compilation is UNVERIFIED off macOS.
 
 ## Validation

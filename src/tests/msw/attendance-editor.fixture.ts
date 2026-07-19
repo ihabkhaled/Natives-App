@@ -1,6 +1,4 @@
-import type { AttendanceStatus } from '@/modules/attendance/constants/attendance.constants';
-import type { AttendanceEditorView } from '@/modules/attendance/hooks/use-attendance-editor.hook';
-import type { AttendanceDraft } from '@/modules/attendance/types/attendance.types';
+import type { AttendanceDraft, AttendanceEditorView, AttendanceStatus } from '@/modules/attendance';
 
 interface EditorStubOverrides {
   readonly drafts?: Record<string, AttendanceDraft>;

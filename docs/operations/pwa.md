@@ -23,13 +23,17 @@ inspects the real browser caches, validates the manifest, and drives an offline 
 
 ## Cache classes
 
-| Cache                             | May contain                                           | Must never contain                                                    |
-| --------------------------------- | ----------------------------------------------------- | --------------------------------------------------------------------- |
-| `ultimate-natives-static-<build>` | Vite-hashed JS, CSS, fonts, and imported public media | HTML navigations, API/auth responses, source maps, manifest, raw logo |
-| `ultimate-natives-offline-v1`     | Only `offline.html`                                   | Session state, API payloads, private pages, tokens, queued operations |
+| Cache                             | May contain                                            | Must never contain                                                    |
+| --------------------------------- | ------------------------------------------------------ | --------------------------------------------------------------------- |
+| `ultimate-natives-static-<build>` | Vite-hashed JS, CSS, fonts, and imported public media  | HTML navigations, API/auth responses, source maps, manifest, raw logo |
+| `ultimate-natives-offline-v1`     | The public app shell (`index.html`) and `offline.html` | Session state, API payloads, private pages, tokens, queued operations |
 
 Navigations are always network-first and are never written to a worker cache. When the network
-fails, the worker returns the public offline document. Cross-origin requests, non-GET requests,
+succeeds the origin answers (with the SPA fallback rewrite in [`vercel.json`](../../vercel.json), a
+deep-link refresh such as `/welcome` resolves to `index.html` and the client router renders it).
+When the network fails, the worker serves the cached public app shell (`index.html`) so the client
+router can still render a deep link offline, and returns the public offline document only when the
+shell is unavailable. Cross-origin requests, non-GET requests,
 `/api/*`, `/auth/*`, and every URL outside the generated immutable allowlist pass through without a
 worker response or cache write. Offline read data for approved product workflows belongs in its
 future scoped storage owner, never in these broad web caches.

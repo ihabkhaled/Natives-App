@@ -31,8 +31,8 @@ function sessionsBody(screen: SessionsScreenView): React.JSX.Element {
   }
   return (
     <div className="flex flex-col gap-4">
-      <IonText color="medium">
-        <p className="m-0 text-sm">{screen.labels.intro}</p>
+      <IonText>
+        <p className="m-0 text-sm text-[color:var(--ion-text-color)]">{screen.labels.intro}</p>
       </IonText>
       <SessionList
         rows={screen.rows}

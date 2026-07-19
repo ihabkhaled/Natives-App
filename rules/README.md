@@ -50,3 +50,4 @@ the shortest path to a passing review is [31-review-checklist](31-review-checkli
 | [29 — Exceptions](29-exceptions.md)                                                       | The `EXC-nnnn` scheme and the exceptions in this codebase   |
 | [30 — Release gates](30-release-gates.md)                                                 | `validate:web`, `validate:native`, `validate`               |
 | [31 — Review checklist](31-review-checklist.md)                                           | What a reviewer checks that no machine can                  |
+| [UI/UX Quality Mandate](ui-ux-quality-mandate.md)                                         | Cool, clear, vibrant, responsive, accessible UI everywhere  |

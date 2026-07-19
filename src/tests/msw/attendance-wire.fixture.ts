@@ -4,7 +4,7 @@ import type {
   attendanceSheetResponseSchema,
   attendanceStatusResponseSchema,
   bulkAttendanceResponseSchema,
-} from '@/modules/attendance/schemas/attendance.schema';
+} from '@/modules/attendance';
 import type { SchemaOutput } from '@/packages/schema';
 
 type SheetDto = SchemaOutput<typeof attendanceSheetResponseSchema>;
@@ -16,7 +16,7 @@ type HistoryDto = SchemaOutput<typeof attendanceHistoryResponseSchema>;
 
 const RECORDED_AT = '2026-07-26T15:05:00.000Z';
 
-export function makeRosterEntryDto(overrides: Partial<RosterEntryDto> = {}): RosterEntryDto {
+function makeRosterEntryDto(overrides: Partial<RosterEntryDto> = {}): RosterEntryDto {
   return {
     membershipId: 'm-1',
     userId: 'user-1',

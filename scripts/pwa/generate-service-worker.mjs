@@ -60,6 +60,7 @@ const PRECACHE_URLS = ${JSON.stringify(urls, null, 2)};
 const STATIC_CACHE = 'ultimate-natives-static-${buildId}';
 const OFFLINE_CACHE = 'ultimate-natives-offline-v1';
 const OFFLINE_URL = '/offline.html';
+const APP_SHELL_URL = '/index.html';
 const CACHE_PREFIX = 'ultimate-natives-';
 const NEVER_CACHE_PREFIXES = ['/api/', '/auth/'];
 const PRECACHE_PATHS = new Set(PRECACHE_URLS);
@@ -68,7 +69,7 @@ self.addEventListener('install', (event) => {
   event.waitUntil(
     Promise.all([
       caches.open(STATIC_CACHE).then((cache) => cache.addAll(PRECACHE_URLS)),
-      caches.open(OFFLINE_CACHE).then((cache) => cache.add(OFFLINE_URL)),
+      caches.open(OFFLINE_CACHE).then((cache) => cache.addAll([APP_SHELL_URL, OFFLINE_URL])),
     ]),
   );
 });
@@ -103,7 +104,11 @@ async function offlineNavigation(request) {
   try {
     return await fetch(request);
   } catch {
-    return (await caches.match(OFFLINE_URL)) ?? Response.error();
+    return (
+      (await caches.match(APP_SHELL_URL)) ??
+      (await caches.match(OFFLINE_URL)) ??
+      Response.error()
+    );
   }
 }
 

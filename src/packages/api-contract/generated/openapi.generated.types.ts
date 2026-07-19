@@ -90,6 +90,23 @@ export interface paths {
         readonly patch?: never;
         readonly trace?: never;
     };
+    readonly "/auth/invitations/{token}": {
+        readonly parameters: {
+            readonly query?: never;
+            readonly header?: never;
+            readonly path?: never;
+            readonly cookie?: never;
+        };
+        /** Inspect a pending invitation by opaque token */
+        readonly get: operations["PublicInvitations.get"];
+        readonly put?: never;
+        readonly post?: never;
+        readonly delete?: never;
+        readonly options?: never;
+        readonly head?: never;
+        readonly patch?: never;
+        readonly trace?: never;
+    };
     readonly "/auth/login": {
         readonly parameters: {
             readonly query?: never;
@@ -186,6 +203,74 @@ export interface paths {
         readonly put?: never;
         /** Reset a password with a one-time token */
         readonly post: operations["Auth.resetPassword"];
+        readonly delete?: never;
+        readonly options?: never;
+        readonly head?: never;
+        readonly patch?: never;
+        readonly trace?: never;
+    };
+    readonly "/auth/sessions": {
+        readonly parameters: {
+            readonly query?: never;
+            readonly header?: never;
+            readonly path?: never;
+            readonly cookie?: never;
+        };
+        /** List active refresh sessions for the caller */
+        readonly get: operations["Auth.listSessions"];
+        readonly put?: never;
+        readonly post?: never;
+        readonly delete?: never;
+        readonly options?: never;
+        readonly head?: never;
+        readonly patch?: never;
+        readonly trace?: never;
+    };
+    readonly "/auth/sessions/{id}/revoke": {
+        readonly parameters: {
+            readonly query?: never;
+            readonly header?: never;
+            readonly path?: never;
+            readonly cookie?: never;
+        };
+        readonly get?: never;
+        readonly put?: never;
+        /** Revoke one owned refresh session */
+        readonly post: operations["Auth.revokeSession"];
+        readonly delete?: never;
+        readonly options?: never;
+        readonly head?: never;
+        readonly patch?: never;
+        readonly trace?: never;
+    };
+    readonly "/auth/sessions/revoke-others": {
+        readonly parameters: {
+            readonly query?: never;
+            readonly header?: never;
+            readonly path?: never;
+            readonly cookie?: never;
+        };
+        readonly get?: never;
+        readonly put?: never;
+        /** Revoke all refresh sessions except the current one */
+        readonly post: operations["Auth.revokeOtherSessions"];
+        readonly delete?: never;
+        readonly options?: never;
+        readonly head?: never;
+        readonly patch?: never;
+        readonly trace?: never;
+    };
+    readonly "/calendar/feeds/{feedToken}.ics": {
+        readonly parameters: {
+            readonly query?: never;
+            readonly header?: never;
+            readonly path?: never;
+            readonly cookie?: never;
+        };
+        /** Render a scoped practice calendar subscription */
+        readonly get: operations["PublicPracticeCalendar.render"];
+        readonly put?: never;
+        readonly post?: never;
         readonly delete?: never;
         readonly options?: never;
         readonly head?: never;
@@ -344,6 +429,24 @@ export interface paths {
         readonly patch?: never;
         readonly trace?: never;
     };
+    readonly "/notifications/quiet-hours": {
+        readonly parameters: {
+            readonly query?: never;
+            readonly header?: never;
+            readonly path?: never;
+            readonly cookie?: never;
+        };
+        /** Get my notification quiet hours */
+        readonly get: operations["Notifications.getQuietHours"];
+        /** Update my notification quiet hours */
+        readonly put: operations["Notifications.updateQuietHours"];
+        readonly post?: never;
+        readonly delete?: never;
+        readonly options?: never;
+        readonly head?: never;
+        readonly patch?: never;
+        readonly trace?: never;
+    };
     readonly "/rbac/assignments": {
         readonly parameters: {
             readonly query?: never;
@@ -449,6 +552,162 @@ export interface paths {
         readonly patch: operations["Teams.update"];
         readonly trace?: never;
     };
+    readonly "/teams/{teamId}/assessment-catalog/categories": {
+        readonly parameters: {
+            readonly query?: never;
+            readonly header?: never;
+            readonly path?: never;
+            readonly cookie?: never;
+        };
+        /** List assessment metric categories */
+        readonly get: operations["AssessmentCatalog.listCategories"];
+        readonly put?: never;
+        readonly post?: never;
+        readonly delete?: never;
+        readonly options?: never;
+        readonly head?: never;
+        readonly patch?: never;
+        readonly trace?: never;
+    };
+    readonly "/teams/{teamId}/assessment-catalog/metrics": {
+        readonly parameters: {
+            readonly query?: never;
+            readonly header?: never;
+            readonly path?: never;
+            readonly cookie?: never;
+        };
+        /** List current assessment metric definitions */
+        readonly get: operations["AssessmentCatalog.listMetrics"];
+        readonly put?: never;
+        /** Create a team metric definition (version 1) */
+        readonly post: operations["AssessmentCatalog.create"];
+        readonly delete?: never;
+        readonly options?: never;
+        readonly head?: never;
+        readonly patch?: never;
+        readonly trace?: never;
+    };
+    readonly "/teams/{teamId}/assessment-catalog/metrics/{metricId}/archive": {
+        readonly parameters: {
+            readonly query?: never;
+            readonly header?: never;
+            readonly path?: never;
+            readonly cookie?: never;
+        };
+        readonly get?: never;
+        readonly put?: never;
+        /** Archive a metric definition (must be unused) */
+        readonly post: operations["AssessmentCatalog.archive"];
+        readonly delete?: never;
+        readonly options?: never;
+        readonly head?: never;
+        readonly patch?: never;
+        readonly trace?: never;
+    };
+    readonly "/teams/{teamId}/assessment-catalog/metrics/{metricId}/versions": {
+        readonly parameters: {
+            readonly query?: never;
+            readonly header?: never;
+            readonly path?: never;
+            readonly cookie?: never;
+        };
+        readonly get?: never;
+        readonly put?: never;
+        /** Append a new version of a metric definition */
+        readonly post: operations["AssessmentCatalog.createVersion"];
+        readonly delete?: never;
+        readonly options?: never;
+        readonly head?: never;
+        readonly patch?: never;
+        readonly trace?: never;
+    };
+    readonly "/teams/{teamId}/assessment-catalog/periods": {
+        readonly parameters: {
+            readonly query?: never;
+            readonly header?: never;
+            readonly path?: never;
+            readonly cookie?: never;
+        };
+        /** List assessment periods for a team */
+        readonly get: operations["AssessmentPeriod.list"];
+        readonly put?: never;
+        /** Open an assessment period for a published template */
+        readonly post: operations["AssessmentPeriod.create"];
+        readonly delete?: never;
+        readonly options?: never;
+        readonly head?: never;
+        readonly patch?: never;
+        readonly trace?: never;
+    };
+    readonly "/teams/{teamId}/assessment-catalog/scales": {
+        readonly parameters: {
+            readonly query?: never;
+            readonly header?: never;
+            readonly path?: never;
+            readonly cookie?: never;
+        };
+        /** List assessment scales */
+        readonly get: operations["AssessmentCatalog.listScales"];
+        readonly put?: never;
+        readonly post?: never;
+        readonly delete?: never;
+        readonly options?: never;
+        readonly head?: never;
+        readonly patch?: never;
+        readonly trace?: never;
+    };
+    readonly "/teams/{teamId}/assessment-catalog/templates": {
+        readonly parameters: {
+            readonly query?: never;
+            readonly header?: never;
+            readonly path?: never;
+            readonly cookie?: never;
+        };
+        /** List assessment templates for a team */
+        readonly get: operations["AssessmentTemplate.list"];
+        readonly put?: never;
+        /** Create a draft assessment template (version 1) */
+        readonly post: operations["AssessmentTemplate.create"];
+        readonly delete?: never;
+        readonly options?: never;
+        readonly head?: never;
+        readonly patch?: never;
+        readonly trace?: never;
+    };
+    readonly "/teams/{teamId}/assessment-catalog/templates/{templateId}/publish": {
+        readonly parameters: {
+            readonly query?: never;
+            readonly header?: never;
+            readonly path?: never;
+            readonly cookie?: never;
+        };
+        readonly get?: never;
+        readonly put?: never;
+        /** Publish and lock a draft template version */
+        readonly post: operations["AssessmentTemplate.publish"];
+        readonly delete?: never;
+        readonly options?: never;
+        readonly head?: never;
+        readonly patch?: never;
+        readonly trace?: never;
+    };
+    readonly "/teams/{teamId}/assessment-catalog/templates/{templateId}/versions": {
+        readonly parameters: {
+            readonly query?: never;
+            readonly header?: never;
+            readonly path?: never;
+            readonly cookie?: never;
+        };
+        readonly get?: never;
+        readonly put?: never;
+        /** Append a new draft version of a template */
+        readonly post: operations["AssessmentTemplate.createVersion"];
+        readonly delete?: never;
+        readonly options?: never;
+        readonly head?: never;
+        readonly patch?: never;
+        readonly trace?: never;
+    };
     readonly "/teams/{teamId}/attendance/me/participation": {
         readonly parameters: {
             readonly query?: never;
@@ -530,6 +789,213 @@ export interface paths {
         readonly post?: never;
         /** Archive a reference catalog entry */
         readonly delete: operations["Catalogs.archive"];
+        readonly options?: never;
+        readonly head?: never;
+        readonly patch?: never;
+        readonly trace?: never;
+    };
+    readonly "/teams/{teamId}/coach-feedback": {
+        readonly parameters: {
+            readonly query?: never;
+            readonly header?: never;
+            readonly path?: never;
+            readonly cookie?: never;
+        };
+        /** List a team’s coach feedback (note-free summaries) */
+        readonly get: operations["CoachFeedback.list"];
+        readonly put?: never;
+        /** Create a draft coach feedback */
+        readonly post: operations["CoachFeedback.create"];
+        readonly delete?: never;
+        readonly options?: never;
+        readonly head?: never;
+        readonly patch?: never;
+        readonly trace?: never;
+    };
+    readonly "/teams/{teamId}/coach-feedback/{feedbackId}": {
+        readonly parameters: {
+            readonly query?: never;
+            readonly header?: never;
+            readonly path?: never;
+            readonly cookie?: never;
+        };
+        /** Read one coach feedback with its coach note */
+        readonly get: operations["CoachFeedback.detail"];
+        readonly put?: never;
+        readonly post?: never;
+        readonly delete?: never;
+        readonly options?: never;
+        readonly head?: never;
+        readonly patch?: never;
+        readonly trace?: never;
+    };
+    readonly "/teams/{teamId}/coach-feedback/{feedbackId}/correct": {
+        readonly parameters: {
+            readonly query?: never;
+            readonly header?: never;
+            readonly path?: never;
+            readonly cookie?: never;
+        };
+        readonly get?: never;
+        readonly put?: never;
+        /** Correct a published feedback via a new revision */
+        readonly post: operations["CoachFeedback.correct"];
+        readonly delete?: never;
+        readonly options?: never;
+        readonly head?: never;
+        readonly patch?: never;
+        readonly trace?: never;
+    };
+    readonly "/teams/{teamId}/coach-feedback/{feedbackId}/fields": {
+        readonly parameters: {
+            readonly query?: never;
+            readonly header?: never;
+            readonly path?: never;
+            readonly cookie?: never;
+        };
+        readonly get?: never;
+        /** Autosave a draft feedback’s structured fields */
+        readonly put: operations["CoachFeedback.update"];
+        readonly post?: never;
+        readonly delete?: never;
+        readonly options?: never;
+        readonly head?: never;
+        readonly patch?: never;
+        readonly trace?: never;
+    };
+    readonly "/teams/{teamId}/coach-feedback/{feedbackId}/publish": {
+        readonly parameters: {
+            readonly query?: never;
+            readonly header?: never;
+            readonly path?: never;
+            readonly cookie?: never;
+        };
+        readonly get?: never;
+        readonly put?: never;
+        /** Publish (share) an in-review feedback */
+        readonly post: operations["CoachFeedback.publish"];
+        readonly delete?: never;
+        readonly options?: never;
+        readonly head?: never;
+        readonly patch?: never;
+        readonly trace?: never;
+    };
+    readonly "/teams/{teamId}/coach-feedback/{feedbackId}/revisions": {
+        readonly parameters: {
+            readonly query?: never;
+            readonly header?: never;
+            readonly path?: never;
+            readonly cookie?: never;
+        };
+        /** List the revision history of a feedback family */
+        readonly get: operations["CoachFeedback.revisions"];
+        readonly put?: never;
+        readonly post?: never;
+        readonly delete?: never;
+        readonly options?: never;
+        readonly head?: never;
+        readonly patch?: never;
+        readonly trace?: never;
+    };
+    readonly "/teams/{teamId}/coach-feedback/{feedbackId}/submit": {
+        readonly parameters: {
+            readonly query?: never;
+            readonly header?: never;
+            readonly path?: never;
+            readonly cookie?: never;
+        };
+        readonly get?: never;
+        readonly put?: never;
+        /** Submit a draft feedback for review */
+        readonly post: operations["CoachFeedback.submit"];
+        readonly delete?: never;
+        readonly options?: never;
+        readonly head?: never;
+        readonly patch?: never;
+        readonly trace?: never;
+    };
+    readonly "/teams/{teamId}/development-goals": {
+        readonly parameters: {
+            readonly query?: never;
+            readonly header?: never;
+            readonly path?: never;
+            readonly cookie?: never;
+        };
+        /** List a team’s development goals */
+        readonly get: operations["DevelopmentGoal.list"];
+        readonly put?: never;
+        /** Create a proposed development goal */
+        readonly post: operations["DevelopmentGoal.create"];
+        readonly delete?: never;
+        readonly options?: never;
+        readonly head?: never;
+        readonly patch?: never;
+        readonly trace?: never;
+    };
+    readonly "/teams/{teamId}/development-goals/{goalId}": {
+        readonly parameters: {
+            readonly query?: never;
+            readonly header?: never;
+            readonly path?: never;
+            readonly cookie?: never;
+        };
+        /** Read one development goal with its action plan */
+        readonly get: operations["DevelopmentGoal.detail"];
+        /** Update a development goal and its action plan */
+        readonly put: operations["DevelopmentGoal.update"];
+        readonly post?: never;
+        readonly delete?: never;
+        readonly options?: never;
+        readonly head?: never;
+        readonly patch?: never;
+        readonly trace?: never;
+    };
+    readonly "/teams/{teamId}/development-goals/{goalId}/review": {
+        readonly parameters: {
+            readonly query?: never;
+            readonly header?: never;
+            readonly path?: never;
+            readonly cookie?: never;
+        };
+        readonly get?: never;
+        readonly put?: never;
+        /** Record a coach review of a development goal */
+        readonly post: operations["DevelopmentGoal.review"];
+        readonly delete?: never;
+        readonly options?: never;
+        readonly head?: never;
+        readonly patch?: never;
+        readonly trace?: never;
+    };
+    readonly "/teams/{teamId}/development-goals/{goalId}/transition": {
+        readonly parameters: {
+            readonly query?: never;
+            readonly header?: never;
+            readonly path?: never;
+            readonly cookie?: never;
+        };
+        readonly get?: never;
+        readonly put?: never;
+        /** Move a development goal through its lifecycle */
+        readonly post: operations["DevelopmentGoal.transition"];
+        readonly delete?: never;
+        readonly options?: never;
+        readonly head?: never;
+        readonly patch?: never;
+        readonly trace?: never;
+    };
+    readonly "/teams/{teamId}/development-reminders": {
+        readonly parameters: {
+            readonly query?: never;
+            readonly header?: never;
+            readonly path?: never;
+            readonly cookie?: never;
+        };
+        readonly get?: never;
+        readonly put?: never;
+        /** Queue reminders for unacknowledged feedback and overdue goals */
+        readonly post: operations["DevelopmentReminder.enqueue"];
+        readonly delete?: never;
         readonly options?: never;
         readonly head?: never;
         readonly patch?: never;
@@ -857,6 +1323,245 @@ export interface paths {
         /** Invite a person into a team */
         readonly post: operations["Members.invite"];
         readonly delete?: never;
+        readonly options?: never;
+        readonly head?: never;
+        readonly patch?: never;
+        readonly trace?: never;
+    };
+    readonly "/teams/{teamId}/my-assessments": {
+        readonly parameters: {
+            readonly query?: never;
+            readonly header?: never;
+            readonly path?: never;
+            readonly cookie?: never;
+        };
+        /** List my own published assessments for a team */
+        readonly get: operations["PlayerAssessmentSelf.listOwn"];
+        readonly put?: never;
+        readonly post?: never;
+        readonly delete?: never;
+        readonly options?: never;
+        readonly head?: never;
+        readonly patch?: never;
+        readonly trace?: never;
+    };
+    readonly "/teams/{teamId}/my-development-goals": {
+        readonly parameters: {
+            readonly query?: never;
+            readonly header?: never;
+            readonly path?: never;
+            readonly cookie?: never;
+        };
+        /** List my own development goals for a team */
+        readonly get: operations["DevelopmentGoalSelf.listOwn"];
+        readonly put?: never;
+        readonly post?: never;
+        readonly delete?: never;
+        readonly options?: never;
+        readonly head?: never;
+        readonly patch?: never;
+        readonly trace?: never;
+    };
+    readonly "/teams/{teamId}/my-feedback": {
+        readonly parameters: {
+            readonly query?: never;
+            readonly header?: never;
+            readonly path?: never;
+            readonly cookie?: never;
+        };
+        /** List my own shared feedback for a team */
+        readonly get: operations["CoachFeedbackSelf.listOwn"];
+        readonly put?: never;
+        readonly post?: never;
+        readonly delete?: never;
+        readonly options?: never;
+        readonly head?: never;
+        readonly patch?: never;
+        readonly trace?: never;
+    };
+    readonly "/teams/{teamId}/my-feedback/{feedbackId}/acknowledge": {
+        readonly parameters: {
+            readonly query?: never;
+            readonly header?: never;
+            readonly path?: never;
+            readonly cookie?: never;
+        };
+        readonly get?: never;
+        readonly put?: never;
+        /** Acknowledge feedback shared with me */
+        readonly post: operations["CoachFeedbackSelf.acknowledge"];
+        readonly delete?: never;
+        readonly options?: never;
+        readonly head?: never;
+        readonly patch?: never;
+        readonly trace?: never;
+    };
+    readonly "/teams/{teamId}/player-assessments": {
+        readonly parameters: {
+            readonly query?: never;
+            readonly header?: never;
+            readonly path?: never;
+            readonly cookie?: never;
+        };
+        /** List a team’s player assessments */
+        readonly get: operations["PlayerAssessment.list"];
+        readonly put?: never;
+        /** Create a draft player assessment */
+        readonly post: operations["PlayerAssessment.create"];
+        readonly delete?: never;
+        readonly options?: never;
+        readonly head?: never;
+        readonly patch?: never;
+        readonly trace?: never;
+    };
+    readonly "/teams/{teamId}/player-assessments/{assessmentId}": {
+        readonly parameters: {
+            readonly query?: never;
+            readonly header?: never;
+            readonly path?: never;
+            readonly cookie?: never;
+        };
+        /** Read one player assessment with its values */
+        readonly get: operations["PlayerAssessment.detail"];
+        readonly put?: never;
+        readonly post?: never;
+        readonly delete?: never;
+        readonly options?: never;
+        readonly head?: never;
+        readonly patch?: never;
+        readonly trace?: never;
+    };
+    readonly "/teams/{teamId}/player-assessments/{assessmentId}/correct": {
+        readonly parameters: {
+            readonly query?: never;
+            readonly header?: never;
+            readonly path?: never;
+            readonly cookie?: never;
+        };
+        readonly get?: never;
+        readonly put?: never;
+        /** Correct a published assessment via a new revision */
+        readonly post: operations["PlayerAssessment.correct"];
+        readonly delete?: never;
+        readonly options?: never;
+        readonly head?: never;
+        readonly patch?: never;
+        readonly trace?: never;
+    };
+    readonly "/teams/{teamId}/player-assessments/{assessmentId}/publish": {
+        readonly parameters: {
+            readonly query?: never;
+            readonly header?: never;
+            readonly path?: never;
+            readonly cookie?: never;
+        };
+        readonly get?: never;
+        readonly put?: never;
+        /** Publish an approved assessment */
+        readonly post: operations["PlayerAssessment.publish"];
+        readonly delete?: never;
+        readonly options?: never;
+        readonly head?: never;
+        readonly patch?: never;
+        readonly trace?: never;
+    };
+    readonly "/teams/{teamId}/player-assessments/{assessmentId}/review": {
+        readonly parameters: {
+            readonly query?: never;
+            readonly header?: never;
+            readonly path?: never;
+            readonly cookie?: never;
+        };
+        readonly get?: never;
+        readonly put?: never;
+        /** Review (claim, approve, or reopen) an assessment */
+        readonly post: operations["PlayerAssessment.review"];
+        readonly delete?: never;
+        readonly options?: never;
+        readonly head?: never;
+        readonly patch?: never;
+        readonly trace?: never;
+    };
+    readonly "/teams/{teamId}/player-assessments/{assessmentId}/revisions": {
+        readonly parameters: {
+            readonly query?: never;
+            readonly header?: never;
+            readonly path?: never;
+            readonly cookie?: never;
+        };
+        /** List the revision history of an assessment family */
+        readonly get: operations["PlayerAssessment.revisions"];
+        readonly put?: never;
+        readonly post?: never;
+        readonly delete?: never;
+        readonly options?: never;
+        readonly head?: never;
+        readonly patch?: never;
+        readonly trace?: never;
+    };
+    readonly "/teams/{teamId}/player-assessments/{assessmentId}/submit": {
+        readonly parameters: {
+            readonly query?: never;
+            readonly header?: never;
+            readonly path?: never;
+            readonly cookie?: never;
+        };
+        readonly get?: never;
+        readonly put?: never;
+        /** Submit a draft assessment for review */
+        readonly post: operations["PlayerAssessment.submit"];
+        readonly delete?: never;
+        readonly options?: never;
+        readonly head?: never;
+        readonly patch?: never;
+        readonly trace?: never;
+    };
+    readonly "/teams/{teamId}/player-assessments/{assessmentId}/values": {
+        readonly parameters: {
+            readonly query?: never;
+            readonly header?: never;
+            readonly path?: never;
+            readonly cookie?: never;
+        };
+        readonly get?: never;
+        /** Autosave a draft assessment’s values */
+        readonly put: operations["PlayerAssessment.update"];
+        readonly post?: never;
+        readonly delete?: never;
+        readonly options?: never;
+        readonly head?: never;
+        readonly patch?: never;
+        readonly trace?: never;
+    };
+    readonly "/teams/{teamId}/practice-calendar-feeds": {
+        readonly parameters: {
+            readonly query?: never;
+            readonly header?: never;
+            readonly path?: never;
+            readonly cookie?: never;
+        };
+        readonly get?: never;
+        readonly put?: never;
+        /** Create a revocable practice calendar feed */
+        readonly post: operations["PracticeCalendar.create"];
+        readonly delete?: never;
+        readonly options?: never;
+        readonly head?: never;
+        readonly patch?: never;
+        readonly trace?: never;
+    };
+    readonly "/teams/{teamId}/practice-calendar-feeds/{feedId}": {
+        readonly parameters: {
+            readonly query?: never;
+            readonly header?: never;
+            readonly path?: never;
+            readonly cookie?: never;
+        };
+        readonly get?: never;
+        readonly put?: never;
+        readonly post?: never;
+        /** Revoke one of my practice calendar feeds */
+        readonly delete: operations["PracticeCalendar.revoke"];
         readonly options?: never;
         readonly head?: never;
         readonly patch?: never;
@@ -1396,6 +2101,57 @@ export interface paths {
         readonly patch?: never;
         readonly trace?: never;
     };
+    readonly "/teams/{teamId}/practice-sessions/{sessionId}/reminders/dispatch": {
+        readonly parameters: {
+            readonly query?: never;
+            readonly header?: never;
+            readonly path?: never;
+            readonly cookie?: never;
+        };
+        readonly get?: never;
+        readonly put?: never;
+        /** Enqueue due practice reminders */
+        readonly post: operations["PracticeReminderAdmin.dispatch"];
+        readonly delete?: never;
+        readonly options?: never;
+        readonly head?: never;
+        readonly patch?: never;
+        readonly trace?: never;
+    };
+    readonly "/teams/{teamId}/practice-sessions/{sessionId}/reminders/preview": {
+        readonly parameters: {
+            readonly query?: never;
+            readonly header?: never;
+            readonly path?: never;
+            readonly cookie?: never;
+        };
+        /** Preview due practice reminders */
+        readonly get: operations["PracticeReminderAdmin.preview"];
+        readonly put?: never;
+        readonly post?: never;
+        readonly delete?: never;
+        readonly options?: never;
+        readonly head?: never;
+        readonly patch?: never;
+        readonly trace?: never;
+    };
+    readonly "/teams/{teamId}/practice-sessions/{sessionId}/reminders/test": {
+        readonly parameters: {
+            readonly query?: never;
+            readonly header?: never;
+            readonly path?: never;
+            readonly cookie?: never;
+        };
+        readonly get?: never;
+        readonly put?: never;
+        /** Enqueue a safe practice reminder test to myself */
+        readonly post: operations["PracticeReminderAdmin.sendTest"];
+        readonly delete?: never;
+        readonly options?: never;
+        readonly head?: never;
+        readonly patch?: never;
+        readonly trace?: never;
+    };
     readonly "/teams/{teamId}/practice-sessions/{sessionId}/reopen": {
         readonly parameters: {
             readonly query?: never;
@@ -1633,6 +2389,11 @@ export interface components {
             readonly password: string;
             readonly token: string;
         };
+        readonly AcknowledgeFeedbackDto: {
+            readonly clarificationNote?: Record<string, never> | null;
+            /** @default false */
+            readonly clarificationRequested: boolean;
+        };
         readonly AddAliasDto: {
             readonly alias: string;
             /** @enum {string} */
@@ -1678,6 +2439,9 @@ export interface components {
             /** @enum {string} */
             readonly source: "manual" | "import";
         };
+        readonly ArchiveMetricDto: {
+            readonly expectedRecordVersion: number;
+        };
         readonly ArticleResponseDto: {
             readonly body: string;
             readonly createdAt: string;
@@ -1686,6 +2450,15 @@ export interface components {
             /** @enum {string} */
             readonly status: "draft" | "published";
             readonly title: string;
+        };
+        readonly AssessmentValueDto: {
+            readonly confidence?: number | null;
+            /** Format: uuid */
+            readonly metricDefinitionId: string;
+            readonly note?: string | null;
+            readonly numericValue?: number | null;
+            readonly observationCount?: number | null;
+            readonly textValue?: string | null;
         };
         readonly AssignGroupMembersDto: {
             readonly membershipIds: readonly string[];
@@ -1856,6 +2629,25 @@ export interface components {
             readonly items: readonly components["schemas"]["AttendanceResponseDto"][];
             readonly recorded: number;
         };
+        readonly CalendarFeedResponseDto: {
+            /** Format: date-time */
+            readonly expiresAt: string;
+            readonly feedPath: string;
+            /** Format: uuid */
+            readonly id: string;
+            /** Format: uuid */
+            readonly seasonId?: string | null;
+            /** Format: uuid */
+            readonly teamId: string;
+            readonly timezone: string;
+            /** @description Shown once. Treat this calendar subscription token as a secret. */
+            readonly token: string;
+        };
+        readonly CalendarFeedRevokeResponseDto: {
+            /** Format: uuid */
+            readonly id: string;
+            readonly revoked: boolean;
+        };
         readonly CatalogEntryResponseDto: {
             /** @enum {string} */
             readonly catalog: "division" | "gender_format" | "position";
@@ -1875,6 +2667,72 @@ export interface components {
             readonly updatedAt: string;
             readonly updatedBy: string | null;
             readonly version: number;
+        };
+        readonly CategoryResponseDto: {
+            /** Format: date-time */
+            readonly createdAt: string;
+            readonly description: string;
+            /** Format: uuid */
+            readonly id: string;
+            readonly key: string;
+            readonly name: string;
+            readonly sortOrder: number;
+            /** @enum {string} */
+            readonly status: "active" | "archived";
+            readonly version: number;
+        };
+        readonly CategoryWeightDto: {
+            /** Format: uuid */
+            readonly categoryId: string;
+            readonly weightPercentage: number;
+        };
+        readonly CoachFeedbackRecordResponseDto: {
+            /** Format: uuid */
+            readonly authorUserId: string;
+            readonly coachNote: string | null;
+            /** Format: date-time */
+            readonly createdAt: string;
+            /** Format: uuid */
+            readonly createdBy: string | null;
+            /** Format: uuid */
+            readonly familyId: string;
+            readonly frisbeeImprovement: string | null;
+            /** Format: uuid */
+            readonly id: string;
+            /** Format: uuid */
+            readonly membershipId: string;
+            readonly mentalImprovement: string | null;
+            readonly positiveFrisbee: string | null;
+            readonly positiveMental: string | null;
+            /** Format: date-time */
+            readonly publishedAt: string | null;
+            /** Format: uuid */
+            readonly publishedBy: string | null;
+            readonly recommendedPosition: string | null;
+            readonly recordVersion: number;
+            readonly revision: number;
+            /** Format: uuid */
+            readonly seasonId: string | null;
+            /** @enum {string} */
+            readonly status: "draft" | "in_review" | "published" | "revised";
+            /** Format: date-time */
+            readonly submittedAt: string | null;
+            /** Format: uuid */
+            readonly submittedBy: string | null;
+            readonly summary: string | null;
+            /** Format: date-time */
+            readonly supersededAt: string | null;
+            /** Format: uuid */
+            readonly supersededById: string | null;
+            /** Format: uuid */
+            readonly teamId: string;
+            readonly teamRole: string | null;
+            /** Format: date-time */
+            readonly updatedAt: string;
+        };
+        readonly CoachFeedbackResponseDto: {
+            readonly acknowledgement: components["schemas"]["FeedbackAcknowledgementResponseDto"] | null;
+            readonly feedback: components["schemas"]["CoachFeedbackRecordResponseDto"];
         };
         readonly CompleteBlockDto: {
             /** @enum {string} */
@@ -1900,6 +2758,15 @@ export interface components {
             /** @enum {string} */
             readonly status: "present_on_time" | "present_late" | "excused" | "injured" | "absent" | "remote_approved" | "other_approved";
         };
+        readonly CorrectFeedbackDto: {
+            readonly fields?: components["schemas"]["FeedbackFieldsDto"];
+            readonly reason: string;
+        };
+        readonly CorrectPlayerAssessmentDto: {
+            readonly reason: string;
+            readonly summary?: Record<string, never> | null;
+            readonly values: readonly components["schemas"]["AssessmentValueDto"][];
+        };
         readonly CreateAgendaDto: {
             readonly notes?: string;
             readonly theme?: string;
@@ -1922,6 +2789,12 @@ export interface components {
             readonly repetitions?: number;
             readonly target?: string;
             readonly title: string;
+        };
+        readonly CreateCalendarFeedDto: {
+            readonly expiresInDays?: number;
+            /** Format: uuid */
+            readonly seasonId?: string;
+            readonly timezone?: string;
         };
         readonly CreateCatalogEntryDto: {
             /** @enum {string} */
@@ -1947,6 +2820,36 @@ export interface components {
             readonly seasonId?: string;
             readonly skillTags?: readonly string[];
         };
+        readonly CreateFeedbackDto: {
+            readonly fields?: components["schemas"]["FeedbackFieldsDto"];
+            /** Format: uuid */
+            readonly membershipId: string;
+            /** Format: uuid */
+            readonly seasonId?: Record<string, never> | null;
+        };
+        readonly CreateGoalDto: {
+            readonly actions?: readonly components["schemas"]["GoalActionDto"][];
+            readonly baselineValue?: Record<string, never> | null;
+            readonly description?: Record<string, never> | null;
+            /** Format: date */
+            readonly dueDate?: string | null;
+            readonly evidence?: Record<string, never> | null;
+            /** Format: uuid */
+            readonly feedbackId?: Record<string, never> | null;
+            readonly measurableTarget?: Record<string, never> | null;
+            /** Format: uuid */
+            readonly membershipId: string;
+            /** Format: uuid */
+            readonly metricDefinitionId?: Record<string, never> | null;
+            /** Format: uuid */
+            readonly ownerUserId?: Record<string, never> | null;
+            readonly progressNote?: Record<string, never> | null;
+            readonly progressValue?: Record<string, never> | null;
+            /** Format: uuid */
+            readonly seasonId?: Record<string, never> | null;
+            readonly targetValue?: Record<string, never> | null;
+            readonly title: string;
+        };
         readonly CreateGroupDto: {
             /** Format: uuid */
             readonly coachMembershipId?: string;
@@ -1958,6 +2861,40 @@ export interface components {
             readonly email: string;
             /** @enum {string} */
             readonly role?: "admin" | "user";
+        };
+        readonly CreateMetricDto: {
+            readonly applicability?: readonly string[];
+            /** Format: uuid */
+            readonly categoryId: string;
+            readonly definition: string;
+            /** @enum {string} */
+            readonly direction: "higher_is_better" | "lower_is_better" | "target_range" | "descriptive";
+            readonly guidance: string;
+            readonly key: string;
+            readonly name: string;
+            /** Format: uuid */
+            readonly scaleId: string;
+            readonly tags?: readonly string[];
+        };
+        readonly CreatePeriodDto: {
+            readonly cohort?: Record<string, never> | null;
+            /** @example 2026-06-30 */
+            readonly endsOn: string;
+            readonly name: string;
+            /** Format: uuid */
+            readonly seasonId?: Record<string, never> | null;
+            /** @example 2026-01-01 */
+            readonly startsOn: string;
+            /** Format: uuid */
+            readonly templateId: string;
+        };
+        readonly CreatePlayerAssessmentDto: {
+            /** Format: uuid */
+            readonly membershipId: string;
+            /** Format: uuid */
+            readonly periodId: string;
+            readonly summary?: Record<string, never> | null;
+            readonly values?: readonly components["schemas"]["AssessmentValueDto"][];
         };
         readonly CreateScheduleDto: {
             readonly defaultCapacity?: number;
@@ -2053,12 +2990,77 @@ export interface components {
             readonly slug: string;
             readonly timezone?: string;
         };
+        readonly CreateTemplateDto: {
+            readonly categoryWeights: readonly components["schemas"]["CategoryWeightDto"][];
+            readonly cohort?: Record<string, never> | null;
+            readonly evaluatorRoles: readonly ("MEMBER" | "COACH" | "TEAM_ADMIN" | "SCOREKEEPER" | "ANALYST")[];
+            readonly key: string;
+            readonly metrics: readonly components["schemas"]["TemplateMetricDto"][];
+            readonly name: string;
+            readonly scoreVersion: number;
+            /** Format: uuid */
+            readonly seasonId?: Record<string, never> | null;
+        };
         readonly CreateVenueDto: {
             readonly address?: string;
             readonly latitude?: number;
             readonly longitude?: number;
             readonly name: string;
             readonly timezone?: string;
+        };
+        readonly DevelopmentGoalRecordResponseDto: {
+            readonly baselineValue: number | null;
+            /** Format: date-time */
+            readonly completedAt: string | null;
+            /** Format: date-time */
+            readonly createdAt: string;
+            /** Format: uuid */
+            readonly createdBy: string | null;
+            readonly description: string | null;
+            /** Format: date */
+            readonly dueDate: string | null;
+            readonly evidence: string | null;
+            /** Format: uuid */
+            readonly feedbackId: string | null;
+            /** Format: uuid */
+            readonly id: string;
+            readonly measurableTarget: string | null;
+            /** Format: uuid */
+            readonly membershipId: string;
+            /** Format: uuid */
+            readonly metricDefinitionId: string | null;
+            /** Format: uuid */
+            readonly ownerUserId: string | null;
+            readonly progressNote: string | null;
+            readonly progressValue: number | null;
+            readonly recordVersion: number;
+            /** Format: date-time */
+            readonly reviewedAt: string | null;
+            /** Format: uuid */
+            readonly reviewedBy: string | null;
+            readonly reviewNote: string | null;
+            /** Format: uuid */
+            readonly seasonId: string | null;
+            /** @enum {string} */
+            readonly status: "proposed" | "active" | "achieved" | "missed" | "cancelled";
+            readonly targetValue: number | null;
+            /** Format: uuid */
+            readonly teamId: string;
+            readonly title: string;
+            /** Format: date-time */
+            readonly updatedAt: string;
+        };
+        readonly DevelopmentGoalResponseDto: {
+            readonly actions: readonly components["schemas"]["GoalActionResponseDto"][];
+            readonly goal: components["schemas"]["DevelopmentGoalRecordResponseDto"];
+        };
+        readonly DeviceSessionResponseDto: {
+            readonly approxLocation: string;
+            readonly current: boolean;
+            readonly device: string;
+            readonly id: string;
+            /** Format: date-time */
+            readonly lastActiveAt: string;
         };
         readonly DrillResponseDto: {
             /** @enum {string} */
@@ -2092,6 +3094,53 @@ export interface components {
             readonly settingKey: "attendance_statuses" | "session_types" | "attendance_weights" | "assessment_scale" | "badge_tiers" | "roster_limits" | "notification_rules" | "report_branding";
             readonly value: Record<string, never> | null;
         };
+        readonly FeedbackAcknowledgementResponseDto: {
+            /** Format: date-time */
+            readonly acknowledgedAt: string;
+            readonly clarificationNote: string | null;
+            readonly clarificationRequested: boolean;
+            /** Format: uuid */
+            readonly feedbackId: string;
+            /** Format: uuid */
+            readonly id: string;
+            /** Format: uuid */
+            readonly membershipId: string;
+            /** Format: uuid */
+            readonly userId: string;
+        };
+        readonly FeedbackFieldsDto: {
+            readonly coachNote?: Record<string, never> | null;
+            readonly frisbeeImprovement?: Record<string, never> | null;
+            readonly mentalImprovement?: Record<string, never> | null;
+            readonly positiveFrisbee?: Record<string, never> | null;
+            readonly positiveMental?: Record<string, never> | null;
+            readonly recommendedPosition?: Record<string, never> | null;
+            readonly summary?: Record<string, never> | null;
+            readonly teamRole?: Record<string, never> | null;
+        };
+        readonly FeedbackRevisionsResponseDto: {
+            readonly items: readonly components["schemas"]["FeedbackSummaryResponseDto"][];
+        };
+        readonly FeedbackSummaryResponseDto: {
+            /** Format: uuid */
+            readonly authorUserId: string;
+            /** Format: date-time */
+            readonly createdAt: string;
+            /** Format: uuid */
+            readonly familyId: string;
+            /** Format: uuid */
+            readonly id: string;
+            /** Format: uuid */
+            readonly membershipId: string;
+            /** Format: date-time */
+            readonly publishedAt: string | null;
+            readonly recordVersion: number;
+            readonly revision: number;
+            /** @enum {string} */
+            readonly status: "draft" | "in_review" | "published" | "revised";
+            /** Format: uuid */
+            readonly teamId: string;
+        };
         readonly FinalizeAttendanceDto: {
             readonly expectedVersion: number;
         };
@@ -2104,6 +3153,21 @@ export interface components {
             readonly sessions: readonly components["schemas"]["SessionResponseDto"][];
             /** @description Occurrences already present and left untouched */
             readonly skipped: number;
+        };
+        readonly GoalActionDto: {
+            readonly description: string;
+            /** @default false */
+            readonly done: boolean;
+            /** Format: date */
+            readonly dueDate?: string | null;
+            readonly sortOrder: number;
+        };
+        readonly GoalActionResponseDto: {
+            readonly description: string;
+            readonly done: boolean;
+            /** Format: date */
+            readonly dueDate: string | null;
+            readonly sortOrder: number;
         };
         readonly GroupMemberResponseDto: {
             readonly membershipId: string;
@@ -2157,6 +3221,24 @@ export interface components {
             readonly offset: number;
             readonly total: number;
         };
+        readonly ListCategoriesResponseDto: {
+            readonly items: readonly components["schemas"]["CategoryResponseDto"][];
+            readonly limit: number;
+            readonly offset: number;
+            readonly total: number;
+        };
+        readonly ListCoachFeedbackResponseDto: {
+            readonly items: readonly components["schemas"]["FeedbackSummaryResponseDto"][];
+            readonly limit: number;
+            readonly offset: number;
+            readonly total: number;
+        };
+        readonly ListDevelopmentGoalsResponseDto: {
+            readonly items: readonly components["schemas"]["DevelopmentGoalResponseDto"][];
+            readonly limit: number;
+            readonly offset: number;
+            readonly total: number;
+        };
         readonly ListDrillsResponseDto: {
             readonly items: readonly components["schemas"]["DrillResponseDto"][];
             readonly limit: number;
@@ -2169,14 +3251,44 @@ export interface components {
             readonly offset: number;
             readonly total: number;
         };
+        readonly ListMetricsResponseDto: {
+            readonly items: readonly components["schemas"]["MetricResponseDto"][];
+            readonly limit: number;
+            readonly offset: number;
+            readonly total: number;
+        };
         readonly ListNotificationsResponseDto: {
             readonly items: readonly components["schemas"]["NotificationViewDto"][];
             readonly limit: number;
             readonly offset: number;
             readonly total: number;
         };
+        readonly ListPeriodsResponseDto: {
+            readonly items: readonly components["schemas"]["PeriodResponseDto"][];
+            readonly limit: number;
+            readonly offset: number;
+            readonly total: number;
+        };
+        readonly ListPlayerAssessmentsResponseDto: {
+            readonly items: readonly components["schemas"]["PlayerAssessmentSummaryResponseDto"][];
+            readonly limit: number;
+            readonly offset: number;
+            readonly total: number;
+        };
+        readonly ListPublishedAssessmentsResponseDto: {
+            readonly items: readonly components["schemas"]["PlayerPublishedAssessmentResponseDto"][];
+            readonly limit: number;
+            readonly offset: number;
+            readonly total: number;
+        };
         readonly ListRsvpsResponseDto: {
             readonly items: readonly components["schemas"]["RsvpParticipantResponseDto"][];
+            readonly limit: number;
+            readonly offset: number;
+            readonly total: number;
+        };
+        readonly ListScalesResponseDto: {
+            readonly items: readonly components["schemas"]["ScaleResponseDto"][];
             readonly limit: number;
             readonly offset: number;
             readonly total: number;
@@ -2205,8 +3317,20 @@ export interface components {
             readonly offset: number;
             readonly total: number;
         };
+        readonly ListSharedFeedbackResponseDto: {
+            readonly items: readonly components["schemas"]["SharedFeedbackResponseDto"][];
+            readonly limit: number;
+            readonly offset: number;
+            readonly total: number;
+        };
         readonly ListTeamsResponseDto: {
             readonly items: readonly components["schemas"]["TeamResponseDto"][];
+            readonly limit: number;
+            readonly offset: number;
+            readonly total: number;
+        };
+        readonly ListTemplatesResponseDto: {
+            readonly items: readonly components["schemas"]["TemplateResponseDto"][];
             readonly limit: number;
             readonly offset: number;
             readonly total: number;
@@ -2345,6 +3469,38 @@ export interface components {
         readonly MessageResponseDto: {
             readonly message: string;
         };
+        readonly MetricResponseDto: {
+            readonly applicability: readonly string[];
+            /** Format: date-time */
+            readonly archivedAt: string | null;
+            /** Format: uuid */
+            readonly archivedBy: string | null;
+            /** Format: uuid */
+            readonly categoryId: string;
+            /** Format: date-time */
+            readonly createdAt: string;
+            /** Format: uuid */
+            readonly createdBy: string | null;
+            readonly definition: string;
+            /** @enum {string} */
+            readonly direction: "higher_is_better" | "lower_is_better" | "target_range" | "descriptive";
+            /** Format: uuid */
+            readonly familyId: string;
+            readonly guidance: string;
+            /** Format: uuid */
+            readonly id: string;
+            readonly key: string;
+            readonly name: string;
+            readonly recordVersion: number;
+            /** Format: uuid */
+            readonly scaleId: string;
+            /** @enum {string} */
+            readonly status: "active" | "archived";
+            readonly tags: readonly string[];
+            /** Format: uuid */
+            readonly teamId: string | null;
+            readonly version: number;
+        };
         readonly NotificationPreferenceDto: {
             /** @enum {string} */
             readonly category: "member_lifecycle" | "practice" | "attendance" | "system";
@@ -2365,6 +3521,9 @@ export interface components {
             readonly readAt: string | null;
             readonly teamId: string | null;
             readonly titleKey: string;
+        };
+        readonly OptimisticVersionDto: {
+            readonly expectedRecordVersion: number;
         };
         readonly OutboxMetricsResponseDto: {
             readonly completed: number;
@@ -2407,6 +3566,109 @@ export interface components {
             readonly seasonId: string | null;
             readonly weightedPresentPoints: number;
         };
+        readonly PeriodResponseDto: {
+            readonly cohort: string | null;
+            /** Format: date-time */
+            readonly createdAt: string;
+            /** Format: uuid */
+            readonly createdBy: string | null;
+            /** @example 2026-06-30 */
+            readonly endsOn: string;
+            /** Format: uuid */
+            readonly id: string;
+            readonly name: string;
+            readonly recordVersion: number;
+            /** Format: uuid */
+            readonly seasonId: string | null;
+            /** @example 2026-01-01 */
+            readonly startsOn: string;
+            /** @enum {string} */
+            readonly status: "active" | "archived";
+            /** Format: uuid */
+            readonly teamId: string;
+            /** Format: uuid */
+            readonly templateId: string;
+        };
+        readonly PlayerAssessmentRecordResponseDto: {
+            /** Format: date-time */
+            readonly createdAt: string;
+            /** Format: uuid */
+            readonly createdBy: string | null;
+            /** Format: uuid */
+            readonly evaluatorUserId: string;
+            /** Format: uuid */
+            readonly familyId: string;
+            /** Format: uuid */
+            readonly id: string;
+            /** Format: uuid */
+            readonly membershipId: string;
+            /** Format: uuid */
+            readonly periodId: string;
+            /** Format: date-time */
+            readonly publishedAt: string | null;
+            /** Format: uuid */
+            readonly publishedBy: string | null;
+            readonly recordVersion: number;
+            /** Format: date-time */
+            readonly reviewedAt: string | null;
+            /** Format: uuid */
+            readonly reviewedBy: string | null;
+            readonly revision: number;
+            /** Format: uuid */
+            readonly seasonId: string | null;
+            /** @enum {string} */
+            readonly status: "draft" | "submitted" | "in_review" | "approved" | "published" | "revised";
+            /** Format: date-time */
+            readonly submittedAt: string | null;
+            /** Format: uuid */
+            readonly submittedBy: string | null;
+            readonly summary: string | null;
+            /** Format: date-time */
+            readonly supersededAt: string | null;
+            /** Format: uuid */
+            readonly supersededById: string | null;
+            /** Format: uuid */
+            readonly teamId: string;
+            /** Format: uuid */
+            readonly templateId: string;
+            /** Format: date-time */
+            readonly updatedAt: string;
+        };
+        readonly PlayerAssessmentResponseDto: {
+            readonly assessment: components["schemas"]["PlayerAssessmentRecordResponseDto"];
+            readonly values: readonly components["schemas"]["PlayerAssessmentValueResponseDto"][];
+        };
+        readonly PlayerAssessmentSummaryResponseDto: {
+            /** Format: date-time */
+            readonly createdAt: string;
+            /** Format: uuid */
+            readonly evaluatorUserId: string;
+            /** Format: uuid */
+            readonly familyId: string;
+            /** Format: uuid */
+            readonly id: string;
+            /** Format: uuid */
+            readonly membershipId: string;
+            /** Format: uuid */
+            readonly periodId: string;
+            /** Format: date-time */
+            readonly publishedAt: string | null;
+            readonly recordVersion: number;
+            readonly revision: number;
+            /** @enum {string} */
+            readonly status: "draft" | "submitted" | "in_review" | "approved" | "published" | "revised";
+            /** Format: uuid */
+            readonly teamId: string;
+        };
+        readonly PlayerAssessmentValueResponseDto: {
+            readonly confidence: number | null;
+            /** Format: uuid */
+            readonly metricDefinitionId: string;
+            readonly note: string | null;
+            readonly numericValue: number | null;
+            readonly observationCount: number | null;
+            readonly textValue: string | null;
+        };
         readonly PlayerProfileDto: {
             /** @example 2000-01-31 */
             readonly dateOfBirth?: string;
@@ -2425,8 +3687,54 @@ export interface components {
             readonly preferredName?: string;
             readonly weightKg?: number;
         };
+        readonly PlayerPublishedAssessmentResponseDto: {
+            /** Format: uuid */
+            readonly id: string;
+            /** Format: uuid */
+            readonly membershipId: string;
+            /** Format: uuid */
+            readonly periodId: string;
+            /** Format: date-time */
+            readonly publishedAt: string | null;
+            readonly revision: number;
+            /** @enum {string} */
+            readonly status: "draft" | "submitted" | "in_review" | "approved" | "published" | "revised";
+            readonly summary: string | null;
+            /** Format: uuid */
+            readonly teamId: string;
+            /** Format: uuid */
+            readonly templateId: string;
+            readonly values: readonly components["schemas"]["PlayerPublishedValueResponseDto"][];
+        };
+        readonly PlayerPublishedValueResponseDto: {
+            /** Format: uuid */
+            readonly metricDefinitionId: string;
+            readonly numericValue: number | null;
+            readonly textValue: string | null;
+        };
         readonly PreferencesResponseDto: {
             readonly items: readonly components["schemas"]["NotificationPreferenceDto"][];
+        };
+        readonly PublicInvitationResponseDto: {
+            readonly email: string;
+            /** Format: date-time */
+            readonly expiresAt: string;
+            readonly inviterName?: Record<string, never> | null;
+            /** @enum {string} */
+            readonly role: "admin" | "user";
+        };
+        readonly PublishTemplateDto: {
+            readonly expectedRecordVersion: number;
+        };
+        readonly QuietHoursResponseDto: {
+            /** @example 07:00 */
+            readonly endsLocal: string;
+            /** @example 22:00 */
+            readonly startsLocal: string;
+            readonly timezone: string;
+            readonly urgentCancellationOverride: boolean;
+            /** Format: uuid */
+            readonly userId: string;
         };
         readonly RecordScanDto: {
             /** @enum {string} */
@@ -2435,6 +3743,29 @@ export interface components {
         readonly RefreshDto: {
             readonly deviceLabel?: string;
             readonly refreshToken: string;
+        };
+        readonly ReminderDispatchResponseDto: {
+            readonly candidates: number;
+            readonly enqueued: number;
+        };
+        readonly ReminderPreviewResponseDto: {
+            readonly cutoff: boolean;
+            readonly kinds: readonly ("published" | "upcoming" | "no_response" | "cutoff" | "rescheduled" | "cancelled" | "venue_changed" | "attendance_corrected" | "test")[];
+            readonly noResponse: number;
+            /** Format: uuid */
+            readonly sessionId: string;
+            readonly totalEligible: number;
+            readonly upcoming: boolean;
+            readonly urgentCancellationOverride: boolean;
+        };
+        readonly RemindersResponseDto: {
+            readonly feedbackReminders: number;
+            readonly goalReminders: number;
+        };
+        readonly ReminderTestResponseDto: {
+            readonly enqueued: boolean;
+            /** @enum {string|null} */
+            readonly reason?: "quiet_hours" | null;
         };
         readonly ReorderBlocksDto: {
             readonly blockIds: readonly string[];
@@ -2468,6 +3799,25 @@ export interface components {
         readonly ResetPasswordDto: {
             readonly password: string;
             readonly token: string;
+        };
+        readonly ReviewGoalDto: {
+            readonly evidence?: Record<string, never> | null;
+            readonly expectedRecordVersion: number;
+            readonly progressNote?: Record<string, never> | null;
+            readonly progressValue?: Record<string, never> | null;
+            readonly reviewNote?: Record<string, never> | null;
+        };
+        readonly ReviewPlayerAssessmentDto: {
+            /** @enum {string} */
+            readonly decision: "start_review" | "approve" | "reject";
+            readonly expectedRecordVersion: number;
+            readonly note?: Record<string, never> | null;
+        };
+        readonly RevisionsResponseDto: {
+            readonly items: readonly components["schemas"]["PlayerAssessmentSummaryResponseDto"][];
+        };
+        readonly RevokeOtherSessionsResponseDto: {
+            readonly revokedCount: number;
         };
         readonly RoleAssignmentResponseDto: {
             /** Format: date-time */
@@ -2558,6 +3908,25 @@ export interface components {
             readonly spotsRemaining: number | null;
             readonly waitlisted: number;
         };
+        readonly ScaleResponseDto: {
+            readonly categoricalOptions: readonly string[];
+            /** Format: date-time */
+            readonly createdAt: string;
+            readonly guidance: string;
+            /** Format: uuid */
+            readonly id: string;
+            readonly key: string;
+            readonly maximumValue: number | null;
+            readonly minimumValue: number | null;
+            readonly name: string;
+            /** @enum {string} */
+            readonly status: "active" | "archived";
+            readonly stepValue: number | null;
+            readonly unit: string | null;
+            /** @enum {string} */
+            readonly valueKind: "legacy_0_5" | "timed" | "count" | "percentage" | "categorical" | "text";
+            readonly version: number;
+        };
         readonly ScheduleResponseDto: {
             /** Format: date-time */
             readonly createdAt: string;
@@ -2623,6 +3992,12 @@ export interface components {
         };
         readonly SessionHistoryResponseDto: {
             readonly items: readonly components["schemas"]["StatusEventResponseDto"][];
+        };
+        readonly SessionListResponseDto: {
+            readonly limit: number;
+            readonly offset: number;
+            readonly sessions: readonly components["schemas"]["DeviceSessionResponseDto"][];
+            readonly total: number;
         };
         readonly SessionResponseDto: {
             readonly cancellationReason: string | null;
@@ -2691,6 +4066,29 @@ export interface components {
             readonly teamId: string;
             readonly value: Record<string, never>;
         };
+        readonly SharedFeedbackResponseDto: {
+            /** Format: date-time */
+            readonly acknowledgedAt: string | null;
+            readonly clarificationRequested: boolean;
+            readonly frisbeeImprovement: string | null;
+            /** Format: uuid */
+            readonly id: string;
+            /** Format: uuid */
+            readonly membershipId: string;
+            readonly mentalImprovement: string | null;
+            readonly positiveFrisbee: string | null;
+            readonly positiveMental: string | null;
+            /** Format: date-time */
+            readonly publishedAt: string | null;
+            readonly recommendedPosition: string | null;
+            readonly revision: number;
+            /** @enum {string} */
+            readonly status: "draft" | "in_review" | "published" | "revised";
+            readonly summary: string | null;
+            /** Format: uuid */
+            readonly teamId: string;
+            readonly teamRole: string | null;
+        };
         readonly StationResponseDto: {
             readonly blockId: string;
             readonly coachMembershipId: string | null;
@@ -2735,10 +4133,50 @@ export interface components {
             readonly updatedBy: string | null;
             readonly version: number;
         };
+        readonly TemplateMetricDto: {
+            /** Format: uuid */
+            readonly metricDefinitionId: string;
+            readonly required: boolean;
+            readonly sortOrder: number;
+        };
+        readonly TemplateResponseDto: {
+            readonly categoryWeights: readonly components["schemas"]["CategoryWeightDto"][];
+            readonly cohort: string | null;
+            /** Format: date-time */
+            readonly createdAt: string;
+            /** Format: uuid */
+            readonly createdBy: string | null;
+            readonly evaluatorRoles: readonly ("MEMBER" | "COACH" | "TEAM_ADMIN" | "SCOREKEEPER" | "ANALYST")[];
+            /** Format: uuid */
+            readonly familyId: string;
+            /** Format: uuid */
+            readonly id: string;
+            readonly key: string;
+            readonly metrics: readonly components["schemas"]["TemplateMetricDto"][];
+            readonly name: string;
+            /** Format: date-time */
+            readonly publishedAt: string | null;
+            /** Format: uuid */
+            readonly publishedBy: string | null;
+            readonly recordVersion: number;
+            readonly scoreVersion: number;
+            /** Format: uuid */
+            readonly seasonId: string | null;
+            /** @enum {string} */
+            readonly status: "draft" | "published" | "archived";
+            /** Format: uuid */
+            readonly teamId: string;
+            readonly version: number;
+        };
         readonly TransitionDto: {
             /** Format: date-time */
             readonly effectiveAt?: string;
             readonly reason?: string;
+        };
+        readonly TransitionGoalDto: {
+            readonly expectedRecordVersion: number;
+            /** @enum {string} */
+            readonly transition: "activate" | "achieve" | "miss" | "cancel" | "reopen";
         };
         readonly UpdateBlockDto: {
             /** @enum {string} */
@@ -2771,6 +4209,35 @@ export interface components {
             readonly safetyNotes?: string;
             readonly skillTags?: readonly string[];
         };
+        readonly UpdateFeedbackDto: {
+            readonly expectedRecordVersion: number;
+            readonly fields?: components["schemas"]["FeedbackFieldsDto"];
+        };
+        readonly UpdateGoalDto: {
+            readonly actions?: readonly components["schemas"]["GoalActionDto"][];
+            readonly baselineValue?: Record<string, never> | null;
+            readonly description?: Record<string, never> | null;
+            /** Format: date */
+            readonly dueDate?: string | null;
+            readonly evidence?: Record<string, never> | null;
+            readonly expectedRecordVersion: number;
+            /** Format: uuid */
+            readonly feedbackId?: Record<string, never> | null;
+            readonly measurableTarget?: Record<string, never> | null;
+            /** Format: uuid */
+            readonly metricDefinitionId?: Record<string, never> | null;
+            /** Format: uuid */
+            readonly ownerUserId?: Record<string, never> | null;
+            readonly progressNote?: Record<string, never> | null;
+            readonly progressValue?: Record<string, never> | null;
+            readonly targetValue?: Record<string, never> | null;
+            readonly title: string;
+        };
+        readonly UpdatePlayerAssessmentDto: {
+            readonly expectedRecordVersion: number;
+            readonly summary?: Record<string, never> | null;
+            readonly values: readonly components["schemas"]["AssessmentValueDto"][];
+        };
         readonly UpdatePreferencesDto: {
             /** @enum {string} */
             readonly category: "member_lifecycle" | "practice" | "attendance" | "system";
@@ -2781,6 +4248,16 @@ export interface components {
         readonly UpdateProfileDto: {
             readonly expectedVersion: number;
             readonly profile: components["schemas"]["PlayerProfileDto"];
+        };
+        readonly UpdateQuietHoursDto: {
+            /** @example 07:00 */
+            readonly endsLocal: string;
+            /** @example 22:00 */
+            readonly startsLocal: string;
+            /** @example Africa/Cairo */
+            readonly timezone: string;
+            /** @description Allow urgent practice cancellations during quiet hours. */
+            readonly urgentCancellationOverride: boolean;
         };
         readonly UpdateScheduleDto: {
             readonly defaultCapacity?: number;
@@ -3072,6 +4549,28 @@ export interface operations {
             };
         };
     };
+    readonly "PublicInvitations.get": {
+        readonly parameters: {
+            readonly query?: never;
+            readonly header?: never;
+            readonly path: {
+                readonly token: string;
+            };
+            readonly cookie?: never;
+        };
+        readonly requestBody?: never;
+        readonly responses: {
+            /** @description Minimal pending invitation details */
+            readonly 200: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content: {
+                    readonly "application/json": components["schemas"]["PublicInvitationResponseDto"];
+                };
+            };
+        };
+    };
     readonly "Auth.login": {
         readonly parameters: {
             readonly query?: never;
@@ -3240,6 +4739,107 @@ export interface operations {
                 content: {
                     readonly "application/json": components["schemas"]["MessageResponseDto"];
                 };
+            };
+        };
+    };
+    readonly "Auth.listSessions": {
+        readonly parameters: {
+            readonly query?: {
+                readonly limit?: number;
+                readonly offset?: number;
+            };
+            readonly header?: never;
+            readonly path?: never;
+            readonly cookie?: never;
+        };
+        readonly requestBody?: never;
+        readonly responses: {
+            /** @description Bounded active session page */
+            readonly 200: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content: {
+                    readonly "application/json": components["schemas"]["SessionListResponseDto"];
+                };
+            };
+        };
+    };
+    readonly "Auth.revokeSession": {
+        readonly parameters: {
+            readonly query?: never;
+            readonly header?: never;
+            readonly path: {
+                readonly id: string;
+            };
+            readonly cookie?: never;
+        };
+        readonly requestBody?: never;
+        readonly responses: {
+            /** @description Session revoked */
+            readonly 200: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content: {
+                    readonly "application/json": components["schemas"]["MessageResponseDto"];
+                };
+            };
+            /** @description Session not found */
+            readonly 404: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    readonly "Auth.revokeOtherSessions": {
+        readonly parameters: {
+            readonly query?: never;
+            readonly header?: never;
+            readonly path?: never;
+            readonly cookie?: never;
+        };
+        readonly requestBody?: never;
+        readonly responses: {
+            /** @description Other sessions revoked */
+            readonly 200: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content: {
+                    readonly "application/json": components["schemas"]["RevokeOtherSessionsResponseDto"];
+                };
+            };
+        };
+    };
+    readonly "PublicPracticeCalendar.render": {
+        readonly parameters: {
+            readonly query?: never;
+            readonly header?: never;
+            readonly path: {
+                readonly feedToken: string;
+            };
+            readonly cookie?: never;
+        };
+        readonly requestBody?: never;
+        readonly responses: {
+            /** @description RFC 5545 calendar */
+            readonly 200: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content: {
+                    readonly "application/json": string;
+                };
+            };
+            /** @description Calendar feed unavailable */
+            readonly 404: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content?: never;
             };
         };
     };
@@ -3496,6 +5096,62 @@ export interface operations {
                 };
                 content: {
                     readonly "application/json": components["schemas"]["PreferencesResponseDto"];
+                };
+            };
+            /** @description Unauthorized */
+            readonly 401: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    readonly "Notifications.getQuietHours": {
+        readonly parameters: {
+            readonly query?: never;
+            readonly header?: never;
+            readonly path?: never;
+            readonly cookie?: never;
+        };
+        readonly requestBody?: never;
+        readonly responses: {
+            readonly 200: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content: {
+                    readonly "application/json": components["schemas"]["QuietHoursResponseDto"];
+                };
+            };
+            /** @description Unauthorized */
+            readonly 401: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    readonly "Notifications.updateQuietHours": {
+        readonly parameters: {
+            readonly query?: never;
+            readonly header?: never;
+            readonly path?: never;
+            readonly cookie?: never;
+        };
+        readonly requestBody: {
+            readonly content: {
+                readonly "application/json": components["schemas"]["UpdateQuietHoursDto"];
+            };
+        };
+        readonly responses: {
+            readonly 200: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content: {
+                    readonly "application/json": components["schemas"]["QuietHoursResponseDto"];
                 };
             };
             /** @description Unauthorized */
@@ -3816,6 +5472,450 @@ export interface operations {
             };
         };
     };
+    readonly "AssessmentCatalog.listCategories": {
+        readonly parameters: {
+            readonly query?: {
+                readonly limit?: number;
+                readonly offset?: number;
+            };
+            readonly header?: never;
+            readonly path: {
+                readonly teamId: string;
+            };
+            readonly cookie?: never;
+        };
+        readonly requestBody?: never;
+        readonly responses: {
+            /** @description Categories */
+            readonly 200: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content: {
+                    readonly "application/json": components["schemas"]["ListCategoriesResponseDto"];
+                };
+            };
+            /** @description Unauthorized */
+            readonly 401: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    readonly "AssessmentCatalog.listMetrics": {
+        readonly parameters: {
+            readonly query?: {
+                readonly limit?: number;
+                readonly offset?: number;
+            };
+            readonly header?: never;
+            readonly path: {
+                readonly teamId: string;
+            };
+            readonly cookie?: never;
+        };
+        readonly requestBody?: never;
+        readonly responses: {
+            /** @description Metrics */
+            readonly 200: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content: {
+                    readonly "application/json": components["schemas"]["ListMetricsResponseDto"];
+                };
+            };
+            /** @description Unauthorized */
+            readonly 401: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    readonly "AssessmentCatalog.create": {
+        readonly parameters: {
+            readonly query?: never;
+            readonly header?: never;
+            readonly path: {
+                readonly teamId: string;
+            };
+            readonly cookie?: never;
+        };
+        readonly requestBody: {
+            readonly content: {
+                readonly "application/json": components["schemas"]["CreateMetricDto"];
+            };
+        };
+        readonly responses: {
+            /** @description Metric created */
+            readonly 201: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content: {
+                    readonly "application/json": components["schemas"]["MetricResponseDto"];
+                };
+            };
+            /** @description Unauthorized */
+            readonly 401: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Forbidden */
+            readonly 403: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    readonly "AssessmentCatalog.archive": {
+        readonly parameters: {
+            readonly query?: never;
+            readonly header?: never;
+            readonly path: {
+                readonly metricId: string;
+                readonly teamId: string;
+            };
+            readonly cookie?: never;
+        };
+        readonly requestBody: {
+            readonly content: {
+                readonly "application/json": components["schemas"]["ArchiveMetricDto"];
+            };
+        };
+        readonly responses: {
+            /** @description Metric archived */
+            readonly 200: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content: {
+                    readonly "application/json": components["schemas"]["MetricResponseDto"];
+                };
+            };
+            /** @description Unauthorized */
+            readonly 401: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Forbidden */
+            readonly 403: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    readonly "AssessmentCatalog.createVersion": {
+        readonly parameters: {
+            readonly query?: never;
+            readonly header?: never;
+            readonly path: {
+                readonly metricId: string;
+                readonly teamId: string;
+            };
+            readonly cookie?: never;
+        };
+        readonly requestBody: {
+            readonly content: {
+                readonly "application/json": components["schemas"]["CreateMetricDto"];
+            };
+        };
+        readonly responses: {
+            /** @description Version created */
+            readonly 201: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content: {
+                    readonly "application/json": components["schemas"]["MetricResponseDto"];
+                };
+            };
+            /** @description Unauthorized */
+            readonly 401: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Forbidden */
+            readonly 403: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    readonly "AssessmentPeriod.list": {
+        readonly parameters: {
+            readonly query?: {
+                readonly limit?: number;
+                readonly offset?: number;
+            };
+            readonly header?: never;
+            readonly path: {
+                readonly teamId: string;
+            };
+            readonly cookie?: never;
+        };
+        readonly requestBody?: never;
+        readonly responses: {
+            /** @description Periods */
+            readonly 200: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content: {
+                    readonly "application/json": components["schemas"]["ListPeriodsResponseDto"];
+                };
+            };
+            /** @description Unauthorized */
+            readonly 401: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    readonly "AssessmentPeriod.create": {
+        readonly parameters: {
+            readonly query?: never;
+            readonly header?: never;
+            readonly path: {
+                readonly teamId: string;
+            };
+            readonly cookie?: never;
+        };
+        readonly requestBody: {
+            readonly content: {
+                readonly "application/json": components["schemas"]["CreatePeriodDto"];
+            };
+        };
+        readonly responses: {
+            /** @description Period created */
+            readonly 201: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content: {
+                    readonly "application/json": components["schemas"]["PeriodResponseDto"];
+                };
+            };
+            /** @description Unauthorized */
+            readonly 401: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Forbidden */
+            readonly 403: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    readonly "AssessmentCatalog.listScales": {
+        readonly parameters: {
+            readonly query?: {
+                readonly limit?: number;
+                readonly offset?: number;
+            };
+            readonly header?: never;
+            readonly path: {
+                readonly teamId: string;
+            };
+            readonly cookie?: never;
+        };
+        readonly requestBody?: never;
+        readonly responses: {
+            /** @description Scales */
+            readonly 200: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content: {
+                    readonly "application/json": components["schemas"]["ListScalesResponseDto"];
+                };
+            };
+            /** @description Unauthorized */
+            readonly 401: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    readonly "AssessmentTemplate.list": {
+        readonly parameters: {
+            readonly query?: {
+                readonly limit?: number;
+                readonly offset?: number;
+            };
+            readonly header?: never;
+            readonly path: {
+                readonly teamId: string;
+            };
+            readonly cookie?: never;
+        };
+        readonly requestBody?: never;
+        readonly responses: {
+            /** @description Templates */
+            readonly 200: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content: {
+                    readonly "application/json": components["schemas"]["ListTemplatesResponseDto"];
+                };
+            };
+            /** @description Unauthorized */
+            readonly 401: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    readonly "AssessmentTemplate.create": {
+        readonly parameters: {
+            readonly query?: never;
+            readonly header?: never;
+            readonly path: {
+                readonly teamId: string;
+            };
+            readonly cookie?: never;
+        };
+        readonly requestBody: {
+            readonly content: {
+                readonly "application/json": components["schemas"]["CreateTemplateDto"];
+            };
+        };
+        readonly responses: {
+            /** @description Template created */
+            readonly 201: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content: {
+                    readonly "application/json": components["schemas"]["TemplateResponseDto"];
+                };
+            };
+            /** @description Unauthorized */
+            readonly 401: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Forbidden */
+            readonly 403: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    readonly "AssessmentTemplate.publish": {
+        readonly parameters: {
+            readonly query?: never;
+            readonly header?: never;
+            readonly path: {
+                readonly teamId: string;
+                readonly templateId: string;
+            };
+            readonly cookie?: never;
+        };
+        readonly requestBody: {
+            readonly content: {
+                readonly "application/json": components["schemas"]["PublishTemplateDto"];
+            };
+        };
+        readonly responses: {
+            /** @description Template published */
+            readonly 200: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content: {
+                    readonly "application/json": components["schemas"]["TemplateResponseDto"];
+                };
+            };
+            /** @description Unauthorized */
+            readonly 401: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Forbidden */
+            readonly 403: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    readonly "AssessmentTemplate.createVersion": {
+        readonly parameters: {
+            readonly query?: never;
+            readonly header?: never;
+            readonly path: {
+                readonly teamId: string;
+                readonly templateId: string;
+            };
+            readonly cookie?: never;
+        };
+        readonly requestBody: {
+            readonly content: {
+                readonly "application/json": components["schemas"]["CreateTemplateDto"];
+            };
+        };
+        readonly responses: {
+            /** @description Version created */
+            readonly 201: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content: {
+                    readonly "application/json": components["schemas"]["TemplateResponseDto"];
+                };
+            };
+            /** @description Unauthorized */
+            readonly 401: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Forbidden */
+            readonly 403: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
     readonly "AttendanceParticipation.getMyParticipation": {
         readonly parameters: {
             readonly query?: {
@@ -4010,6 +6110,548 @@ export interface operations {
                 };
                 content: {
                     readonly "application/json": components["schemas"]["CatalogEntryResponseDto"];
+                };
+            };
+            /** @description Unauthorized */
+            readonly 401: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Forbidden */
+            readonly 403: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    readonly "CoachFeedback.list": {
+        readonly parameters: {
+            readonly query?: {
+                readonly limit?: number;
+                readonly offset?: number;
+            };
+            readonly header?: never;
+            readonly path: {
+                readonly teamId: string;
+            };
+            readonly cookie?: never;
+        };
+        readonly requestBody?: never;
+        readonly responses: {
+            readonly 200: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content: {
+                    readonly "application/json": components["schemas"]["ListCoachFeedbackResponseDto"];
+                };
+            };
+            /** @description Unauthorized */
+            readonly 401: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    readonly "CoachFeedback.create": {
+        readonly parameters: {
+            readonly query?: never;
+            readonly header?: never;
+            readonly path: {
+                readonly teamId: string;
+            };
+            readonly cookie?: never;
+        };
+        readonly requestBody: {
+            readonly content: {
+                readonly "application/json": components["schemas"]["CreateFeedbackDto"];
+            };
+        };
+        readonly responses: {
+            readonly 201: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content: {
+                    readonly "application/json": components["schemas"]["CoachFeedbackResponseDto"];
+                };
+            };
+            /** @description Unauthorized */
+            readonly 401: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Forbidden */
+            readonly 403: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    readonly "CoachFeedback.detail": {
+        readonly parameters: {
+            readonly query?: never;
+            readonly header?: never;
+            readonly path: {
+                readonly feedbackId: string;
+                readonly teamId: string;
+            };
+            readonly cookie?: never;
+        };
+        readonly requestBody?: never;
+        readonly responses: {
+            readonly 200: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content: {
+                    readonly "application/json": components["schemas"]["CoachFeedbackResponseDto"];
+                };
+            };
+            /** @description Unauthorized */
+            readonly 401: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    readonly "CoachFeedback.correct": {
+        readonly parameters: {
+            readonly query?: never;
+            readonly header?: never;
+            readonly path: {
+                readonly feedbackId: string;
+                readonly teamId: string;
+            };
+            readonly cookie?: never;
+        };
+        readonly requestBody: {
+            readonly content: {
+                readonly "application/json": components["schemas"]["CorrectFeedbackDto"];
+            };
+        };
+        readonly responses: {
+            readonly 201: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content: {
+                    readonly "application/json": components["schemas"]["CoachFeedbackResponseDto"];
+                };
+            };
+            /** @description Unauthorized */
+            readonly 401: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Forbidden */
+            readonly 403: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    readonly "CoachFeedback.update": {
+        readonly parameters: {
+            readonly query?: never;
+            readonly header?: never;
+            readonly path: {
+                readonly feedbackId: string;
+                readonly teamId: string;
+            };
+            readonly cookie?: never;
+        };
+        readonly requestBody: {
+            readonly content: {
+                readonly "application/json": components["schemas"]["UpdateFeedbackDto"];
+            };
+        };
+        readonly responses: {
+            readonly 200: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content: {
+                    readonly "application/json": components["schemas"]["CoachFeedbackResponseDto"];
+                };
+            };
+            /** @description Unauthorized */
+            readonly 401: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Forbidden */
+            readonly 403: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    readonly "CoachFeedback.publish": {
+        readonly parameters: {
+            readonly query?: never;
+            readonly header?: never;
+            readonly path: {
+                readonly feedbackId: string;
+                readonly teamId: string;
+            };
+            readonly cookie?: never;
+        };
+        readonly requestBody: {
+            readonly content: {
+                readonly "application/json": components["schemas"]["OptimisticVersionDto"];
+            };
+        };
+        readonly responses: {
+            readonly 200: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content: {
+                    readonly "application/json": components["schemas"]["CoachFeedbackResponseDto"];
+                };
+            };
+            /** @description Unauthorized */
+            readonly 401: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Forbidden */
+            readonly 403: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    readonly "CoachFeedback.revisions": {
+        readonly parameters: {
+            readonly query?: never;
+            readonly header?: never;
+            readonly path: {
+                readonly feedbackId: string;
+                readonly teamId: string;
+            };
+            readonly cookie?: never;
+        };
+        readonly requestBody?: never;
+        readonly responses: {
+            readonly 200: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content: {
+                    readonly "application/json": components["schemas"]["FeedbackRevisionsResponseDto"];
+                };
+            };
+            /** @description Unauthorized */
+            readonly 401: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    readonly "CoachFeedback.submit": {
+        readonly parameters: {
+            readonly query?: never;
+            readonly header?: never;
+            readonly path: {
+                readonly feedbackId: string;
+                readonly teamId: string;
+            };
+            readonly cookie?: never;
+        };
+        readonly requestBody: {
+            readonly content: {
+                readonly "application/json": components["schemas"]["OptimisticVersionDto"];
+            };
+        };
+        readonly responses: {
+            readonly 200: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content: {
+                    readonly "application/json": components["schemas"]["CoachFeedbackResponseDto"];
+                };
+            };
+            /** @description Unauthorized */
+            readonly 401: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Forbidden */
+            readonly 403: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    readonly "DevelopmentGoal.list": {
+        readonly parameters: {
+            readonly query?: {
+                readonly limit?: number;
+                readonly offset?: number;
+            };
+            readonly header?: never;
+            readonly path: {
+                readonly teamId: string;
+            };
+            readonly cookie?: never;
+        };
+        readonly requestBody?: never;
+        readonly responses: {
+            readonly 200: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content: {
+                    readonly "application/json": components["schemas"]["ListDevelopmentGoalsResponseDto"];
+                };
+            };
+            /** @description Unauthorized */
+            readonly 401: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    readonly "DevelopmentGoal.create": {
+        readonly parameters: {
+            readonly query?: never;
+            readonly header?: never;
+            readonly path: {
+                readonly teamId: string;
+            };
+            readonly cookie?: never;
+        };
+        readonly requestBody: {
+            readonly content: {
+                readonly "application/json": components["schemas"]["CreateGoalDto"];
+            };
+        };
+        readonly responses: {
+            readonly 201: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content: {
+                    readonly "application/json": components["schemas"]["DevelopmentGoalResponseDto"];
+                };
+            };
+            /** @description Unauthorized */
+            readonly 401: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Forbidden */
+            readonly 403: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    readonly "DevelopmentGoal.detail": {
+        readonly parameters: {
+            readonly query?: never;
+            readonly header?: never;
+            readonly path: {
+                readonly goalId: string;
+                readonly teamId: string;
+            };
+            readonly cookie?: never;
+        };
+        readonly requestBody?: never;
+        readonly responses: {
+            readonly 200: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content: {
+                    readonly "application/json": components["schemas"]["DevelopmentGoalResponseDto"];
+                };
+            };
+            /** @description Unauthorized */
+            readonly 401: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    readonly "DevelopmentGoal.update": {
+        readonly parameters: {
+            readonly query?: never;
+            readonly header?: never;
+            readonly path: {
+                readonly goalId: string;
+                readonly teamId: string;
+            };
+            readonly cookie?: never;
+        };
+        readonly requestBody: {
+            readonly content: {
+                readonly "application/json": components["schemas"]["UpdateGoalDto"];
+            };
+        };
+        readonly responses: {
+            readonly 200: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content: {
+                    readonly "application/json": components["schemas"]["DevelopmentGoalResponseDto"];
+                };
+            };
+            /** @description Unauthorized */
+            readonly 401: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Forbidden */
+            readonly 403: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    readonly "DevelopmentGoal.review": {
+        readonly parameters: {
+            readonly query?: never;
+            readonly header?: never;
+            readonly path: {
+                readonly goalId: string;
+                readonly teamId: string;
+            };
+            readonly cookie?: never;
+        };
+        readonly requestBody: {
+            readonly content: {
+                readonly "application/json": components["schemas"]["ReviewGoalDto"];
+            };
+        };
+        readonly responses: {
+            readonly 200: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content: {
+                    readonly "application/json": components["schemas"]["DevelopmentGoalResponseDto"];
+                };
+            };
+            /** @description Unauthorized */
+            readonly 401: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Forbidden */
+            readonly 403: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    readonly "DevelopmentGoal.transition": {
+        readonly parameters: {
+            readonly query?: never;
+            readonly header?: never;
+            readonly path: {
+                readonly goalId: string;
+                readonly teamId: string;
+            };
+            readonly cookie?: never;
+        };
+        readonly requestBody: {
+            readonly content: {
+                readonly "application/json": components["schemas"]["TransitionGoalDto"];
+            };
+        };
+        readonly responses: {
+            readonly 200: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content: {
+                    readonly "application/json": components["schemas"]["DevelopmentGoalResponseDto"];
+                };
+            };
+            /** @description Unauthorized */
+            readonly 401: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Forbidden */
+            readonly 403: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    readonly "DevelopmentReminder.enqueue": {
+        readonly parameters: {
+            readonly query?: never;
+            readonly header?: never;
+            readonly path: {
+                readonly teamId: string;
+            };
+            readonly cookie?: never;
+        };
+        readonly requestBody?: never;
+        readonly responses: {
+            readonly 201: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content: {
+                    readonly "application/json": components["schemas"]["RemindersResponseDto"];
                 };
             };
             /** @description Unauthorized */
@@ -4786,6 +7428,535 @@ export interface operations {
                 };
                 content: {
                     readonly "application/json": components["schemas"]["MembershipResponseDto"];
+                };
+            };
+            /** @description Unauthorized */
+            readonly 401: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Forbidden */
+            readonly 403: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    readonly "PlayerAssessmentSelf.listOwn": {
+        readonly parameters: {
+            readonly query?: {
+                readonly limit?: number;
+                readonly offset?: number;
+            };
+            readonly header?: never;
+            readonly path: {
+                readonly teamId: string;
+            };
+            readonly cookie?: never;
+        };
+        readonly requestBody?: never;
+        readonly responses: {
+            readonly 200: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content: {
+                    readonly "application/json": components["schemas"]["ListPublishedAssessmentsResponseDto"];
+                };
+            };
+            /** @description Unauthorized */
+            readonly 401: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    readonly "DevelopmentGoalSelf.listOwn": {
+        readonly parameters: {
+            readonly query?: {
+                readonly limit?: number;
+                readonly offset?: number;
+            };
+            readonly header?: never;
+            readonly path: {
+                readonly teamId: string;
+            };
+            readonly cookie?: never;
+        };
+        readonly requestBody?: never;
+        readonly responses: {
+            readonly 200: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content: {
+                    readonly "application/json": components["schemas"]["ListDevelopmentGoalsResponseDto"];
+                };
+            };
+            /** @description Unauthorized */
+            readonly 401: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    readonly "CoachFeedbackSelf.listOwn": {
+        readonly parameters: {
+            readonly query?: {
+                readonly limit?: number;
+                readonly offset?: number;
+            };
+            readonly header?: never;
+            readonly path: {
+                readonly teamId: string;
+            };
+            readonly cookie?: never;
+        };
+        readonly requestBody?: never;
+        readonly responses: {
+            readonly 200: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content: {
+                    readonly "application/json": components["schemas"]["ListSharedFeedbackResponseDto"];
+                };
+            };
+            /** @description Unauthorized */
+            readonly 401: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    readonly "CoachFeedbackSelf.acknowledge": {
+        readonly parameters: {
+            readonly query?: never;
+            readonly header?: never;
+            readonly path: {
+                readonly feedbackId: string;
+                readonly teamId: string;
+            };
+            readonly cookie?: never;
+        };
+        readonly requestBody: {
+            readonly content: {
+                readonly "application/json": components["schemas"]["AcknowledgeFeedbackDto"];
+            };
+        };
+        readonly responses: {
+            readonly 200: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content: {
+                    readonly "application/json": components["schemas"]["FeedbackAcknowledgementResponseDto"];
+                };
+            };
+            /** @description Unauthorized */
+            readonly 401: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    readonly "PlayerAssessment.list": {
+        readonly parameters: {
+            readonly query?: {
+                readonly limit?: number;
+                readonly offset?: number;
+            };
+            readonly header?: never;
+            readonly path: {
+                readonly teamId: string;
+            };
+            readonly cookie?: never;
+        };
+        readonly requestBody?: never;
+        readonly responses: {
+            readonly 200: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content: {
+                    readonly "application/json": components["schemas"]["ListPlayerAssessmentsResponseDto"];
+                };
+            };
+            /** @description Unauthorized */
+            readonly 401: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    readonly "PlayerAssessment.create": {
+        readonly parameters: {
+            readonly query?: never;
+            readonly header?: never;
+            readonly path: {
+                readonly teamId: string;
+            };
+            readonly cookie?: never;
+        };
+        readonly requestBody: {
+            readonly content: {
+                readonly "application/json": components["schemas"]["CreatePlayerAssessmentDto"];
+            };
+        };
+        readonly responses: {
+            readonly 201: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content: {
+                    readonly "application/json": components["schemas"]["PlayerAssessmentResponseDto"];
+                };
+            };
+            /** @description Unauthorized */
+            readonly 401: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Forbidden */
+            readonly 403: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    readonly "PlayerAssessment.detail": {
+        readonly parameters: {
+            readonly query?: never;
+            readonly header?: never;
+            readonly path: {
+                readonly assessmentId: string;
+                readonly teamId: string;
+            };
+            readonly cookie?: never;
+        };
+        readonly requestBody?: never;
+        readonly responses: {
+            readonly 200: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content: {
+                    readonly "application/json": components["schemas"]["PlayerAssessmentResponseDto"];
+                };
+            };
+            /** @description Unauthorized */
+            readonly 401: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    readonly "PlayerAssessment.correct": {
+        readonly parameters: {
+            readonly query?: never;
+            readonly header?: never;
+            readonly path: {
+                readonly assessmentId: string;
+                readonly teamId: string;
+            };
+            readonly cookie?: never;
+        };
+        readonly requestBody: {
+            readonly content: {
+                readonly "application/json": components["schemas"]["CorrectPlayerAssessmentDto"];
+            };
+        };
+        readonly responses: {
+            readonly 201: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content: {
+                    readonly "application/json": components["schemas"]["PlayerAssessmentResponseDto"];
+                };
+            };
+            /** @description Unauthorized */
+            readonly 401: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Forbidden */
+            readonly 403: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    readonly "PlayerAssessment.publish": {
+        readonly parameters: {
+            readonly query?: never;
+            readonly header?: never;
+            readonly path: {
+                readonly assessmentId: string;
+                readonly teamId: string;
+            };
+            readonly cookie?: never;
+        };
+        readonly requestBody: {
+            readonly content: {
+                readonly "application/json": components["schemas"]["OptimisticVersionDto"];
+            };
+        };
+        readonly responses: {
+            readonly 200: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content: {
+                    readonly "application/json": components["schemas"]["PlayerAssessmentResponseDto"];
+                };
+            };
+            /** @description Unauthorized */
+            readonly 401: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Forbidden */
+            readonly 403: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    readonly "PlayerAssessment.review": {
+        readonly parameters: {
+            readonly query?: never;
+            readonly header?: never;
+            readonly path: {
+                readonly assessmentId: string;
+                readonly teamId: string;
+            };
+            readonly cookie?: never;
+        };
+        readonly requestBody: {
+            readonly content: {
+                readonly "application/json": components["schemas"]["ReviewPlayerAssessmentDto"];
+            };
+        };
+        readonly responses: {
+            readonly 200: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content: {
+                    readonly "application/json": components["schemas"]["PlayerAssessmentResponseDto"];
+                };
+            };
+            /** @description Unauthorized */
+            readonly 401: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Forbidden */
+            readonly 403: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    readonly "PlayerAssessment.revisions": {
+        readonly parameters: {
+            readonly query?: never;
+            readonly header?: never;
+            readonly path: {
+                readonly assessmentId: string;
+                readonly teamId: string;
+            };
+            readonly cookie?: never;
+        };
+        readonly requestBody?: never;
+        readonly responses: {
+            readonly 200: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content: {
+                    readonly "application/json": components["schemas"]["RevisionsResponseDto"];
+                };
+            };
+            /** @description Unauthorized */
+            readonly 401: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    readonly "PlayerAssessment.submit": {
+        readonly parameters: {
+            readonly query?: never;
+            readonly header?: never;
+            readonly path: {
+                readonly assessmentId: string;
+                readonly teamId: string;
+            };
+            readonly cookie?: never;
+        };
+        readonly requestBody: {
+            readonly content: {
+                readonly "application/json": components["schemas"]["OptimisticVersionDto"];
+            };
+        };
+        readonly responses: {
+            readonly 200: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content: {
+                    readonly "application/json": components["schemas"]["PlayerAssessmentResponseDto"];
+                };
+            };
+            /** @description Unauthorized */
+            readonly 401: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Forbidden */
+            readonly 403: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    readonly "PlayerAssessment.update": {
+        readonly parameters: {
+            readonly query?: never;
+            readonly header?: never;
+            readonly path: {
+                readonly assessmentId: string;
+                readonly teamId: string;
+            };
+            readonly cookie?: never;
+        };
+        readonly requestBody: {
+            readonly content: {
+                readonly "application/json": components["schemas"]["UpdatePlayerAssessmentDto"];
+            };
+        };
+        readonly responses: {
+            readonly 200: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content: {
+                    readonly "application/json": components["schemas"]["PlayerAssessmentResponseDto"];
+                };
+            };
+            /** @description Unauthorized */
+            readonly 401: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Forbidden */
+            readonly 403: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    readonly "PracticeCalendar.create": {
+        readonly parameters: {
+            readonly query?: never;
+            readonly header?: never;
+            readonly path: {
+                readonly teamId: string;
+            };
+            readonly cookie?: never;
+        };
+        readonly requestBody: {
+            readonly content: {
+                readonly "application/json": components["schemas"]["CreateCalendarFeedDto"];
+            };
+        };
+        readonly responses: {
+            readonly 201: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content: {
+                    readonly "application/json": components["schemas"]["CalendarFeedResponseDto"];
+                };
+            };
+            /** @description Unauthorized */
+            readonly 401: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Forbidden */
+            readonly 403: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    readonly "PracticeCalendar.revoke": {
+        readonly parameters: {
+            readonly query?: never;
+            readonly header?: never;
+            readonly path: {
+                readonly feedId: string;
+                readonly teamId: string;
+            };
+            readonly cookie?: never;
+        };
+        readonly requestBody?: never;
+        readonly responses: {
+            readonly 200: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content: {
+                    readonly "application/json": components["schemas"]["CalendarFeedRevokeResponseDto"];
                 };
             };
             /** @description Unauthorized */
@@ -6259,6 +9430,93 @@ export interface operations {
             };
         };
     };
+    readonly "PracticeReminderAdmin.dispatch": {
+        readonly parameters: {
+            readonly query?: never;
+            readonly header?: never;
+            readonly path: {
+                readonly sessionId: string;
+                readonly teamId: string;
+            };
+            readonly cookie?: never;
+        };
+        readonly requestBody?: never;
+        readonly responses: {
+            readonly 200: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content: {
+                    readonly "application/json": components["schemas"]["ReminderDispatchResponseDto"];
+                };
+            };
+            /** @description Unauthorized */
+            readonly 401: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    readonly "PracticeReminderAdmin.preview": {
+        readonly parameters: {
+            readonly query?: never;
+            readonly header?: never;
+            readonly path: {
+                readonly sessionId: string;
+                readonly teamId: string;
+            };
+            readonly cookie?: never;
+        };
+        readonly requestBody?: never;
+        readonly responses: {
+            readonly 200: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content: {
+                    readonly "application/json": components["schemas"]["ReminderPreviewResponseDto"];
+                };
+            };
+            /** @description Unauthorized */
+            readonly 401: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    readonly "PracticeReminderAdmin.sendTest": {
+        readonly parameters: {
+            readonly query?: never;
+            readonly header?: never;
+            readonly path: {
+                readonly sessionId: string;
+                readonly teamId: string;
+            };
+            readonly cookie?: never;
+        };
+        readonly requestBody?: never;
+        readonly responses: {
+            readonly 200: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content: {
+                    readonly "application/json": components["schemas"]["ReminderTestResponseDto"];
+                };
+            };
+            /** @description Unauthorized */
+            readonly 401: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
     readonly "PracticeSessions.reopen": {
         readonly parameters: {
             readonly query?: never;
@@ -6405,6 +9663,13 @@ export interface operations {
             };
             /** @description Forbidden */
             readonly 403: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description The RSVP changed since the submitted expected version */
+            readonly 409: {
                 headers: {
                     readonly [name: string]: unknown;
                 };

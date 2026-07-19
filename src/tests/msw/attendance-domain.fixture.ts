@@ -1,9 +1,9 @@
-import { ATTENDANCE_SHEET_STATE } from '@/modules/attendance/constants/attendance.constants';
-import type {
-  AttendanceQueuedOperation,
-  AttendanceRosterEntry,
-  AttendanceSheet,
-} from '@/modules/attendance/types/attendance.types';
+import {
+  ATTENDANCE_SHEET_STATE,
+  type AttendanceQueuedOperation,
+  type AttendanceRosterEntry,
+  type AttendanceSheet,
+} from '@/modules/attendance';
 
 /** Deterministic domain-shaped attendance samples shared by the module's unit tests. */
 export function makeRosterEntry(

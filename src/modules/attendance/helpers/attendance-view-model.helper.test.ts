@@ -1,6 +1,10 @@
 import { describe, expect, it } from 'vitest';
 
-import { makeAttendanceSheet, makeQueuedOperation, makeRosterEntry } from '@/tests/msw/attendance-domain.fixture';
+import {
+  makeAttendanceSheet,
+  makeQueuedOperation,
+  makeRosterEntry,
+} from '@/tests/msw/attendance-domain.fixture';
 import { buildAttendanceEditorStub } from '@/tests/msw/attendance-editor.fixture';
 import { AppError } from '@/shared/errors/app.errors';
 import { APP_ERROR_CODE } from '@/shared/errors';

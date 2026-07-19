@@ -1,9 +1,9 @@
-import { act, waitFor } from '@testing-library/react';
+import { waitFor } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import { APP_ERROR_CODE, AppError } from '@/shared/errors';
 
-import { renderHookWithProviders } from '../../../../tests/setup/render-with-providers.helper';
+import { actOnHook } from '../../../../tests/setup/render-with-providers.helper';
 import type { AttendanceMark } from '../types/attendance.types';
 import { queueAttendanceMarks } from '../services/queue-attendance-marks.service';
 import { submitBulkAttendance } from '../services/submit-bulk-attendance.service';
@@ -26,6 +26,15 @@ function callbacks() {
   return { onSaved: vi.fn(), onQueued: vi.fn(), onError: vi.fn() };
 }
 
+function submitBulk(online: boolean, cb: ReturnType<typeof callbacks>) {
+  return actOnHook(
+    () => useBulkAttendanceMutation('team-1', 'sess-1', online, cb),
+    (api) => {
+      api.submit(MARKS);
+    },
+  );
+}
+
 afterEach(() => {
   vi.clearAllMocks();
 });
@@ -35,12 +44,7 @@ describe('useBulkAttendanceMutation', () => {
     vi.mocked(submitBulkAttendance).mockResolvedValue({ recorded: 2, items: [] });
     const cb = callbacks();
 
-    const { result } = renderHookWithProviders(() =>
-      useBulkAttendanceMutation('team-1', 'sess-1', true, cb),
-    );
-    act(() => {
-      result.current.submit(MARKS);
-    });
+    submitBulk(true, cb);
 
     await waitFor(() => {
       expect(cb.onSaved).toHaveBeenCalledWith(2);
@@ -51,12 +55,7 @@ describe('useBulkAttendanceMutation', () => {
   it('queues the marks while offline instead of calling the backend', async () => {
     const cb = callbacks();
 
-    const { result } = renderHookWithProviders(() =>
-      useBulkAttendanceMutation('team-1', 'sess-1', false, cb),
-    );
-    act(() => {
-      result.current.submit(MARKS);
-    });
+    submitBulk(false, cb);
 
     await waitFor(() => {
       expect(cb.onQueued).toHaveBeenCalledWith(1);
@@ -71,12 +70,7 @@ describe('useBulkAttendanceMutation', () => {
     );
     const cb = callbacks();
 
-    const { result } = renderHookWithProviders(() =>
-      useBulkAttendanceMutation('team-1', 'sess-1', true, cb),
-    );
-    act(() => {
-      result.current.submit(MARKS);
-    });
+    submitBulk(true, cb);
 
     await waitFor(() => {
       expect(cb.onQueued).toHaveBeenCalledWith(1);
@@ -90,12 +84,7 @@ describe('useBulkAttendanceMutation', () => {
     );
     const cb = callbacks();
 
-    const { result } = renderHookWithProviders(() =>
-      useBulkAttendanceMutation('team-1', 'sess-1', true, cb),
-    );
-    act(() => {
-      result.current.submit(MARKS);
-    });
+    const { result } = submitBulk(true, cb);
 
     await waitFor(() => {
       expect(cb.onError).toHaveBeenCalled();

@@ -1,5 +1,6 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import {
+  act,
   render,
   renderHook,
   type RenderHookResult,
@@ -44,4 +45,21 @@ export function renderHookWithProviders<Result>(
   options: ProviderOptions = {},
 ): RenderHookResult<Result, unknown> {
   return renderHook(callback, { wrapper: buildWrapper(options) });
+}
+
+/**
+ * Render a hook with providers, then run one synchronous interaction against its
+ * current value inside `act()`. Keeps the arrange+act ceremony in a single place
+ * so mutation-hook tests stay assertion-only.
+ */
+export function actOnHook<Result>(
+  callback: () => Result,
+  interact: (api: Result) => void,
+  options: ProviderOptions = {},
+): RenderHookResult<Result, unknown> {
+  const rendered = renderHookWithProviders(callback, options);
+  act(() => {
+    interact(rendered.result.current);
+  });
+  return rendered;
 }

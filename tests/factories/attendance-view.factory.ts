@@ -1,0 +1,155 @@
+import { vi } from 'vitest';
+
+import type {
+  AttendanceExcuse,
+  AttendanceStatus,
+} from '@/modules/attendance/constants/attendance.constants';
+import type {
+  AttendanceOption,
+  AttendanceRevisionView,
+  AttendanceRosterRowView,
+  AttendanceScreenView,
+} from '@/modules/attendance/types/attendance-view.types';
+
+const STATUS_OPTIONS: readonly AttendanceOption<AttendanceStatus>[] = [
+  { value: 'present_on_time', label: 'Present' },
+  { value: 'present_late', label: 'Late' },
+  { value: 'absent', label: 'Absent' },
+];
+
+const EXCUSE_OPTIONS: readonly AttendanceOption<AttendanceExcuse>[] = [
+  { value: 'illness', label: 'Illness' },
+  { value: 'work', label: 'Work' },
+];
+
+export function buildAttendanceRosterRowView(
+  overrides: Partial<AttendanceRosterRowView> = {},
+): AttendanceRosterRowView {
+  return {
+    membershipId: 'm-1',
+    playerLabel: 'Alex Ranger',
+    memberIdentifierLabel: '#7',
+    rsvpLabel: 'RSVP is not shared here',
+    isHistorical: false,
+    historicalLabel: 'Historical player',
+    isSelected: false,
+    selectLabel: 'Select Alex Ranger',
+    status: 'present_on_time',
+    statusLabel: 'Status',
+    statusOptions: STATUS_OPTIONS,
+    latenessMinutes: '',
+    showLateness: false,
+    latenessLabel: 'Late minutes',
+    excuseCategory: null,
+    showExcuse: false,
+    excuseLabel: 'Excuse',
+    excuseNoneLabel: 'No excuse',
+    excuseOptions: EXCUSE_OPTIONS,
+    queueState: null,
+    syncLabel: 'Saved',
+    conflictMessage: null,
+    correctionReason: '',
+    correctionReasonLabel: 'Correction reason',
+    correctionReasonPlaceholder: 'Why is this changing?',
+    canSaveCorrection: false,
+    isLocked: false,
+    historyLabel: 'History',
+    saveCorrectionLabel: 'Save correction',
+    ...overrides,
+  };
+}
+
+export function buildAttendanceRevisionView(
+  overrides: Partial<AttendanceRevisionView> = {},
+): AttendanceRevisionView {
+  return {
+    id: 'rev-1',
+    transitionLabel: 'Absent to Present',
+    occurredLabel: 'July 18, 2026 at 5:05 PM',
+    reason: 'Late scanner reconciliation',
+    ...overrides,
+  };
+}
+
+export function buildAttendanceScreenView(
+  overrides: Partial<AttendanceScreenView> = {},
+): AttendanceScreenView {
+  return {
+    title: 'Attendance',
+    status: 'ready',
+    loadingLabel: 'Loading the roster',
+    errorTitle: 'Could not load attendance',
+    errorMessage: 'Something went wrong.',
+    retryLabel: 'Try again',
+    offlineTitle: 'You are offline',
+    offlineMessage: 'Reconnect to load attendance.',
+    forbiddenTitle: 'No access',
+    forbiddenMessage: 'You cannot manage this roster.',
+    emptyTitle: 'No roster yet',
+    emptyMessage: 'Nobody is scheduled for this session.',
+    sessionLabel: 'Tuesday practice',
+    subtitle: 'Coach roster',
+    sheetState: 'open',
+    sheetStateLabel: 'Open',
+    rosterSummary: '3 of 4 marked',
+    finalizedLabel: null,
+    queueSummary: 'Queue is empty',
+    isOffline: false,
+    offlineQueueNotice: 'Marks will sync when you reconnect.',
+    privacyNotice: 'RSVP is not shared with players.',
+    searchLabel: 'Search players',
+    searchPlaceholder: 'Search by name',
+    searchValue: '',
+    filterLabel: 'Filter by status',
+    filterAllLabel: 'All statuses',
+    filterValue: null,
+    statusOptions: STATUS_OPTIONS,
+    selectedCountLabel: '0 selected',
+    selectAllVisibleLabel: 'Select all visible',
+    rows: [buildAttendanceRosterRowView()],
+    noMatchesTitle: 'No matches',
+    noMatchesMessage: 'No players match your filters.',
+    markAllPresentLabel: 'Mark all present',
+    markSelectedPresentLabel: 'Mark selected present',
+    markSelectedAbsentLabel: 'Mark selected absent',
+    undoLabel: 'Undo',
+    saveLabel: 'Save marks',
+    finalizeLabel: 'Finalize',
+    retryQueueLabel: 'Retry queued marks',
+    resolveConflictLabel: 'Resolve conflict',
+    canUndo: false,
+    canSubmit: false,
+    canFinalize: false,
+    canRetryQueue: false,
+    isSubmitting: false,
+    isFinalizing: false,
+    isCorrecting: false,
+    isReplaying: false,
+    historyTitle: 'Attendance history',
+    historyEmptyLabel: 'No changes recorded yet.',
+    historyLoadingLabel: 'Loading history',
+    historyMembershipId: null,
+    historyItems: [],
+    isHistoryLoading: false,
+    onRetry: vi.fn(),
+    onSubmit: vi.fn(),
+    onFinalize: vi.fn(),
+    onRetryQueue: vi.fn(),
+    onResolveConflict: vi.fn(),
+    onShowHistory: vi.fn(),
+    onSaveCorrection: vi.fn(),
+    onSearchChange: vi.fn(),
+    onFilterChange: vi.fn(),
+    onToggleMember: vi.fn(),
+    onSelectAllVisible: vi.fn(),
+    onStatusChange: vi.fn(),
+    onLatenessChange: vi.fn(),
+    onExcuseChange: vi.fn(),
+    onCorrectionReasonChange: vi.fn(),
+    onMarkAllPresent: vi.fn(),
+    onMarkSelectedPresent: vi.fn(),
+    onMarkSelectedAbsent: vi.fn(),
+    onUndo: vi.fn(),
+    ...overrides,
+  };
+}

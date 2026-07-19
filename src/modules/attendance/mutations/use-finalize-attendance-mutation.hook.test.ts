@@ -1,9 +1,9 @@
-import { act, waitFor } from '@testing-library/react';
+import { waitFor } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import { APP_ERROR_CODE, AppError } from '@/shared/errors';
 
-import { renderHookWithProviders } from '../../../../tests/setup/render-with-providers.helper';
+import { actOnHook } from '../../../../tests/setup/render-with-providers.helper';
 import type { AttendanceFinalization } from '../types/attendance.types';
 import { finalizeAttendance } from '../services/finalize-attendance.service';
 import { useFinalizeAttendanceMutation } from './use-finalize-attendance-mutation.hook';
@@ -17,6 +17,18 @@ const FINALIZATION: AttendanceFinalization = {
   version: 5,
 };
 
+function renderFinalize() {
+  const onSuccess = vi.fn();
+  const onError = vi.fn();
+  actOnHook(
+    () => useFinalizeAttendanceMutation('team-1', 'sess-1', { onSuccess, onError }),
+    (api) => {
+      api.finalize(3);
+    },
+  );
+  return { onSuccess, onError };
+}
+
 afterEach(() => {
   vi.clearAllMocks();
 });
@@ -24,15 +36,8 @@ afterEach(() => {
 describe('useFinalizeAttendanceMutation', () => {
   it('finalizes with the expected version and invokes the success callback', async () => {
     vi.mocked(finalizeAttendance).mockResolvedValue(FINALIZATION);
-    const onSuccess = vi.fn();
-    const onError = vi.fn();
 
-    const { result } = renderHookWithProviders(() =>
-      useFinalizeAttendanceMutation('team-1', 'sess-1', { onSuccess, onError }),
-    );
-    act(() => {
-      result.current.finalize(3);
-    });
+    const { onSuccess } = renderFinalize();
 
     await waitFor(() => {
       expect(onSuccess).toHaveBeenCalledOnce();
@@ -41,16 +46,11 @@ describe('useFinalizeAttendanceMutation', () => {
   });
 
   it('routes a finalize failure to the error callback', async () => {
-    vi.mocked(finalizeAttendance).mockRejectedValue(new AppError({ code: APP_ERROR_CODE.Conflict }));
-    const onSuccess = vi.fn();
-    const onError = vi.fn();
-
-    const { result } = renderHookWithProviders(() =>
-      useFinalizeAttendanceMutation('team-1', 'sess-1', { onSuccess, onError }),
+    vi.mocked(finalizeAttendance).mockRejectedValue(
+      new AppError({ code: APP_ERROR_CODE.Conflict }),
     );
-    act(() => {
-      result.current.finalize(3);
-    });
+
+    const { onSuccess, onError } = renderFinalize();
 
     await waitFor(() => {
       expect(onError).toHaveBeenCalled();
