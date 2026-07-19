@@ -1,6 +1,6 @@
 export type ToastTone = 'success' | 'warning' | 'danger' | 'neutral';
 
-export interface ToastAction {
+interface ToastAction {
   readonly label: string;
   readonly onSelect: () => void;
 }

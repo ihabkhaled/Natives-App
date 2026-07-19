@@ -112,6 +112,44 @@ function exposedApply(options: PwaServiceWorkerOptions): ApplyPwaUpdate {
   return vi.mocked(options.onUpdateReady).mock.calls[0]![0];
 }
 
+interface WaitingScenario {
+  readonly waiting: WorkerFixture;
+  readonly registration: RegistrationFixture;
+  readonly container: ContainerFixture;
+  readonly options: PwaServiceWorkerOptions;
+}
+
+async function arrangeWaitingWorker(): Promise<WaitingScenario> {
+  const waiting = createWorker();
+  const registration = createRegistration();
+  registration.setWaiting(waiting.worker);
+  const container = createContainer(registration.registration);
+  installContainer(container.container);
+  const options = buildOptions();
+  registerPwaServiceWorker(options);
+  await settleRegistration();
+  return { waiting, registration, container, options };
+}
+
+interface InstallingScenario {
+  readonly installing: WorkerFixture;
+  readonly registration: RegistrationFixture;
+  readonly container: ContainerFixture;
+  readonly options: PwaServiceWorkerOptions;
+}
+
+async function arrangeInstallingWorker(): Promise<InstallingScenario> {
+  const installing = createWorker('installing');
+  const registration = createRegistration();
+  registration.setInstalling(installing.worker);
+  const container = createContainer(registration.registration);
+  installContainer(container.container);
+  const options = buildOptions();
+  registerPwaServiceWorker(options);
+  await settleRegistration();
+  return { installing, registration, container, options };
+}
+
 afterEach(() => {
   vi.restoreAllMocks();
   vi.unstubAllGlobals();
@@ -252,15 +290,7 @@ describe('registerPwaServiceWorker', () => {
   });
 
   it('reloads only after the requested worker controls the page', async () => {
-    const waiting = createWorker();
-    const registration = createRegistration();
-    registration.setWaiting(waiting.worker);
-    const container = createContainer(registration.registration);
-    installContainer(container.container);
-    const options = buildOptions();
-
-    registerPwaServiceWorker(options);
-    await settleRegistration();
+    const { container, options } = await arrangeWaitingWorker();
     container.container.dispatchEvent(new Event('controllerchange'));
     expect(options.onActivated).not.toHaveBeenCalled();
 
@@ -272,15 +302,7 @@ describe('registerPwaServiceWorker', () => {
   });
 
   it('allows a waiting worker to be applied only once', async () => {
-    const waiting = createWorker();
-    const registration = createRegistration();
-    registration.setWaiting(waiting.worker);
-    const container = createContainer(registration.registration);
-    installContainer(container.container);
-    const options = buildOptions();
-
-    registerPwaServiceWorker(options);
-    await settleRegistration();
+    const { waiting, container, options } = await arrangeWaitingWorker();
     const applyUpdate = exposedApply(options);
 
     await expect(applyUpdate()).resolves.toBe('requested');
@@ -292,15 +314,7 @@ describe('registerPwaServiceWorker', () => {
   });
 
   it('observes an installing worker already present when registration resolves', async () => {
-    const installing = createWorker('installing');
-    const registration = createRegistration();
-    registration.setInstalling(installing.worker);
-    const container = createContainer(registration.registration);
-    installContainer(container.container);
-    const options = buildOptions();
-
-    registerPwaServiceWorker(options);
-    await settleRegistration();
+    const { installing, options } = await arrangeInstallingWorker();
     installing.setState('installed');
     installing.worker.dispatchEvent(new Event('statechange'));
 
@@ -308,15 +322,7 @@ describe('registerPwaServiceWorker', () => {
   });
 
   it('detects a newly installed worker when an older worker controls the page', async () => {
-    const installing = createWorker('installing');
-    const registration = createRegistration();
-    registration.setInstalling(installing.worker);
-    const container = createContainer(registration.registration);
-    installContainer(container.container);
-    const options = buildOptions();
-
-    registerPwaServiceWorker(options);
-    await settleRegistration();
+    const { installing, registration, options } = await arrangeInstallingWorker();
     registration.registration.dispatchEvent(new Event('updatefound'));
     installing.setState('installed');
     installing.worker.dispatchEvent(new Event('statechange'));

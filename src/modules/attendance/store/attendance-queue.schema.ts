@@ -19,7 +19,7 @@ const excuseSchema = schemaBuilder.enum([
 ]);
 const queueStateSchema = schemaBuilder.enum(['pending', 'retrying', 'conflict', 'failed']);
 
-export const attendanceQueuedOperationSchema = schemaBuilder.object({
+const attendanceQueuedOperationSchema = schemaBuilder.object({
   operationId: schemaBuilder.string().min(1),
   teamId: schemaBuilder.string().min(1),
   sessionId: schemaBuilder.string().min(1),

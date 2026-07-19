@@ -1,6 +1,10 @@
 import { describe, expect, it } from 'vitest';
 
 import type { SchemaOutput } from '@/packages/schema';
+import {
+  SAMPLE_RSVP_RESPONSE,
+  SAMPLE_SESSION_RESPONSE,
+} from '@/tests/msw/practice-session-sample.fixture';
 
 import { PRACTICE_TYPE, RSVP_STATUS } from '../constants/practice.constants';
 import type {
@@ -21,45 +25,8 @@ import {
 type SessionDto = SchemaOutput<typeof practiceSessionResponseSchema>;
 type RsvpDto = SchemaOutput<typeof practiceRsvpResponseSchema>;
 
-const SESSION: SessionDto = {
-  cancellationReason: null,
-  capacity: 24,
-  createdAt: '2026-07-18T09:00:00.000Z',
-  createdBy: null,
-  endsAt: '2026-07-26T17:00:00.000Z',
-  field: null,
-  id: 'sess-1',
-  meetAt: null,
-  notes: null,
-  occurrenceDate: '2026-07-26',
-  organizerUserId: null,
-  rsvpCutoffAt: '2026-07-25T12:00:00.000Z',
-  scheduleId: null,
-  seasonId: 'season-1',
-  sessionType: 'practice',
-  startsAt: '2026-07-26T15:00:00.000Z',
-  status: 'published',
-  teamId: 'team-1',
-  timezone: 'Africa/Cairo',
-  updatedAt: '2026-07-18T09:00:00.000Z',
-  updatedBy: null,
-  venueId: null,
-  version: 2,
-  visibility: 'team',
-};
-
-const RSVP: RsvpDto = {
-  membershipId: 'membership-1',
-  sessionId: SESSION.id,
-  status: 'going',
-  reasonCategory: 'travel',
-  note: null,
-  noteVisibility: null,
-  respondedAt: '2026-07-24T10:00:00.000Z',
-  source: 'self',
-  version: 2,
-  waitlisted: true,
-};
+const SESSION: SessionDto = SAMPLE_SESSION_RESPONSE;
+const RSVP: RsvpDto = SAMPLE_RSVP_RESPONSE;
 
 describe('mapRsvpState', () => {
   it('combines the RSVP resource with session response policy', () => {

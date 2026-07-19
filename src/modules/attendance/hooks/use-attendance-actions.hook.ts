@@ -4,7 +4,7 @@ import { useAppTranslation } from '@/packages/i18n';
 import { I18N_KEYS } from '@/shared/i18n';
 import { useConfirmAlert } from '@/shared/ui';
 
-import type { AttendanceScreenActions } from '../helpers/attendance-view-model.helper';
+import type { AttendanceScreenActions } from '../types/attendance-view.types';
 import { useBulkAttendanceMutation } from '../mutations/use-bulk-attendance-mutation.hook';
 import { useCorrectAttendanceMutation } from '../mutations/use-correct-attendance-mutation.hook';
 import { useFinalizeAttendanceMutation } from '../mutations/use-finalize-attendance-mutation.hook';

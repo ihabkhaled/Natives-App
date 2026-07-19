@@ -10,10 +10,3 @@ export function selectSessionQueue(
     (operation) => operation.teamId === teamId && operation.sessionId === sessionId,
   );
 }
-
-export function selectMemberQueuedOperation(
-  operations: readonly AttendanceQueuedOperation[],
-  membershipId: string,
-): AttendanceQueuedOperation | null {
-  return operations.find((operation) => operation.membershipId === membershipId) ?? null;
-}

@@ -52,15 +52,6 @@ export const ATTENDANCE_STATUS_OPTIONS: readonly AttendanceStatus[] = [
   ATTENDANCE_STATUS.otherApproved,
 ];
 
-export const ATTENDANCE_EXCEPTION_OPTIONS: readonly AttendanceStatus[] = [
-  ATTENDANCE_STATUS.presentLate,
-  ATTENDANCE_STATUS.excused,
-  ATTENDANCE_STATUS.injured,
-  ATTENDANCE_STATUS.absent,
-  ATTENDANCE_STATUS.remoteApproved,
-  ATTENDANCE_STATUS.otherApproved,
-];
-
 export const ATTENDANCE_EXCUSE_OPTIONS: readonly AttendanceExcuse[] =
   Object.values(ATTENDANCE_EXCUSE);
 
@@ -87,4 +78,3 @@ export const ATTENDANCE_PAGE_SIZE = 100;
 export const ATTENDANCE_QUEUE_LIMIT = 50;
 export const ATTENDANCE_QUEUE_MAX_RETRIES = 3;
 export const ATTENDANCE_LATE_MAX_MINUTES = 1440;
-export const ATTENDANCE_CORRECTION_REASON_MAX_LENGTH = 512;

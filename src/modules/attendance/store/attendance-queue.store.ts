@@ -4,7 +4,6 @@ import { STORAGE_KEYS } from '@/shared/config';
 
 import {
   ATTENDANCE_QUEUE_LIMIT,
-  ATTENDANCE_QUEUE_STATE,
   type AttendanceQueueState,
 } from '../constants/attendance.constants';
 import {
@@ -95,5 +94,3 @@ export const useAttendanceQueueStore = createPersistedAppStore<AttendanceQueueSt
     partialize: (state) => ({ operations: state.operations }),
   },
 );
-
-export const INITIAL_ATTENDANCE_QUEUE_STATE = ATTENDANCE_QUEUE_STATE.pending;

@@ -49,7 +49,7 @@ export const INVITATION_ROLE = {
   User: 'user',
 } as const;
 
-export type InvitationRole = (typeof INVITATION_ROLE)[keyof typeof INVITATION_ROLE];
+type InvitationRole = (typeof INVITATION_ROLE)[keyof typeof INVITATION_ROLE];
 
 /** Read-only view of a pending invitation, shown before password creation. */
 export interface InvitationDetails {

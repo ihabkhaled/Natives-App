@@ -18,7 +18,11 @@ import {
   resolveAttendanceScreenStatus,
 } from './attendance-screen-state.helper';
 import type { AttendanceEditorView } from '../hooks/use-attendance-editor.hook';
-import type { AttendanceRosterRowView, AttendanceScreenView } from '../types/attendance-view.types';
+import type {
+  AttendanceRosterRowView,
+  AttendanceScreenActions,
+  AttendanceScreenView,
+} from '../types/attendance-view.types';
 import type {
   AttendanceQueuedOperation,
   AttendanceRevision,
@@ -26,16 +30,6 @@ import type {
 } from '../types/attendance.types';
 
 type Translate = (key: string, params?: TranslateParams) => string;
-
-export interface AttendanceScreenActions {
-  readonly onRetry: () => void;
-  readonly onSubmit: () => void;
-  readonly onFinalize: () => void;
-  readonly onRetryQueue: () => void;
-  readonly onResolveConflict: (membershipId: string) => void;
-  readonly onShowHistory: (membershipId: string) => void;
-  readonly onSaveCorrection: (membershipId: string) => void;
-}
 
 export interface BuildAttendanceScreenParams {
   readonly t: Translate;

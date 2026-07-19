@@ -53,7 +53,9 @@ describe('attendance coach flow (real client + MSW)', () => {
     expect(submit).toBeDisabled();
 
     fireEvent.click(screen.getByTestId(TEST_IDS.attendanceMarkAllPresent));
-    expect(submit).toBeEnabled();
+    await waitFor(() => {
+      expect(submit).toBeEnabled();
+    });
     fireEvent.click(submit);
 
     await waitFor(

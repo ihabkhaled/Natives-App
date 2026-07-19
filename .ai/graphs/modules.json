@@ -8,6 +8,25 @@
       ]
     },
     {
+      "name": "attendance",
+      "publicSurface": [
+        "ATTENDANCE_EXCUSE",
+        "ATTENDANCE_SHEET_STATE",
+        "ATTENDANCE_STATUS",
+        "AttendanceExcuse",
+        "AttendanceSheetState",
+        "AttendanceStatus",
+        "attendanceHistoryResponseSchema",
+        "attendancePath",
+        "attendanceQueryKeys",
+        "attendanceRecordResponseSchema",
+        "attendanceSheetResponseSchema",
+        "attendanceStatusResponseSchema",
+        "bulkAttendanceResponseSchema",
+        "getAttendanceRouteDefinitions"
+      ]
+    },
+    {
       "name": "auth",
       "publicSurface": [
         "ACCOUNT_STATE",

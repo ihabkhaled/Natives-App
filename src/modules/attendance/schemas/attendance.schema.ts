@@ -34,7 +34,7 @@ export const attendanceRecordResponseSchema = schemaBuilder.object({
   version: schemaBuilder.number().int().nonnegative().nullable(),
 });
 
-export const attendanceRosterEntryResponseSchema = schemaBuilder.object({
+const attendanceRosterEntryResponseSchema = schemaBuilder.object({
   membershipId: schemaBuilder.string().min(1),
   userId: schemaBuilder.string().min(1).nullable(),
   status: attendanceStatusSchema.nullable(),
@@ -69,7 +69,7 @@ export const attendanceStatusResponseSchema = schemaBuilder.object({
   version: schemaBuilder.number().int().positive(),
 });
 
-export const attendanceRevisionResponseSchema = schemaBuilder.object({
+const attendanceRevisionResponseSchema = schemaBuilder.object({
   id: schemaBuilder.string().min(1),
   membershipId: schemaBuilder.string().min(1),
   fromStatus: attendanceStatusSchema.nullable(),

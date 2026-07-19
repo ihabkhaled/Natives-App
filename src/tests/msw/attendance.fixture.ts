@@ -88,10 +88,7 @@ function findRosterEntry(membershipId: string): RosterEntry | undefined {
   return roster.find((entry) => entry.membershipId === membershipId);
 }
 
-export function hasVersionConflict(
-  membershipId: string,
-  expectedVersion: number | undefined,
-): boolean {
+function hasVersionConflict(membershipId: string, expectedVersion: number | undefined): boolean {
   const current = findRosterEntry(membershipId);
   return (
     current === undefined || (expectedVersion !== undefined && current.version !== expectedVersion)
