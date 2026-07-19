@@ -236,6 +236,7 @@ export const I18N_KEYS = {
   nav: {
     primaryLabel: 'nav.primaryLabel',
     skipToContent: 'nav.skipToContent',
+    profileLabel: 'nav.profileLabel',
     home: 'nav.home',
     admin: 'nav.admin',
     settings: 'nav.settings',

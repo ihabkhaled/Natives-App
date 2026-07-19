@@ -26,10 +26,17 @@ export interface PrimaryNavItem {
   readonly onSelect: () => void;
 }
 
+/** The signed-in identity shown in the persistent sidebar profile block. */
+interface NavProfile {
+  readonly name: string;
+  readonly label: string;
+}
+
 export interface PrimaryNavigationView {
   readonly isVisible: boolean;
   readonly ariaLabel: string;
   readonly appName: string;
   readonly logoLabel: string;
+  readonly profile: NavProfile | null;
   readonly items: readonly PrimaryNavItem[];
 }

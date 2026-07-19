@@ -1,5 +1,5 @@
 import { IonIcon } from '@/packages/ionic';
-import { BrandLogo } from '@/shared/ui';
+import { AvatarFallback, BrandLogo } from '@/shared/ui';
 
 import { PRIMARY_NAV_TEST_ID } from './primary-navigation.constants';
 import type { PrimaryNavigationProps } from './primary-navigation.types';
@@ -16,6 +16,12 @@ export function PrimaryNavigation(props: PrimaryNavigationProps): React.JSX.Elem
         <BrandLogo label={props.logoLabel} size="sm" />
         <span>{props.appName}</span>
       </div>
+      {props.profile === null ? null : (
+        <div className="app-primary-nav__profile">
+          <AvatarFallback name={props.profile.name} label={props.profile.label} size="md" />
+          <span className="app-primary-nav__profile-name">{props.profile.name}</span>
+        </div>
+      )}
       {props.items.map((item) => (
         <button
           key={item.key}

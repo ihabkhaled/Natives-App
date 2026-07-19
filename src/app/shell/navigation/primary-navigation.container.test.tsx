@@ -16,6 +16,7 @@ function mockView(view: Partial<PrimaryNavigationView>): void {
     ariaLabel: 'Primary',
     appName: 'Ultimate Natives',
     logoLabel: 'Ultimate Natives logo',
+    profile: null,
     items: [],
     ...view,
   });

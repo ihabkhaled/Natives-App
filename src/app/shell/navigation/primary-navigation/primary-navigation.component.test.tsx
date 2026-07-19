@@ -28,6 +28,7 @@ describe('PrimaryNavigation', () => {
         ariaLabel="Primary"
         appName="Ultimate Natives"
         logoLabel="Ultimate Natives logo"
+        profile={null}
         items={[
           item(),
           item({ key: 'settings', label: 'Settings', testId: 'primary-nav-item-settings' }),
@@ -48,6 +49,7 @@ describe('PrimaryNavigation', () => {
         ariaLabel="Primary"
         appName="Ultimate Natives"
         logoLabel="Ultimate Natives logo"
+        profile={null}
         items={[
           item({ isActive: true }),
           item({ key: 'settings', label: 'Settings', testId: 'primary-nav-item-settings' }),
@@ -67,6 +69,7 @@ describe('PrimaryNavigation', () => {
         ariaLabel="Primary"
         appName="Ultimate Natives"
         logoLabel="Ultimate Natives logo"
+        profile={null}
         items={[item({ onSelect })]}
       />,
     );
@@ -83,10 +86,27 @@ describe('PrimaryNavigation', () => {
         ariaLabel="Primary"
         appName="Ultimate Natives"
         logoLabel="Ultimate Natives logo"
+        profile={null}
         items={[]}
       />,
     );
 
     expect(screen.queryByRole('navigation')).not.toBeInTheDocument();
+  });
+
+  it('renders the signed-in profile block when a profile is provided', () => {
+    render(
+      <PrimaryNavigation
+        isVisible
+        ariaLabel="Primary"
+        appName="Ultimate Natives"
+        logoLabel="Ultimate Natives logo"
+        profile={{ name: 'Ranger Rick', label: 'Your profile' }}
+        items={[item()]}
+      />,
+    );
+
+    expect(screen.getByText('Ranger Rick')).toBeInTheDocument();
+    expect(screen.getByRole('img', { name: 'Your profile' })).toBeInTheDocument();
   });
 });

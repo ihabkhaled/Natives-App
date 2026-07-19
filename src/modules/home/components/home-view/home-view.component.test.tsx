@@ -12,6 +12,8 @@ function buildProps(overrides: Partial<HomeViewProps> = {}): HomeViewProps {
   return {
     title: 'Home',
     greeting: 'Hello, Ranger Rick',
+    userName: 'Ranger Rick',
+    avatarLabel: 'Your profile',
     isLoadingUser: false,
     loadingLabel: 'Loading…',
     logoutLabel: 'Sign out',
@@ -37,6 +39,14 @@ describe('HomeView', () => {
 
     expect(screen.getByTestId(HOME_VIEW_TEST_IDS.greeting)).toHaveTextContent('Hello, Ranger Rick');
     expect(screen.queryByTestId(TEST_IDS.loadingState)).not.toBeInTheDocument();
+    expect(screen.getByRole('img', { name: 'Your profile' })).toBeInTheDocument();
+  });
+
+  it('renders the fallback avatar when the display name is not yet known', () => {
+    mountHome(buildProps({ userName: null }));
+
+    expect(screen.getByRole('img', { name: 'Your profile' })).toBeInTheDocument();
+    expect(screen.getByTestId(HOME_VIEW_TEST_IDS.greeting)).toBeInTheDocument();
   });
 
   it('shows the loading state instead of the greeting while the profile loads', () => {

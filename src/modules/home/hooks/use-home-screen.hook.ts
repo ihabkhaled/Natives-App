@@ -8,6 +8,8 @@ import { I18N_KEYS } from '@/shared/i18n';
 export interface HomeScreenView {
   readonly title: string;
   readonly greeting: string;
+  readonly userName: string | null;
+  readonly avatarLabel: string;
   readonly isLoadingUser: boolean;
   readonly loadingLabel: string;
   readonly logoutLabel: string;
@@ -27,6 +29,8 @@ export function useHomeScreen(): HomeScreenView {
   return {
     title: t(I18N_KEYS.home.title),
     greeting: t(I18N_KEYS.home.greeting, { name: currentUser.user?.displayName ?? '' }),
+    userName: currentUser.user?.displayName ?? null,
+    avatarLabel: t(I18N_KEYS.nav.profileLabel),
     isLoadingUser: currentUser.isLoading,
     loadingLabel: t(I18N_KEYS.common.loading),
     logoutLabel: t(I18N_KEYS.home.logout),

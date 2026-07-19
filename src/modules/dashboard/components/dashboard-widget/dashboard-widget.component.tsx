@@ -1,4 +1,5 @@
 import { IonCard, IonCardContent, IonCardHeader, IonCardTitle, IonNote } from '@/packages/ionic';
+import { EmptyState } from '@/shared/ui';
 
 import { DashboardWidgetBody } from '../dashboard-widget-body';
 import type { DashboardWidgetProps } from './dashboard-widget.types';
@@ -19,7 +20,9 @@ export function DashboardWidget(props: DashboardWidgetProps): React.JSX.Element 
         {widget.showsContent ? (
           <DashboardWidgetBody widget={widget} />
         ) : (
-          <IonNote>{widget.stateLabel}</IonNote>
+          <div className="app-widget-state">
+            <EmptyState title={widget.stateLabel} />
+          </div>
         )}
         {widget.partialLabel === null ? null : (
           <IonNote className="mt-2 block">{widget.partialLabel}</IonNote>

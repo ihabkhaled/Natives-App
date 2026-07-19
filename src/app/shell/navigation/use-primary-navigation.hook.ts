@@ -1,4 +1,4 @@
-import { useEffectivePermissions, useSession } from '@/modules/auth';
+import { useCurrentUserQuery, useEffectivePermissions, useSession } from '@/modules/auth';
 import { APP_ICONS } from '@/packages/icons';
 import { useAppTranslation } from '@/packages/i18n';
 import { useAppNavigation } from '@/packages/router';
@@ -17,9 +17,11 @@ import type { PrimaryNavigationView } from './navigation.types';
 export function usePrimaryNavigation(): PrimaryNavigationView {
   const session = useSession();
   const effective = useEffectivePermissions();
+  const currentUser = useCurrentUserQuery();
   const { t } = useAppTranslation();
   const navigation = useAppNavigation();
   const isReady = session.isAuthenticated && !effective.isLoading;
+  const displayName = currentUser.user?.displayName ?? null;
   const items = selectVisibleNavItems(getAppRouteDefinitions(), {
     permissions: effective.permissions,
     hasTeamContext: effective.hasTeamContext,
@@ -29,6 +31,8 @@ export function usePrimaryNavigation(): PrimaryNavigationView {
     ariaLabel: t(I18N_KEYS.nav.primaryLabel),
     appName: t(I18N_KEYS.common.appName),
     logoLabel: t(I18N_KEYS.brand.logoAlt),
+    profile:
+      displayName === null ? null : { name: displayName, label: t(I18N_KEYS.nav.profileLabel) },
     items: items.map((item) => ({
       key: item.key,
       label: t(item.labelKey),

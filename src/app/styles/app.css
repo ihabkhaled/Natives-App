@@ -58,7 +58,11 @@
     var(--un-brand-gold),
     color-mix(in srgb, var(--un-brand-gold) 62%, #ffffff)
   );
-  --app-cta-gradient: linear-gradient(135deg, #e8c158 0%, #d4af37 50%, #b8942a 100%);
+  --app-cta-gradient: linear-gradient(135deg, #ffd85c 0%, #f0c22f 46%, #dca821 100%);
+  --app-tonal-bg: color-mix(in srgb, var(--un-brand-gold) 15%, var(--un-brand-white));
+  --app-tonal-bg-hover: color-mix(in srgb, var(--un-brand-gold) 24%, var(--un-brand-white));
+  --app-tonal-border: color-mix(in srgb, var(--un-brand-gold) 40%, transparent);
+  --app-tonal-text: #6e5700;
   --app-cta-text: #241d00;
   --app-cta-shadow:
     0 1px 2px rgba(11, 11, 11, 0.2),
@@ -113,6 +117,10 @@
     0 2px 6px rgba(0, 0, 0, 0.55),
     0 18px 40px color-mix(in srgb, var(--un-brand-gold) 40%, transparent);
   --app-card-highlight: linear-gradient(180deg, rgba(255, 255, 255, 0.06), transparent 40%);
+  --app-tonal-bg: color-mix(in srgb, var(--un-brand-gold) 14%, var(--un-surface-elevated));
+  --app-tonal-bg-hover: color-mix(in srgb, var(--un-brand-gold) 22%, var(--un-surface-elevated));
+  --app-tonal-border: color-mix(in srgb, var(--un-brand-gold) 34%, transparent);
+  --app-tonal-text: #edcb70;
 }
 
 /* Respect reduced-motion preferences globally (WCAG 2.2). */
@@ -407,6 +415,22 @@ ion-button.button-solid.ion-color-primary ion-spinner {
   color: var(--app-cta-text);
 }
 
+/* Secondary = tonal: a soft gold-tinted surface with gold text and a hairline,
+   so supporting actions read as clearly interactive — never disabled grey. */
+ion-button.button-solid.ion-color-medium {
+  --box-shadow: none;
+}
+
+ion-button.button-solid.ion-color-medium::part(native) {
+  background: var(--app-tonal-bg);
+  color: var(--app-tonal-text);
+  box-shadow: inset 0 0 0 1px var(--app-tonal-border);
+}
+
+ion-button.button-solid.ion-color-medium ion-spinner {
+  color: var(--app-tonal-text);
+}
+
 @media (hover: hover) {
   ion-button.button-solid:hover {
     transform: translateY(-1px);
@@ -414,6 +438,10 @@ ion-button.button-solid.ion-color-primary ion-spinner {
 
   ion-button.button-solid.ion-color-primary:hover {
     --box-shadow: var(--app-cta-shadow-hover);
+  }
+
+  ion-button.button-solid.ion-color-medium:hover::part(native) {
+    background: var(--app-tonal-bg-hover);
   }
 }
 
@@ -699,32 +727,79 @@ ion-spinner {
    Dashboard — stat values pop in brand gold; widgets breathe
 ---------------------------------------------------------------------------- */
 [data-testid='dashboard-metric-value'] {
+  font-size: clamp(2.25rem, 6vw, 2.75rem);
+  font-weight: 800;
   font-variant-numeric: tabular-nums;
   letter-spacing: var(--un-letter-spacing-tight);
+  line-height: 1.05;
 }
 
 [data-testid='dashboard-view'] > header h2 {
+  font-size: var(--un-font-size-lg);
+  font-weight: 700;
   letter-spacing: var(--un-letter-spacing-tight);
+}
+
+/* Stat rows: each task reads as a labelled row with a prominent count pill on
+   the end rather than a tiny ambiguous dot. */
+[data-testid='dashboard-view'] ion-card ion-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+[data-testid='dashboard-view'] ion-card ion-item {
+  --background: transparent;
+  --padding-start: 0;
+  --inner-padding-end: 0;
+  --min-height: 48px;
+}
+
+[data-testid='dashboard-view'] ion-card ion-item ion-badge[slot='end'] {
+  min-inline-size: 2rem;
+  padding: 0.32rem 0.6rem;
+  font-size: 0.8125rem;
+  font-weight: 700;
+  text-align: center;
+}
+
+/* Designed, compact empty/error state inside a widget card (icon disc + copy). */
+.app-widget-state .app-status-view {
+  min-height: 0;
+  gap: 0.35rem;
+  padding: 0.85rem 0.5rem;
+}
+
+.app-widget-state .app-status-view ion-icon {
+  padding: 0.6rem;
+  font-size: 2.1rem;
+}
+
+.app-widget-state .app-status-view h2 {
+  font-size: var(--un-font-size-md);
 }
 
 .app-home-layout {
   display: grid;
   gap: 1.25rem;
+  padding-bottom: 0.5rem;
 }
 
+/* Hero band: an identity block (avatar + greeting) above a horizontal row of
+   call-to-actions, so the name never fights the buttons for width. */
 .app-home-hero {
   position: relative;
   display: flex;
   flex-direction: column;
-  gap: 1.25rem;
+  gap: 1.35rem;
   overflow: hidden;
-  padding: clamp(1.25rem, 4vw, 2rem);
+  padding: clamp(1.35rem, 4vw, 2.25rem);
   border: 1px solid var(--app-accent-line);
   border-radius: var(--un-radius-xl);
   background:
     radial-gradient(
       120% 130% at 100% 0%,
-      color-mix(in srgb, var(--un-brand-gold) 18%, transparent),
+      color-mix(in srgb, var(--un-brand-gold) 22%, transparent),
       transparent 55%
     ),
     linear-gradient(135deg, var(--app-accent-soft), transparent 62%), var(--app-card-bg);
@@ -734,13 +809,29 @@ ion-spinner {
 .app-home-hero::after {
   content: '';
   position: absolute;
-  inset-block-start: -3rem;
-  inset-inline-end: -3rem;
-  inline-size: 9rem;
+  inset-block-start: -3.5rem;
+  inset-inline-end: -3.5rem;
+  inline-size: 10rem;
   aspect-ratio: 1;
-  border: 1.5rem solid var(--app-accent-soft);
+  border: 1.75rem solid var(--app-accent-soft);
   border-radius: 50%;
   pointer-events: none;
+}
+
+.app-home-hero__intro {
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  min-height: 3.5rem;
+}
+
+.app-home-hero__greeting {
+  font-size: clamp(1.5rem, 3.5vw, 2rem);
+  font-weight: 800;
+  line-height: var(--un-line-height-tight);
+  letter-spacing: var(--un-letter-spacing-tight);
+  text-wrap: balance;
 }
 
 .app-home-hero__actions {
@@ -754,6 +845,14 @@ ion-spinner {
   min-width: 0;
 }
 
+.app-home-footer {
+  display: flex;
+}
+
+.app-home-footer ion-button {
+  width: 100%;
+}
+
 .app-health-status-badge {
   align-self: flex-start;
   max-width: 100%;
@@ -763,7 +862,7 @@ ion-spinner {
 
 [data-testid='dashboard-view'] {
   min-width: 0;
-  padding: 1.25rem;
+  padding: clamp(1.25rem, 3vw, 1.75rem);
   border: 1px solid var(--app-hairline);
   border-radius: var(--un-radius-xl);
   background: var(--app-card-bg);
@@ -776,42 +875,50 @@ ion-spinner {
   gap: 0.875rem;
 }
 
-@media (min-width: 720px) {
-  .app-home-hero {
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
-  }
-
-  .app-home-hero__actions {
-    justify-content: flex-end;
-  }
-
+@media (min-width: 640px) {
   [data-testid='dashboard-view'] > div:last-child {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
 
-@media (min-width: 1100px) {
+/* Desktop dashboard grid: the hero and the compact health card share the top
+   row; the widget board spans the full width beneath them; sign-out lives in a
+   right-aligned footer. Nothing is left floating in empty space. */
+@media (min-width: 960px) {
   .app-home-layout {
-    grid-template-columns: minmax(0, 1.7fr) minmax(18rem, 0.7fr);
-    align-items: start;
+    grid-template-columns: minmax(0, 1fr) minmax(15rem, 20rem);
   }
 
-  .app-home-hero,
-  .app-home-layout > [data-testid='dashboard-view'] {
+  .app-home-hero {
     grid-column: 1;
+    grid-row: 1;
   }
 
   .app-home-health {
     grid-column: 2;
-    grid-row: 1 / span 2;
-    position: sticky;
-    top: 1rem;
+    grid-row: 1;
   }
 
-  .app-home-layout > ion-button {
-    grid-column: 2;
+  .app-home-layout > [data-testid='dashboard-view'] {
+    grid-column: 1 / -1;
+    grid-row: 2;
+  }
+
+  .app-home-footer {
+    grid-column: 1 / -1;
+    grid-row: 3;
+    justify-content: flex-end;
+  }
+
+  .app-home-footer ion-button {
+    width: auto;
+    min-width: 12rem;
+  }
+}
+
+@media (min-width: 1180px) {
+  [data-testid='dashboard-view'] > div:last-child {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 }
 
@@ -1150,7 +1257,8 @@ ion-spinner {
   backdrop-filter: saturate(180%) blur(18px);
 }
 
-.app-primary-nav__brand {
+.app-primary-nav__brand,
+.app-primary-nav__profile {
   display: none;
 }
 
@@ -1251,6 +1359,28 @@ ion-spinner {
     flex: 0 0 auto;
     border-radius: var(--un-radius-md);
     box-shadow: var(--app-elevation-card);
+  }
+
+  /* Signed-in identity block: the persistent sidebar's user chip. */
+  .app-primary-nav__profile {
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+    margin: 0 0.25rem 1rem;
+    padding: 0.6rem 0.7rem;
+    border: 1px solid var(--app-hairline);
+    border-radius: var(--un-radius-lg);
+    background: var(--app-accent-soft);
+  }
+
+  .app-primary-nav__profile-name {
+    min-inline-size: 0;
+    overflow: hidden;
+    color: var(--ion-text-color);
+    font-size: var(--un-font-size-sm);
+    font-weight: 700;
+    white-space: nowrap;
+    text-overflow: ellipsis;
   }
 
   .app-primary-nav__item {

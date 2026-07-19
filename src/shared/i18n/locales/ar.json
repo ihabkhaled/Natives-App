@@ -388,6 +388,7 @@
   "nav": {
     "primaryLabel": "التنقل الرئيسي",
     "skipToContent": "تخطَّ إلى المحتوى الرئيسي",
+    "profileLabel": "ملفك الشخصي",
     "home": "الرئيسية",
     "admin": "الإدارة",
     "settings": "الإعدادات"

@@ -1,8 +1,14 @@
 import { act } from '@testing-library/react';
-import { afterEach, beforeAll, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import type * as AuthModule from '@/modules/auth';
-import { useEffectivePermissions, useSession } from '@/modules/auth';
+import {
+  buildAuthUser,
+  useCurrentUserQuery,
+  useEffectivePermissions,
+  useSession,
+  type CurrentUserQueryView,
+} from '@/modules/auth';
 import { PERMISSIONS } from '@/shared/security';
 
 import { initTestI18n } from '../../../../tests/setup/i18n-test.helper';
@@ -13,7 +19,17 @@ vi.mock('@/modules/auth', async (importOriginal) => ({
   ...(await importOriginal<typeof AuthModule>()),
   useSession: vi.fn(),
   useEffectivePermissions: vi.fn(),
+  useCurrentUserQuery: vi.fn(),
 }));
+
+function mockCurrentUser(overrides: Partial<CurrentUserQueryView> = {}): void {
+  vi.mocked(useCurrentUserQuery).mockReturnValue({
+    user: buildAuthUser({ displayName: 'Ranger Rick' }),
+    isLoading: false,
+    isError: false,
+    ...overrides,
+  });
+}
 
 function mockSession(isAuthenticated: boolean): void {
   vi.mocked(useSession).mockReturnValue({
@@ -43,6 +59,10 @@ function keysAt(path: string): readonly string[] {
 
 beforeAll(async () => {
   await initTestI18n();
+});
+
+beforeEach(() => {
+  mockCurrentUser();
 });
 
 afterEach(() => {
@@ -115,5 +135,28 @@ describe('usePrimaryNavigation', () => {
     expect(result.current.ariaLabel).toBe('Primary');
     expect(result.current.appName).toBe('Ultimate Natives');
     expect(result.current.logoLabel).toBe('Ultimate Natives logo');
+  });
+
+  it('exposes the signed-in profile for the sidebar block', () => {
+    mockSession(true);
+    mockEffective({ permissions: [PERMISSIONS.usersManage] });
+
+    const { result } = renderHookWithProviders(() => usePrimaryNavigation(), {
+      initialPath: '/home',
+    });
+
+    expect(result.current.profile).toEqual({ name: 'Ranger Rick', label: 'Your profile' });
+  });
+
+  it('omits the profile until the display name resolves', () => {
+    mockSession(true);
+    mockEffective({ permissions: [PERMISSIONS.usersManage] });
+    mockCurrentUser({ user: undefined });
+
+    const { result } = renderHookWithProviders(() => usePrimaryNavigation(), {
+      initialPath: '/home',
+    });
+
+    expect(result.current.profile).toBeNull();
   });
 });

@@ -388,6 +388,7 @@
   "nav": {
     "primaryLabel": "Primary",
     "skipToContent": "Skip to main content",
+    "profileLabel": "Your profile",
     "home": "Home",
     "admin": "Admin",
     "settings": "Settings"

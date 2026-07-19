@@ -71,6 +71,8 @@ describe('useHomeScreen', () => {
     const { result } = renderHook(() => useHomeScreen());
 
     expect(result.current.greeting).toBe('Hello, Ranger Rick');
+    expect(result.current.userName).toBe('Ranger Rick');
+    expect(result.current.avatarLabel).toBe('Your profile');
   });
 
   it('greets with an empty name while the profile is still loading', () => {
@@ -80,6 +82,7 @@ describe('useHomeScreen', () => {
 
     expect(result.current.isLoadingUser).toBe(true);
     expect(result.current.greeting).toBe('Hello, ');
+    expect(result.current.userName).toBeNull();
   });
 
   it('greets with an empty name when the profile failed to load', () => {
@@ -134,6 +137,7 @@ describe('useHomeScreen', () => {
 
     expect(result.current).not.toHaveProperty('user');
     expect(Object.keys(result.current).sort()).toEqual([
+      'avatarLabel',
       'greeting',
       'isLoadingUser',
       'isLoggingOut',
@@ -145,6 +149,7 @@ describe('useHomeScreen', () => {
       'onOpenPracticeCalendar',
       'practiceCalendarLabel',
       'title',
+      'userName',
     ]);
   });
 });

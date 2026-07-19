@@ -26,6 +26,8 @@ function mockScreen(overrides: Partial<HomeScreenView> = {}): void {
   vi.mocked(useHomeScreen).mockReturnValue({
     title: 'Home',
     greeting: 'Hello, Ranger Rick',
+    userName: 'Ranger Rick',
+    avatarLabel: 'Your profile',
     isLoadingUser: false,
     loadingLabel: 'Loading…',
     logoutLabel: 'Sign out',
