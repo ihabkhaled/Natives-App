@@ -40,16 +40,33 @@
   --app-pressed: color-mix(in srgb, var(--ion-text-color) 6%, transparent);
   --app-skeleton-base: color-mix(in srgb, var(--ion-text-color) 8%, var(--un-brand-white));
   --app-skeleton-sheen: color-mix(in srgb, var(--ion-text-color) 3%, var(--un-brand-white));
-  --app-hero-glow: radial-gradient(
-    128% 82% at 50% -12%,
-    color-mix(in srgb, var(--un-brand-gold) 20%, var(--app-page-bg)),
-    var(--app-page-bg) 60%
-  );
+  --app-hero-glow:
+    radial-gradient(
+      118% 78% at 12% -10%,
+      color-mix(in srgb, var(--un-brand-gold) 26%, var(--app-page-bg)),
+      transparent 58%
+    ),
+    radial-gradient(
+      96% 62% at 100% 4%,
+      color-mix(in srgb, var(--ion-color-secondary) 14%, var(--app-page-bg)),
+      transparent 60%
+    ),
+    var(--app-page-bg);
+  --app-page-aura: radial-gradient(130% 58% at 100% -12%, var(--app-accent-soft), transparent 52%);
   --app-brand-gradient: linear-gradient(
     135deg,
     var(--un-brand-gold),
     color-mix(in srgb, var(--un-brand-gold) 62%, #ffffff)
   );
+  --app-cta-gradient: linear-gradient(135deg, #e8c158 0%, #d4af37 50%, #b8942a 100%);
+  --app-cta-text: #241d00;
+  --app-cta-shadow:
+    0 1px 2px rgba(11, 11, 11, 0.2),
+    0 10px 24px color-mix(in srgb, var(--un-brand-gold) 44%, transparent);
+  --app-cta-shadow-hover:
+    0 2px 4px rgba(11, 11, 11, 0.22),
+    0 16px 34px color-mix(in srgb, var(--un-brand-gold) 54%, transparent);
+  --app-card-highlight: linear-gradient(180deg, rgba(255, 255, 255, 0.72), transparent 42%);
   --app-sidebar-w: 17.5rem;
   --app-tabbar-h: calc(3.75rem + env(safe-area-inset-bottom));
 }
@@ -71,6 +88,31 @@
   --app-pressed: color-mix(in srgb, var(--un-brand-white) 7%, transparent);
   --app-skeleton-base: color-mix(in srgb, var(--un-brand-white) 9%, var(--un-surface-elevated));
   --app-skeleton-sheen: color-mix(in srgb, var(--un-brand-white) 4%, var(--un-surface-elevated));
+  --app-hero-glow:
+    radial-gradient(
+      120% 80% at 10% -12%,
+      color-mix(in srgb, var(--un-brand-gold) 20%, var(--app-page-bg)),
+      transparent 56%
+    ),
+    radial-gradient(
+      96% 64% at 100% 2%,
+      color-mix(in srgb, var(--ion-color-secondary) 16%, var(--app-page-bg)),
+      transparent 60%
+    ),
+    var(--app-page-bg);
+  --app-page-aura: radial-gradient(
+    130% 58% at 100% -12%,
+    color-mix(in srgb, var(--un-brand-gold) 13%, transparent),
+    transparent 54%
+  );
+  --app-cta-text: #0b0b0b;
+  --app-cta-shadow:
+    0 1px 2px rgba(0, 0, 0, 0.5),
+    0 12px 30px color-mix(in srgb, var(--un-brand-gold) 30%, transparent);
+  --app-cta-shadow-hover:
+    0 2px 6px rgba(0, 0, 0, 0.55),
+    0 18px 40px color-mix(in srgb, var(--un-brand-gold) 40%, transparent);
+  --app-card-highlight: linear-gradient(180deg, rgba(255, 255, 255, 0.06), transparent 40%);
 }
 
 /* Respect reduced-motion preferences globally (WCAG 2.2). */
@@ -96,7 +138,7 @@
    Page canvas + scrolling content
 ---------------------------------------------------------------------------- */
 ion-content {
-  --background: var(--app-page-bg);
+  --background: var(--app-page-aura), var(--app-page-bg);
 }
 
 ion-content.ion-padding {
@@ -163,14 +205,20 @@ ion-title.title-large {
    Cards — the elevated primitive used across dashboards and detail screens
 ---------------------------------------------------------------------------- */
 ion-card {
+  position: relative;
   margin: 0;
   border: 1px solid var(--app-hairline);
   border-radius: var(--un-radius-lg);
-  background: var(--app-card-bg);
+  /* Top-edge sheen layered behind content (never over text) for glassy depth. */
+  background: var(--app-card-highlight), var(--app-card-bg);
   box-shadow: var(--app-elevation-card);
   transition:
     transform var(--un-motion-duration-base) var(--un-motion-easing-standard),
     box-shadow var(--un-motion-duration-base) var(--un-motion-easing-standard);
+}
+
+ion-card:hover {
+  box-shadow: var(--app-elevation-lift);
 }
 
 ion-card-header {
@@ -304,13 +352,14 @@ ion-badge.ion-color-medium {
 ---------------------------------------------------------------------------- */
 ion-segment {
   --background: var(--app-track-bg);
+  border: 1px solid var(--app-hairline);
   border-radius: var(--un-radius-pill);
   padding: 0.2rem;
 }
 
 ion-segment-button {
   --color: var(--un-muted);
-  --color-checked: var(--ion-color-primary);
+  --color-checked: var(--app-accent-strong);
   --background-checked: var(--app-card-bg);
   --indicator-color: var(--app-card-bg);
   --border-radius: var(--un-radius-pill);
@@ -332,16 +381,40 @@ ion-button {
   font-weight: 600;
   letter-spacing: 0;
   text-transform: none;
-  transition: transform var(--un-motion-duration-fast) var(--un-motion-easing-standard);
+  transition:
+    transform var(--un-motion-duration-fast) var(--un-motion-easing-standard),
+    box-shadow var(--un-motion-duration-base) var(--un-motion-easing-standard);
 }
 
 ion-button.button-solid {
   --box-shadow: 0 1px 2px rgba(11, 11, 11, 0.16), 0 6px 18px rgba(11, 11, 11, 0.12);
 }
 
+/* Signature gold call to action: a warm metallic gradient with legible ink text
+   and a soft gold halo — the most catchy, confident element on every screen.
+   Ionic colour buttons paint their base from --ion-color-base rather than
+   --background, so the gradient is applied through the exposed native part. */
 ion-button.button-solid.ion-color-primary {
-  --background-hover: var(--ion-color-primary-tint);
-  --background-activated: var(--ion-color-primary-shade);
+  --box-shadow: var(--app-cta-shadow);
+}
+
+ion-button.button-solid.ion-color-primary::part(native) {
+  background: var(--app-cta-gradient);
+  color: var(--app-cta-text);
+}
+
+ion-button.button-solid.ion-color-primary ion-spinner {
+  color: var(--app-cta-text);
+}
+
+@media (hover: hover) {
+  ion-button.button-solid:hover {
+    transform: translateY(-1px);
+  }
+
+  ion-button.button-solid.ion-color-primary:hover {
+    --box-shadow: var(--app-cta-shadow-hover);
+  }
 }
 
 ion-button:active {
@@ -485,6 +558,16 @@ ion-spinner {
 }
 
 /* ----------------------------------------------------------------------------
+   Status views — empty / error / offline / permission. The tone-coloured icon
+   sits in a soft matching disc so the state reads instantly without a rainbow.
+---------------------------------------------------------------------------- */
+.app-status-view ion-icon {
+  padding: 0.9rem;
+  border-radius: var(--un-radius-circle);
+  background: color-mix(in srgb, currentColor 12%, transparent);
+}
+
+/* ----------------------------------------------------------------------------
    Welcome — a hero with a soft brand-gold glow and an elevated logo lockup
 ---------------------------------------------------------------------------- */
 [data-testid='welcome-page'] ion-content {
@@ -540,7 +623,9 @@ ion-spinner {
   padding: clamp(1.5rem, 5vw, 3.25rem);
   border: 1px solid var(--app-accent-line);
   border-radius: var(--un-radius-xl);
-  background: color-mix(in srgb, var(--app-card-bg) 88%, transparent);
+  background:
+    radial-gradient(125% 80% at 0% 0%, var(--app-accent-soft), transparent 46%),
+    color-mix(in srgb, var(--app-card-bg) 90%, transparent);
   box-shadow: var(--app-elevation-lift);
   -webkit-backdrop-filter: saturate(150%) blur(20px);
   backdrop-filter: saturate(150%) blur(20px);
@@ -581,7 +666,9 @@ ion-spinner {
   padding: clamp(1.25rem, 5vw, 2.5rem);
   border: 1px solid var(--app-accent-line);
   border-radius: var(--un-radius-xl);
-  background: color-mix(in srgb, var(--app-card-bg) 92%, transparent);
+  background:
+    radial-gradient(120% 78% at 100% 0%, var(--app-accent-soft), transparent 48%),
+    color-mix(in srgb, var(--app-card-bg) 93%, transparent);
   box-shadow: var(--app-elevation-lift);
   -webkit-backdrop-filter: saturate(150%) blur(20px);
   backdrop-filter: saturate(150%) blur(20px);
@@ -634,7 +721,13 @@ ion-spinner {
   padding: clamp(1.25rem, 4vw, 2rem);
   border: 1px solid var(--app-accent-line);
   border-radius: var(--un-radius-xl);
-  background: linear-gradient(135deg, var(--app-accent-soft), transparent 55%), var(--app-card-bg);
+  background:
+    radial-gradient(
+      120% 130% at 100% 0%,
+      color-mix(in srgb, var(--un-brand-gold) 18%, transparent),
+      transparent 55%
+    ),
+    linear-gradient(135deg, var(--app-accent-soft), transparent 62%), var(--app-card-bg);
   box-shadow: var(--app-elevation-card);
 }
 
@@ -757,7 +850,7 @@ ion-spinner {
   inset-inline-start: 0;
   inline-size: 3px;
   background: var(--app-brand-gradient);
-  opacity: 0;
+  opacity: 0.55;
   transition: opacity var(--un-motion-duration-base) var(--un-motion-easing-standard);
 }
 
@@ -1093,14 +1186,23 @@ ion-spinner {
   color: var(--ion-color-primary);
 }
 
+.app-primary-nav__item:not([aria-current='page']):hover .app-primary-nav__icon {
+  background: var(--app-pressed);
+}
+
 .app-primary-nav__item[aria-current='page'] {
   color: var(--app-accent-text);
   font-weight: 700;
 }
 
 .app-primary-nav__item[aria-current='page'] .app-primary-nav__icon {
-  background: var(--app-accent-soft);
+  background: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--un-brand-gold) 26%, transparent),
+    var(--app-accent-soft)
+  );
   color: var(--app-accent-strong);
+  box-shadow: inset 0 0 0 1px var(--app-accent-line);
 }
 
 .ion-palette-dark .app-primary-nav__item[aria-current='page'] .app-primary-nav__icon {
@@ -1170,8 +1272,20 @@ ion-spinner {
   }
 
   .app-primary-nav__item[aria-current='page'] {
+    position: relative;
     background: var(--app-accent-soft);
     color: var(--app-accent-text);
+    box-shadow: inset 0 0 0 1px var(--app-accent-line);
+  }
+
+  .app-primary-nav__item[aria-current='page']::before {
+    content: '';
+    position: absolute;
+    inset-block: 0.5rem;
+    inset-inline-start: 0;
+    inline-size: 3px;
+    border-radius: var(--un-radius-pill);
+    background: var(--app-brand-gradient);
   }
 
   .ion-palette-dark .app-primary-nav__item[aria-current='page'] {
@@ -1180,6 +1294,7 @@ ion-spinner {
 
   .app-primary-nav__item[aria-current='page'] .app-primary-nav__icon {
     background: transparent;
+    box-shadow: none;
   }
 
   #main-content:has(> .app-primary-nav) > ion-router-outlet {

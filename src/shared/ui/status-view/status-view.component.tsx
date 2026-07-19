@@ -8,7 +8,7 @@ export function StatusView(props: StatusViewProps): React.JSX.Element {
   return (
     <div
       data-testid={props.testId}
-      className="flex min-h-40 flex-col items-center justify-center gap-1 p-6 text-center"
+      className="app-status-view flex min-h-40 flex-col items-center justify-center gap-1 p-6 text-center"
       role="status"
     >
       <IonIcon
