@@ -1,9 +1,19 @@
+import type {
+  attendanceRecordResponseSchema,
+  attendanceSheetResponseSchema,
+} from '@/modules/attendance';
 import type { BackendApiSchemas } from '@/packages/api-contract';
+import type { SchemaOutput } from '@/packages/schema';
 
 import { MOCK_ATTENDANCE } from './mock-data.constants';
 
-type RosterEntry = BackendApiSchemas['RosterEntryResponseDto'];
-type AttendanceRecord = BackendApiSchemas['AttendanceResponseDto'];
+/**
+ * The attendance sheet row. Sourced from the client schema rather than the
+ * generated `RosterEntryResponseDto`, whose name the backend now also uses for
+ * competition roster entries.
+ */
+type RosterEntry = SchemaOutput<typeof attendanceSheetResponseSchema>['items'][number];
+type AttendanceRecord = SchemaOutput<typeof attendanceRecordResponseSchema>;
 type BulkMark = BackendApiSchemas['BulkMarkEntryDto'];
 type Mark = BackendApiSchemas['MarkAttendanceDto'];
 type Correction = BackendApiSchemas['CorrectAttendanceDto'];

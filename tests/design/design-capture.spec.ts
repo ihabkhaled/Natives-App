@@ -2,13 +2,7 @@ import { expect, test, type Page } from '@playwright/test';
 
 import { TEST_IDS } from '@/shared/config';
 
-import {
-  APP_ROUTES,
-  expectPresentedPage,
-  gotoApp,
-  login,
-  waitForAppAnimations,
-} from '../e2e/fixtures/app.fixture';
+import { APP_ROUTES, gotoApp, signIn, waitForAppAnimations } from '../e2e/fixtures/app.fixture';
 
 /**
  * Design-evidence capture. Not an assertion suite: it drives each screen in
@@ -17,6 +11,13 @@ import {
  */
 const OUTPUT_DIR =
   'C:/Users/Ihab/AppData/Local/Temp/claude/d--Freelance-UltimateNatives/6949e5ba-a90d-42a2-b3cf-217d7e8f96f6/scratchpad/design-after';
+
+/** Deterministic ids from the mock fixtures the capture screens open. */
+const DESIGN_IDS = {
+  league: '60000000-0000-4000-8000-000000000001',
+  draftSquad: 'b0000000-0000-4000-8000-000000000001',
+  roster: '11000000-0000-4000-8000-000000000001',
+} as const;
 
 const DESKTOP = { width: 1440, height: 900 };
 const MOBILE = { width: 412, height: 900 };
@@ -58,6 +59,33 @@ const SCREENS = [
   },
   { slug: 'leaderboard', route: APP_ROUTES.leaderboard, anchor: TEST_IDS.leaderboardTable },
   { slug: 'points-history', route: APP_ROUTES.points, anchor: TEST_IDS.pointsLedger },
+  {
+    slug: 'competitions',
+    route: APP_ROUTES.competitions,
+    anchor: TEST_IDS.competitionsList,
+  },
+  {
+    slug: 'competition-detail',
+    route: `${APP_ROUTES.competitions}/${DESIGN_IDS.league}`,
+    anchor: TEST_IDS.competitionSummary,
+  },
+  {
+    slug: 'squad-workspace',
+    route: `${APP_ROUTES.squads}/${DESIGN_IDS.draftSquad}`,
+    anchor: TEST_IDS.squadEligibilityPanel,
+  },
+  { slug: 'rosters', route: APP_ROUTES.rosters, anchor: TEST_IDS.rostersList },
+  {
+    slug: 'roster-workspace',
+    route: `${APP_ROUTES.rosters}/${DESIGN_IDS.roster}`,
+    anchor: TEST_IDS.rosterEntriesPanel,
+  },
+  {
+    slug: 'tryout-registration',
+    route: APP_ROUTES.tryoutRegistration,
+    anchor: TEST_IDS.tryoutRegistrationSubmit,
+  },
+  { slug: 'tryouts', route: APP_ROUTES.tryouts, anchor: TEST_IDS.tryoutsList },
 ];
 
 const VARIANTS = [
@@ -78,8 +106,7 @@ test.describe('design capture @design-capture', () => {
       test(`${viewport.label} ${variant.suffix}`, async ({ page }) => {
         test.slow();
         await page.setViewportSize(viewport.size);
-        await login(page);
-        await expectPresentedPage(page, TEST_IDS.homePage);
+        await signIn(page);
         await applyChrome(page, variant.theme, variant.locale);
         for (const screen of SCREENS) {
           await capture(

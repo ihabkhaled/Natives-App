@@ -7,7 +7,7 @@ import {
   type RenderResult,
 } from '@testing-library/react';
 import type { ReactElement, ReactNode } from 'react';
-import { MemoryRouter } from 'react-router-dom';
+import { MemoryRouter, Route } from 'react-router-dom';
 
 export function createTestQueryClient(): QueryClient {
   return new QueryClient({
@@ -62,4 +62,15 @@ export function actOnHook<Result>(
     interact(rendered.result.current);
   });
   return rendered;
+}
+
+/** Render one routed screen at a path, with query + router providers. */
+export function renderRoute(path: string, pattern: string, screen: ReactElement): RenderResult {
+  return render(
+    <QueryClientProvider client={createTestQueryClient()}>
+      <MemoryRouter initialEntries={[path]}>
+        <Route path={pattern}>{screen}</Route>
+      </MemoryRouter>
+    </QueryClientProvider>,
+  );
 }

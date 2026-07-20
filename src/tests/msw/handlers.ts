@@ -5,6 +5,7 @@ import { getEnvironment } from '@/packages/environment';
 
 import { assessmentsHandlers } from './assessments-handlers';
 import { resetMockAssessmentsState } from './assessments.fixture';
+import { competitionsHandlers } from './competitions-handlers';
 import { buildDashboardSummaryResponse } from './dashboard-summary.fixture';
 import { attendanceHandlers } from './attendance-handlers';
 import { resetMockAttendanceState } from './attendance.fixture';
@@ -19,27 +20,37 @@ import {
 import { membersHandlers } from './members-handlers';
 import { resetMockMembersState } from './members.fixture';
 import { nestErrorResponse } from './nest-error.helper';
-import { ADMIN_PERSONA, PERSONA_USERS } from './personas.fixture';
+import {
+  ADMIN_PERSONA,
+  forgetIssuedTokens,
+  personaFromToken,
+  rememberIssuedToken,
+  tokensForPersona,
+} from './persona-permissions.helper';
+import { PERSONA_USERS } from './personas.fixture';
 import { pointsHandlers } from './points-handlers';
 import { practiceHandlers } from './practice-handlers';
 import { resetMockPracticeState } from './practice.fixture';
 import { recoveryHandlers, resetMockRecoveryState } from './recovery-handlers';
+import { rostersHandlers } from './rosters-handlers';
+import { resetMockRostersState } from './rosters.fixture';
+import { resetMockSquadsState } from './squads.fixture';
+import { tryoutsHandlers } from './tryouts-handlers';
+import { resetMockTryoutsState } from './tryouts.fixture';
 import { trainingHandlers } from './training-handlers';
 import { resetMockTrainingState } from './training.fixture';
 
-const PERSONA_TOKEN_PREFIX = 'mock-access-';
-const PERSONA_BY_ID = new Map(Object.values(PERSONA_USERS).map((persona) => [persona.id, persona]));
-
-const issuedTokenEmails = new Map<string, string>();
-
 export function resetMockAuthState(): void {
-  issuedTokenEmails.clear();
+  forgetIssuedTokens();
   resetMockRecoveryState();
   resetMockPracticeState();
   resetMockAttendanceState();
   resetMockMembersState();
   resetMockAssessmentsState();
   resetMockTrainingState();
+  resetMockSquadsState();
+  resetMockRostersState();
+  resetMockTryoutsState();
 }
 
 function apiUrl(path: string): string {
@@ -97,48 +108,10 @@ function scenarioResponseForEmail(email: string): Response | Promise<Response> |
   return null;
 }
 
-function tokensForUser(user: AuthUser): { accessToken: string; refreshToken: string } {
-  if (user.email === MOCK_PERSONA_EMAILS.admin) {
-    return { accessToken: MOCK_TOKENS.access, refreshToken: MOCK_TOKENS.refresh };
-  }
-  return {
-    accessToken: `${PERSONA_TOKEN_PREFIX}${user.id}`,
-    refreshToken: `mock-refresh-${user.id}`,
-  };
-}
-
 function issueTokensForUser(user: AuthUser): { accessToken: string; refreshToken: string } {
-  const tokens = tokensForUser(user);
-  issuedTokenEmails.set(tokens.accessToken, user.email);
+  const tokens = tokensForPersona(user);
+  rememberIssuedToken(tokens.accessToken, user.email);
   return tokens;
-}
-
-/** Cold-start resolution: derive the persona from the deterministic token shape. */
-function personaForDeterministicToken(token: string): AuthUser | null {
-  if (token === MOCK_TOKENS.access || token === MOCK_TOKENS.rotatedAccess) {
-    return PERSONA_USERS[MOCK_PERSONA_EMAILS.admin] ?? null;
-  }
-  if (token.startsWith(PERSONA_TOKEN_PREFIX)) {
-    return PERSONA_BY_ID.get(token.slice(PERSONA_TOKEN_PREFIX.length)) ?? null;
-  }
-  return null;
-}
-
-/**
- * Resolve the persona for a bearer token. Deterministic so a cold-start deep
- * link (which reloads the app and clears the issued-token map) still resolves
- * the stored token to its persona instead of a spurious 401.
- */
-function personaFromToken(request: Request): AuthUser | null {
-  const token = (request.headers.get('Authorization') ?? '').replace('Bearer ', '');
-  if (token === '') {
-    return null;
-  }
-  const issuedEmail = issuedTokenEmails.get(token);
-  if (issuedEmail !== undefined) {
-    return PERSONA_USERS[issuedEmail] ?? null;
-  }
-  return personaForDeterministicToken(token);
 }
 
 /**
@@ -193,7 +166,7 @@ export const mockApiHandlers = [
         path: '/api/v1/auth/refresh',
       });
     }
-    issuedTokenEmails.set(MOCK_TOKENS.rotatedAccess, MOCK_PERSONA_EMAILS.admin);
+    rememberIssuedToken(MOCK_TOKENS.rotatedAccess, MOCK_PERSONA_EMAILS.admin);
     return HttpResponse.json({
       accessToken: MOCK_TOKENS.rotatedAccess,
       refreshToken: MOCK_TOKENS.rotatedRefresh,
@@ -233,6 +206,9 @@ export const mockApiHandlers = [
   ...membersHandlers,
   ...assessmentsHandlers,
   ...trainingHandlers,
+  ...competitionsHandlers,
+  ...rostersHandlers,
+  ...tryoutsHandlers,
   ...pointsHandlers,
   ...recoveryHandlers,
 ];

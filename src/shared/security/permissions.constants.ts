@@ -40,6 +40,22 @@ export const PERMISSIONS = {
   pointsReadTeam: 'points.read.team',
   matchesScore: 'matches.score',
   reportsGenerate: 'reports.generate',
+  competitionRead: 'competition.read',
+  competitionManage: 'competition.manage',
+  squadRead: 'squad.read',
+  squadManage: 'squad.manage',
+  squadOverrideEligibility: 'squad.override_eligibility',
+  rosterRead: 'roster.read',
+  rosterManage: 'roster.manage',
+  rosterLock: 'roster.lock',
+  tryoutPublicRegister: 'tryout.public.register',
+  tryoutCandidateReadSelf: 'tryout.candidate.read.self',
+  tryoutManage: 'tryout.manage',
+  tryoutContactsRead: 'tryout.contacts.read',
+  tryoutReadinessRead: 'tryout.readiness.read',
+  tryoutEvaluate: 'tryout.evaluate',
+  tryoutDecide: 'tryout.decide',
+  tryoutConvert: 'tryout.convert',
 } as const;
 
 export type Permission = (typeof PERMISSIONS)[keyof typeof PERMISSIONS];

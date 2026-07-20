@@ -11,6 +11,9 @@ export default defineConfig({
   ...(isCi ? { workers: 2 } : {}),
   reporter: isCi ? [['list'], ['html', { open: 'never' }]] : [['list']],
   expect: {
+    // Full-page capture of a dozen screens in parallel starves the renderer on
+    // a loaded machine; the assertion still has to pass, it just gets to wait.
+    timeout: 15_000,
     toHaveScreenshot: {
       maxDiffPixelRatio: 0.02,
       animations: 'disabled',

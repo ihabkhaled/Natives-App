@@ -21,6 +21,11 @@ export const APP_ROUTES = {
   trainingReview: '/training-review',
   leaderboard: '/leaderboard',
   points: '/points',
+  competitions: '/competitions',
+  squads: '/squads',
+  rosters: '/rosters',
+  tryoutRegistration: '/tryout-registration',
+  tryouts: '/tryouts',
   admin: '/admin',
   settings: '/settings',
   workbench: '/workbench',
@@ -64,6 +69,21 @@ export async function login(
   await fillIonInput(page, TEST_IDS.loginEmailInput, credentials.email);
   await fillIonInput(page, TEST_IDS.loginPasswordInput, credentials.password);
   await page.getByTestId(TEST_IDS.loginSubmitButton).click();
+}
+
+/**
+ * Sign in and wait until the authenticated shell is the presented page.
+ *
+ * `login` only clicks submit. A `page.goto` issued before the session write
+ * lands reloads the app mid-authentication and boots it signed out, so any
+ * suite that navigates straight after signing in must use this instead.
+ */
+export async function signIn(
+  page: Page,
+  credentials: { email: string; password: string } = MOCK_CREDENTIALS,
+): Promise<void> {
+  await login(page, credentials);
+  await expectPresentedPage(page, TEST_IDS.homePage);
 }
 
 /** Force the app offline through the browser context (Capacitor Network reads navigator). */

@@ -109,6 +109,61 @@ active membership row in the database. The endpoints themselves are correct — 
 directly with a real team, session, RSVP, and attendance sheet and all match the client schemas (see
 table). Once the backend populates `memberships`, those screens light up with no client change.
 
+### Gap 4 — resolved: roster endpoints landed mid-implementation (prompt 810)
+
+Recorded here because the state changed during the work. The competitions and squads surface —
+competitions, structure, fixtures, opponents, squads, eligibility, selections, selection override,
+availability, and squad transitions — was published from the start and is consumed live. Roster
+paths were **absent** at the 196-path revision of `contracts/openapi.json`, so the squad workspace
+originally shipped a non-persisted match-day preview.
+
+A `npm run contract:sync` (the documented refresh, run against the sibling backend; the backend repo
+was not modified) brought the contract to **208 paths**, including the full roster surface:
+`/teams/{teamId}/rosters` and `.../{rosterId}` plus `entries`, `entries/override`,
+`entries/{membershipId}/removal`, `availability`, `validation`, `snapshots`, `lock`, `revision`,
+`transition`, and `rosters/match`. The preview was replaced with a live roster module
+(`src/modules/competitions` gateways `rosters.gateway.ts`, list route `/rosters`, workspace route
+`/rosters/:rosterId`) covering roster list, entries, validation violations, availability, lifecycle
+(publish / lock / archive) and snapshot history. The `squads.rosterPendingNotice` copy now describes
+the squad panel as a read-only mirror of the live roster rather than a pending mock.
+
+One contract break surfaced from the sync and was fixed at the root cause: the backend now reuses
+`RosterEntryResponseDto` for competition roster entries, so `src/tests/msw/attendance.fixture.ts`
+was typing its rows off the wrong generated DTO. It now derives them from the client's own
+`attendanceSheetResponseSchema` output type.
+
+### Gap 5 — the tryouts module is not deployed (prompt 813)
+
+No tryout path exists in the published contract and the backend tryouts module (prompts 600/601) is
+not implemented. The whole tryout screen set — public candidate registration with consent capture,
+staff event list, candidate roll, check-in, evaluator scoring, decision/offer, and member
+conversion — therefore runs **mock-only**, against NestJS-shaped MSW handlers
+(`src/tests/msw/tryouts-handlers.ts`) that are validated by the same Zod schemas
+(`src/modules/tryouts/schemas/tryout.schema.ts`) that will parse the remote responses.
+
+The client contract this was written against:
+
+| Endpoint                                                      | Method | Purpose                                                    |
+| ------------------------------------------------------------- | ------ | ---------------------------------------------------------- |
+| `/public/tryout-events`                                       | GET    | Events open to public registration (no session).           |
+| `/public/tryout-registrations`                                | POST   | Register with `consentVersion` + `consentGiven`.           |
+| `/teams/{teamId}/tryouts`                                     | GET    | Staff event list with capacity and waitlist counts.        |
+| `/teams/{teamId}/tryouts/{tryoutId}`                          | GET    | One event.                                                 |
+| `/teams/{teamId}/tryouts/{tryoutId}/candidates`               | GET    | Privacy-safe roll (no contacts, no readiness).             |
+| `/teams/{teamId}/tryouts/{tryoutId}/candidates/{candidateId}` | GET    | Detail; `contacts`/`readiness` are null without the grant. |
+| `.../candidates/{candidateId}/check-in`                       | POST   | Day-of check-in.                                           |
+| `.../candidates/{candidateId}/evaluations`                    | POST   | Scores (`null` = not scored) + evaluator note.             |
+| `.../candidates/{candidateId}/decision`                       | POST   | `accept`/`waitlist`/`decline` with a reason.               |
+| `.../candidates/{candidateId}/conversion`                     | POST   | Idempotent member conversion.                              |
+
+Privacy is enforced in the shape, not only in the UI: the list DTO has no contact or readiness
+field, and the detail DTO carries them as nullable blocks the server omits for a caller without
+`tryout.contacts.read` / `tryout.readiness.read`. The mock handler reproduces that behaviour from
+the persona bearer token, so the forbidden path is exercised by the integration tests.
+
+Switching to the live service when it ships is a configuration change (`VITE_API_MODE=remote`) plus
+a `npm run contract:sync`; no screen, hook, or schema is expected to change.
+
 ## Reproducing
 
 ```bash

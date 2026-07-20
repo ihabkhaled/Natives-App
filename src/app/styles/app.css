@@ -177,12 +177,22 @@ ion-content.ion-padding {
 
 /* The uppercase micro-label above a group of facts. */
 .app-eyebrow,
+.app-fact-list__row dt,
+.app-competition-detail__subhead,
+.app-squad-detail__subhead,
+.app-eligibility__subhead,
+.app-roster__table thead th,
 .app-feedback-card__section dt,
 .app-chart-table thead th,
 ion-list-header ion-label {
   font-size: var(--un-font-size-xs);
 }
 
+[dir='rtl'] .app-fact-list__row dt,
+[dir='rtl'] .app-competition-detail__subhead,
+[dir='rtl'] .app-squad-detail__subhead,
+[dir='rtl'] .app-eligibility__subhead,
+[dir='rtl'] .app-roster__table thead th,
 [dir='rtl'] .app-eyebrow,
 [dir='rtl'] .app-feedback-card__section dt,
 [dir='rtl'] .app-chart-table thead th,
@@ -3131,4 +3141,447 @@ ion-spinner {
   font-size: 11px;
   font-weight: 600;
   dominant-baseline: middle;
+}
+
+/* ----------------------------------------------------------------------------
+   COMPETITIONS, SQUADS, ROSTERS + TRYOUTS (prompts 810 / 813)
+
+   Three shared primitives carry both feature families: the state chip, the
+   fact grid, and the section panel. Everything below composes them, so the
+   competition list, the squad workspace, and the tryout workspace read as one
+   system in light and dark, LTR and RTL.
+---------------------------------------------------------------------------- */
+.app-status-chip {
+  --padding-start: var(--un-space-2);
+  --padding-end: var(--un-space-2);
+  border-radius: var(--un-radius-pill);
+  font-size: var(--un-font-size-xs);
+  font-weight: var(--un-font-weight-semibold);
+  letter-spacing: var(--un-letter-spacing-wide);
+}
+
+[dir='rtl'] .app-status-chip {
+  letter-spacing: var(--un-letter-spacing-normal);
+}
+
+.app-fact-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: var(--un-space-3);
+  margin: 0;
+}
+
+.app-fact-list__row {
+  display: flex;
+  min-inline-size: 0;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.app-fact-list__row dd {
+  margin: 0;
+  color: var(--app-ink);
+  font-size: var(--un-font-size-sm);
+  font-weight: var(--un-font-weight-semibold);
+}
+
+.app-section-panel {
+  gap: var(--un-space-4);
+}
+
+.app-section-panel__head {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.app-section-panel__title {
+  color: var(--app-ink);
+  font-size: var(--un-font-size-base);
+  font-weight: var(--un-font-weight-bold);
+  letter-spacing: var(--un-letter-spacing-tight);
+}
+
+.app-section-panel__notice,
+.app-pending-notice,
+.app-eligibility__advisory,
+.app-roster__pending {
+  padding: var(--un-space-2) var(--un-space-3);
+  border-inline-start: 3px solid var(--app-lime-line);
+  border-radius: var(--un-radius-md);
+  background: var(--app-lime-soft);
+  color: var(--app-ink);
+  font-size: var(--un-font-size-sm);
+}
+
+.app-competition-detail__notice,
+.app-fixture-list__note {
+  padding: var(--un-space-2) var(--un-space-3);
+  border-inline-start: 3px solid var(--ion-color-warning-shade);
+  border-radius: var(--un-radius-md);
+  background: color-mix(in srgb, var(--ion-color-warning) 14%, transparent);
+  color: var(--app-ink);
+  font-size: var(--un-font-size-sm);
+}
+
+/* ---- Bounded card lists (competitions, squads, tryouts) ---- */
+.app-competitions__list,
+.app-squads__list,
+.app-tryouts__list {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--un-space-3);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+@media (min-width: 900px) {
+  .app-competitions__list,
+  .app-squads__list,
+  .app-tryouts__list {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.app-competition-card,
+.app-squad-card,
+.app-tryout-card {
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--un-space-4);
+}
+
+.app-competition-card__main,
+.app-squad-card__main,
+.app-tryout-card__main {
+  display: flex;
+  min-inline-size: 0;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.app-competition-card__title,
+.app-squad-card__title,
+.app-tryout-card__title {
+  color: var(--app-ink);
+  font-size: var(--un-font-size-base);
+  font-weight: var(--un-font-weight-bold);
+  line-height: var(--un-line-height-tight);
+}
+
+.app-competition-card__meta,
+.app-squad-card__meta,
+.app-tryout-card__meta {
+  display: flex;
+  flex: 0 0 auto;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: var(--un-space-2);
+}
+
+.app-competitions__filters,
+.app-squads__filters {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: end;
+  gap: var(--un-space-3);
+}
+
+/* ---- Competition detail ---- */
+.app-competition-detail__head,
+.app-squad-detail__head,
+.app-tryout-detail__head,
+.app-candidate-panel__head {
+  display: flex;
+  flex-direction: column;
+  gap: var(--un-space-3);
+}
+
+.app-competition-detail__title,
+.app-squad-detail__title,
+.app-tryout-detail__title {
+  color: var(--app-ink);
+  font-size: var(--un-font-size-2xl);
+  font-weight: var(--un-font-weight-bold);
+  line-height: var(--un-line-height-tight);
+  letter-spacing: var(--un-letter-spacing-tight);
+}
+
+.app-fact-list__row dt,
+.app-competition-detail__subhead,
+.app-squad-detail__subhead,
+.app-eligibility__subhead,
+.app-roster__table thead th {
+  margin: 0;
+  color: var(--app-muted);
+  font-weight: var(--un-font-weight-semibold);
+  letter-spacing: var(--un-letter-spacing-wide);
+  text-transform: uppercase;
+}
+
+.app-competition-detail__chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--un-space-2);
+}
+
+.app-stage-list,
+.app-fixture-list,
+.app-opponent-list,
+.app-eligibility__list,
+.app-availability__list,
+.app-candidate-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--un-space-3);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.app-stage-list__item,
+.app-fixture-list__item,
+.app-eligibility__row,
+.app-candidate-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--un-space-3);
+  padding: var(--un-space-3);
+  border: 1px solid var(--app-hairline);
+  border-radius: var(--un-radius-lg);
+  background: var(--app-card-bg);
+}
+
+.app-stage-list__item {
+  flex-direction: column;
+}
+
+.app-stage-list__head {
+  display: flex;
+  align-items: baseline;
+  gap: var(--un-space-2);
+}
+
+.app-stage-list__ordinal {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-inline-size: var(--un-space-6);
+  block-size: var(--un-space-6);
+  border-radius: var(--un-radius-pill);
+  background: var(--app-lime-soft);
+  color: var(--app-lime-text);
+  font-size: var(--un-font-size-xs);
+  font-weight: var(--un-font-weight-bold);
+}
+
+.app-stage-list__title,
+.app-fixture-list__title,
+.app-eligibility__name,
+.app-candidate-row__title {
+  color: var(--app-ink);
+  font-size: var(--un-font-size-sm);
+  font-weight: var(--un-font-weight-bold);
+}
+
+.app-stage-list__rounds {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--un-space-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.app-stage-list__rounds li {
+  padding: 2px var(--un-space-2);
+  border: 1px solid var(--app-hairline);
+  border-radius: var(--un-radius-pill);
+  color: var(--app-muted-strong);
+  font-size: var(--un-font-size-xs);
+}
+
+.app-fixture-list__main,
+.app-eligibility__identity,
+.app-candidate-row__main,
+.app-availability__list li {
+  display: flex;
+  min-inline-size: 0;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.app-opponent-list li {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--un-space-2);
+  padding-block-end: var(--un-space-2);
+  border-block-end: 1px solid var(--app-hairline);
+}
+
+.app-opponent-list__name,
+.app-availability__who {
+  color: var(--app-ink);
+  font-size: var(--un-font-size-sm);
+  font-weight: var(--un-font-weight-semibold);
+}
+
+/* ---- Squad eligibility + selection ---- */
+.app-eligibility__ratio {
+  display: flex;
+  flex-direction: column;
+  gap: var(--un-space-2);
+  padding-block-end: var(--un-space-3);
+  border-block-end: 1px solid var(--app-hairline);
+}
+
+.app-eligibility__signals {
+  display: flex;
+  flex: 1 1 220px;
+  flex-wrap: wrap;
+  gap: var(--un-space-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.app-eligibility__signals li {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+
+.app-eligibility__actions,
+.app-squad-detail__actions,
+.app-decision__actions,
+.app-override-panel__actions,
+.app-candidate-row__meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--un-space-2);
+}
+
+.app-override-panel {
+  display: flex;
+  flex-direction: column;
+  gap: var(--un-space-2);
+  padding: var(--un-space-3);
+  border: 1px solid var(--app-lime-line);
+  border-radius: var(--un-radius-lg);
+  background: var(--app-lime-soft);
+}
+
+.app-override-panel__title {
+  color: var(--app-ink);
+  font-size: var(--un-font-size-sm);
+  font-weight: var(--un-font-weight-bold);
+}
+
+.app-availability__form,
+.app-evaluation__grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--un-space-3);
+  align-items: end;
+}
+
+@media (min-width: 720px) {
+  .app-availability__form,
+  .app-evaluation__grid {
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  }
+}
+
+.app-availability__state {
+  color: var(--app-lime-text);
+  font-size: var(--un-font-size-sm);
+  font-weight: var(--un-font-weight-semibold);
+}
+
+/* ---- Roster preview table ---- */
+.app-roster__scroll {
+  overflow-x: auto;
+}
+
+.app-roster__table {
+  inline-size: 100%;
+  border-collapse: collapse;
+  font-size: var(--un-font-size-sm);
+}
+
+.app-roster__table th,
+.app-roster__table td {
+  padding: var(--un-space-2);
+  border-block-end: 1px solid var(--app-hairline);
+  color: var(--app-ink);
+  text-align: start;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---- Tryouts ---- */
+.app-candidate-row--selected {
+  border-color: var(--app-lime-line);
+  box-shadow: inset 3px 0 0 var(--app-arc-strong);
+}
+
+[dir='rtl'] .app-candidate-row--selected {
+  box-shadow: inset -3px 0 0 var(--app-arc-strong);
+}
+
+.app-tryout-detail__grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--un-space-4);
+  align-items: start;
+}
+
+@media (min-width: 1080px) {
+  .app-tryout-detail__grid {
+    grid-template-columns: minmax(0, 360px) minmax(0, 1fr);
+  }
+}
+
+.app-candidate-panel {
+  display: flex;
+  flex-direction: column;
+  gap: var(--un-space-4);
+}
+
+.app-candidate-panel__title {
+  color: var(--app-ink);
+  font-size: var(--un-font-size-lg);
+  font-weight: var(--un-font-weight-bold);
+}
+
+.app-consent,
+.app-consent__privacy,
+.app-conversion__preview {
+  display: flex;
+  flex-direction: column;
+  gap: var(--un-space-2);
+  padding: var(--un-space-3);
+  border: 1px solid var(--app-hairline);
+  border-radius: var(--un-radius-lg);
+  background: var(--app-page-bg);
+}
+
+.app-consent__title {
+  color: var(--app-ink);
+  font-size: var(--un-font-size-sm);
+  font-weight: var(--un-font-weight-bold);
+}
+
+.app-consent__reference {
+  color: var(--app-lime-text);
+  font-size: var(--un-font-size-lg);
+  font-weight: var(--un-font-weight-bold);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: var(--un-letter-spacing-wide);
 }

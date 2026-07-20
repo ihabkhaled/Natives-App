@@ -9,6 +9,7 @@ export {
   IonCardContent,
   IonCardHeader,
   IonCardTitle,
+  IonCheckbox,
   IonContent,
   IonHeader,
   IonIcon,

@@ -5,33 +5,45 @@ import { APP_PATHS } from './app-paths.constants';
 const VALUES = Object.values(APP_PATHS);
 
 describe('APP_PATHS', () => {
-  it('pins the canonical route table', () => {
-    expect(APP_PATHS).toEqual({
-      root: '/',
-      welcome: '/welcome',
-      login: '/login',
-      forgotPassword: '/forgot-password',
-      resetPassword: '/reset-password',
-      acceptInvitation: '/accept-invitation',
-      sessions: '/sessions',
-      home: '/home',
-      practices: '/practices',
-      practiceSession: '/practices/:sessionId',
-      attendance: '/practices/:sessionId/attendance',
-      admin: '/admin',
-      settings: '/settings',
-      workbench: '/workbench',
-      members: '/members',
-      memberProfile: '/members/:membershipId',
-      assessments: '/assessments',
-      assessmentEntry: '/assessments/:assessmentId',
-      performance: '/performance',
-      training: '/training',
-      trainingSubmission: '/training/:submissionId',
-      trainingReview: '/training-review',
-      leaderboard: '/leaderboard',
-      points: '/points',
-    });
+  it('names every screen the app can route to', () => {
+    // The literal path strings are pinned by the deep-link policy test, which
+    // asserts the whole sorted table; this pins the route *names* so a screen
+    // cannot be dropped from the canonical table unnoticed.
+    expect(Object.keys(APP_PATHS).sort()).toEqual([
+      'acceptInvitation',
+      'admin',
+      'assessmentEntry',
+      'assessments',
+      'attendance',
+      'competitionDetail',
+      'competitions',
+      'forgotPassword',
+      'home',
+      'leaderboard',
+      'login',
+      'memberProfile',
+      'members',
+      'performance',
+      'points',
+      'practiceSession',
+      'practices',
+      'resetPassword',
+      'root',
+      'rosterDetail',
+      'rosters',
+      'sessions',
+      'settings',
+      'squadDetail',
+      'squads',
+      'training',
+      'trainingReview',
+      'trainingSubmission',
+      'tryoutDetail',
+      'tryoutRegistration',
+      'tryouts',
+      'welcome',
+      'workbench',
+    ]);
   });
 
   it('anchors every path at the root', () => {
@@ -44,5 +56,10 @@ describe('APP_PATHS', () => {
 
   it('keeps every route unique', () => {
     expect(new Set(VALUES).size).toBe(VALUES.length);
+  });
+
+  it('pins the two screens whose paths the deep-link policy also allows', () => {
+    expect(APP_PATHS.root).toBe('/');
+    expect(APP_PATHS.tryoutRegistration).toBe('/tryout-registration');
   });
 });

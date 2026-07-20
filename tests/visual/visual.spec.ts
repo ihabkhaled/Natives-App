@@ -2,7 +2,7 @@ import { expect, test } from '@playwright/test';
 
 import { TEST_IDS } from '@/shared/config';
 
-import { APP_ROUTES, gotoApp, login, waitForAppAnimations } from '../e2e/fixtures/app.fixture';
+import { APP_ROUTES, gotoApp, signIn, waitForAppAnimations } from '../e2e/fixtures/app.fixture';
 
 /** Deterministic screenshots: animations disabled by the config expectation. */
 test.describe('visual regression', () => {
@@ -19,7 +19,7 @@ test.describe('visual regression', () => {
   });
 
   test('authenticated home screen (light)', async ({ page }) => {
-    await login(page);
+    await signIn(page);
     await expect(page.getByTestId(TEST_IDS.homePage)).toBeVisible();
     await expect(page.getByTestId(TEST_IDS.dashboardView)).toBeVisible();
     await waitForAppAnimations(page);
@@ -27,7 +27,7 @@ test.describe('visual regression', () => {
   });
 
   test('practice calendar (light)', async ({ page }) => {
-    await login(page);
+    await signIn(page);
     await page.getByTestId(`${TEST_IDS.primaryNavItem}-practice-calendar`).click();
     await expect(page.getByTestId(TEST_IDS.practiceSessionCard).first()).toBeVisible();
     await waitForAppAnimations(page);
@@ -62,7 +62,7 @@ test.describe('visual regression', () => {
   });
 
   test('member directory (light)', async ({ page }) => {
-    await login(page);
+    await signIn(page);
     await page.getByTestId(`${TEST_IDS.primaryNavItem}-members`).click();
     await expect(page.getByTestId(TEST_IDS.membersList)).toBeVisible();
     await waitForAppAnimations(page);
@@ -70,7 +70,7 @@ test.describe('visual regression', () => {
   });
 
   test('member profile (light)', async ({ page }) => {
-    await login(page);
+    await signIn(page);
     await page.getByTestId(`${TEST_IDS.primaryNavItem}-members`).click();
     await expect(page.getByTestId(TEST_IDS.membersList)).toBeVisible();
     await page.getByRole('button', { name: 'Omar Hassan' }).click();
@@ -80,7 +80,7 @@ test.describe('visual regression', () => {
   });
 
   test('assessment workspace (light)', async ({ page }) => {
-    await login(page);
+    await signIn(page);
     await page.getByTestId(`${TEST_IDS.primaryNavItem}-assessments`).click();
     await expect(page.getByTestId(TEST_IDS.assessmentsList)).toBeVisible();
     await waitForAppAnimations(page);
@@ -88,7 +88,7 @@ test.describe('visual regression', () => {
   });
 
   test('assessment entry grid (light)', async ({ page }) => {
-    await login(page);
+    await signIn(page);
     await page.getByTestId(`${TEST_IDS.primaryNavItem}-assessments`).click();
     await expect(page.getByTestId(TEST_IDS.assessmentsList)).toBeVisible();
     await page.getByTestId(TEST_IDS.assessmentSummaryCard).first().getByText('Open').click();
@@ -98,7 +98,7 @@ test.describe('visual regression', () => {
   });
 
   test('player performance charts (light)', async ({ page }) => {
-    await login(page);
+    await signIn(page);
     await gotoApp(page, APP_ROUTES.performance);
     await expect(page.getByTestId(TEST_IDS.performanceTrendChart)).toBeVisible();
     await waitForAppAnimations(page);
@@ -106,7 +106,7 @@ test.describe('visual regression', () => {
   });
 
   test('external training workspace (light)', async ({ page }) => {
-    await login(page);
+    await signIn(page);
     await gotoApp(page, APP_ROUTES.training);
     await expect(page.getByTestId(TEST_IDS.trainingComposer)).toBeVisible();
     await waitForAppAnimations(page);
@@ -114,7 +114,7 @@ test.describe('visual regression', () => {
   });
 
   test('training review queue (light)', async ({ page }) => {
-    await login(page);
+    await signIn(page);
     await gotoApp(page, APP_ROUTES.trainingReview);
     await expect(page.getByTestId(TEST_IDS.trainingReviewQueue)).toBeVisible();
     await waitForAppAnimations(page);
@@ -122,7 +122,7 @@ test.describe('visual regression', () => {
   });
 
   test('leaderboard standings (light)', async ({ page }) => {
-    await login(page);
+    await signIn(page);
     await gotoApp(page, APP_ROUTES.leaderboard);
     await expect(page.getByTestId(TEST_IDS.leaderboardTable)).toBeVisible();
     await waitForAppAnimations(page);
@@ -130,10 +130,50 @@ test.describe('visual regression', () => {
   });
 
   test('points ledger and badges (light)', async ({ page }) => {
-    await login(page);
+    await signIn(page);
     await gotoApp(page, APP_ROUTES.points);
     await expect(page.getByTestId(TEST_IDS.pointsLedger)).toBeVisible();
     await waitForAppAnimations(page);
     await expect(page).toHaveScreenshot('points-history-light.png', { fullPage: true });
+  });
+
+  test('competition list (light)', async ({ page }) => {
+    await signIn(page);
+    await gotoApp(page, APP_ROUTES.competitions);
+    await expect(page.getByTestId(TEST_IDS.competitionsList)).toBeVisible();
+    await waitForAppAnimations(page);
+    await expect(page).toHaveScreenshot('competitions-light.png', { fullPage: true });
+  });
+
+  test('squad workspace (light)', async ({ page }) => {
+    await signIn(page);
+    await gotoApp(page, `${APP_ROUTES.squads}/b0000000-0000-4000-8000-000000000001`);
+    await expect(page.getByTestId(TEST_IDS.squadEligibilityPanel)).toBeVisible();
+    await waitForAppAnimations(page);
+    await expect(page).toHaveScreenshot('squad-workspace-light.png', { fullPage: true });
+  });
+
+  test('roster workspace (light)', async ({ page }) => {
+    await signIn(page);
+    await gotoApp(page, `${APP_ROUTES.rosters}/11000000-0000-4000-8000-000000000001`);
+    await expect(page.getByTestId(TEST_IDS.rosterEntriesPanel)).toBeVisible();
+    await waitForAppAnimations(page);
+    await expect(page).toHaveScreenshot('roster-workspace-light.png', { fullPage: true });
+  });
+
+  test('tryout registration (light)', async ({ page }) => {
+    await gotoApp(page, APP_ROUTES.tryoutRegistration);
+    await expect(page.getByTestId(TEST_IDS.tryoutRegistrationSubmit)).toBeVisible();
+    await waitForAppAnimations(page);
+    await expect(page).toHaveScreenshot('tryout-registration-light.png', { fullPage: true });
+  });
+
+  test('tryout workspace (light)', async ({ page }) => {
+    await signIn(page);
+    await gotoApp(page, APP_ROUTES.tryouts);
+    await page.getByTestId(TEST_IDS.tryoutOpen).first().click();
+    await expect(page.getByTestId(TEST_IDS.tryoutCandidateList)).toBeVisible();
+    await waitForAppAnimations(page);
+    await expect(page).toHaveScreenshot('tryout-workspace-light.png', { fullPage: true });
   });
 });

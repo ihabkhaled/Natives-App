@@ -3133,6 +3133,213 @@ export interface paths {
         readonly patch?: never;
         readonly trace?: never;
     };
+    readonly "/teams/{teamId}/rosters": {
+        readonly parameters: {
+            readonly query?: never;
+            readonly header?: never;
+            readonly path?: never;
+            readonly cookie?: never;
+        };
+        /** List a team’s competition and match rosters */
+        readonly get: operations["Rosters.list"];
+        readonly put?: never;
+        /** Create a draft competition roster */
+        readonly post: operations["Rosters.create"];
+        readonly delete?: never;
+        readonly options?: never;
+        readonly head?: never;
+        readonly patch?: never;
+        readonly trace?: never;
+    };
+    readonly "/teams/{teamId}/rosters/{rosterId}": {
+        readonly parameters: {
+            readonly query?: never;
+            readonly header?: never;
+            readonly path?: never;
+            readonly cookie?: never;
+        };
+        /** Get one roster */
+        readonly get: operations["Rosters.get"];
+        readonly put?: never;
+        readonly post?: never;
+        readonly delete?: never;
+        readonly options?: never;
+        readonly head?: never;
+        readonly patch?: never;
+        readonly trace?: never;
+    };
+    readonly "/teams/{teamId}/rosters/{rosterId}/availability": {
+        readonly parameters: {
+            readonly query?: never;
+            readonly header?: never;
+            readonly path?: never;
+            readonly cookie?: never;
+        };
+        /** List a roster’s availability declarations */
+        readonly get: operations["RosterAvailability.list"];
+        readonly put?: never;
+        /** Declare your own availability for a roster */
+        readonly post: operations["RosterAvailability.declare"];
+        readonly delete?: never;
+        readonly options?: never;
+        readonly head?: never;
+        readonly patch?: never;
+        readonly trace?: never;
+    };
+    readonly "/teams/{teamId}/rosters/{rosterId}/entries": {
+        readonly parameters: {
+            readonly query?: never;
+            readonly header?: never;
+            readonly path?: never;
+            readonly cookie?: never;
+        };
+        /** List every roster entry, active and withdrawn */
+        readonly get: operations["RosterEntries.list"];
+        readonly put?: never;
+        /** Add an unflagged player to the roster */
+        readonly post: operations["RosterEntries.add"];
+        readonly delete?: never;
+        readonly options?: never;
+        readonly head?: never;
+        readonly patch?: never;
+        readonly trace?: never;
+    };
+    readonly "/teams/{teamId}/rosters/{rosterId}/entries/{membershipId}/removal": {
+        readonly parameters: {
+            readonly query?: never;
+            readonly header?: never;
+            readonly path?: never;
+            readonly cookie?: never;
+        };
+        readonly get?: never;
+        readonly put?: never;
+        /** Withdraw a player, keeping the entry as history */
+        readonly post: operations["RosterEntries.remove"];
+        readonly delete?: never;
+        readonly options?: never;
+        readonly head?: never;
+        readonly patch?: never;
+        readonly trace?: never;
+    };
+    readonly "/teams/{teamId}/rosters/{rosterId}/entries/override": {
+        readonly parameters: {
+            readonly query?: never;
+            readonly header?: never;
+            readonly path?: never;
+            readonly cookie?: never;
+        };
+        readonly get?: never;
+        readonly put?: never;
+        /** Add a flagged player with an explicit override */
+        readonly post: operations["RosterEntries.override"];
+        readonly delete?: never;
+        readonly options?: never;
+        readonly head?: never;
+        readonly patch?: never;
+        readonly trace?: never;
+    };
+    readonly "/teams/{teamId}/rosters/{rosterId}/lock": {
+        readonly parameters: {
+            readonly query?: never;
+            readonly header?: never;
+            readonly path?: never;
+            readonly cookie?: never;
+        };
+        readonly get?: never;
+        readonly put?: never;
+        /** Freeze a published roster and snapshot it */
+        readonly post: operations["Rosters.lock"];
+        readonly delete?: never;
+        readonly options?: never;
+        readonly head?: never;
+        readonly patch?: never;
+        readonly trace?: never;
+    };
+    readonly "/teams/{teamId}/rosters/{rosterId}/revision": {
+        readonly parameters: {
+            readonly query?: never;
+            readonly header?: never;
+            readonly path?: never;
+            readonly cookie?: never;
+        };
+        readonly get?: never;
+        readonly put?: never;
+        /** Supersede a published or locked roster with a new revision */
+        readonly post: operations["Rosters.revise"];
+        readonly delete?: never;
+        readonly options?: never;
+        readonly head?: never;
+        readonly patch?: never;
+        readonly trace?: never;
+    };
+    readonly "/teams/{teamId}/rosters/{rosterId}/snapshots": {
+        readonly parameters: {
+            readonly query?: never;
+            readonly header?: never;
+            readonly path?: never;
+            readonly cookie?: never;
+        };
+        /** List a roster’s immutable snapshots */
+        readonly get: operations["RosterSnapshots.list"];
+        readonly put?: never;
+        readonly post?: never;
+        readonly delete?: never;
+        readonly options?: never;
+        readonly head?: never;
+        readonly patch?: never;
+        readonly trace?: never;
+    };
+    readonly "/teams/{teamId}/rosters/{rosterId}/transition": {
+        readonly parameters: {
+            readonly query?: never;
+            readonly header?: never;
+            readonly path?: never;
+            readonly cookie?: never;
+        };
+        readonly get?: never;
+        readonly put?: never;
+        /** Publish or archive a roster */
+        readonly post: operations["Rosters.transition"];
+        readonly delete?: never;
+        readonly options?: never;
+        readonly head?: never;
+        readonly patch?: never;
+        readonly trace?: never;
+    };
+    readonly "/teams/{teamId}/rosters/{rosterId}/validation": {
+        readonly parameters: {
+            readonly query?: never;
+            readonly header?: never;
+            readonly path?: never;
+            readonly cookie?: never;
+        };
+        /** Preview the server-side composition validation */
+        readonly get: operations["Rosters.validate"];
+        readonly put?: never;
+        readonly post?: never;
+        readonly delete?: never;
+        readonly options?: never;
+        readonly head?: never;
+        readonly patch?: never;
+        readonly trace?: never;
+    };
+    readonly "/teams/{teamId}/rosters/match": {
+        readonly parameters: {
+            readonly query?: never;
+            readonly header?: never;
+            readonly path?: never;
+            readonly cookie?: never;
+        };
+        readonly get?: never;
+        readonly put?: never;
+        /** Create a draft match roster for a fixture */
+        readonly post: operations["Rosters.createMatch"];
+        readonly delete?: never;
+        readonly options?: never;
+        readonly head?: never;
+        readonly patch?: never;
+        readonly trace?: never;
+    };
     readonly "/teams/{teamId}/seasons": {
         readonly parameters: {
             readonly query?: never;
@@ -3415,6 +3622,27 @@ export interface components {
             readonly alias: string;
             /** @enum {string} */
             readonly source?: "manual" | "import";
+        };
+        readonly AddRosterEntryDto: {
+            /**
+             * @default player
+             * @enum {string}
+             */
+            readonly entryRole: "player" | "captain" | "spirit_captain" | "coach";
+            /**
+             * @default unspecified
+             * @enum {string}
+             */
+            readonly fieldPosition: "handler" | "cutter" | "hybrid" | "unspecified";
+            readonly jerseyNumber?: Record<string, never> | null;
+            /**
+             * @default any
+             * @enum {string}
+             */
+            readonly lineAssignment: "offense" | "defense" | "any";
+            /** Format: uuid */
+            readonly membershipId: string;
+            readonly selectionReason?: Record<string, never> | null;
         };
         readonly AgendaResponseDto: {
             readonly agendaId: string | null;
@@ -3973,6 +4201,25 @@ export interface components {
             readonly seasonId: string;
             readonly startsOn?: Record<string, never> | null;
         };
+        readonly CreateCompetitionRosterDto: {
+            /** Format: uuid */
+            readonly competitionId: string;
+            /** @enum {string} */
+            readonly division?: "open" | "women" | "mixed" | "unspecified";
+            /** @default 30 */
+            readonly maxSize: number;
+            /** @default 7 */
+            readonly minSize: number;
+            readonly minWomen?: Record<string, never> | null;
+            readonly name: string;
+            readonly notes?: Record<string, never> | null;
+            /** @default true */
+            readonly requireCaptain: boolean;
+            /** Format: date-time */
+            readonly selectionDeadline?: Record<string, never> | null;
+            /** Format: uuid */
+            readonly squadId?: Record<string, never> | null;
+        };
         readonly CreateDrillDto: {
             /** @enum {string} */
             readonly category: "warmup" | "conditioning" | "throwing" | "cutting" | "defense" | "offense" | "scrimmage" | "set_play" | "cooldown" | "other";
@@ -4044,6 +4291,23 @@ export interface components {
             readonly email: string;
             /** @enum {string} */
             readonly role?: "admin" | "user";
+        };
+        readonly CreateMatchRosterDto: {
+            /** @enum {string} */
+            readonly division?: "open" | "women" | "mixed" | "unspecified";
+            /** Format: uuid */
+            readonly fixtureId: string;
+            /** @default 30 */
+            readonly maxSize: number;
+            /** @default 7 */
+            readonly minSize: number;
+            readonly minWomen?: Record<string, never> | null;
+            readonly name: string;
+            readonly notes?: Record<string, never> | null;
+            /** @default true */
+            readonly requireCaptain: boolean;
+            /** Format: uuid */
+            readonly sourceRosterId?: Record<string, never> | null;
         };
         readonly CreateMeasurementSessionDto: {
             readonly conditions?: Record<string, never> | null;
@@ -4334,6 +4598,11 @@ export interface components {
             readonly tasks?: readonly components["schemas"]["DashboardTaskDto"][];
         };
         readonly DeclareAvailabilityDto: {
+            /** @enum {string} */
+            readonly availability: "available" | "unavailable" | "tentative";
+            readonly reason?: Record<string, never> | null;
+        };
+        readonly DeclareRosterAvailabilityDto: {
             /** @enum {string} */
             readonly availability: "available" | "unavailable" | "tentative";
             readonly reason?: Record<string, never> | null;
@@ -4800,6 +5069,30 @@ export interface components {
             readonly offset: number;
             readonly total: number;
         };
+        readonly ListRosterAvailabilityResponseDto: {
+            readonly items: readonly components["schemas"]["RosterAvailabilityResponseDto"][];
+            readonly limit: number;
+            readonly offset: number;
+            readonly total: number;
+        };
+        readonly ListRosterEntriesResponseDto: {
+            readonly items: readonly components["schemas"]["RosterEntryResponseDto"][];
+            readonly limit: number;
+            readonly offset: number;
+            readonly total: number;
+        };
+        readonly ListRosterSnapshotsResponseDto: {
+            readonly items: readonly components["schemas"]["RosterSnapshotResponseDto"][];
+            readonly limit: number;
+            readonly offset: number;
+            readonly total: number;
+        };
+        readonly ListRostersResponseDto: {
+            readonly items: readonly components["schemas"]["RosterResponseDto"][];
+            readonly limit: number;
+            readonly offset: number;
+            readonly total: number;
+        };
         readonly ListRsvpsResponseDto: {
             readonly items: readonly components["schemas"]["RsvpParticipantResponseDto"][];
             readonly limit: number;
@@ -4889,6 +5182,9 @@ export interface components {
             readonly limit: number;
             readonly offset: number;
             readonly total: number;
+        };
+        readonly LockRosterDto: {
+            readonly expectedRecordVersion: number;
         };
         readonly LoginDto: {
             readonly deviceLabel?: string;
@@ -5156,6 +5452,28 @@ export interface components {
             readonly numerator: number;
             readonly sufficient: boolean;
             readonly unrounded: number | null;
+        };
+        readonly OverrideRosterEntryDto: {
+            /**
+             * @default player
+             * @enum {string}
+             */
+            readonly entryRole: "player" | "captain" | "spirit_captain" | "coach";
+            /**
+             * @default unspecified
+             * @enum {string}
+             */
+            readonly fieldPosition: "handler" | "cutter" | "hybrid" | "unspecified";
+            readonly jerseyNumber?: Record<string, never> | null;
+            /**
+             * @default any
+             * @enum {string}
+             */
+            readonly lineAssignment: "offense" | "defense" | "any";
+            /** Format: uuid */
+            readonly membershipId: string;
+            readonly overrideReason: string;
+            readonly selectionReason?: Record<string, never> | null;
         };
         readonly OverrideRsvpDto: {
             readonly expectedVersion?: number;
@@ -5557,6 +5875,9 @@ export interface components {
             /** @enum {string|null} */
             readonly reason?: "quiet_hours" | null;
         };
+        readonly RemoveRosterEntryDto: {
+            readonly reason?: Record<string, never> | null;
+        };
         readonly RemoveSelectionDto: {
             readonly reason?: Record<string, never> | null;
         };
@@ -5674,6 +5995,10 @@ export interface components {
             /** Format: date-time */
             readonly updatedAt: string;
         };
+        readonly ReviseRosterDto: {
+            readonly expectedRecordVersion: number;
+            readonly reason: string;
+        };
         readonly RevisionsResponseDto: {
             readonly items: readonly components["schemas"]["PlayerAssessmentSummaryResponseDto"][];
         };
@@ -5696,19 +6021,201 @@ export interface components {
             readonly userId: string;
             readonly version: number;
         };
-        readonly RosterEntryResponseDto: {
+        readonly RosterAvailabilityResponseDto: {
+            /** @enum {string} */
+            readonly availability: "available" | "unavailable" | "tentative";
+            /** Format: uuid */
+            readonly availabilityId: string;
             /** Format: date-time */
-            readonly checkInAt: string | null;
-            /** @enum {string|null} */
-            readonly excuseCategory: "injury" | "illness" | "work" | "travel" | "personal" | "other" | null;
-            readonly latenessMinutes: number | null;
+            readonly createdAt: string;
+            /** Format: uuid */
+            readonly declaredBy: string | null;
+            /** Format: uuid */
             readonly membershipId: string;
+            readonly reason: string | null;
+            readonly recordVersion: number;
+            /** Format: uuid */
+            readonly rosterId: string;
+            /** @enum {string} */
+            readonly source: "self" | "coach";
+            /** Format: uuid */
+            readonly teamId: string;
+            /** Format: date-time */
+            readonly updatedAt: string;
+        };
+        readonly RosterCompositionDto: {
+            readonly captains: number;
+            readonly defense: number;
+            readonly duplicateJerseys: number;
+            readonly flexible: number;
+            readonly men: number;
+            readonly missingJersey: number;
+            readonly mixed: number;
+            readonly offense: number;
+            readonly selected: number;
+            readonly spiritCaptains: number;
+            readonly unavailableSelected: number;
+            readonly unknownGender: number;
+            readonly women: number;
+        };
+        readonly RosterConstraintViolationDto: {
+            /** @enum {string} */
+            readonly code: "min_size" | "max_size" | "missing_captain" | "jersey_collision" | "missing_jersey" | "gender_ratio" | "line_balance" | "unavailable_selected";
+            readonly count: number | null;
+            /** @enum {string} */
+            readonly severity: "error" | "warning";
+        };
+        readonly RosterEntryResponseDto: {
             /** @enum {string|null} */
-            readonly source: "self" | "coach" | "admin" | "import" | "system" | null;
+            readonly availability: "available" | "unavailable" | "tentative" | null;
+            readonly constraintOverridden: boolean;
+            /** Format: date-time */
+            readonly createdAt: string;
+            /** Format: uuid */
+            readonly entryId: string;
+            /** @enum {string} */
+            readonly entryRole: "player" | "captain" | "spirit_captain" | "coach";
+            /** @enum {string} */
+            readonly fieldPosition: "handler" | "cutter" | "hybrid" | "unspecified";
+            /** @enum {string} */
+            readonly genderBucket: "men" | "women" | "mixed" | "unknown";
+            readonly jerseyNumber: number | null;
+            /** @enum {string} */
+            readonly lineAssignment: "offense" | "defense" | "any";
+            /** Format: uuid */
+            readonly membershipId: string;
+            /** Format: uuid */
+            readonly overriddenBy: string | null;
+            readonly overrideReason: string | null;
+            readonly recordVersion: number;
+            readonly removalReason: string | null;
+            /** Format: date-time */
+            readonly removedAt: string | null;
+            /** Format: uuid */
+            readonly removedBy: string | null;
+            /** Format: uuid */
+            readonly rosterId: string;
+            /** Format: uuid */
+            readonly selectedBy: string | null;
+            readonly selectionReason: string | null;
+            /** @enum {string} */
+            readonly status: "selected" | "withdrawn";
+            /** Format: uuid */
+            readonly teamId: string;
+            /** Format: date-time */
+            readonly updatedAt: string;
+        };
+        readonly RosterResponseDto: {
+            /** Format: date-time */
+            readonly archivedAt: string | null;
+            /** Format: uuid */
+            readonly competitionId: string;
+            /** Format: date-time */
+            readonly createdAt: string;
+            /** Format: uuid */
+            readonly createdBy: string | null;
+            /** Format: uuid */
+            readonly currentSnapshotId: string | null;
+            /** @enum {string} */
+            readonly division: "open" | "women" | "mixed" | "unspecified";
+            /** Format: uuid */
+            readonly fixtureId: string | null;
+            /** Format: date-time */
+            readonly lockedAt: string | null;
+            /** Format: uuid */
+            readonly lockedBy: string | null;
+            readonly maxSize: number;
+            readonly minSize: number;
+            readonly minWomen: number | null;
+            readonly name: string;
+            readonly notes: string | null;
+            readonly policyVersion: string;
+            /** Format: date-time */
+            readonly publishedAt: string | null;
+            /** Format: uuid */
+            readonly publishedBy: string | null;
+            readonly recordVersion: number;
+            readonly requireCaptain: boolean;
+            /** Format: date-time */
+            readonly revisedAt: string | null;
+            /** Format: uuid */
+            readonly revisedBy: string | null;
+            readonly revision: number;
+            readonly revisionReason: string | null;
+            /** Format: uuid */
+            readonly rosterId: string;
+            /** @enum {string} */
+            readonly rosterKind: "competition" | "match";
+            /** Format: uuid */
+            readonly seasonId: string;
+            /** Format: date-time */
+            readonly selectionDeadline: string | null;
+            /** Format: uuid */
+            readonly sourceRosterId: string | null;
+            /** Format: uuid */
+            readonly squadId: string | null;
+            /** @enum {string} */
+            readonly status: "draft" | "published" | "locked" | "revised" | "archived";
+            /** Format: uuid */
+            readonly supersedesRosterId: string | null;
+            /** Format: uuid */
+            readonly teamId: string;
+            /** Format: date-time */
+            readonly updatedAt: string;
+        };
+        readonly RosterSnapshotEntryDto: {
             /** @enum {string|null} */
-            readonly status: "present_on_time" | "present_late" | "excused" | "injured" | "absent" | "remote_approved" | "other_approved" | null;
-            readonly userId: string | null;
-            readonly version: number | null;
+            readonly availability: "available" | "unavailable" | "tentative" | null;
+            readonly constraintOverridden: boolean;
+            /** @enum {string} */
+            readonly entryRole: "player" | "captain" | "spirit_captain" | "coach";
+            /** @enum {string} */
+            readonly fieldPosition: "handler" | "cutter" | "hybrid" | "unspecified";
+            /** @enum {string} */
+            readonly genderBucket: "men" | "women" | "mixed" | "unknown";
+            readonly jerseyNumber: number | null;
+            /** @enum {string} */
+            readonly lineAssignment: "offense" | "defense" | "any";
+            /** Format: uuid */
+            readonly membershipId: string;
+        };
+        readonly RosterSnapshotResponseDto: {
+            readonly checksum: string;
+            /** Format: uuid */
+            readonly competitionId: string;
+            readonly entries: readonly components["schemas"]["RosterSnapshotEntryDto"][];
+            readonly entryCount: number;
+            /** Format: uuid */
+            readonly fixtureId: string | null;
+            /** @enum {string} */
+            readonly reason: "published" | "locked" | "revised";
+            readonly revision: number;
+            /** Format: uuid */
+            readonly rosterId: string;
+            /** @enum {string} */
+            readonly rosterKind: "competition" | "match";
+            /** @enum {string} */
+            readonly rosterStatus: "draft" | "published" | "locked" | "revised" | "archived";
+            /** Format: uuid */
+            readonly seasonId: string;
+            /** Format: uuid */
+            readonly snapshotId: string;
+            /** Format: date-time */
+            readonly takenAt: string;
+            /** Format: uuid */
+            readonly takenBy: string | null;
+            /** Format: uuid */
+            readonly teamId: string;
+        };
+        readonly RosterValidationResponseDto: {
+            readonly composition: components["schemas"]["RosterCompositionDto"];
+            readonly policyVersion: string;
+            readonly publishable: boolean;
+            /** Format: uuid */
+            readonly rosterId: string;
+            /** @enum {string} */
+            readonly status: "draft" | "published" | "locked" | "revised" | "archived";
+            readonly violations: readonly components["schemas"]["RosterConstraintViolationDto"][];
         };
         readonly RoundResponseDto: {
             /** Format: uuid */
@@ -6292,6 +6799,11 @@ export interface components {
             readonly expectedRecordVersion: number;
             /** @enum {string} */
             readonly transition: "activate" | "achieve" | "miss" | "cancel" | "reopen";
+        };
+        readonly TransitionRosterDto: {
+            readonly expectedRecordVersion: number;
+            /** @enum {string} */
+            readonly transition: "publish" | "archive";
         };
         readonly TransitionRuleDto: {
             readonly expectedRecordVersion: number;
@@ -14130,6 +14642,546 @@ export interface operations {
             };
             /** @description Unauthorized */
             readonly 401: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    readonly "Rosters.list": {
+        readonly parameters: {
+            readonly query?: {
+                readonly competitionId?: string;
+                readonly fixtureId?: string;
+                readonly limit?: number;
+                readonly offset?: number;
+                readonly rosterKind?: "competition" | "match";
+            };
+            readonly header?: never;
+            readonly path: {
+                readonly teamId: string;
+            };
+            readonly cookie?: never;
+        };
+        readonly requestBody?: never;
+        readonly responses: {
+            readonly 200: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content: {
+                    readonly "application/json": components["schemas"]["ListRostersResponseDto"];
+                };
+            };
+            /** @description Unauthorized */
+            readonly 401: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    readonly "Rosters.create": {
+        readonly parameters: {
+            readonly query?: never;
+            readonly header?: never;
+            readonly path: {
+                readonly teamId: string;
+            };
+            readonly cookie?: never;
+        };
+        readonly requestBody: {
+            readonly content: {
+                readonly "application/json": components["schemas"]["CreateCompetitionRosterDto"];
+            };
+        };
+        readonly responses: {
+            readonly 201: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content: {
+                    readonly "application/json": components["schemas"]["RosterResponseDto"];
+                };
+            };
+            /** @description Unauthorized */
+            readonly 401: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Forbidden */
+            readonly 403: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    readonly "Rosters.get": {
+        readonly parameters: {
+            readonly query?: never;
+            readonly header?: never;
+            readonly path: {
+                readonly rosterId: string;
+                readonly teamId: string;
+            };
+            readonly cookie?: never;
+        };
+        readonly requestBody?: never;
+        readonly responses: {
+            readonly 200: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content: {
+                    readonly "application/json": components["schemas"]["RosterResponseDto"];
+                };
+            };
+            /** @description Unauthorized */
+            readonly 401: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    readonly "RosterAvailability.list": {
+        readonly parameters: {
+            readonly query?: {
+                readonly limit?: number;
+                readonly offset?: number;
+            };
+            readonly header?: never;
+            readonly path: {
+                readonly rosterId: string;
+                readonly teamId: string;
+            };
+            readonly cookie?: never;
+        };
+        readonly requestBody?: never;
+        readonly responses: {
+            readonly 200: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content: {
+                    readonly "application/json": components["schemas"]["ListRosterAvailabilityResponseDto"];
+                };
+            };
+            /** @description Unauthorized */
+            readonly 401: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    readonly "RosterAvailability.declare": {
+        readonly parameters: {
+            readonly query?: never;
+            readonly header?: never;
+            readonly path: {
+                readonly rosterId: string;
+                readonly teamId: string;
+            };
+            readonly cookie?: never;
+        };
+        readonly requestBody: {
+            readonly content: {
+                readonly "application/json": components["schemas"]["DeclareRosterAvailabilityDto"];
+            };
+        };
+        readonly responses: {
+            readonly 201: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content: {
+                    readonly "application/json": components["schemas"]["RosterAvailabilityResponseDto"];
+                };
+            };
+            /** @description Unauthorized */
+            readonly 401: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    readonly "RosterEntries.list": {
+        readonly parameters: {
+            readonly query?: {
+                readonly limit?: number;
+                readonly offset?: number;
+            };
+            readonly header?: never;
+            readonly path: {
+                readonly rosterId: string;
+                readonly teamId: string;
+            };
+            readonly cookie?: never;
+        };
+        readonly requestBody?: never;
+        readonly responses: {
+            readonly 200: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content: {
+                    readonly "application/json": components["schemas"]["ListRosterEntriesResponseDto"];
+                };
+            };
+            /** @description Unauthorized */
+            readonly 401: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    readonly "RosterEntries.add": {
+        readonly parameters: {
+            readonly query?: never;
+            readonly header?: never;
+            readonly path: {
+                readonly rosterId: string;
+                readonly teamId: string;
+            };
+            readonly cookie?: never;
+        };
+        readonly requestBody: {
+            readonly content: {
+                readonly "application/json": components["schemas"]["AddRosterEntryDto"];
+            };
+        };
+        readonly responses: {
+            readonly 201: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content: {
+                    readonly "application/json": components["schemas"]["RosterEntryResponseDto"];
+                };
+            };
+            /** @description Unauthorized */
+            readonly 401: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Forbidden */
+            readonly 403: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    readonly "RosterEntries.remove": {
+        readonly parameters: {
+            readonly query?: never;
+            readonly header?: never;
+            readonly path: {
+                readonly membershipId: string;
+                readonly rosterId: string;
+                readonly teamId: string;
+            };
+            readonly cookie?: never;
+        };
+        readonly requestBody: {
+            readonly content: {
+                readonly "application/json": components["schemas"]["RemoveRosterEntryDto"];
+            };
+        };
+        readonly responses: {
+            readonly 200: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content: {
+                    readonly "application/json": components["schemas"]["RosterEntryResponseDto"];
+                };
+            };
+            /** @description Unauthorized */
+            readonly 401: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Forbidden */
+            readonly 403: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    readonly "RosterEntries.override": {
+        readonly parameters: {
+            readonly query?: never;
+            readonly header?: never;
+            readonly path: {
+                readonly rosterId: string;
+                readonly teamId: string;
+            };
+            readonly cookie?: never;
+        };
+        readonly requestBody: {
+            readonly content: {
+                readonly "application/json": components["schemas"]["OverrideRosterEntryDto"];
+            };
+        };
+        readonly responses: {
+            readonly 201: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content: {
+                    readonly "application/json": components["schemas"]["RosterEntryResponseDto"];
+                };
+            };
+            /** @description Unauthorized */
+            readonly 401: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Forbidden */
+            readonly 403: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    readonly "Rosters.lock": {
+        readonly parameters: {
+            readonly query?: never;
+            readonly header?: never;
+            readonly path: {
+                readonly rosterId: string;
+                readonly teamId: string;
+            };
+            readonly cookie?: never;
+        };
+        readonly requestBody: {
+            readonly content: {
+                readonly "application/json": components["schemas"]["LockRosterDto"];
+            };
+        };
+        readonly responses: {
+            readonly 200: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content: {
+                    readonly "application/json": components["schemas"]["RosterResponseDto"];
+                };
+            };
+            /** @description Unauthorized */
+            readonly 401: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Forbidden */
+            readonly 403: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    readonly "Rosters.revise": {
+        readonly parameters: {
+            readonly query?: never;
+            readonly header?: never;
+            readonly path: {
+                readonly rosterId: string;
+                readonly teamId: string;
+            };
+            readonly cookie?: never;
+        };
+        readonly requestBody: {
+            readonly content: {
+                readonly "application/json": components["schemas"]["ReviseRosterDto"];
+            };
+        };
+        readonly responses: {
+            readonly 201: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content: {
+                    readonly "application/json": components["schemas"]["RosterResponseDto"];
+                };
+            };
+            /** @description Unauthorized */
+            readonly 401: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Forbidden */
+            readonly 403: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    readonly "RosterSnapshots.list": {
+        readonly parameters: {
+            readonly query?: {
+                readonly limit?: number;
+                readonly offset?: number;
+            };
+            readonly header?: never;
+            readonly path: {
+                readonly rosterId: string;
+                readonly teamId: string;
+            };
+            readonly cookie?: never;
+        };
+        readonly requestBody?: never;
+        readonly responses: {
+            readonly 200: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content: {
+                    readonly "application/json": components["schemas"]["ListRosterSnapshotsResponseDto"];
+                };
+            };
+            /** @description Unauthorized */
+            readonly 401: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    readonly "Rosters.transition": {
+        readonly parameters: {
+            readonly query?: never;
+            readonly header?: never;
+            readonly path: {
+                readonly rosterId: string;
+                readonly teamId: string;
+            };
+            readonly cookie?: never;
+        };
+        readonly requestBody: {
+            readonly content: {
+                readonly "application/json": components["schemas"]["TransitionRosterDto"];
+            };
+        };
+        readonly responses: {
+            readonly 200: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content: {
+                    readonly "application/json": components["schemas"]["RosterResponseDto"];
+                };
+            };
+            /** @description Unauthorized */
+            readonly 401: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Forbidden */
+            readonly 403: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    readonly "Rosters.validate": {
+        readonly parameters: {
+            readonly query?: never;
+            readonly header?: never;
+            readonly path: {
+                readonly rosterId: string;
+                readonly teamId: string;
+            };
+            readonly cookie?: never;
+        };
+        readonly requestBody?: never;
+        readonly responses: {
+            readonly 200: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content: {
+                    readonly "application/json": components["schemas"]["RosterValidationResponseDto"];
+                };
+            };
+            /** @description Unauthorized */
+            readonly 401: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    readonly "Rosters.createMatch": {
+        readonly parameters: {
+            readonly query?: never;
+            readonly header?: never;
+            readonly path: {
+                readonly teamId: string;
+            };
+            readonly cookie?: never;
+        };
+        readonly requestBody: {
+            readonly content: {
+                readonly "application/json": components["schemas"]["CreateMatchRosterDto"];
+            };
+        };
+        readonly responses: {
+            readonly 201: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content: {
+                    readonly "application/json": components["schemas"]["RosterResponseDto"];
+                };
+            };
+            /** @description Unauthorized */
+            readonly 401: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Forbidden */
+            readonly 403: {
                 headers: {
                     readonly [name: string]: unknown;
                 };

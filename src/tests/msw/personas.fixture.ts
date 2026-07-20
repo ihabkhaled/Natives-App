@@ -30,6 +30,14 @@ const COACH_PERMISSIONS = [
   PERMISSIONS.activityCorrect,
   PERMISSIONS.pointsReadSelf,
   PERMISSIONS.pointsReadTeam,
+  PERMISSIONS.competitionRead,
+  PERMISSIONS.competitionManage,
+  PERMISSIONS.squadRead,
+  PERMISSIONS.squadManage,
+  PERMISSIONS.rosterRead,
+  PERMISSIONS.rosterManage,
+  PERMISSIONS.tryoutManage,
+  PERMISSIONS.tryoutEvaluate,
 ];
 
 const MEMBER_PERMISSIONS = [
@@ -45,6 +53,9 @@ const MEMBER_PERMISSIONS = [
   PERMISSIONS.activityReadSelf,
   PERMISSIONS.activitySubmitSelf,
   PERMISSIONS.pointsReadSelf,
+  PERMISSIONS.competitionRead,
+  PERMISSIONS.squadRead,
+  PERMISSIONS.rosterRead,
 ];
 
 export const ADMIN_PERSONA = buildAuthUser();

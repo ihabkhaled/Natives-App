@@ -7,4 +7,8 @@ export {
 export { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 export { useAppMutation } from './hooks/use-app-mutation.hook';
 export { useAppQuery } from './hooks/use-app-query.hook';
+export {
+  useInvalidatingMutation,
+  type InvalidatingMutationView,
+} from './hooks/use-invalidating-mutation.hook';
 export { createAppQueryClient } from './query-client.factory';

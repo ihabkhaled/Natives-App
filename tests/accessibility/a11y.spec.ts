@@ -8,7 +8,7 @@ import {
   APP_ROUTES,
   fillIonInput,
   gotoApp,
-  login,
+  signIn,
   waitForAppAnimations,
 } from '../e2e/fixtures/app.fixture';
 
@@ -57,7 +57,7 @@ test.describe('accessibility (WCAG 2.2 AA)', () => {
   });
 
   test('session management screen has no violations', async ({ page }) => {
-    await login(page);
+    await signIn(page);
     await expect(page.getByTestId(TEST_IDS.homePage)).toBeVisible();
     await page.getByTestId(TEST_IDS.homeSessionsLink).click();
     await expect(page.getByTestId(TEST_IDS.sessionsPage)).toBeVisible();
@@ -73,13 +73,13 @@ test.describe('accessibility (WCAG 2.2 AA)', () => {
   });
 
   test('authenticated home screen has no violations', async ({ page }) => {
-    await login(page);
+    await signIn(page);
     await expect(page.getByTestId(TEST_IDS.homePage)).toBeVisible();
     expect((await analyze(page)).violations).toEqual([]);
   });
 
   test('practice calendar and session detail have no violations', async ({ page }) => {
-    await login(page);
+    await signIn(page);
     await expect(page.getByTestId(TEST_IDS.homePage)).toBeVisible();
     await page.getByTestId(`${TEST_IDS.primaryNavItem}-practice-calendar`).click();
     await expect(page.getByTestId(TEST_IDS.practiceSessionCard).first()).toBeVisible();
@@ -97,7 +97,7 @@ test.describe('accessibility (WCAG 2.2 AA)', () => {
   });
 
   test('member directory and profile have no violations', async ({ page }) => {
-    await login(page);
+    await signIn(page);
     await expect(page.getByTestId(TEST_IDS.homePage)).toBeVisible();
     await page.getByTestId(`${TEST_IDS.primaryNavItem}-members`).click();
     await expect(page.getByTestId(TEST_IDS.membersList)).toBeVisible();
@@ -111,7 +111,7 @@ test.describe('accessibility (WCAG 2.2 AA)', () => {
   });
 
   test('assessment workspace and entry screens have no violations', async ({ page }) => {
-    await login(page);
+    await signIn(page);
     await page.getByTestId(`${TEST_IDS.primaryNavItem}-assessments`).click();
     await expect(page.getByTestId(TEST_IDS.assessmentsList)).toBeVisible();
     await waitForAppAnimations(page);
@@ -126,7 +126,7 @@ test.describe('accessibility (WCAG 2.2 AA)', () => {
   test('player performance charts have no violations and keep their data tables', async ({
     page,
   }) => {
-    await login(page);
+    await signIn(page);
     await gotoApp(page, APP_ROUTES.performance);
     await expect(page.getByTestId(TEST_IDS.performanceTrendChart)).toBeVisible();
     await waitForAppAnimations(page);
@@ -171,7 +171,7 @@ test.describe('accessibility (WCAG 2.2 AA)', () => {
 
 test.describe('external training and points accessibility', () => {
   test('external training workspace has no violations', async ({ page }) => {
-    await login(page);
+    await signIn(page);
     await gotoApp(page, APP_ROUTES.training);
     await expect(page.getByTestId(TEST_IDS.trainingComposer)).toBeVisible();
     await waitForAppAnimations(page);
@@ -179,7 +179,7 @@ test.describe('external training and points accessibility', () => {
   });
 
   test('training review queue has no violations', async ({ page }) => {
-    await login(page);
+    await signIn(page);
     await gotoApp(page, APP_ROUTES.trainingReview);
     await expect(page.getByTestId(TEST_IDS.trainingReviewQueue)).toBeVisible();
     await waitForAppAnimations(page);
@@ -187,7 +187,7 @@ test.describe('external training and points accessibility', () => {
   });
 
   test('leaderboard table and its rank explanation have no violations', async ({ page }) => {
-    await login(page);
+    await signIn(page);
     await gotoApp(page, APP_ROUTES.leaderboard);
     await expect(page.getByTestId(TEST_IDS.leaderboardTable)).toBeVisible();
     await page.getByTestId(TEST_IDS.leaderboardExplainToggle).first().click();
@@ -197,9 +197,71 @@ test.describe('external training and points accessibility', () => {
   });
 
   test('points ledger, badges, and the category chart have no violations', async ({ page }) => {
-    await login(page);
+    await signIn(page);
     await gotoApp(page, APP_ROUTES.points);
     await expect(page.getByTestId(TEST_IDS.pointsLedger)).toBeVisible();
+    await waitForAppAnimations(page);
+    expect((await analyze(page)).violations).toEqual([]);
+  });
+});
+
+test.describe('competitions, squads, and tryouts accessibility', () => {
+  test('competition list and detail have no violations', async ({ page }) => {
+    await signIn(page);
+    await gotoApp(page, APP_ROUTES.competitions);
+    await expect(page.getByTestId(TEST_IDS.competitionsList)).toBeVisible();
+    await waitForAppAnimations(page);
+    expect((await analyze(page)).violations).toEqual([]);
+
+    await page.getByTestId(TEST_IDS.competitionOpen).first().click();
+    await expect(page.getByTestId(TEST_IDS.competitionSummary)).toBeVisible();
+    await waitForAppAnimations(page);
+    expect((await analyze(page)).violations).toEqual([]);
+  });
+
+  test('squad list and workspace have no violations', async ({ page }) => {
+    await signIn(page);
+    await gotoApp(page, APP_ROUTES.squads);
+    await expect(page.getByTestId(TEST_IDS.squadsList)).toBeVisible();
+    await waitForAppAnimations(page);
+    expect((await analyze(page)).violations).toEqual([]);
+
+    await page.getByTestId(TEST_IDS.squadOpen).first().click();
+    await expect(page.getByTestId(TEST_IDS.squadEligibilityPanel)).toBeVisible();
+    await waitForAppAnimations(page);
+    expect((await analyze(page)).violations).toEqual([]);
+  });
+
+  test('roster list and workspace have no violations', async ({ page }) => {
+    await signIn(page);
+    await gotoApp(page, APP_ROUTES.rosters);
+    await expect(page.getByTestId(TEST_IDS.rostersList)).toBeVisible();
+    await waitForAppAnimations(page);
+    expect((await analyze(page)).violations).toEqual([]);
+
+    await page.getByTestId(TEST_IDS.rosterOpen).first().click();
+    await expect(page.getByTestId(TEST_IDS.rosterEntriesPanel)).toBeVisible();
+    await waitForAppAnimations(page);
+    expect((await analyze(page)).violations).toEqual([]);
+  });
+
+  test('the public tryout registration form has no violations', async ({ page }) => {
+    await gotoApp(page, APP_ROUTES.tryoutRegistration);
+    await expect(page.getByTestId(TEST_IDS.tryoutRegistrationSubmit)).toBeVisible();
+    await waitForAppAnimations(page);
+    expect((await analyze(page)).violations).toEqual([]);
+  });
+
+  test('the tryout workspace and its restricted panels have no violations', async ({ page }) => {
+    await signIn(page);
+    await gotoApp(page, APP_ROUTES.tryouts);
+    await page.getByTestId(TEST_IDS.tryoutOpen).first().click();
+    await expect(page.getByTestId(TEST_IDS.tryoutCandidateList)).toBeVisible();
+    await waitForAppAnimations(page);
+    expect((await analyze(page)).violations).toEqual([]);
+
+    await page.getByTestId(TEST_IDS.tryoutCandidateOpen).first().click();
+    await expect(page.getByTestId(TEST_IDS.tryoutCandidatePanel)).toBeVisible();
     await waitForAppAnimations(page);
     expect((await analyze(page)).violations).toEqual([]);
   });

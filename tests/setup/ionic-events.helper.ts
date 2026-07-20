@@ -12,3 +12,8 @@ export function fireIonBlur(element: Element): void {
 export function fireIonChange(element: Element, value: string): void {
   fireEvent(element, new CustomEvent('ionChange', { detail: { value } }));
 }
+
+/** Fire an ion-checkbox change, which reports `checked` rather than a value. */
+export function fireIonCheckboxChange(element: Element, checked: boolean): void {
+  fireEvent(element, new CustomEvent('ionChange', { detail: { checked } }));
+}
