@@ -782,7 +782,9 @@ ion-spinner {
 .app-home-layout {
   display: grid;
   gap: 1.25rem;
-  padding-bottom: 0.5rem;
+  /* Reserve room below the last row so the desktop sign-out footer never clips
+     against the viewport bottom edge. */
+  padding-bottom: 1.5rem;
 }
 
 /* Hero band: an identity block (avatar + greeting) above a horizontal row of
@@ -869,16 +871,16 @@ ion-spinner {
   box-shadow: var(--app-elevation-card);
 }
 
+/* Widget board: auto-fit tracks so a widowed final card stretches to fill its
+   row instead of leaving dead space, and the offline notice always spans. */
 [data-testid='dashboard-view'] > div:last-child {
   display: grid;
-  grid-template-columns: minmax(0, 1fr);
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 15.5rem), 1fr));
   gap: 0.875rem;
 }
 
-@media (min-width: 640px) {
-  [data-testid='dashboard-view'] > div:last-child {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
+[data-testid='dashboard-view'] > div:last-child > ion-note {
+  grid-column: 1 / -1;
 }
 
 /* Desktop dashboard grid: the hero and the compact health card share the top
@@ -916,12 +918,6 @@ ion-spinner {
   }
 }
 
-@media (min-width: 1180px) {
-  [data-testid='dashboard-view'] > div:last-child {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-  }
-}
-
 /* ----------------------------------------------------------------------------
    Practice calendar — each session becomes a tappable, gold-edged card
 ---------------------------------------------------------------------------- */
@@ -950,7 +946,8 @@ ion-spinner {
     box-shadow var(--un-motion-duration-base) var(--un-motion-easing-standard);
 }
 
-[data-testid='practice-session-card']::before {
+[data-testid='practice-session-card']::before,
+.app-member-card::before {
   content: '';
   position: absolute;
   inset-block: 0;
@@ -1029,7 +1026,8 @@ ion-spinner {
   border-inline-start: 3px solid var(--app-accent);
 }
 
-[data-testid='practice-filter-bar'] {
+[data-testid='practice-filter-bar'],
+.app-members-filter-bar {
   padding: 1rem;
   border: 1px solid var(--app-hairline);
   border-radius: var(--un-radius-lg);
@@ -1037,7 +1035,8 @@ ion-spinner {
   box-shadow: var(--app-elevation-card);
 }
 
-[data-testid='practice-filter-bar'] ion-select {
+[data-testid='practice-filter-bar'] ion-select,
+.app-members-filter-bar ion-select {
   --padding-start: 0.75rem;
   --padding-end: 0.75rem;
   min-height: 48px;
@@ -1430,5 +1429,265 @@ ion-spinner {
   #main-content:has(> .app-primary-nav) > ion-router-outlet {
     inset-block-end: 0;
     inset-inline-start: var(--app-sidebar-w);
+  }
+}
+
+/* ----------------------------------------------------------------------------
+   Members — searchable directory + audience-tiered profiles. Directory rows are
+   tappable gold-edged cards; profile panels present as calm inset cards. All
+   geometry uses logical properties so Arabic (RTL) mirrors perfectly.
+---------------------------------------------------------------------------- */
+.app-members__count {
+  color: var(--app-muted-strong);
+  font-variant-numeric: tabular-nums;
+}
+
+@media (min-width: 720px) {
+  .app-members-filter-bar {
+    display: grid;
+    grid-template-columns: minmax(16rem, 1.6fr) minmax(9rem, 0.7fr) minmax(9rem, 0.7fr);
+    align-items: center;
+  }
+}
+
+/* Directory row — a tappable card with a gold spine, mirroring practice cards. */
+.app-member-card {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  width: 100%;
+  margin-block-end: 0.625rem;
+  padding: 0.85rem 1rem;
+  overflow: hidden;
+  border: 1px solid var(--app-hairline);
+  border-radius: var(--un-radius-lg);
+  background: var(--app-card-bg);
+  box-shadow: var(--app-elevation-card);
+  text-align: start;
+  cursor: pointer;
+  transition:
+    transform var(--un-motion-duration-fast) var(--un-motion-easing-standard),
+    box-shadow var(--un-motion-duration-base) var(--un-motion-easing-standard);
+}
+
+@media (hover: hover) {
+  .app-member-card:hover {
+    box-shadow: var(--app-elevation-lift);
+  }
+
+  .app-member-card:hover::before {
+    opacity: 1;
+  }
+}
+
+.app-member-card:active {
+  transform: scale(0.99);
+}
+
+.app-member-card__body {
+  display: flex;
+  min-width: 0;
+  flex: 1 1 auto;
+  flex-direction: column;
+  gap: 0.1rem;
+}
+
+.app-member-card__name {
+  font-weight: 700;
+  letter-spacing: var(--un-letter-spacing-tight);
+}
+
+.app-member-card__nickname,
+.app-member-card__positions {
+  font-size: var(--un-font-size-sm);
+  overflow-wrap: anywhere;
+}
+
+.app-member-card__meta {
+  display: flex;
+  flex: 0 0 auto;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.35rem;
+}
+
+.app-member-card__jersey {
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: var(--app-accent-text);
+}
+
+/* Inline invite / self-edit forms present as a soft gold-tinted panel. */
+.app-member-form {
+  padding: 1rem;
+  border: 1px solid var(--app-accent-line);
+  border-radius: var(--un-radius-lg);
+  background: var(--app-accent-soft);
+}
+
+/* Profile header: centred avatar + identity lockup on an elevated hero card. */
+.app-profile-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.85rem;
+  padding: clamp(1.25rem, 4vw, 2rem);
+  border: 1px solid var(--app-accent-line);
+  border-radius: var(--un-radius-xl);
+  background:
+    radial-gradient(120% 120% at 100% 0%, var(--app-accent-soft), transparent 58%),
+    var(--app-card-bg);
+  box-shadow: var(--app-elevation-card);
+}
+
+.app-profile-header__name {
+  font-size: clamp(1.35rem, 3vw, 1.75rem);
+  font-weight: 800;
+  letter-spacing: var(--un-letter-spacing-tight);
+  text-wrap: balance;
+}
+
+.app-member-avatar__frame {
+  position: relative;
+  display: inline-flex;
+  inline-size: 4rem;
+  block-size: 4rem;
+}
+
+.app-member-avatar__image {
+  position: absolute;
+  inset: 0;
+  inline-size: 100%;
+  block-size: 100%;
+  object-fit: cover;
+  border-radius: var(--un-radius-circle);
+  box-shadow: inset 0 0 0 1px var(--app-hairline);
+}
+
+/* Profile panels — fields, lifecycle, roles, aliases, history — as inset cards. */
+.app-panel {
+  padding: 1.125rem;
+  border: 1px solid var(--app-hairline);
+  border-radius: var(--un-radius-lg);
+  background: var(--app-card-bg);
+  box-shadow: var(--app-elevation-card);
+}
+
+.app-panel__heading {
+  font-size: var(--un-font-size-md);
+  font-weight: 700;
+  letter-spacing: var(--un-letter-spacing-tight);
+}
+
+.app-profile-fields__list {
+  display: grid;
+  gap: 0.1rem;
+  margin: 0;
+}
+
+.app-profile-fields__row {
+  display: grid;
+  grid-template-columns: minmax(8rem, 0.7fr) minmax(0, 1fr);
+  gap: 0.75rem;
+  padding-block: 0.55rem;
+  border-block-end: 1px solid var(--app-hairline);
+}
+
+.app-profile-fields__row:last-child {
+  border-block-end: none;
+}
+
+.app-profile-fields__label {
+  color: var(--app-muted-strong);
+  font-size: var(--un-font-size-sm);
+  font-weight: 600;
+}
+
+.app-profile-fields__value {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+/* Role toggles — pill chips that read as pressed when the role is assigned. */
+.app-role-toggle {
+  min-height: 44px;
+  padding: 0.5rem 1rem;
+  border: 1px solid var(--app-hairline);
+  border-radius: var(--un-radius-pill);
+  background: var(--app-card-bg);
+  color: var(--ion-text-color);
+  font-weight: 600;
+  cursor: pointer;
+  transition:
+    background var(--un-motion-duration-fast) var(--un-motion-easing-standard),
+    box-shadow var(--un-motion-duration-base) var(--un-motion-easing-standard);
+}
+
+.app-role-toggle[aria-pressed='true'] {
+  background: var(--app-tonal-bg);
+  color: var(--app-tonal-text);
+  box-shadow: inset 0 0 0 1px var(--app-tonal-border);
+}
+
+.app-role-toggle:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.app-alias-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid var(--app-hairline);
+  border-radius: var(--un-radius-md);
+  background: var(--app-surface-bg);
+}
+
+.app-alias-item__label {
+  min-width: 0;
+  overflow-wrap: anywhere;
+  font-weight: 600;
+}
+
+.app-history-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin: 0;
+  padding-inline-start: 0;
+  list-style: none;
+}
+
+.app-history-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  padding-inline-start: 0.85rem;
+  border-inline-start: 3px solid var(--app-accent-line);
+}
+
+.app-history-item__transition {
+  font-weight: 700;
+}
+
+.app-history-item__meta,
+.app-history-item__reason {
+  color: var(--app-muted-strong);
+  font-size: var(--un-font-size-sm);
+}
+
+@media (min-width: 900px) {
+  .app-profile-body {
+    display: grid;
+    grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+    align-items: start;
+  }
+
+  .app-profile-header,
+  .app-profile-fields {
+    grid-column: 1 / -1;
   }
 }

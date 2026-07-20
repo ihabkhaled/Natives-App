@@ -14,6 +14,7 @@ export const APP_ROUTES = {
   home: '/home',
   practices: '/practices',
   attendance: '/practices/sess-evening/attendance',
+  members: '/members',
   admin: '/admin',
   settings: '/settings',
   workbench: '/workbench',

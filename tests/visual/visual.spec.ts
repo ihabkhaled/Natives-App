@@ -60,4 +60,22 @@ test.describe('visual regression', () => {
     await expect(states).toBeVisible();
     await expect(states).toHaveScreenshot('workbench-states.png');
   });
+
+  test('member directory (light)', async ({ page }) => {
+    await login(page);
+    await page.getByTestId(`${TEST_IDS.primaryNavItem}-members`).click();
+    await expect(page.getByTestId(TEST_IDS.membersList)).toBeVisible();
+    await waitForAppAnimations(page);
+    await expect(page).toHaveScreenshot('members-directory-light.png', { fullPage: true });
+  });
+
+  test('member profile (light)', async ({ page }) => {
+    await login(page);
+    await page.getByTestId(`${TEST_IDS.primaryNavItem}-members`).click();
+    await expect(page.getByTestId(TEST_IDS.membersList)).toBeVisible();
+    await page.getByRole('button', { name: 'Omar Hassan' }).click();
+    await expect(page.getByTestId(TEST_IDS.memberProfileFields)).toBeVisible();
+    await waitForAppAnimations(page);
+    await expect(page).toHaveScreenshot('member-profile-light.png', { fullPage: true });
+  });
 });

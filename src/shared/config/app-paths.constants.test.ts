@@ -21,6 +21,8 @@ describe('APP_PATHS', () => {
       admin: '/admin',
       settings: '/settings',
       workbench: '/workbench',
+      members: '/members',
+      memberProfile: '/members/:membershipId',
     });
   });
 

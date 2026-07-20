@@ -2,6 +2,7 @@ import { getAdminRouteDefinitions } from '@/modules/admin';
 import { getAttendanceRouteDefinitions } from '@/modules/attendance';
 import { getAuthRouteDefinitions } from '@/modules/auth';
 import { getHomeRouteDefinitions, getNotFoundRouteDefinition } from '@/modules/home';
+import { getMembersRouteDefinitions } from '@/modules/members';
 import { getPracticeRouteDefinitions } from '@/modules/practice';
 import { getSettingsRouteDefinitions } from '@/modules/settings';
 import { getWorkbenchRouteDefinitions } from '@/modules/ui-workbench';
@@ -14,6 +15,7 @@ export function getAppRouteDefinitions(): readonly AppRouteDefinition[] {
     ...getHomeRouteDefinitions(),
     ...getPracticeRouteDefinitions(),
     ...getAttendanceRouteDefinitions(),
+    ...getMembersRouteDefinitions(),
     ...getAdminRouteDefinitions(),
     ...getSettingsRouteDefinitions(),
     ...getWorkbenchRouteDefinitions(),

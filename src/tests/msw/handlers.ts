@@ -16,6 +16,8 @@ import {
   MOCK_TIMEOUT_DELAY_MS,
   MOCK_TOKENS,
 } from './mock-data.constants';
+import { membersHandlers } from './members-handlers';
+import { resetMockMembersState } from './members.fixture';
 import { nestErrorResponse } from './nest-error.helper';
 import { practiceHandlers } from './practice-handlers';
 import { resetMockPracticeState } from './practice.fixture';
@@ -23,6 +25,12 @@ import { recoveryHandlers, resetMockRecoveryState } from './recovery-handlers';
 
 const COACH_PERMISSIONS = [
   PERMISSIONS.membersRead,
+  PERMISSIONS.memberList,
+  PERMISSIONS.memberProfileReadPublic,
+  PERMISSIONS.memberProfileReadCoach,
+  PERMISSIONS.memberProfileUpdateSelf,
+  PERMISSIONS.memberRolesManage,
+  PERMISSIONS.memberAliasesManage,
   PERMISSIONS.practicesRead,
   PERMISSIONS.practicesManage,
   PERMISSIONS.practicesRsvpSelf,
@@ -33,6 +41,9 @@ const COACH_PERMISSIONS = [
 
 const MEMBER_PERMISSIONS = [
   PERMISSIONS.membersRead,
+  PERMISSIONS.memberList,
+  PERMISSIONS.memberProfileReadPublic,
+  PERMISSIONS.memberProfileUpdateSelf,
   PERMISSIONS.practicesRead,
   PERMISSIONS.practicesRsvpSelf,
   PERMISSIONS.leaderboardsRead,
@@ -95,6 +106,7 @@ export function resetMockAuthState(): void {
   resetMockRecoveryState();
   resetMockPracticeState();
   resetMockAttendanceState();
+  resetMockMembersState();
 }
 
 function apiUrl(path: string): string {
@@ -285,5 +297,6 @@ export const mockApiHandlers = [
   }),
   ...practiceHandlers,
   ...attendanceHandlers,
+  ...membersHandlers,
   ...recoveryHandlers,
 ];

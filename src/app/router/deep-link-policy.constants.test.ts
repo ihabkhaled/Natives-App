@@ -28,6 +28,8 @@ describe('APP_DEEP_LINK_POLICY', () => {
       '/forgot-password',
       '/home',
       '/login',
+      '/members',
+      '/members/:membershipId',
       '/practices',
       '/practices/:sessionId',
       '/practices/:sessionId/attendance',

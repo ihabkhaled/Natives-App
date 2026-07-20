@@ -96,6 +96,20 @@ test.describe('accessibility (WCAG 2.2 AA)', () => {
     expect((await analyze(page)).violations).toEqual([]);
   });
 
+  test('member directory and profile have no violations', async ({ page }) => {
+    await login(page);
+    await expect(page.getByTestId(TEST_IDS.homePage)).toBeVisible();
+    await page.getByTestId(`${TEST_IDS.primaryNavItem}-members`).click();
+    await expect(page.getByTestId(TEST_IDS.membersList)).toBeVisible();
+
+    expect((await analyze(page)).violations).toEqual([]);
+
+    await page.getByRole('button', { name: 'Omar Hassan' }).click();
+    await expect(page.getByTestId(TEST_IDS.memberProfileFields)).toBeVisible();
+    await waitForAppAnimations(page);
+    expect((await analyze(page)).violations).toEqual([]);
+  });
+
   test('dark palette has no contrast violations', async ({ page }) => {
     await gotoApp(page, APP_ROUTES.settings);
     await page
