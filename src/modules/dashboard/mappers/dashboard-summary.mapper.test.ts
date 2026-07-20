@@ -82,3 +82,42 @@ describe('mapDashboardSummary', () => {
     expect(widget.tasks[1]?.count).toBeNull();
   });
 });
+
+describe('mapDashboardSummary with an omitted widget payload', () => {
+  it('reports an absent metric as not evaluated rather than as zero', () => {
+    const result = mapDashboardSummary({
+      persona: 'member',
+      generatedAt: '2026-07-18T09:00:00.000Z',
+      widgets: [
+        { kind: 'member-standing', presentation: 'metric', status: 'unavailable', asOf: null },
+      ],
+    });
+    const widget = result.widgets[0];
+    assert(widget?.presentation === 'metric');
+
+    expect(widget.metric).toEqual({
+      value: null,
+      displayValue: null,
+      unit: null,
+      tone: 'neutral',
+    });
+  });
+
+  it('reports an absent breakdown or task list as empty, never as invented rows', () => {
+    const result = mapDashboardSummary({
+      persona: 'member',
+      generatedAt: '2026-07-18T09:00:00.000Z',
+      widgets: [
+        { kind: 'member-attendance', presentation: 'breakdown', status: 'empty', asOf: null },
+        { kind: 'member-schedule', presentation: 'tasks', status: 'empty', asOf: null },
+      ],
+    });
+    const breakdown = result.widgets[0];
+    const tasks = result.widgets[1];
+    assert(breakdown?.presentation === 'breakdown');
+    assert(tasks?.presentation === 'tasks');
+
+    expect(breakdown.rows).toEqual([]);
+    expect(tasks.tasks).toEqual([]);
+  });
+});

@@ -1,8 +1,8 @@
 import { IonNote, IonText } from '@/packages/ionic';
 import { TEST_IDS } from '@/shared/config';
+import { ChartDataTable } from '@/shared/ui';
 
 import { CHART_GEOMETRY } from '../../constants/assessments.constants';
-import { ChartDataTable } from '../chart-data-table';
 import type { PerformanceTrendChartProps } from './performance-trend-chart.types';
 
 /**

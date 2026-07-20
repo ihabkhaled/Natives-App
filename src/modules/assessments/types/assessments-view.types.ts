@@ -1,4 +1,5 @@
 import type { AsyncViewCopy } from '@/shared/types';
+import type { ChartTableRow } from '@/shared/ui';
 
 import type {
   AssessmentWorkflowStep,
@@ -149,12 +150,6 @@ export interface AssessmentEntryView extends AsyncViewCopy {
 export interface ChartPoint {
   readonly label: string;
   readonly value: number | null;
-}
-
-export interface ChartTableRow {
-  readonly key: string;
-  readonly label: string;
-  readonly valueText: string;
 }
 
 export interface TrendChartView {

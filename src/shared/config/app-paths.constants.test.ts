@@ -26,6 +26,11 @@ describe('APP_PATHS', () => {
       assessments: '/assessments',
       assessmentEntry: '/assessments/:assessmentId',
       performance: '/performance',
+      training: '/training',
+      trainingSubmission: '/training/:submissionId',
+      trainingReview: '/training-review',
+      leaderboard: '/leaderboard',
+      points: '/points',
     });
   });
 

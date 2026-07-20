@@ -1,12 +1,24 @@
 import { schemaBuilder } from '@/packages/schema';
 
-import { ACCOUNT_STATE, INVITATION_ROLE } from '../types/auth.types';
+import { ACCOUNT_STATE, INVITATION_ROLE, MEMBERSHIP_SCOPE_STATUSES } from '../types/auth.types';
 
-const authMembershipDtoSchema = schemaBuilder.object({
+/**
+ * One team/season scope the principal belongs to, exactly as `GET /auth/me`
+ * and `POST /auth/login` return it (backend `AuthMembershipDto`). The season
+ * triple is nullable on purpose: a team may legitimately have no season, and
+ * a missing season must not be invented or downgraded into a team-less
+ * principal.
+ */
+export const authMembershipDtoSchema = schemaBuilder.object({
+  membershipId: schemaBuilder.string().min(1),
   teamId: schemaBuilder.string().min(1),
+  teamSlug: schemaBuilder.string().min(1),
   teamName: schemaBuilder.string().min(1),
-  seasonId: schemaBuilder.string().min(1),
-  seasonName: schemaBuilder.string().min(1),
+  seasonId: schemaBuilder.string().min(1).nullable(),
+  seasonSlug: schemaBuilder.string().min(1).nullable(),
+  seasonName: schemaBuilder.string().min(1).nullable(),
+  status: schemaBuilder.enum(MEMBERSHIP_SCOPE_STATUSES),
+  roles: schemaBuilder.array(schemaBuilder.string()),
 });
 
 /** Wire contracts shared by remote NestJS mode and MSW mock mode. */

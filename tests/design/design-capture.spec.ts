@@ -50,6 +50,14 @@ const SCREENS = [
     anchor: TEST_IDS.assessmentMetricGrid,
   },
   { slug: 'performance', route: APP_ROUTES.performance, anchor: TEST_IDS.performanceTrendChart },
+  { slug: 'external-training', route: APP_ROUTES.training, anchor: TEST_IDS.trainingComposer },
+  {
+    slug: 'training-review',
+    route: APP_ROUTES.trainingReview,
+    anchor: TEST_IDS.trainingReviewQueue,
+  },
+  { slug: 'leaderboard', route: APP_ROUTES.leaderboard, anchor: TEST_IDS.leaderboardTable },
+  { slug: 'points-history', route: APP_ROUTES.points, anchor: TEST_IDS.pointsLedger },
 ];
 
 const VARIANTS = [

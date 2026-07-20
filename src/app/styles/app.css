@@ -811,8 +811,11 @@ ion-spinner {
   inset-block-end: 0;
   z-index: 20;
   display: flex;
-  justify-content: space-around;
+  /* More destinations than fit: the row scrolls rather than clipping one off. */
+  overflow-x: auto;
+  justify-content: flex-start;
   gap: var(--un-space-1);
+  scrollbar-width: none;
   padding: var(--un-space-1) calc(var(--un-space-2) + env(safe-area-inset-right))
     calc(var(--un-space-1) + env(safe-area-inset-bottom))
     calc(var(--un-space-2) + env(safe-area-inset-left));
@@ -836,10 +839,15 @@ ion-spinner {
   display: contents;
 }
 
+.app-primary-nav::-webkit-scrollbar {
+  display: none;
+}
+
 .app-primary-nav__item {
   position: relative;
   display: flex;
-  flex: 1 1 0;
+  flex: 1 0 auto;
+  min-inline-size: var(--un-control-xl, 4.5rem);
   flex-direction: column;
   align-items: center;
   justify-content: center;
@@ -2440,14 +2448,8 @@ ion-spinner {
   text-align: start;
 }
 
-.app-chart-table thead th {
-  color: var(--app-muted);
-  font-size: var(--un-font-size-xs);
-  font-weight: var(--un-font-weight-bold);
-  letter-spacing: var(--un-letter-spacing-wide);
-  text-transform: uppercase;
-}
-
+.app-chart-table thead th,
+.app-training-chiplist__kind,
 .app-chart-table td {
   font-variant-numeric: tabular-nums;
 }
@@ -2588,4 +2590,545 @@ ion-spinner {
 .app-goal-action__due {
   color: var(--app-muted);
   font-size: var(--un-font-size-xs);
+}
+
+/* ----------------------------------------------------------------------------
+   External training — the composer is one calm sheet, the claim rows read as
+   a timeline, and the reviewer queue sits beside the claim it decides on.
+---------------------------------------------------------------------------- */
+.app-training-composer {
+  gap: var(--un-space-4);
+}
+
+.app-training-composer__head,
+.app-training-panel__head {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.app-training-composer__title {
+  color: var(--app-ink);
+  font-size: var(--un-font-size-md);
+  font-weight: var(--un-font-weight-bold);
+  letter-spacing: var(--un-letter-spacing-tight);
+}
+
+.app-training-composer__grid {
+  display: grid;
+  gap: var(--un-space-3);
+  grid-template-columns: 1fr;
+}
+
+@media (min-width: 720px) {
+  .app-training-composer__grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.app-training-composer__hint,
+.app-training-panel__note,
+.app-training-chiplist__note {
+  color: var(--app-muted);
+  font-size: var(--un-font-size-xs);
+}
+
+/* The candidate readout: lime when a real value exists, muted when pending. */
+.app-training-candidate {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: var(--un-space-3);
+  border: 1px solid var(--app-lime-line);
+  border-radius: var(--un-radius-lg);
+  background: var(--app-lime-soft);
+}
+
+.app-training-candidate--pending {
+  border-color: var(--app-hairline);
+  background: transparent;
+}
+
+.app-training-candidate__value {
+  color: var(--app-lime-text);
+  font-size: var(--un-font-size-lg);
+  font-weight: var(--un-font-weight-bold);
+  font-variant-numeric: tabular-nums;
+}
+
+.app-training-candidate--pending .app-training-candidate__value {
+  color: var(--app-muted-strong);
+}
+
+.app-training-panel {
+  display: flex;
+  flex-direction: column;
+  gap: var(--un-space-2);
+  padding-block-start: var(--un-space-3);
+  border-block-start: 1px solid var(--app-hairline);
+}
+
+.app-training-panel__title {
+  color: var(--app-ink);
+  font-size: var(--un-font-size-sm);
+  font-weight: var(--un-font-weight-bold);
+}
+
+.app-training-evidence__form,
+.app-training-buddy__form {
+  display: grid;
+  gap: var(--un-space-2);
+  grid-template-columns: 1fr;
+}
+
+@media (min-width: 720px) {
+  .app-training-evidence__form {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .app-training-buddy__form {
+    grid-template-columns: 2fr 1fr;
+    align-items: end;
+  }
+}
+
+.app-training-chiplist {
+  display: flex;
+  flex-direction: column;
+  gap: var(--un-space-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.app-training-chiplist li {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--un-space-2);
+  min-block-size: var(--un-control-md);
+  padding: var(--un-space-2) var(--un-space-3);
+  border: 1px solid var(--app-hairline);
+  border-radius: var(--un-radius-lg);
+  background: var(--app-card-bg);
+}
+
+.app-training-chiplist__value {
+  overflow-wrap: anywhere;
+  color: var(--app-ink);
+  font-size: var(--un-font-size-sm);
+}
+
+.app-training__filters,
+.app-training-actions,
+.app-leaderboard__filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--un-space-3);
+}
+
+.app-training-list,
+.app-ledger {
+  display: flex;
+  flex-direction: column;
+  gap: var(--un-space-3);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.app-training-card {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--un-space-3);
+}
+
+.app-training-card--selected {
+  border-color: var(--app-lime-line);
+  box-shadow:
+    var(--app-elevation-card),
+    inset 3px 0 0 var(--app-arc-strong);
+}
+
+[dir='rtl'] .app-training-card--selected {
+  box-shadow:
+    var(--app-elevation-card),
+    inset -3px 0 0 var(--app-arc-strong);
+}
+
+.app-training-card__main {
+  display: flex;
+  min-inline-size: 0;
+  flex: 1 1 14rem;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.app-training-card__title {
+  color: var(--app-ink);
+  font-size: var(--un-font-size-md);
+  font-weight: var(--un-font-weight-bold);
+  letter-spacing: var(--un-letter-spacing-tight);
+}
+
+.app-training-card__meta {
+  display: flex;
+  flex: 0 0 auto;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: var(--un-space-1);
+}
+
+.app-training-banner {
+  padding: var(--un-space-3) var(--un-space-4);
+  border: 1px solid var(--app-gold-line);
+  border-radius: var(--un-radius-lg);
+  background: var(--app-gold-soft);
+  color: var(--app-ink);
+  font-size: var(--un-font-size-sm);
+}
+
+.app-training-detail__head {
+  gap: var(--un-space-2);
+}
+
+.app-training-detail__headline {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--un-space-3);
+}
+
+.app-training-detail__title {
+  color: var(--app-ink);
+  font-size: var(--un-font-size-lg);
+  font-weight: var(--un-font-weight-bold);
+  letter-spacing: var(--un-letter-spacing-tight);
+}
+
+.app-training-detail__candidate {
+  color: var(--app-lime-text);
+  font-weight: var(--un-font-weight-bold);
+  font-variant-numeric: tabular-nums;
+}
+
+.app-training-history {
+  display: flex;
+  flex-direction: column;
+  gap: var(--un-space-2);
+  margin: 0;
+  padding-inline-start: 0;
+  list-style: none;
+}
+
+.app-training-history li {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--un-space-2);
+  padding-inline-start: var(--un-space-4);
+  border-inline-start: 2px solid var(--app-hairline);
+}
+
+.app-training-review__intro {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--un-space-4);
+}
+
+.app-training-review__grid {
+  display: grid;
+  gap: var(--un-space-4);
+  grid-template-columns: 1fr;
+  align-items: start;
+}
+
+@media (min-width: 960px) {
+  .app-training-review__grid {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr);
+  }
+}
+
+.app-training-review__queue,
+.app-training-review__detail,
+.app-points-history__ledger,
+.app-badges {
+  display: flex;
+  flex-direction: column;
+  gap: var(--un-space-2);
+}
+
+/* Advisory prompts read as observations, never as an accusation. */
+.app-training-signals {
+  display: flex;
+  flex-direction: column;
+  gap: var(--un-space-1);
+  padding: var(--un-space-3);
+  border: 1px dashed var(--app-hairline);
+  border-radius: var(--un-radius-lg);
+}
+
+.app-training-signals__list {
+  margin: 0;
+  padding-inline-start: var(--un-space-5);
+  color: var(--app-muted-strong);
+  font-size: var(--un-font-size-sm);
+}
+
+/* ----------------------------------------------------------------------------
+   Leaderboard + points ledger — standings are a real table, movement is never
+   colour-only, and gold appears exactly once: on an awarded badge.
+---------------------------------------------------------------------------- */
+.app-leaderboard__meta {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: var(--un-space-2);
+}
+
+.app-tie-rule {
+  gap: var(--un-space-1);
+}
+
+.app-leaderboard__scroll {
+  overflow-x: auto;
+}
+
+.app-leaderboard-table {
+  inline-size: 100%;
+  border-collapse: collapse;
+  font-size: var(--un-font-size-sm);
+}
+
+.app-leaderboard-table caption {
+  padding-block-end: var(--un-space-2);
+  color: var(--app-muted);
+  font-size: var(--un-font-size-xs);
+  text-align: start;
+}
+
+.app-leaderboard-table th,
+.app-leaderboard-table td {
+  padding: var(--un-space-3) var(--un-space-2);
+  border-block-end: 1px solid var(--app-hairline);
+  color: var(--app-ink);
+  text-align: start;
+  vertical-align: top;
+}
+
+.app-leaderboard-table thead th {
+  color: var(--app-muted);
+  font-size: var(--un-font-size-xs);
+  font-weight: var(--un-font-weight-bold);
+  letter-spacing: var(--un-letter-spacing-wide);
+  text-transform: uppercase;
+}
+
+.app-leaderboard-table__rank {
+  font-size: var(--un-font-size-md);
+  font-weight: var(--un-font-weight-bold);
+  font-variant-numeric: tabular-nums;
+}
+
+.app-leaderboard-table__tie {
+  display: block;
+  color: var(--app-muted);
+  font-size: var(--un-font-size-xs);
+  font-weight: var(--un-font-weight-semibold);
+}
+
+.app-leaderboard-table__total {
+  font-weight: var(--un-font-weight-bold);
+  font-variant-numeric: tabular-nums;
+}
+
+/* A member on zero stays on the board, quietly. */
+.app-leaderboard-table__row--zero td,
+.app-leaderboard-table__row--zero th {
+  color: var(--app-muted-strong);
+}
+
+.app-leaderboard-table__glyph {
+  margin-inline-end: var(--un-space-1);
+}
+
+.app-leaderboard-table__movement {
+  font-weight: var(--un-font-weight-semibold);
+}
+
+.app-leaderboard-table__badges {
+  display: inline-block;
+  margin-inline-end: var(--un-space-2);
+  color: var(--app-ink);
+  font-weight: var(--un-font-weight-bold);
+}
+
+.app-leaderboard-table__explain {
+  min-block-size: var(--un-control-md);
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--app-ink);
+  font-size: var(--un-font-size-sm);
+  font-weight: var(--un-font-weight-semibold);
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.app-rank-explain {
+  display: flex;
+  flex-direction: column;
+  gap: var(--un-space-1);
+  padding: var(--un-space-3);
+  border: 1px solid var(--app-lime-line);
+  border-radius: var(--un-radius-lg);
+  background: var(--app-card-bg);
+}
+
+.app-rank-explain__table {
+  inline-size: 100%;
+  border-collapse: collapse;
+  font-variant-numeric: tabular-nums;
+}
+
+.app-rank-explain__table th,
+.app-rank-explain__table td {
+  padding: var(--un-space-1) var(--un-space-2);
+  text-align: start;
+}
+
+.app-rank-explain__table tfoot th,
+.app-rank-explain__table tfoot td {
+  border-block-start: 1px solid var(--app-hairline);
+  font-weight: var(--un-font-weight-bold);
+}
+
+.app-points-total {
+  align-items: flex-start;
+  gap: var(--un-space-1);
+}
+
+.app-points-total__value {
+  color: var(--app-lime-text);
+  font-size: var(--un-font-size-xl);
+  font-weight: var(--un-font-weight-bold);
+  font-variant-numeric: tabular-nums;
+  line-height: var(--un-line-height-tight);
+}
+
+.app-ledger__row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: var(--un-space-3);
+}
+
+.app-ledger__lead {
+  display: flex;
+  flex: 0 0 auto;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--un-space-1);
+}
+
+.app-ledger__amount {
+  font-size: var(--un-font-size-md);
+  font-weight: var(--un-font-weight-bold);
+  font-variant-numeric: tabular-nums;
+}
+
+.app-ledger__body {
+  display: flex;
+  min-inline-size: 0;
+  flex: 1 1 12rem;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.app-ledger__reason {
+  color: var(--app-ink);
+  font-size: var(--un-font-size-sm);
+}
+
+.app-badges__list,
+.app-badges__candidates {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--un-space-3);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* The one place gold fills: an achievement the server actually awarded. */
+.app-badge {
+  display: flex;
+  flex: 1 1 13rem;
+  align-items: flex-start;
+  gap: var(--un-space-3);
+  padding: var(--un-space-3);
+  border: 1px solid var(--app-gold-line);
+  border-radius: var(--un-radius-xl);
+  background: var(--app-gold-soft);
+}
+
+.app-badge__medal {
+  display: block;
+  flex: 0 0 auto;
+  inline-size: var(--un-space-6);
+  block-size: var(--un-space-6);
+  border-radius: 50%;
+  background: var(--app-gold);
+  box-shadow: inset 0 0 0 3px color-mix(in srgb, var(--un-brand-white) 45%, transparent);
+}
+
+.app-badge__body {
+  display: flex;
+  min-inline-size: 0;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.app-badge__title {
+  color: var(--app-gold-text);
+  font-size: var(--un-font-size-sm);
+  font-weight: var(--un-font-weight-bold);
+}
+
+/* Candidate tiers stay deliberately neutral — never mistakable for an award. */
+.app-badge-candidate {
+  display: flex;
+  flex: 1 1 10rem;
+  flex-direction: column;
+  gap: 2px;
+  padding: var(--un-space-3);
+  border: 1px dashed var(--app-hairline);
+  border-radius: var(--un-radius-lg);
+  color: var(--app-muted-strong);
+}
+
+.app-badge-candidate--reached {
+  border-style: solid;
+  border-color: var(--app-lime-line);
+  color: var(--app-lime-text);
+}
+
+.app-chart__svg--bars {
+  block-size: auto;
+  aspect-ratio: auto;
+}
+
+.app-chart__bar {
+  fill: var(--app-arc-line);
+}
+
+.app-chart__bar-label {
+  fill: var(--app-ink);
+  font-size: 11px;
+  font-weight: 600;
+  dominant-baseline: middle;
 }

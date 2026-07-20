@@ -21,6 +21,11 @@ export const APP_PATHS = {
   assessments: '/assessments',
   assessmentEntry: '/assessments/:assessmentId',
   performance: '/performance',
+  training: '/training',
+  trainingSubmission: '/training/:submissionId',
+  trainingReview: '/training-review',
+  leaderboard: '/leaderboard',
+  points: '/points',
   settings: '/settings',
   workbench: '/workbench',
 } as const;

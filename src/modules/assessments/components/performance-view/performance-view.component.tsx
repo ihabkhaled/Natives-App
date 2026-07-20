@@ -1,8 +1,7 @@
 import { IonSelect, IonSelectOption, IonText } from '@/packages/ionic';
 import { TEST_IDS } from '@/shared/config';
-import { PageShell } from '@/shared/ui';
+import { AsyncStateView, PageShell } from '@/shared/ui';
 
-import { AssessmentsStateView } from '../assessments-state-view';
 import { CoachFeedbackPanel } from '../coach-feedback-panel';
 import { DevelopmentGoalsPanel } from '../development-goals-panel';
 import { PerformanceRadarChart } from '../performance-radar-chart';
@@ -24,7 +23,7 @@ export function PerformanceView(props: PerformanceViewProps): React.JSX.Element 
             <p className="m-0 text-sm">{props.subtitle}</p>
           </IonText>
         </header>
-        <AssessmentsStateView view={props} variant="dashboard" {...PERFORMANCE_STATE_TEST_IDS} />
+        <AsyncStateView view={props} variant="dashboard" {...PERFORMANCE_STATE_TEST_IDS} />
         {props.status === 'ready' ? (
           <>
             <div className="app-performance__charts">

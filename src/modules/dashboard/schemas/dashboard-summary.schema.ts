@@ -37,12 +37,19 @@ const dashboardWidgetStatusSchema = schemaBuilder.enum([
   'unavailable',
 ]);
 
+/**
+ * The backend marks `metric`, `rows`, and `tasks` optional on
+ * `DashboardWidgetDto`: a widget whose status is `empty` or `unavailable`
+ * carries no payload at all. Each presentation therefore accepts its own
+ * payload as optional and the mapper supplies an explicitly-unknown
+ * projection rather than a fabricated zero.
+ */
 const dashboardMetricWidgetSchema = schemaBuilder.object({
   kind: schemaBuilder.string().min(1),
   presentation: schemaBuilder.literal('metric'),
   status: dashboardWidgetStatusSchema,
   asOf: schemaBuilder.iso.datetime({ offset: true }).nullable(),
-  metric: dashboardMetricSchema,
+  metric: dashboardMetricSchema.optional(),
 });
 
 const dashboardBreakdownWidgetSchema = schemaBuilder.object({
@@ -50,7 +57,7 @@ const dashboardBreakdownWidgetSchema = schemaBuilder.object({
   presentation: schemaBuilder.literal('breakdown'),
   status: dashboardWidgetStatusSchema,
   asOf: schemaBuilder.iso.datetime({ offset: true }).nullable(),
-  rows: schemaBuilder.array(dashboardBreakdownRowSchema),
+  rows: schemaBuilder.array(dashboardBreakdownRowSchema).optional(),
 });
 
 const dashboardTasksWidgetSchema = schemaBuilder.object({
@@ -58,7 +65,7 @@ const dashboardTasksWidgetSchema = schemaBuilder.object({
   presentation: schemaBuilder.literal('tasks'),
   status: dashboardWidgetStatusSchema,
   asOf: schemaBuilder.iso.datetime({ offset: true }).nullable(),
-  tasks: schemaBuilder.array(dashboardTaskSchema),
+  tasks: schemaBuilder.array(dashboardTaskSchema).optional(),
 });
 
 const dashboardWidgetSchema = schemaBuilder.discriminatedUnion('presentation', [

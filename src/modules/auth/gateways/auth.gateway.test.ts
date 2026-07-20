@@ -14,6 +14,7 @@ import {
   invitationDetailPath,
   sessionRevokePath,
 } from '../constants/auth-api.constants';
+import { buildAuthMembership } from '../factories/auth.factory';
 import {
   requestCurrentUser,
   requestInvitationAccept,
@@ -41,9 +42,7 @@ const USER_DTO = {
   permissions: ['members.read'],
   accountState: 'active',
   onboardingComplete: true,
-  memberships: [
-    { teamId: 'team-1', teamName: 'Team One', seasonId: 'season-1', seasonName: 'Season One' },
-  ],
+  memberships: [buildAuthMembership({ teamId: 'team-1', teamName: 'Team One' })],
 };
 const TOKENS_DTO = { accessToken: 'access-2', refreshToken: 'refresh-2' };
 const INVITATION_DTO = {

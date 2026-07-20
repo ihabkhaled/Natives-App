@@ -2,8 +2,10 @@ import { describe, expect, it } from 'vitest';
 
 import { safeParseWithSchema } from '@/packages/schema';
 
+import { buildAuthMembership } from '../factories/auth.factory';
 import {
   authAckSchema,
+  authMembershipDtoSchema,
   authTokensDtoSchema,
   authUserDtoSchema,
   invitationDetailsDtoSchema,
@@ -22,9 +24,7 @@ const validUser = {
   permissions: ['members.read', 'users.manage'],
   accountState: 'active',
   onboardingComplete: true,
-  memberships: [
-    { teamId: 'team-1', teamName: 'Team One', seasonId: 'season-1', seasonName: 'Season One' },
-  ],
+  memberships: [buildAuthMembership({ teamId: 'team-1', teamName: 'Team One' })],
 };
 const validTokens = { accessToken: 'access-1', refreshToken: 'refresh-1' };
 
@@ -54,12 +54,50 @@ describe('authUserDtoSchema', () => {
     ).toBe(false);
   });
 
-  it('rejects a membership missing its season scope', () => {
+  it('rejects a membership missing its team identity', () => {
     expect(
       safeParseWithSchema(authUserDtoSchema, {
         ...validUser,
         memberships: [{ teamId: 'team-1', teamName: 'Team One' }],
       }).success,
+    ).toBe(false);
+  });
+
+  it('accepts a membership on a team that has no season yet', () => {
+    const seasonless = buildAuthMembership({
+      seasonId: null,
+      seasonSlug: null,
+      seasonName: null,
+    });
+
+    expect(
+      safeParseWithSchema(authUserDtoSchema, { ...validUser, memberships: [seasonless] }).success,
+    ).toBe(true);
+  });
+
+  it('rejects a membership whose lifecycle status is outside the canonical set', () => {
+    expect(
+      safeParseWithSchema(authUserDtoSchema, {
+        ...validUser,
+        memberships: [buildAuthMembership({ status: 'retired' as never })],
+      }).success,
+    ).toBe(false);
+  });
+});
+
+describe('authMembershipDtoSchema', () => {
+  it('accepts the real membership envelope with its role slugs', () => {
+    const parsed = safeParseWithSchema(
+      authMembershipDtoSchema,
+      buildAuthMembership({ roles: ['member', 'team_admin'] }),
+    );
+
+    expect(parsed.success).toBe(true);
+  });
+
+  it('rejects an empty season id rather than treating it as absent', () => {
+    expect(
+      safeParseWithSchema(authMembershipDtoSchema, buildAuthMembership({ seasonId: '' })).success,
     ).toBe(false);
   });
 });

@@ -26,11 +26,13 @@ describe('APP_ICONS', () => {
       'people',
       'person',
       'refresh',
+      'ribbon',
       'settings',
       'shield',
       'sun',
       'time',
       'trendingUp',
+      'trophy',
       'warning',
     ]);
   });

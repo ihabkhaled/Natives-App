@@ -104,4 +104,36 @@ test.describe('visual regression', () => {
     await waitForAppAnimations(page);
     await expect(page).toHaveScreenshot('performance-light.png', { fullPage: true });
   });
+
+  test('external training workspace (light)', async ({ page }) => {
+    await login(page);
+    await gotoApp(page, APP_ROUTES.training);
+    await expect(page.getByTestId(TEST_IDS.trainingComposer)).toBeVisible();
+    await waitForAppAnimations(page);
+    await expect(page).toHaveScreenshot('external-training-light.png', { fullPage: true });
+  });
+
+  test('training review queue (light)', async ({ page }) => {
+    await login(page);
+    await gotoApp(page, APP_ROUTES.trainingReview);
+    await expect(page.getByTestId(TEST_IDS.trainingReviewQueue)).toBeVisible();
+    await waitForAppAnimations(page);
+    await expect(page).toHaveScreenshot('training-review-light.png', { fullPage: true });
+  });
+
+  test('leaderboard standings (light)', async ({ page }) => {
+    await login(page);
+    await gotoApp(page, APP_ROUTES.leaderboard);
+    await expect(page.getByTestId(TEST_IDS.leaderboardTable)).toBeVisible();
+    await waitForAppAnimations(page);
+    await expect(page).toHaveScreenshot('leaderboard-light.png', { fullPage: true });
+  });
+
+  test('points ledger and badges (light)', async ({ page }) => {
+    await login(page);
+    await gotoApp(page, APP_ROUTES.points);
+    await expect(page.getByTestId(TEST_IDS.pointsLedger)).toBeVisible();
+    await waitForAppAnimations(page);
+    await expect(page).toHaveScreenshot('points-history-light.png', { fullPage: true });
+  });
 });

@@ -1,8 +1,7 @@
 import { delay, http, HttpResponse } from 'msw';
 
-import { buildAuthUser, type AuthUser } from '@/modules/auth';
+import type { AuthUser } from '@/modules/auth';
 import { getEnvironment } from '@/packages/environment';
-import { PERMISSIONS } from '@/shared/security';
 
 import { assessmentsHandlers } from './assessments-handlers';
 import { resetMockAssessmentsState } from './assessments.fixture';
@@ -12,7 +11,6 @@ import { resetMockAttendanceState } from './attendance.fixture';
 import {
   MOCK_CREDENTIALS,
   MOCK_HEALTH,
-  MOCK_INVITATION,
   MOCK_PERSONA_EMAILS,
   MOCK_SCENARIO_EMAILS,
   MOCK_TIMEOUT_DELAY_MS,
@@ -21,91 +19,13 @@ import {
 import { membersHandlers } from './members-handlers';
 import { resetMockMembersState } from './members.fixture';
 import { nestErrorResponse } from './nest-error.helper';
+import { ADMIN_PERSONA, PERSONA_USERS } from './personas.fixture';
+import { pointsHandlers } from './points-handlers';
 import { practiceHandlers } from './practice-handlers';
 import { resetMockPracticeState } from './practice.fixture';
 import { recoveryHandlers, resetMockRecoveryState } from './recovery-handlers';
-
-const COACH_PERMISSIONS = [
-  PERMISSIONS.membersRead,
-  PERMISSIONS.memberList,
-  PERMISSIONS.memberProfileReadPublic,
-  PERMISSIONS.memberProfileReadCoach,
-  PERMISSIONS.memberProfileUpdateSelf,
-  PERMISSIONS.memberRolesManage,
-  PERMISSIONS.memberAliasesManage,
-  PERMISSIONS.practicesRead,
-  PERMISSIONS.practicesManage,
-  PERMISSIONS.practicesRsvpSelf,
-  PERMISSIONS.attendanceMark,
-  PERMISSIONS.assessmentsManage,
-  PERMISSIONS.assessmentReadTeam,
-  PERMISSIONS.assessmentReadSelfPublished,
-  PERMISSIONS.assessmentCreate,
-  PERMISSIONS.assessmentReview,
-  PERMISSIONS.assessmentPublish,
-  PERMISSIONS.feedbackReadSelf,
-  PERMISSIONS.feedbackManage,
-  PERMISSIONS.leaderboardsRead,
-];
-
-const MEMBER_PERMISSIONS = [
-  PERMISSIONS.membersRead,
-  PERMISSIONS.memberList,
-  PERMISSIONS.memberProfileReadPublic,
-  PERMISSIONS.memberProfileUpdateSelf,
-  PERMISSIONS.practicesRead,
-  PERMISSIONS.practicesRsvpSelf,
-  PERMISSIONS.assessmentReadSelfPublished,
-  PERMISSIONS.feedbackReadSelf,
-  PERMISSIONS.leaderboardsRead,
-];
-
-const ADMIN_PERSONA = buildAuthUser();
-const INVITED_PERSONA = buildAuthUser({
-  id: 'user-invited',
-  email: MOCK_INVITATION.email,
-  displayName: 'Invited Ranger',
-  permissions: MEMBER_PERMISSIONS,
-});
-
-/** Deterministic persona directory keyed by login email. */
-const PERSONA_USERS: Record<string, AuthUser> = {
-  [MOCK_PERSONA_EMAILS.admin]: ADMIN_PERSONA,
-  [MOCK_PERSONA_EMAILS.coach]: buildAuthUser({
-    id: 'user-coach',
-    email: MOCK_PERSONA_EMAILS.coach,
-    displayName: 'Coach Nadia',
-    permissions: COACH_PERMISSIONS,
-  }),
-  [MOCK_PERSONA_EMAILS.member]: buildAuthUser({
-    id: 'user-member',
-    email: MOCK_PERSONA_EMAILS.member,
-    displayName: 'Member Omar',
-    permissions: MEMBER_PERMISSIONS,
-  }),
-  [MOCK_PERSONA_EMAILS.pending]: buildAuthUser({
-    id: 'user-pending',
-    email: MOCK_PERSONA_EMAILS.pending,
-    displayName: 'Pending Sara',
-    permissions: MEMBER_PERMISSIONS,
-    onboardingComplete: false,
-  }),
-  [MOCK_PERSONA_EMAILS.suspended]: buildAuthUser({
-    id: 'user-suspended',
-    email: MOCK_PERSONA_EMAILS.suspended,
-    displayName: 'Suspended Ali',
-    permissions: MEMBER_PERMISSIONS,
-    accountState: 'suspended',
-  }),
-  [MOCK_PERSONA_EMAILS.noTeam]: buildAuthUser({
-    id: 'user-noteam',
-    email: MOCK_PERSONA_EMAILS.noTeam,
-    displayName: 'Newcomer Lina',
-    permissions: MEMBER_PERMISSIONS,
-    memberships: [],
-  }),
-  [MOCK_INVITATION.email]: INVITED_PERSONA,
-};
+import { trainingHandlers } from './training-handlers';
+import { resetMockTrainingState } from './training.fixture';
 
 const PERSONA_TOKEN_PREFIX = 'mock-access-';
 const PERSONA_BY_ID = new Map(Object.values(PERSONA_USERS).map((persona) => [persona.id, persona]));
@@ -119,6 +39,7 @@ export function resetMockAuthState(): void {
   resetMockAttendanceState();
   resetMockMembersState();
   resetMockAssessmentsState();
+  resetMockTrainingState();
 }
 
 function apiUrl(path: string): string {
@@ -311,5 +232,7 @@ export const mockApiHandlers = [
   ...attendanceHandlers,
   ...membersHandlers,
   ...assessmentsHandlers,
+  ...trainingHandlers,
+  ...pointsHandlers,
   ...recoveryHandlers,
 ];

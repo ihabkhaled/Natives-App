@@ -1,18 +1,29 @@
 import { describe, expect, it } from 'vitest';
 
 import {
+  authMembershipDtoSchema,
   authUserDtoSchema,
   loginResponseSchema,
   logoutResponseSchema,
   refreshResponseSchema,
 } from '@/modules/auth';
+import { dashboardSummaryResponseSchema } from '@/modules/dashboard';
+import { memberRolesResponseSchema } from '@/modules/members';
+import { leaderboardResponseSchema, pointsSummaryResponseSchema } from '@/modules/points';
+import { activityTypeListResponseSchema } from '@/modules/training';
 import {
   practiceRsvpResponseSchema,
   practiceSessionListResponseSchema,
   practiceSessionResponseSchema,
 } from '@/modules/practice';
 import type {
+  ActivityTypeListContract,
+  AuthMembershipContract,
   CurrentUserResponseContract,
+  DashboardSummaryContract,
+  LeaderboardContract,
+  MemberRolesContract,
+  PointsSummaryContract,
   LoginResponseContract,
   MessageResponseContract,
   PracticeRsvpContract,
@@ -116,5 +127,107 @@ describe('generated backend contract', () => {
     expect(safeParseWithSchema(practiceSessionResponseSchema, practiceSession).success).toBe(true);
     expect(safeParseWithSchema(practiceSessionListResponseSchema, practiceList).success).toBe(true);
     expect(safeParseWithSchema(practiceRsvpResponseSchema, practiceRsvp).success).toBe(true);
+  });
+});
+
+const authMembership: AuthMembershipContract = {
+  membershipId: '00000000-0000-4000-8000-00000000a001',
+  teamId: '00000000-0000-4000-8000-00000000b001',
+  teamSlug: 'cairo-natives',
+  teamName: 'Cairo Natives',
+  seasonId: null,
+  seasonSlug: null,
+  seasonName: null,
+  status: 'active',
+  roles: ['member'],
+};
+
+const dashboardSummary: DashboardSummaryContract = {
+  persona: 'member',
+  generatedAt: '2026-07-18T09:00:00.000Z',
+  widgets: [{ kind: 'member-standing', presentation: 'metric', status: 'unavailable', asOf: null }],
+};
+
+const memberRoles: MemberRolesContract = {
+  membershipId: '00000000-0000-4000-8000-00000000a001',
+  roles: ['member'],
+  assignableRoles: ['member', 'coach'],
+};
+
+const leaderboard: LeaderboardContract = {
+  items: [
+    {
+      membershipId: '00000000-0000-4000-8000-00000000a001',
+      status: 'active',
+      total: 0,
+      rank: 4,
+      previousRank: null,
+      rankDelta: null,
+      movement: 'none',
+      badgeCount: 0,
+      contributions: [],
+    },
+  ],
+  total: 1,
+  limit: 50,
+  offset: 0,
+  period: 'season',
+  tieMode: 'competition',
+  cohort: 'all',
+  category: null,
+  asOf: '2026-07-13T06:00:00.000Z',
+};
+
+const pointsSummary: PointsSummaryContract = {
+  membershipId: '00000000-0000-4000-8000-00000000a001',
+  total: 0,
+  entries: [],
+  badges: [],
+};
+
+const activityTypes: ActivityTypeListContract = {
+  items: [
+    {
+      id: '00000000-0000-4000-8000-00000000c001',
+      typeKey: 'wfdf-accreditation',
+      name: 'WFDF accreditation module',
+      description: 'Officiating module.',
+      category: 'accreditation',
+      unit: null,
+      defaultPointValue: null,
+      pointsApproval: 'pending',
+      requiresEvidence: true,
+      minDurationMinutes: null,
+      maxDurationMinutes: null,
+      catalogVersion: 3,
+    },
+  ],
+  total: 1,
+  limit: 100,
+  offset: 0,
+};
+
+describe('generated contract for the newly landed endpoints', () => {
+  it('accepts a membership on a team that has no season', () => {
+    expect(safeParseWithSchema(authMembershipDtoSchema, authMembership).success).toBe(true);
+  });
+
+  it('accepts a dashboard widget that carries no payload at all', () => {
+    expect(safeParseWithSchema(dashboardSummaryResponseSchema, dashboardSummary).success).toBe(
+      true,
+    );
+  });
+
+  it('keeps the member-roles runtime schema compatible with generated types', () => {
+    expect(safeParseWithSchema(memberRolesResponseSchema, memberRoles).success).toBe(true);
+  });
+
+  it('keeps the points runtime schemas compatible with generated types', () => {
+    expect(safeParseWithSchema(leaderboardResponseSchema, leaderboard).success).toBe(true);
+    expect(safeParseWithSchema(pointsSummaryResponseSchema, pointsSummary).success).toBe(true);
+  });
+
+  it('keeps the activities runtime schema compatible with generated types', () => {
+    expect(safeParseWithSchema(activityTypeListResponseSchema, activityTypes).success).toBe(true);
   });
 });

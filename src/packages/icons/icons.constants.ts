@@ -19,12 +19,14 @@ import {
   notificationsOutline,
   peopleOutline,
   personCircleOutline,
+  ribbonOutline,
   refreshOutline,
   settingsOutline,
   shieldCheckmarkOutline,
   sunnyOutline,
   timeOutline,
   trendingUpOutline,
+  trophyOutline,
   warningOutline,
 } from 'ionicons/icons';
 
@@ -51,11 +53,13 @@ export const APP_ICONS = {
   people: peopleOutline,
   person: personCircleOutline,
   refresh: refreshOutline,
+  ribbon: ribbonOutline,
   settings: settingsOutline,
   shield: shieldCheckmarkOutline,
   sun: sunnyOutline,
   time: timeOutline,
   trendingUp: trendingUpOutline,
+  trophy: trophyOutline,
   warning: warningOutline,
 } as const;
 

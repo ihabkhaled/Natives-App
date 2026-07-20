@@ -21,3 +21,17 @@ export async function loginAs(email: string): Promise<string> {
 export function authGet(path: string, token: string): Promise<Response> {
   return fetch(apiUrl(path), { headers: { Authorization: `Bearer ${token}` } });
 }
+
+/** Authenticated POST against a mock-mode path. */
+export function authPost(path: string, token: string, body: unknown): Promise<Response> {
+  return fetch(apiUrl(path), {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+    body: JSON.stringify(body),
+  });
+}
+
+/** Team-scoped path builder shared by every team-scoped contract test. */
+export function teamScopedPath(teamId: string, suffix: string): string {
+  return `/teams/${teamId}${suffix}`;
+}

@@ -23,20 +23,12 @@ import {
 } from '@/tests/msw/assessments-data.fixture';
 import { MOCK_PERSONA_EMAILS, MOCK_PRACTICE } from '@/tests/msw/mock-data.constants';
 
-import { apiUrl, authGet, loginAs } from '../setup/contract-api.helper';
+import { apiUrl, authGet, authPost, loginAs } from '../setup/contract-api.helper';
 
 const TEAM = MOCK_PRACTICE.teamId;
 
 function teamPath(suffix: string): string {
   return `/teams/${TEAM}${suffix}`;
-}
-
-async function authPost(path: string, token: string, body: unknown): Promise<Response> {
-  return fetch(apiUrl(path), {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
-    body: JSON.stringify(body),
-  });
 }
 
 async function authPut(path: string, token: string, body: unknown): Promise<Response> {

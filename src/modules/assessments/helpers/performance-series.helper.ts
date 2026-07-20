@@ -1,10 +1,10 @@
 import type { TranslateParams } from '@/packages/i18n';
 import { I18N_KEYS } from '@/shared/i18n';
+import type { ChartTableRow } from '@/shared/ui';
 
 import { CHART_GEOMETRY, LEGACY_SCORE_MAXIMUM } from '../constants/assessments.constants';
 import type {
   ChartPoint,
-  ChartTableRow,
   RadarAxisView,
   RadarChartView,
   TrendChartView,

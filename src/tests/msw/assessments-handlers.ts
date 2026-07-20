@@ -20,8 +20,14 @@ import {
   transitionAssessmentRecord,
   transitionGoalRecord,
 } from './assessments.fixture';
-import { apiUrl, isAuthorized } from './mock-request.helper';
-import { nestErrorResponse } from './nest-error.helper';
+import {
+  apiUrl,
+  failRequest,
+  isAuthorized,
+  pathParam,
+  readJsonBody,
+  readPaging,
+} from './mock-request.helper';
 
 interface SaveBody {
   readonly expectedRecordVersion?: number;
@@ -36,32 +42,12 @@ interface VersionBody {
   readonly clarificationRequested?: boolean;
 }
 
-function fail(status: number, code: string, path: string): Response {
-  return nestErrorResponse({ statusCode: status, code, message: code, path: `/api/v1${path}` });
-}
-
 function assessmentsUrl(suffix: string): string {
   return apiUrl(`/teams/:teamId/player-assessments${suffix}`);
 }
 
 function catalogUrl(resource: string): string {
   return apiUrl(`/teams/:teamId/assessment-catalog/${resource}`);
-}
-
-function param(params: Record<string, unknown>, key: string): string {
-  return String(params[key]);
-}
-
-function readPaging(request: Request): { limit: number; offset: number } {
-  const url = new URL(request.url);
-  return {
-    limit: Number.parseInt(url.searchParams.get('limit') ?? '20', 10),
-    offset: Number.parseInt(url.searchParams.get('offset') ?? '0', 10),
-  };
-}
-
-async function readJson<T>(request: Request): Promise<T> {
-  return (await request.json().catch(() => ({}))) as T;
 }
 
 function pagedCatalog(items: readonly unknown[]): Record<string, unknown> {
@@ -78,52 +64,52 @@ const catalogHandlers = [
   http.get(catalogUrl(resource as string), ({ request }) =>
     isAuthorized(request)
       ? HttpResponse.json(pagedCatalog(items as readonly unknown[]))
-      : fail(401, 'UNAUTHORIZED', `/assessment-catalog/${resource as string}`),
+      : failRequest(401, 'UNAUTHORIZED', `/assessment-catalog/${resource as string}`),
   ),
 );
 
 const assessmentHandlers = [
   http.get(assessmentsUrl(''), ({ request }) => {
     if (!isAuthorized(request)) {
-      return fail(401, 'UNAUTHORIZED', '/player-assessments');
+      return failRequest(401, 'UNAUTHORIZED', '/player-assessments');
     }
     const paging = readPaging(request);
     return HttpResponse.json(listAssessmentsResponse(paging.limit, paging.offset));
   }),
   http.get(assessmentsUrl('/:assessmentId'), ({ request, params }) => {
     if (!isAuthorized(request)) {
-      return fail(401, 'UNAUTHORIZED', '/player-assessments');
+      return failRequest(401, 'UNAUTHORIZED', '/player-assessments');
     }
-    const detail = assessmentDetailResponse(param(params, 'assessmentId'));
+    const detail = assessmentDetailResponse(pathParam(params, 'assessmentId'));
     return detail === null
-      ? fail(404, 'NOT_FOUND', '/player-assessments')
+      ? failRequest(404, 'NOT_FOUND', '/player-assessments')
       : HttpResponse.json(detail);
   }),
   http.get(assessmentsUrl('/:assessmentId/revisions'), ({ request, params }) => {
     if (!isAuthorized(request)) {
-      return fail(401, 'UNAUTHORIZED', '/player-assessments');
+      return failRequest(401, 'UNAUTHORIZED', '/player-assessments');
     }
-    const revisions = revisionsResponse(param(params, 'assessmentId'));
+    const revisions = revisionsResponse(pathParam(params, 'assessmentId'));
     return revisions === null
-      ? fail(404, 'NOT_FOUND', '/player-assessments')
+      ? failRequest(404, 'NOT_FOUND', '/player-assessments')
       : HttpResponse.json(revisions);
   }),
   http.put(assessmentsUrl('/:assessmentId/values'), async ({ request, params }) => {
     if (!isAuthorized(request)) {
-      return fail(401, 'UNAUTHORIZED', '/player-assessments');
+      return failRequest(401, 'UNAUTHORIZED', '/player-assessments');
     }
-    const body = await readJson<SaveBody>(request);
+    const body = await readJsonBody<SaveBody>(request);
     const result = saveValues(
-      param(params, 'assessmentId'),
+      pathParam(params, 'assessmentId'),
       body.expectedRecordVersion ?? 0,
       body.summary ?? null,
       body.values ?? [],
     );
     if (result === 'not-found') {
-      return fail(404, 'NOT_FOUND', '/player-assessments');
+      return failRequest(404, 'NOT_FOUND', '/player-assessments');
     }
     return result === 'conflict'
-      ? fail(409, 'VERSION_CONFLICT', '/player-assessments')
+      ? failRequest(409, 'VERSION_CONFLICT', '/player-assessments')
       : HttpResponse.json(result);
   }),
 ];
@@ -131,19 +117,19 @@ const assessmentHandlers = [
 function workflowHandler(step: string) {
   return http.post(assessmentsUrl(`/:assessmentId/${step}`), async ({ request, params }) => {
     if (!isAuthorized(request)) {
-      return fail(401, 'UNAUTHORIZED', `/player-assessments/${step}`);
+      return failRequest(401, 'UNAUTHORIZED', `/player-assessments/${step}`);
     }
-    const body = await readJson<VersionBody>(request);
+    const body = await readJsonBody<VersionBody>(request);
     const result = transitionAssessmentRecord(
-      param(params, 'assessmentId'),
+      pathParam(params, 'assessmentId'),
       step === 'review' ? (body.decision ?? 'start_review') : step,
       body.expectedRecordVersion ?? 0,
     );
     if (result === 'not-found') {
-      return fail(404, 'NOT_FOUND', `/player-assessments/${step}`);
+      return failRequest(404, 'NOT_FOUND', `/player-assessments/${step}`);
     }
     return result === 'conflict'
-      ? fail(409, 'VERSION_CONFLICT', `/player-assessments/${step}`)
+      ? failRequest(409, 'VERSION_CONFLICT', `/player-assessments/${step}`)
       : HttpResponse.json(result);
   });
 }
@@ -151,14 +137,14 @@ function workflowHandler(step: string) {
 const selfHandlers = [
   http.get(apiUrl('/teams/:teamId/my-assessments'), ({ request }) => {
     if (!isAuthorized(request)) {
-      return fail(401, 'UNAUTHORIZED', '/my-assessments');
+      return failRequest(401, 'UNAUTHORIZED', '/my-assessments');
     }
     const paging = readPaging(request);
     return HttpResponse.json(myAssessmentsResponse(paging.limit, paging.offset));
   }),
   http.get(apiUrl('/teams/:teamId/my-feedback'), ({ request }) => {
     if (!isAuthorized(request)) {
-      return fail(401, 'UNAUTHORIZED', '/my-feedback');
+      return failRequest(401, 'UNAUTHORIZED', '/my-feedback');
     }
     const paging = readPaging(request);
     return HttpResponse.json(myFeedbackResponse(paging.limit, paging.offset));
@@ -167,19 +153,21 @@ const selfHandlers = [
     apiUrl('/teams/:teamId/my-feedback/:feedbackId/acknowledge'),
     async ({ request, params }) => {
       if (!isAuthorized(request)) {
-        return fail(401, 'UNAUTHORIZED', '/my-feedback');
+        return failRequest(401, 'UNAUTHORIZED', '/my-feedback');
       }
-      const body = await readJson<VersionBody>(request);
+      const body = await readJsonBody<VersionBody>(request);
       const result = acknowledgeFeedbackRecord(
-        param(params, 'feedbackId'),
+        pathParam(params, 'feedbackId'),
         body.clarificationRequested === true,
       );
-      return result === null ? fail(404, 'NOT_FOUND', '/my-feedback') : HttpResponse.json(result);
+      return result === null
+        ? failRequest(404, 'NOT_FOUND', '/my-feedback')
+        : HttpResponse.json(result);
     },
   ),
   http.get(apiUrl('/teams/:teamId/my-development-goals'), ({ request }) => {
     if (!isAuthorized(request)) {
-      return fail(401, 'UNAUTHORIZED', '/my-development-goals');
+      return failRequest(401, 'UNAUTHORIZED', '/my-development-goals');
     }
     const paging = readPaging(request);
     return HttpResponse.json(myGoalsResponse(paging.limit, paging.offset));
@@ -188,19 +176,19 @@ const selfHandlers = [
     apiUrl('/teams/:teamId/development-goals/:goalId/transition'),
     async ({ request, params }) => {
       if (!isAuthorized(request)) {
-        return fail(401, 'UNAUTHORIZED', '/development-goals');
+        return failRequest(401, 'UNAUTHORIZED', '/development-goals');
       }
-      const body = await readJson<VersionBody>(request);
+      const body = await readJsonBody<VersionBody>(request);
       const result = transitionGoalRecord(
-        param(params, 'goalId'),
+        pathParam(params, 'goalId'),
         body.transition ?? 'activate',
         body.expectedRecordVersion ?? 0,
       );
       if (result === 'not-found') {
-        return fail(404, 'NOT_FOUND', '/development-goals');
+        return failRequest(404, 'NOT_FOUND', '/development-goals');
       }
       return result === 'conflict'
-        ? fail(409, 'VERSION_CONFLICT', '/development-goals')
+        ? failRequest(409, 'VERSION_CONFLICT', '/development-goals')
         : HttpResponse.json(result);
     },
   ),

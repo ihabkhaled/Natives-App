@@ -3,7 +3,10 @@
  * Raw test ids are forbidden everywhere else (ESLint:
  * architecture/no-inline-test-ids).
  */
+import { FEATURE_TEST_IDS } from './feature-test-ids.constants';
+
 export const TEST_IDS = {
+  ...FEATURE_TEST_IDS,
   appShell: 'app-shell',
   skipLink: 'skip-link',
   mainContent: 'main-content',

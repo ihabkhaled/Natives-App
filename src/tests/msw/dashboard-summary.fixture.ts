@@ -11,9 +11,9 @@ import { PERMISSIONS } from '@/shared/security';
 
 type SummaryDto = SchemaOutput<typeof dashboardSummaryResponseSchema>;
 type WidgetDto = SummaryDto['widgets'][number];
-type TaskDto = Extract<WidgetDto, { presentation: 'tasks' }>['tasks'][number];
-type RowDto = Extract<WidgetDto, { presentation: 'breakdown' }>['rows'][number];
-type MetricDto = Extract<WidgetDto, { presentation: 'metric' }>['metric'];
+type TaskDto = NonNullable<Extract<WidgetDto, { presentation: 'tasks' }>['tasks']>[number];
+type RowDto = NonNullable<Extract<WidgetDto, { presentation: 'breakdown' }>['rows']>[number];
+type MetricDto = NonNullable<Extract<WidgetDto, { presentation: 'metric' }>['metric']>;
 type WidgetStatus = WidgetDto['status'];
 
 interface TaskSpec {

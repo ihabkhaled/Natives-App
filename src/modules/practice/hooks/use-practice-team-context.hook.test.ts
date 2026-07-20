@@ -34,10 +34,15 @@ describe('usePracticeTeamContext', () => {
       onboardingComplete: true,
       memberships: [
         {
+          membershipId: 'membership-1',
           teamId: 'team-1',
+          teamSlug: 'team-one',
           teamName: 'Team One',
           seasonId: 'season-1',
+          seasonSlug: 'season-one',
           seasonName: 'Season One',
+          status: 'active',
+          roles: ['member'],
         },
       ],
     });

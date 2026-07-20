@@ -1,7 +1,7 @@
 import { IonNote, IonText } from '@/packages/ionic';
 import { TEST_IDS } from '@/shared/config';
+import { ChartDataTable } from '@/shared/ui';
 
-import { ChartDataTable } from '../chart-data-table';
 import type { PerformanceRadarChartProps } from './performance-radar-chart.types';
 
 /**

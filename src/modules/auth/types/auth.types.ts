@@ -6,12 +6,39 @@ export const ACCOUNT_STATE = {
 
 export type AccountState = (typeof ACCOUNT_STATE)[keyof typeof ACCOUNT_STATE];
 
-/** An explicit team/season scope the user belongs to. */
+/**
+ * Lifecycle of one membership scope, mirroring the backend membership status
+ * enum. Declared here (not imported from the members module) so the auth
+ * module stays free of upward module dependencies.
+ */
+export const MEMBERSHIP_SCOPE_STATUSES = [
+  'invited',
+  'active',
+  'inactive',
+  'suspended',
+  'left',
+  'archived',
+  'anonymized',
+] as const;
+
+export type MembershipScopeStatus = (typeof MEMBERSHIP_SCOPE_STATUSES)[number];
+
+/**
+ * An explicit team/season scope the user belongs to. The season triple is
+ * nullable: a team without a season is a real, supported scope and is never
+ * coerced into a placeholder season.
+ */
 export interface AuthMembership {
+  readonly membershipId: string;
   readonly teamId: string;
+  readonly teamSlug: string;
   readonly teamName: string;
-  readonly seasonId: string;
-  readonly seasonName: string;
+  readonly seasonId: string | null;
+  readonly seasonSlug: string | null;
+  readonly seasonName: string | null;
+  readonly status: MembershipScopeStatus;
+  /** Lower-snake role slugs the principal holds inside this team scope. */
+  readonly roles: readonly string[];
 }
 
 export interface AuthUser {

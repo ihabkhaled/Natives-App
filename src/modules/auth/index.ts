@@ -1,4 +1,6 @@
-export { buildAuthUser } from './factories/auth.factory';
+export { buildAuthMembership, buildAuthUser } from './factories/auth.factory';
+export { selectActiveMembership } from './helpers/active-membership.helper';
+export { useActiveTeamScope, type ActiveTeamScopeView } from './hooks/use-active-team-scope.hook';
 export {
   useCurrentUserQuery,
   type CurrentUserQueryOptions,
@@ -15,6 +17,7 @@ export { createAuthTokenRepository, getAuthTokenRepository } from './repositorie
 export { getAuthRouteDefinitions } from './routes/auth.routes';
 export {
   authAckSchema,
+  authMembershipDtoSchema,
   authTokensDtoSchema,
   authUserDtoSchema,
   invitationDetailsDtoSchema,
@@ -30,9 +33,11 @@ export { bootstrapSessionFromStoredTokens } from './services/bootstrap-session.s
 export { createRefreshExecutor } from './services/refresh-session.service';
 export {
   ACCOUNT_STATE,
+  MEMBERSHIP_SCOPE_STATUSES,
   SESSION_STATUS,
   type AccountState,
   type AuthMembership,
   type AuthUser,
+  type MembershipScopeStatus,
   type SessionStatus,
 } from './types/auth.types';

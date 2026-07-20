@@ -1,17 +1,13 @@
 import { describe, expect, it } from 'vitest';
 
+import { buildAuthMembership } from '../factories/auth.factory';
 import {
   mapAuthSessionResponseToTokens,
   mapLoginResponseToSession,
   mapUserDtoToAuthUser,
 } from './auth.mapper';
 
-const membership = {
-  teamId: 'team-1',
-  teamName: 'Team One',
-  seasonId: 'season-1',
-  seasonName: 'Season One',
-};
+const membership = buildAuthMembership({ teamId: 'team-1', teamName: 'Team One' });
 
 const wireUser = {
   id: 'user-1',

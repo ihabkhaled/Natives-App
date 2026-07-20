@@ -1,12 +1,11 @@
 import { IonNote, IonText } from '@/packages/ionic';
 import { TEST_IDS } from '@/shared/config';
-import { AppButton, AppInput, PageShell } from '@/shared/ui';
+import { AppButton, AppInput, AsyncStateView, PageShell } from '@/shared/ui';
 
 import { AssessmentMetricGrid } from '../assessment-metric-grid';
 import { AssessmentRevisionList } from '../assessment-revision-list';
 import { AssessmentStatusChip } from '../assessment-status-chip';
 import { AssessmentWorkflowBar } from '../assessment-workflow-bar';
-import { AssessmentsStateView } from '../assessments-state-view';
 import { ASSESSMENT_ENTRY_STATE_TEST_IDS } from './assessment-entry-view.constants';
 import type { AssessmentEntryViewProps } from './assessment-entry-view.types';
 
@@ -25,7 +24,7 @@ export function AssessmentEntryView(props: AssessmentEntryViewProps): React.JSX.
           testId={TEST_IDS.assessmentEntryBack}
           onClick={props.onBack}
         />
-        <AssessmentsStateView view={props} variant="detail" {...ASSESSMENT_ENTRY_STATE_TEST_IDS} />
+        <AsyncStateView view={props} variant="detail" {...ASSESSMENT_ENTRY_STATE_TEST_IDS} />
         {props.status === 'ready' ? (
           <>
             <header className="app-assessment-entry__head">

@@ -1,9 +1,8 @@
-import { IonNote, IonSelect, IonSelectOption, IonText } from '@/packages/ionic';
+import { IonNote, IonText } from '@/packages/ionic';
 import { TEST_IDS } from '@/shared/config';
-import { EmptyState, PageShell } from '@/shared/ui';
+import { AsyncStateView, EmptyState, PageShell, SelectField } from '@/shared/ui';
 
 import { AssessmentSummaryList } from '../assessment-summary-list';
-import { AssessmentsStateView } from '../assessments-state-view';
 import {
   ASSESSMENTS_LIST_HEIGHT_PX,
   ASSESSMENTS_STATE_TEST_IDS,
@@ -25,22 +24,15 @@ export function AssessmentsView(props: AssessmentsViewProps): React.JSX.Element 
           </IonText>
         </header>
         <div className="app-assessments__filters">
-          <IonSelect
-            data-testid={TEST_IDS.assessmentsStatusFilter}
+          <SelectField
+            testId={TEST_IDS.assessmentsStatusFilter}
             label={props.statusFilterLabel}
             value={props.statusFilter}
-            onIonChange={(event) => {
-              props.onStatusFilterChange(event.detail.value as string);
-            }}
-          >
-            {props.statusOptions.map((option) => (
-              <IonSelectOption key={option.value} value={option.value}>
-                {option.label}
-              </IonSelectOption>
-            ))}
-          </IonSelect>
+            options={props.statusOptions}
+            onChange={props.onStatusFilterChange}
+          />
         </div>
-        <AssessmentsStateView view={props} variant="list" {...ASSESSMENTS_STATE_TEST_IDS} />
+        <AsyncStateView view={props} variant="list" {...ASSESSMENTS_STATE_TEST_IDS} />
         {props.status === 'ready' && !props.hasMatches ? (
           <EmptyState title={props.noMatchesTitle} message={props.noMatchesMessage} />
         ) : null}

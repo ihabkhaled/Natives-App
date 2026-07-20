@@ -1,7 +1,9 @@
 import { ASSESSMENTS_I18N_KEYS } from './assessments-keys.constants';
 import { ATTENDANCE_I18N_KEYS } from './attendance-keys.constants';
 import { MEMBERS_I18N_KEYS } from './members-keys.constants';
+import { POINTS_I18N_KEYS } from './points-keys.constants';
 import { PRACTICE_I18N_KEYS } from './practice-keys.constants';
+import { TRAINING_I18N_KEYS } from './training-keys.constants';
 
 /**
  * Every user-visible translation key. Raw copy is forbidden in feature code
@@ -186,6 +188,8 @@ export const I18N_KEYS = {
   practice: PRACTICE_I18N_KEYS,
   members: MEMBERS_I18N_KEYS,
   assessments: ASSESSMENTS_I18N_KEYS,
+  training: TRAINING_I18N_KEYS,
+  points: POINTS_I18N_KEYS,
   health: {
     title: 'health.title',
     statusUp: 'health.statusUp',

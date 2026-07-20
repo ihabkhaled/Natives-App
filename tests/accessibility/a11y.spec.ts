@@ -168,3 +168,39 @@ test.describe('accessibility (WCAG 2.2 AA)', () => {
     expect(box?.height ?? 0).toBeGreaterThanOrEqual(44);
   });
 });
+
+test.describe('external training and points accessibility', () => {
+  test('external training workspace has no violations', async ({ page }) => {
+    await login(page);
+    await gotoApp(page, APP_ROUTES.training);
+    await expect(page.getByTestId(TEST_IDS.trainingComposer)).toBeVisible();
+    await waitForAppAnimations(page);
+    expect((await analyze(page)).violations).toEqual([]);
+  });
+
+  test('training review queue has no violations', async ({ page }) => {
+    await login(page);
+    await gotoApp(page, APP_ROUTES.trainingReview);
+    await expect(page.getByTestId(TEST_IDS.trainingReviewQueue)).toBeVisible();
+    await waitForAppAnimations(page);
+    expect((await analyze(page)).violations).toEqual([]);
+  });
+
+  test('leaderboard table and its rank explanation have no violations', async ({ page }) => {
+    await login(page);
+    await gotoApp(page, APP_ROUTES.leaderboard);
+    await expect(page.getByTestId(TEST_IDS.leaderboardTable)).toBeVisible();
+    await page.getByTestId(TEST_IDS.leaderboardExplainToggle).first().click();
+    await expect(page.getByTestId(TEST_IDS.leaderboardExplainPanel)).toBeVisible();
+    await waitForAppAnimations(page);
+    expect((await analyze(page)).violations).toEqual([]);
+  });
+
+  test('points ledger, badges, and the category chart have no violations', async ({ page }) => {
+    await login(page);
+    await gotoApp(page, APP_ROUTES.points);
+    await expect(page.getByTestId(TEST_IDS.pointsLedger)).toBeVisible();
+    await waitForAppAnimations(page);
+    expect((await analyze(page)).violations).toEqual([]);
+  });
+});

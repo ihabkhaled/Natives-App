@@ -10,6 +10,7 @@ import { AppError } from '@/shared/errors/app.errors';
 import { installTestAppHttpClient } from '../../../../tests/factories/http.factory';
 import { AUTH_ANALYTICS_EVENTS } from '../constants/auth-analytics.constants';
 import { AUTH_API_PATHS } from '../constants/auth-api.constants';
+import { buildAuthMembership } from '../factories/auth.factory';
 import { loginUser } from './login.service';
 
 vi.mock('@/packages/analytics', () => ({ trackEvent: vi.fn() }));
@@ -21,12 +22,7 @@ vi.mock('@/packages/secure-storage', async () => {
 });
 
 const CREDENTIALS = { email: 'ranger@example.com', password: 'Sup3rSecret!' };
-const MEMBERSHIP = {
-  teamId: 'team-1',
-  teamName: 'Team One',
-  seasonId: 'season-1',
-  seasonName: 'Season One',
-};
+const MEMBERSHIP = buildAuthMembership({ teamId: 'team-1', teamName: 'Team One' });
 const USER_EXTRA = {
   permissions: ['members.read'],
   accountState: 'active' as const,

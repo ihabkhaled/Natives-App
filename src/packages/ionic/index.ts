@@ -25,6 +25,7 @@ export {
   IonSelectOption,
   IonSpinner,
   IonText,
+  IonTextarea,
   IonTitle,
   IonToolbar,
   setupIonicReact,

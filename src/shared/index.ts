@@ -8,3 +8,4 @@ export * from './security';
 export * from './testing';
 export * from './types';
 export * from './ui';
+export * from './view';

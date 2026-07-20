@@ -2,7 +2,7 @@ import { http, HttpResponse } from 'msw';
 
 import type { MemberRole } from '@/modules/members';
 
-import { apiUrl } from './mock-request.helper';
+import { apiUrl, failRequest, pathParam, readJsonBody } from './mock-request.helper';
 import {
   addAliasRecord,
   attachAvatarRecord,
@@ -20,7 +20,6 @@ import {
   updateProfileRecord,
   type Actor,
 } from './members.fixture';
-import { nestErrorResponse } from './nest-error.helper';
 
 interface ProfileBody {
   readonly profile?: { fullName?: string; nickname?: string; jerseyNumber?: number };
@@ -65,26 +64,14 @@ function resolveActor(request: Request): Actor | null {
   return { tier: 'admin', userId: 'user-1' };
 }
 
-function fail(status: number, code: string, path: string): Response {
-  return nestErrorResponse({ statusCode: status, code, message: code, path: `/api/v1${path}` });
-}
-
 function membersUrl(suffix: string): string {
   return apiUrl(`/teams/:teamId/members${suffix}`);
-}
-
-function param(params: Record<string, unknown>, key: string): string {
-  return String(params[key]);
-}
-
-async function readJson<T>(request: Request): Promise<T> {
-  return (await request.json().catch(() => ({}))) as T;
 }
 
 const directoryHandlers = [
   http.get(membersUrl(''), ({ request }) => {
     if (resolveActor(request) === null) {
-      return fail(401, 'UNAUTHORIZED', '/members');
+      return failRequest(401, 'UNAUTHORIZED', '/members');
     }
     const url = new URL(request.url);
     const limit = Number.parseInt(url.searchParams.get('limit') ?? '20', 10);
@@ -94,9 +81,9 @@ const directoryHandlers = [
   http.post(membersUrl('/invite'), async ({ request }) => {
     const actor = resolveActor(request);
     if (actor?.tier !== 'admin') {
-      return fail(actor === null ? 401 : 403, 'FORBIDDEN', '/members/invite');
+      return failRequest(actor === null ? 401 : 403, 'FORBIDDEN', '/members/invite');
     }
-    const body = await readJson<ProfileBody>(request);
+    const body = await readJsonBody<ProfileBody>(request);
     const profile = body.profile ?? { fullName: 'New Member' };
     return HttpResponse.json(
       inviteMemberRecord(
@@ -109,33 +96,35 @@ const directoryHandlers = [
   }),
   http.get(membersUrl('/:membershipId'), ({ request, params }) => {
     const actor = resolveActor(request);
-    const id = param(params, 'membershipId');
+    const id = pathParam(params, 'membershipId');
     if (actor === null) {
-      return fail(401, 'UNAUTHORIZED', `/members/${id}`);
+      return failRequest(401, 'UNAUTHORIZED', `/members/${id}`);
     }
     const view = getMemberView(id, actor.tier, actor.userId);
-    return view === null ? fail(404, 'NOT_FOUND', `/members/${id}`) : HttpResponse.json(view);
+    return view === null
+      ? failRequest(404, 'NOT_FOUND', `/members/${id}`)
+      : HttpResponse.json(view);
   }),
   http.patch(membersUrl('/:membershipId/profile'), async ({ request, params }) => {
     const actor = resolveActor(request);
-    const id = param(params, 'membershipId');
+    const id = pathParam(params, 'membershipId');
     if (actor === null) {
-      return fail(401, 'UNAUTHORIZED', `/members/${id}/profile`);
+      return failRequest(401, 'UNAUTHORIZED', `/members/${id}/profile`);
     }
-    const body = await readJson<ProfileBody>(request);
+    const body = await readJsonBody<ProfileBody>(request);
     const result = updateProfileRecord(id, toProfilePatch(body), actor);
     if (result === 'not-found') {
-      return fail(404, 'NOT_FOUND', `/members/${id}/profile`);
+      return failRequest(404, 'NOT_FOUND', `/members/${id}/profile`);
     }
     return result === 'conflict'
-      ? fail(409, 'CONFLICT', `/members/${id}/profile`)
+      ? failRequest(409, 'CONFLICT', `/members/${id}/profile`)
       : HttpResponse.json(result);
   }),
   http.get(membersUrl('/:membershipId/history'), ({ request, params }) => {
     const actor = resolveActor(request);
-    const id = param(params, 'membershipId');
+    const id = pathParam(params, 'membershipId');
     if (actor?.tier !== 'admin') {
-      return fail(actor === null ? 401 : 403, 'FORBIDDEN', `/members/${id}/history`);
+      return failRequest(actor === null ? 401 : 403, 'FORBIDDEN', `/members/${id}/history`);
     }
     return HttpResponse.json(historyResponse(id));
   }),
@@ -144,31 +133,31 @@ const directoryHandlers = [
 const aliasHandlers = [
   http.get(membersUrl('/:membershipId/aliases'), ({ request, params }) => {
     const actor = resolveActor(request);
-    const id = param(params, 'membershipId');
+    const id = pathParam(params, 'membershipId');
     if (actor === null || actor.tier === 'member') {
-      return fail(actor === null ? 401 : 403, 'FORBIDDEN', `/members/${id}/aliases`);
+      return failRequest(actor === null ? 401 : 403, 'FORBIDDEN', `/members/${id}/aliases`);
     }
     return HttpResponse.json(listAliasesResponse(id));
   }),
   http.post(membersUrl('/:membershipId/aliases'), async ({ request, params }) => {
     const actor = resolveActor(request);
-    const id = param(params, 'membershipId');
+    const id = pathParam(params, 'membershipId');
     if (actor === null || actor.tier === 'member') {
-      return fail(actor === null ? 401 : 403, 'FORBIDDEN', `/members/${id}/aliases`);
+      return failRequest(actor === null ? 401 : 403, 'FORBIDDEN', `/members/${id}/aliases`);
     }
-    const body = await readJson<{ alias?: string }>(request);
+    const body = await readJsonBody<{ alias?: string }>(request);
     const result = addAliasRecord(id, body.alias ?? '');
     return result === 'conflict'
-      ? fail(409, 'CONFLICT', `/members/${id}/aliases`)
+      ? failRequest(409, 'CONFLICT', `/members/${id}/aliases`)
       : HttpResponse.json(result, { status: 201 });
   }),
   http.delete(membersUrl('/:membershipId/aliases/:aliasId'), ({ request, params }) => {
     const actor = resolveActor(request);
-    const id = param(params, 'membershipId');
+    const id = pathParam(params, 'membershipId');
     if (actor === null || actor.tier === 'member') {
-      return fail(actor === null ? 401 : 403, 'FORBIDDEN', `/members/${id}/aliases`);
+      return failRequest(actor === null ? 401 : 403, 'FORBIDDEN', `/members/${id}/aliases`);
     }
-    removeAliasRecord(id, param(params, 'aliasId'));
+    removeAliasRecord(id, pathParam(params, 'aliasId'));
     return new HttpResponse(null, { status: 204 });
   }),
 ];
@@ -176,19 +165,19 @@ const aliasHandlers = [
 const roleHandlers = [
   http.get(membersUrl('/:membershipId/roles'), ({ request, params }) => {
     const actor = resolveActor(request);
-    const id = param(params, 'membershipId');
+    const id = pathParam(params, 'membershipId');
     if (actor === null || actor.tier === 'member') {
-      return fail(actor === null ? 401 : 403, 'FORBIDDEN', `/members/${id}/roles`);
+      return failRequest(actor === null ? 401 : 403, 'FORBIDDEN', `/members/${id}/roles`);
     }
     return HttpResponse.json(rolesResponse(id, actor.tier));
   }),
   http.put(membersUrl('/:membershipId/roles'), async ({ request, params }) => {
     const actor = resolveActor(request);
-    const id = param(params, 'membershipId');
+    const id = pathParam(params, 'membershipId');
     if (actor === null || actor.tier === 'member') {
-      return fail(actor === null ? 401 : 403, 'FORBIDDEN', `/members/${id}/roles`);
+      return failRequest(actor === null ? 401 : 403, 'FORBIDDEN', `/members/${id}/roles`);
     }
-    const body = await readJson<{ roles?: MemberRole[] }>(request);
+    const body = await readJsonBody<{ roles?: MemberRole[] }>(request);
     return HttpResponse.json(setRolesRecord(id, body.roles ?? [], actor.tier));
   }),
 ];
@@ -196,27 +185,27 @@ const roleHandlers = [
 const avatarHandlers = [
   http.post(membersUrl('/:membershipId/avatar'), ({ request, params }) => {
     const actor = resolveActor(request);
-    const id = param(params, 'membershipId');
+    const id = pathParam(params, 'membershipId');
     if (actor === null) {
-      return fail(401, 'UNAUTHORIZED', `/members/${id}/avatar`);
+      return failRequest(401, 'UNAUTHORIZED', `/members/${id}/avatar`);
     }
     return HttpResponse.json(avatarTicketResponse(id), { status: 201 });
   }),
   http.put(membersUrl('/:membershipId/avatar/:mediaId'), ({ request, params }) => {
     const actor = resolveActor(request);
-    const id = param(params, 'membershipId');
+    const id = pathParam(params, 'membershipId');
     if (actor === null) {
-      return fail(401, 'UNAUTHORIZED', `/members/${id}/avatar`);
+      return failRequest(401, 'UNAUTHORIZED', `/members/${id}/avatar`);
     }
     const result = attachAvatarRecord(id, actor.tier, actor.userId);
     return result === 'not-found'
-      ? fail(404, 'NOT_FOUND', `/members/${id}/avatar`)
+      ? failRequest(404, 'NOT_FOUND', `/members/${id}/avatar`)
       : HttpResponse.json(result);
   }),
   http.get(membersUrl('/:membershipId/avatar'), ({ request, params }) => {
-    const id = param(params, 'membershipId');
+    const id = pathParam(params, 'membershipId');
     return resolveActor(request) === null
-      ? fail(401, 'UNAUTHORIZED', `/members/${id}/avatar`)
+      ? failRequest(401, 'UNAUTHORIZED', `/members/${id}/avatar`)
       : HttpResponse.json(avatarAccessResponse(id));
   }),
 ];
@@ -225,19 +214,19 @@ const transitionHandler = http.post(
   membersUrl('/:membershipId/:action'),
   async ({ request, params }) => {
     const actor = resolveActor(request);
-    const id = param(params, 'membershipId');
-    const action = param(params, 'action');
+    const id = pathParam(params, 'membershipId');
+    const action = pathParam(params, 'action');
     const status = TRANSITION_STATUS[action];
     if (status === undefined) {
-      return fail(404, 'NOT_FOUND', `/members/${id}/${action}`);
+      return failRequest(404, 'NOT_FOUND', `/members/${id}/${action}`);
     }
     if (actor?.tier !== 'admin') {
-      return fail(actor === null ? 401 : 403, 'FORBIDDEN', `/members/${id}/${action}`);
+      return failRequest(actor === null ? 401 : 403, 'FORBIDDEN', `/members/${id}/${action}`);
     }
-    const body = await readJson<{ reason?: string }>(request);
+    const body = await readJsonBody<{ reason?: string }>(request);
     const result = transitionRecord(id, status, body.reason ?? null);
     return result === 'not-found'
-      ? fail(404, 'NOT_FOUND', `/members/${id}/${action}`)
+      ? failRequest(404, 'NOT_FOUND', `/members/${id}/${action}`)
       : HttpResponse.json(result);
   },
 );

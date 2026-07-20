@@ -12,6 +12,7 @@ import { AppError } from '@/shared/errors/app.errors';
 
 import { buildTokenPair, createMemoryTokenStore } from '../../../../tests/factories/http.factory';
 import { AUTH_API_PATHS } from '../constants/auth-api.constants';
+import { buildAuthMembership } from '../factories/auth.factory';
 import { getCurrentUser } from './get-current-user.service';
 
 function wireClient(routes: readonly TestRoute[]): void {
@@ -40,12 +41,7 @@ afterEach(() => {
 
 describe('getCurrentUser', () => {
   it('returns the normalized profile on success', async () => {
-    const membership = {
-      teamId: 'team-1',
-      teamName: 'Team One',
-      seasonId: 'season-1',
-      seasonName: 'Season One',
-    };
+    const membership = buildAuthMembership({ teamId: 'team-1', teamName: 'Team One' });
     wireClient([
       currentUserRoute(200, {
         id: 'user-1',
