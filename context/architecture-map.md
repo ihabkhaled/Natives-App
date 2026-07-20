@@ -12,7 +12,9 @@ the wiring.
 │                   modules: startup, providers, router, shell, boundary│
 ├──────────────────────────────────────────────────────────────────────┤
 │ src/modules/      features, one folder each, one public index.ts      │
-│                   auth · health · home · settings · ui-workbench      │
+│                   admin · assessments · attendance · auth · dashboard │
+│                   health · home · members · practice · settings ·     │
+│                   ui-workbench                                        │
 ├──────────────────────────────────────────────────────────────────────┤
 │ src/platform/     device + runtime policy composed from plugin owners │
 ├──────────────────────────────────────────────────────────────────────┤

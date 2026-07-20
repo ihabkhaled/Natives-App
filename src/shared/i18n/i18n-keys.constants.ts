@@ -1,3 +1,4 @@
+import { ASSESSMENTS_I18N_KEYS } from './assessments-keys.constants';
 import { ATTENDANCE_I18N_KEYS } from './attendance-keys.constants';
 import { MEMBERS_I18N_KEYS } from './members-keys.constants';
 import { PRACTICE_I18N_KEYS } from './practice-keys.constants';
@@ -120,7 +121,6 @@ export const I18N_KEYS = {
   home: {
     title: 'home.title',
     greeting: 'home.greeting',
-    logout: 'home.logout',
     manageSessions: 'home.manageSessions',
   },
   dashboard: {
@@ -137,6 +137,7 @@ export const I18N_KEYS = {
     offlineNotice: 'dashboard.offlineNotice',
     widgetEmpty: 'dashboard.widgetEmpty',
     widgetUnavailable: 'dashboard.widgetUnavailable',
+    widgetUnavailableMessage: 'dashboard.widgetUnavailableMessage',
     widgetPartial: 'dashboard.widgetPartial',
     unitPercent: 'dashboard.unitPercent',
     unitPoints: 'dashboard.unitPoints',
@@ -184,6 +185,7 @@ export const I18N_KEYS = {
   attendance: ATTENDANCE_I18N_KEYS,
   practice: PRACTICE_I18N_KEYS,
   members: MEMBERS_I18N_KEYS,
+  assessments: ASSESSMENTS_I18N_KEYS,
   health: {
     title: 'health.title',
     statusUp: 'health.statusUp',

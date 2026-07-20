@@ -12,6 +12,7 @@ export function AppInput(props: AppInputProps): React.JSX.Element {
       name={props.name}
       value={props.value}
       type={props.type ?? 'text'}
+      disabled={props.disabled === true}
       {...(props.placeholder === undefined ? {} : { placeholder: props.placeholder })}
       {...(props.autocomplete === undefined ? {} : { autocomplete: props.autocomplete })}
       {...(props.errorMessage === undefined ? {} : { errorText: props.errorMessage })}

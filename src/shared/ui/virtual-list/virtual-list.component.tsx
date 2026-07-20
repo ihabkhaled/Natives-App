@@ -12,6 +12,7 @@ export function VirtualizedList<Item>(props: VirtualizedListProps<Item>): React.
       items={props.items}
       renderItem={props.renderItem}
       heightPx={props.heightPx}
+      initialItemCount={props.initialItemCount ?? props.items.length}
       testId={props.testId}
     />
   );

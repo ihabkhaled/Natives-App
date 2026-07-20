@@ -23,6 +23,9 @@ describe('APP_PATHS', () => {
       workbench: '/workbench',
       members: '/members',
       memberProfile: '/members/:membershipId',
+      assessments: '/assessments',
+      assessmentEntry: '/assessments/:assessmentId',
+      performance: '/performance',
     });
   });
 

@@ -15,6 +15,8 @@ export const APP_ROUTES = {
   practices: '/practices',
   attendance: '/practices/sess-evening/attendance',
   members: '/members',
+  assessments: '/assessments',
+  performance: '/performance',
   admin: '/admin',
   settings: '/settings',
   workbench: '/workbench',
@@ -66,4 +68,13 @@ export async function setOffline(page: Page, offline: boolean): Promise<void> {
   await page.evaluate((isOffline) => {
     globalThis.dispatchEvent(new Event(isOffline ? 'offline' : 'online'));
   }, offline);
+}
+
+/** Switch the app to Arabic from the settings screen and await the RTL flip. */
+export async function switchToArabic(page: Page): Promise<void> {
+  await page
+    .getByTestId(TEST_IDS.settingsLocaleSelect)
+    .locator('ion-segment-button[value="ar"]')
+    .click();
+  await expect(page.locator('html')).toHaveAttribute('dir', 'rtl');
 }

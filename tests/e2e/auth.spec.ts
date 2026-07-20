@@ -67,7 +67,8 @@ test.describe('authentication', () => {
     await login(page);
     await expectPresentedPage(page, TEST_IDS.homePage);
 
-    await page.getByTestId(TEST_IDS.homeLogoutButton).click();
+    await page.getByTestId(TEST_IDS.appBarUserMenuButton).click();
+    await page.getByTestId(TEST_IDS.appBarSignOut).click();
 
     await expectPresentedPage(page, TEST_IDS.loginPage);
     await gotoApp(page, APP_ROUTES.home);

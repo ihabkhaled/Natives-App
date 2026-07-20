@@ -16,11 +16,8 @@ function buildProps(overrides: Partial<HomeViewProps> = {}): HomeViewProps {
     avatarLabel: 'Your profile',
     isLoadingUser: false,
     loadingLabel: 'Loading…',
-    logoutLabel: 'Sign out',
     manageSessionsLabel: 'Manage your devices',
     practiceCalendarLabel: 'Open the practice calendar',
-    isLoggingOut: false,
-    onLogout: vi.fn(),
     onManageSessions: vi.fn(),
     onOpenPracticeCalendar: vi.fn(),
     dashboardSlot: <div data-testid={TEST_IDS.dashboardView}>Dashboard</div>,
@@ -80,19 +77,19 @@ describe('HomeView', () => {
     expect(screen.getByTestId(TEST_IDS.healthCard)).toBeInTheDocument();
   });
 
-  it('renders the sign-out button under its test id', () => {
+  it('never renders a sign-out control on the home canvas', () => {
     mountHome();
 
-    expect(screen.getByTestId(HOME_VIEW_TEST_IDS.logout)).toHaveTextContent('Sign out');
+    expect(screen.queryByTestId(TEST_IDS.homeLogoutButton)).not.toBeInTheDocument();
   });
 
-  it('forwards a sign-out click', async () => {
-    const props = buildProps();
-    mountHome(props);
+  it('lays the canvas out as one main region holding both slots', () => {
+    mountHome();
 
-    await userEvent.click(screen.getByTestId(HOME_VIEW_TEST_IDS.logout));
-
-    expect(props.onLogout).toHaveBeenCalledOnce();
+    const main = screen.getByRole('main');
+    expect(main).toHaveClass('app-home-layout');
+    expect(screen.getByTestId(TEST_IDS.dashboardView)).toBeInTheDocument();
+    expect(screen.getByTestId(TEST_IDS.healthCard)).toBeInTheDocument();
   });
 
   it('opens the practice calendar from the hero action', async () => {
@@ -113,11 +110,10 @@ describe('HomeView', () => {
     expect(props.onManageSessions).toHaveBeenCalledOnce();
   });
 
-  it('blocks a second sign-out while one is in flight', () => {
-    mountHome(buildProps({ isLoggingOut: true }));
+  it('keeps both hero actions reachable side by side', () => {
+    mountHome();
 
-    const button = screen.getByTestId(HOME_VIEW_TEST_IDS.logout);
-    expect(button).toHaveAttribute('aria-busy', 'true');
-    expect(button).toHaveProperty('disabled', true);
+    expect(screen.getByTestId(HOME_VIEW_TEST_IDS.practice)).toBeInTheDocument();
+    expect(screen.getByTestId(HOME_VIEW_TEST_IDS.sessions)).toBeInTheDocument();
   });
 });

@@ -78,4 +78,30 @@ test.describe('visual regression', () => {
     await waitForAppAnimations(page);
     await expect(page).toHaveScreenshot('member-profile-light.png', { fullPage: true });
   });
+
+  test('assessment workspace (light)', async ({ page }) => {
+    await login(page);
+    await page.getByTestId(`${TEST_IDS.primaryNavItem}-assessments`).click();
+    await expect(page.getByTestId(TEST_IDS.assessmentsList)).toBeVisible();
+    await waitForAppAnimations(page);
+    await expect(page).toHaveScreenshot('assessments-workspace-light.png', { fullPage: true });
+  });
+
+  test('assessment entry grid (light)', async ({ page }) => {
+    await login(page);
+    await page.getByTestId(`${TEST_IDS.primaryNavItem}-assessments`).click();
+    await expect(page.getByTestId(TEST_IDS.assessmentsList)).toBeVisible();
+    await page.getByTestId(TEST_IDS.assessmentSummaryCard).first().getByText('Open').click();
+    await expect(page.getByTestId(TEST_IDS.assessmentMetricGrid)).toBeVisible();
+    await waitForAppAnimations(page);
+    await expect(page).toHaveScreenshot('assessment-entry-light.png', { fullPage: true });
+  });
+
+  test('player performance charts (light)', async ({ page }) => {
+    await login(page);
+    await gotoApp(page, APP_ROUTES.performance);
+    await expect(page.getByTestId(TEST_IDS.performanceTrendChart)).toBeVisible();
+    await waitForAppAnimations(page);
+    await expect(page).toHaveScreenshot('performance-light.png', { fullPage: true });
+  });
 });

@@ -34,6 +34,7 @@
     "test:e2e:install": "playwright install chromium",
     "test:a11y": "playwright test tests/accessibility",
     "test:visual": "playwright test tests/visual",
+    "design:capture": "playwright test tests/design --workers=2",
     "quality:architecture": "node scripts/architecture/validate-architecture.mjs",
     "quality:architecture-rules": "vitest run --project architecture-plugin",
     "quality:package-ownership": "node scripts/architecture/validate-package-ownership.mjs",

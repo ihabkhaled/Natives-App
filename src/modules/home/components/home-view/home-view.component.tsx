@@ -47,15 +47,6 @@ export function HomeView(props: HomeViewProps): React.JSX.Element {
         </header>
         {props.dashboardSlot}
         <aside className="app-home-health">{props.healthSlot}</aside>
-        <footer className="app-home-footer">
-          <AppButton
-            label={props.logoutLabel}
-            tone="ghost"
-            onClick={props.onLogout}
-            loading={props.isLoggingOut}
-            testId={HOME_VIEW_TEST_IDS.logout}
-          />
-        </footer>
       </main>
     </PageShell>
   );

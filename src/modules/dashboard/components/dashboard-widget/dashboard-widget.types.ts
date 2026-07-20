@@ -1,5 +1,8 @@
-import type { DashboardWidgetView } from '../../types/dashboard-view.types';
+import type {
+  DashboardWidgetRetryCopy,
+  DashboardWidgetView,
+} from '../../types/dashboard-view.types';
 
-export interface DashboardWidgetProps {
+export interface DashboardWidgetProps extends DashboardWidgetRetryCopy {
   readonly widget: DashboardWidgetView;
 }

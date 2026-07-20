@@ -58,6 +58,8 @@ export function DashboardView(props: DashboardViewProps): React.JSX.Element {
           widgets={props.widgets}
           isOffline={props.isOffline}
           offlineNoticeLabel={props.offlineNoticeLabel}
+          retryLabel={props.retryLabel}
+          onRetry={props.onRetry}
         />
       ) : null}
     </section>

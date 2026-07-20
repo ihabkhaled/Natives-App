@@ -161,6 +161,36 @@ ion-content.ion-padding {
 }
 
 /* ----------------------------------------------------------------------------
+   Shared recipes — composed by feature blocks instead of repeated.
+---------------------------------------------------------------------------- */
+.app-surface-card,
+.app-bar__popover {
+  display: flex;
+  flex-direction: column;
+  gap: var(--un-space-3);
+  padding: var(--un-space-4);
+  border: 1px solid var(--app-hairline);
+  border-radius: var(--un-radius-xl);
+  background: var(--app-card-bg);
+  box-shadow: var(--app-elevation-card);
+}
+
+/* The uppercase micro-label above a group of facts. */
+.app-eyebrow,
+.app-feedback-card__section dt,
+.app-chart-table thead th,
+ion-list-header ion-label {
+  font-size: var(--un-font-size-xs);
+}
+
+[dir='rtl'] .app-eyebrow,
+[dir='rtl'] .app-feedback-card__section dt,
+[dir='rtl'] .app-chart-table thead th,
+[dir='rtl'] ion-list-header ion-label {
+  letter-spacing: var(--un-letter-spacing-normal);
+}
+
+/* ----------------------------------------------------------------------------
    Global top app bar — page title + product context on the lead side, the
    account cluster (palette, notifications, avatar menu) on the trail side.
 ---------------------------------------------------------------------------- */
@@ -282,14 +312,8 @@ ion-content.ion-padding {
   z-index: 30;
   inset-block-start: calc(100% + var(--un-space-2));
   inset-inline-end: 0;
-  display: flex;
-  flex-direction: column;
   gap: var(--un-space-1);
   inline-size: 17rem;
-  padding: var(--un-space-4);
-  border: 1px solid var(--app-hairline);
-  border-radius: var(--un-radius-xl);
-  background: var(--app-card-bg);
   box-shadow: var(--app-elevation-pop);
 }
 
@@ -471,18 +495,6 @@ ion-list.list-inset ion-item {
 ion-list-header {
   min-height: var(--un-control-md);
   padding-inline: var(--un-space-1);
-}
-
-ion-list-header ion-label {
-  color: var(--app-muted);
-  font-size: var(--un-font-size-xs);
-  font-weight: var(--un-font-weight-bold);
-  letter-spacing: var(--un-letter-spacing-wide);
-  text-transform: uppercase;
-}
-
-[dir='rtl'] ion-list-header ion-label {
-  letter-spacing: var(--un-letter-spacing-normal);
 }
 
 /* ----------------------------------------------------------------------------
@@ -1204,6 +1216,7 @@ ion-spinner {
 .app-home-layout {
   display: grid;
   gap: var(--un-space-6);
+  min-block-size: 100%;
   padding-block-end: var(--un-space-6);
 }
 
@@ -1211,9 +1224,9 @@ ion-spinner {
   position: relative;
   display: flex;
   flex-direction: column;
-  gap: var(--un-space-6);
+  gap: var(--un-space-4);
   overflow: hidden;
-  padding: clamp(1.5rem, 4vw, 2rem);
+  padding: clamp(1.25rem, 3vw, 1.75rem);
   border: 1px solid var(--app-hairline);
   border-radius: var(--un-radius-xl);
   background:
@@ -1270,14 +1283,6 @@ ion-spinner {
   min-width: 0;
 }
 
-.app-home-footer {
-  display: flex;
-}
-
-.app-home-footer ion-button {
-  width: 100%;
-}
-
 .app-health-status-badge {
   align-self: flex-start;
   max-width: 100%;
@@ -1291,6 +1296,30 @@ ion-spinner {
   border-radius: var(--un-radius-xl);
   background: var(--app-card-bg);
   box-shadow: var(--app-elevation-card);
+}
+
+/* The board is the page's flexible row: it takes whatever height the hero and
+   the rail leave behind so the canvas never ends in a void. */
+.app-dashboard-board {
+  display: grid;
+  flex: 1;
+  align-content: stretch;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 15.5rem), 1fr));
+  grid-auto-rows: minmax(min-content, 1fr);
+  gap: var(--un-space-4);
+}
+
+.app-dashboard-board > ion-note {
+  grid-column: 1 / -1;
+}
+
+.app-dashboard-board > ion-card {
+  display: flex;
+  flex-direction: column;
+}
+
+.app-dashboard-board > ion-card ion-card-content {
+  flex: 1;
 }
 
 [data-testid='dashboard-view'] > header h2 {
@@ -1328,16 +1357,6 @@ ion-spinner {
   text-align: center;
 }
 
-[data-testid='dashboard-view'] > div:last-child {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 15.5rem), 1fr));
-  gap: var(--un-space-4);
-}
-
-[data-testid='dashboard-view'] > div:last-child > ion-note {
-  grid-column: 1 / -1;
-}
-
 .app-widget-state .app-status-view {
   min-height: 0;
   gap: var(--un-space-1);
@@ -1353,35 +1372,52 @@ ion-spinner {
   font-size: var(--un-font-size-md);
 }
 
+/* A section that failed reads as a failure: the danger disc sits on a tinted
+   well with its own hairline, and the retry control is always reachable. */
+.app-widget-state--error {
+  border: 1px solid color-mix(in srgb, var(--ion-color-danger) 24%, transparent);
+  border-radius: var(--un-radius-lg);
+  background: color-mix(in srgb, var(--ion-color-danger) 7%, transparent);
+}
+
+.app-widget-state--error .app-status-view {
+  padding: var(--un-space-4) var(--un-space-3);
+}
+
+.app-widget-state--error .app-status-view ion-button {
+  --min-height: var(--un-control-md);
+}
+
 @media (min-width: 960px) {
+  /* Hero banner across the top, then the flexible board beside a short rail. */
   .app-home-layout {
     grid-template-columns: minmax(0, 1fr) minmax(15rem, 20rem);
+    grid-template-rows: auto minmax(0, 1fr);
   }
 
   .app-home-hero {
-    grid-column: 1;
+    grid-column: 1 / -1;
     grid-row: 1;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--un-space-6);
+  }
+
+  .app-home-hero__actions {
+    flex: 0 0 auto;
+    justify-content: flex-end;
+  }
+
+  .app-home-layout > [data-testid='dashboard-view'] {
+    grid-column: 1;
+    grid-row: 2;
   }
 
   .app-home-health {
     grid-column: 2;
-    grid-row: 1;
-  }
-
-  .app-home-layout > [data-testid='dashboard-view'] {
-    grid-column: 1 / -1;
     grid-row: 2;
-  }
-
-  .app-home-footer {
-    grid-column: 1 / -1;
-    grid-row: 3;
-    justify-content: flex-end;
-  }
-
-  .app-home-footer ion-button {
-    width: auto;
-    min-width: 12rem;
+    align-self: start;
   }
 }
 
@@ -1880,4 +1916,676 @@ ion-spinner {
   .app-settings-layout ion-segment {
     width: 100%;
   }
+}
+
+/* ----------------------------------------------------------------------------
+   Assessments — coach entry grid, workflow bar, and the player performance
+   board. Charts are in-house SVG: the lime line is the only saturated mark on
+   a cool slate field, and every figure carries a tabular alternative.
+---------------------------------------------------------------------------- */
+.app-assessments__filters {
+  display: grid;
+  gap: var(--un-space-3);
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 14rem), 1fr));
+  padding: var(--un-space-3) var(--un-space-4);
+  border: 1px solid var(--app-hairline);
+  border-radius: var(--un-radius-lg);
+  background: var(--app-card-bg);
+}
+
+.app-assessment-chip {
+  --padding-start: var(--un-space-3);
+  --padding-end: var(--un-space-3);
+  border-radius: var(--un-radius-pill);
+  font-size: var(--un-font-size-xs);
+  font-weight: var(--un-font-weight-bold);
+  letter-spacing: var(--un-letter-spacing-wide);
+  text-transform: uppercase;
+}
+
+[dir='rtl'] .app-assessment-chip {
+  letter-spacing: var(--un-letter-spacing-normal);
+}
+
+.app-assessment-row {
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: center;
+  margin-block-end: var(--un-space-2);
+  transition: box-shadow var(--un-motion-duration-base) var(--un-motion-easing-standard);
+}
+
+.app-assessment-row:hover {
+  box-shadow: var(--app-elevation-lift);
+}
+
+.app-assessment-row__identity {
+  display: flex;
+  min-inline-size: 0;
+  flex: 1 1 12rem;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.app-assessment-row__title {
+  color: var(--app-ink);
+  font-size: var(--un-font-size-md);
+  font-weight: var(--un-font-weight-bold);
+  letter-spacing: var(--un-letter-spacing-tight);
+}
+
+.app-assessment-row__meta {
+  color: var(--app-muted);
+  font-size: var(--un-font-size-xs);
+}
+
+.app-assessment-row__facts {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--un-space-2);
+}
+
+/* ---- Metric grid ---- */
+.app-metric-grid {
+  display: flex;
+  flex-direction: column;
+  gap: var(--un-space-6);
+}
+
+.app-metric-grid__hint {
+  padding: var(--un-space-2) var(--un-space-3);
+  border-inline-start: 3px solid var(--app-lime-line);
+  border-radius: var(--un-radius-sm);
+  background: var(--app-lime-soft);
+  color: var(--app-ink);
+  font-size: var(--un-font-size-sm);
+}
+
+.app-metric-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--un-space-3);
+}
+
+.app-metric-group__head {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding-block-end: var(--un-space-2);
+  border-block-end: 1px solid var(--app-hairline);
+}
+
+.app-metric-group__title {
+  color: var(--app-ink);
+  font-size: var(--un-font-size-md);
+}
+
+.app-metric-group__fields {
+  display: grid;
+  gap: var(--un-space-4);
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 20rem), 1fr));
+}
+
+.app-metric-field {
+  gap: var(--un-space-3);
+}
+
+/* An unevaluated metric is visibly incomplete without shouting. */
+.app-metric-field[data-evaluated='false'] {
+  border-style: dashed;
+}
+
+.app-metric-field__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--un-space-2);
+}
+
+.app-metric-field__name {
+  color: var(--app-ink);
+  font-size: var(--un-font-size-md);
+  font-weight: var(--un-font-weight-bold);
+}
+
+.app-metric-field__tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--un-space-1);
+}
+
+.app-metric-tag {
+  padding: 2px var(--un-space-2);
+  border: 1px solid var(--app-hairline);
+  border-radius: var(--un-radius-pill);
+  color: var(--app-muted-strong);
+  font-size: var(--un-font-size-xs);
+  font-weight: var(--un-font-weight-semibold);
+  white-space: nowrap;
+}
+
+/* Provenance reads differently from the rest so a judgement is never mistaken
+   for a measurement. */
+.app-metric-tag--source {
+  border-color: var(--app-lime-line);
+  background: var(--app-lime-soft);
+  color: var(--app-lime-text);
+}
+
+/* Required is an obligation, not an achievement — it never borrows the gold. */
+.app-metric-tag--required {
+  border-color: color-mix(in srgb, var(--app-ink) 34%, transparent);
+  color: var(--app-ink);
+  font-weight: var(--un-font-weight-bold);
+}
+
+.app-metric-field__definition {
+  color: var(--app-muted);
+  font-size: var(--un-font-size-sm);
+  line-height: var(--un-line-height-snug);
+}
+
+.app-metric-field__scores {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--un-space-2);
+}
+
+.app-score-chip {
+  display: inline-flex;
+  min-inline-size: var(--un-control-md);
+  min-block-size: var(--un-control-md);
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--app-hairline);
+  border-radius: var(--un-radius-md);
+  background: var(--app-card-bg);
+  color: var(--app-ink);
+  font-size: var(--un-font-size-md);
+  font-weight: var(--un-font-weight-bold);
+  font-variant-numeric: tabular-nums;
+  cursor: pointer;
+  transition:
+    background var(--un-motion-duration-fast) var(--un-motion-easing-standard),
+    border-color var(--un-motion-duration-fast) var(--un-motion-easing-standard);
+}
+
+.app-score-chip:hover:not(:disabled) {
+  border-color: var(--app-lime-line);
+  background: var(--app-hover);
+}
+
+.app-score-chip[aria-pressed='true'] {
+  border-color: transparent;
+  background: var(--app-cta-gradient);
+  color: var(--app-cta-ink);
+  box-shadow: var(--app-cta-shadow);
+}
+
+.app-score-chip:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
+.app-metric-field__foot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--un-space-2);
+  padding-block-start: var(--un-space-2);
+  border-block-start: 1px solid var(--app-hairline);
+}
+
+.app-metric-readout {
+  color: var(--app-ink);
+  font-size: var(--un-font-size-md);
+  font-weight: var(--un-font-weight-bold);
+  font-variant-numeric: tabular-nums;
+}
+
+/* "Not evaluated" never borrows the number styling. */
+.app-metric-readout--unknown {
+  color: var(--app-muted);
+  font-size: var(--un-font-size-sm);
+  font-style: italic;
+  font-weight: var(--un-font-weight-medium);
+}
+
+/* ---- Workflow bar ---- */
+.app-workflow-bar {
+  position: sticky;
+  inset-block-start: var(--un-space-2);
+  z-index: 5;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--un-space-4);
+  padding: var(--un-space-3) var(--un-space-4);
+  border: 1px solid var(--app-hairline);
+  border-radius: var(--un-radius-xl);
+  background: var(--app-chrome-bg);
+  box-shadow: var(--app-elevation-chrome);
+  -webkit-backdrop-filter: saturate(180%) blur(12px);
+  backdrop-filter: saturate(180%) blur(12px);
+}
+
+.app-workflow-bar__meter {
+  display: flex;
+  min-inline-size: 12rem;
+  flex: 1 1 14rem;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.app-workflow-bar__label {
+  font-weight: var(--un-font-weight-semibold);
+}
+
+.app-workflow-bar__value {
+  color: var(--app-ink);
+  font-size: var(--un-font-size-sm);
+  font-weight: var(--un-font-weight-bold);
+  font-variant-numeric: tabular-nums;
+}
+
+.app-workflow-bar__track,
+.app-goal-card__track {
+  display: block;
+  overflow: hidden;
+  block-size: 6px;
+  margin-block-start: var(--un-space-1);
+  border-radius: var(--un-radius-pill);
+  background: var(--app-track-bg);
+}
+
+.app-workflow-bar__fill,
+.app-goal-card__fill {
+  display: block;
+  block-size: 100%;
+  border-radius: var(--un-radius-pill);
+  background: var(--app-cta-gradient);
+  transition: inline-size var(--un-motion-duration-base) var(--un-motion-easing-standard);
+}
+
+.app-workflow-bar__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--un-space-2);
+}
+
+/* The back affordance hugs the leading edge, never the measure's centre. */
+.app-assessment-entry > ion-button:first-child {
+  align-self: flex-start;
+  --padding-start: 0;
+}
+
+.app-assessment-entry__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--un-space-3);
+}
+
+.app-assessment-entry__identity {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.app-assessment-entry__player {
+  color: var(--app-ink);
+  font-size: var(--un-font-size-xl);
+  font-weight: var(--un-font-weight-bold);
+  letter-spacing: var(--un-letter-spacing-tight);
+}
+
+.app-assessment-revisions {
+  gap: var(--un-space-2);
+}
+
+.app-assessment-revisions__title,
+.app-panel__title {
+  color: var(--app-ink);
+  font-size: var(--un-font-size-md);
+}
+
+.app-assessment-revisions__list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--un-space-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.app-assessment-revisions__item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--un-space-2);
+  min-block-size: var(--un-control-sm);
+  color: var(--app-ink);
+  font-size: var(--un-font-size-sm);
+}
+
+/* ---- Charts ---- */
+.app-performance__charts {
+  display: grid;
+  gap: var(--un-space-4);
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.app-performance__chart-head {
+  padding: var(--un-space-3) var(--un-space-4);
+  border: 1px solid var(--app-hairline);
+  border-radius: var(--un-radius-lg);
+  background: var(--app-card-bg);
+}
+
+@media (min-width: 980px) {
+  .app-performance__charts {
+    grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
+  }
+
+  .app-performance__chart-head {
+    grid-column: 1 / -1;
+  }
+}
+
+.app-chart {
+  margin: 0;
+}
+
+.app-chart__caption {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.app-chart__title {
+  color: var(--app-ink);
+  font-size: var(--un-font-size-md);
+  font-weight: var(--un-font-weight-bold);
+  letter-spacing: var(--un-letter-spacing-tight);
+}
+
+.app-chart__canvas {
+  display: flex;
+  flex-direction: column;
+  gap: var(--un-space-2);
+}
+
+.app-chart__svg {
+  inline-size: 100%;
+  block-size: clamp(9rem, 26vw, 13.75rem);
+  overflow: visible;
+}
+
+.app-chart__svg--radar {
+  block-size: auto;
+  aspect-ratio: 1;
+  max-inline-size: 20rem;
+  margin-inline: auto;
+}
+
+.app-chart__area {
+  fill: var(--app-lime-soft);
+  stroke: none;
+}
+
+.app-chart__line {
+  fill: none;
+  stroke: var(--app-arc-strong);
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 3;
+}
+
+.app-chart__dot {
+  fill: var(--app-card-bg);
+  stroke: var(--app-arc-strong);
+  stroke-width: 3;
+}
+
+.app-chart__ring,
+.app-chart__spoke {
+  fill: none;
+  stroke: var(--app-hairline);
+  stroke-width: 1;
+}
+
+.app-chart__polygon {
+  fill: var(--app-lime-soft);
+  stroke: var(--app-arc-strong);
+  stroke-linejoin: round;
+  stroke-width: 2;
+}
+
+.app-chart__axis,
+.app-chart__legend {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: var(--un-space-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.app-chart__legend {
+  justify-content: center;
+}
+
+.app-chart__tick,
+.app-chart__legend-item {
+  color: var(--app-muted);
+  font-size: var(--un-font-size-xs);
+  font-weight: var(--un-font-weight-semibold);
+}
+
+.app-chart__legend-item {
+  padding: 2px var(--un-space-2);
+  border: 1px solid var(--app-hairline);
+  border-radius: var(--un-radius-pill);
+}
+
+.app-chart__note {
+  color: var(--app-muted);
+  font-size: var(--un-font-size-xs);
+}
+
+.app-chart-table {
+  border-block-start: 1px solid var(--app-hairline);
+  padding-block-start: var(--un-space-2);
+}
+
+.app-chart-table__toggle {
+  min-block-size: var(--un-control-sm);
+  color: var(--app-lime-text);
+  font-size: var(--un-font-size-sm);
+  font-weight: var(--un-font-weight-semibold);
+  cursor: pointer;
+}
+
+.app-chart-table__scroll {
+  overflow-x: auto;
+  margin-block-start: var(--un-space-2);
+}
+
+.app-chart-table table {
+  inline-size: 100%;
+  border-collapse: collapse;
+  font-size: var(--un-font-size-sm);
+}
+
+.app-chart-table caption {
+  padding-block-end: var(--un-space-2);
+  color: var(--app-muted);
+  font-size: var(--un-font-size-xs);
+  text-align: start;
+}
+
+.app-chart-table th,
+.app-chart-table td {
+  padding: var(--un-space-2);
+  border-block-end: 1px solid var(--app-hairline);
+  color: var(--app-ink);
+  text-align: start;
+}
+
+.app-chart-table thead th {
+  color: var(--app-muted);
+  font-size: var(--un-font-size-xs);
+  font-weight: var(--un-font-weight-bold);
+  letter-spacing: var(--un-letter-spacing-wide);
+  text-transform: uppercase;
+}
+
+.app-chart-table td {
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---- Feedback + goals ---- */
+.app-feedback-panel,
+.app-goals-panel {
+  display: flex;
+  flex-direction: column;
+  gap: var(--un-space-3);
+}
+
+.app-feedback-card,
+.app-goal-card {
+  gap: var(--un-space-3);
+}
+
+.app-feedback-card__published {
+  color: var(--app-muted);
+  font-size: var(--un-font-size-xs);
+}
+
+.app-feedback-card__sections {
+  display: grid;
+  gap: var(--un-space-3);
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr));
+  margin: 0;
+}
+
+.app-feedback-card__section dd {
+  margin: 0;
+  margin-block-start: 2px;
+  color: var(--app-ink);
+  font-size: var(--un-font-size-sm);
+  line-height: var(--un-line-height-snug);
+}
+
+.app-feedback-card__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--un-space-2);
+  padding-block-start: var(--un-space-2);
+  border-block-start: 1px solid var(--app-hairline);
+}
+
+.app-feedback-card__ack {
+  color: var(--app-lime-text);
+  font-size: var(--un-font-size-sm);
+  font-weight: var(--un-font-weight-semibold);
+}
+
+.app-goal-card__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--un-space-2);
+}
+
+.app-goal-card__title {
+  color: var(--app-ink);
+  font-size: var(--un-font-size-md);
+  font-weight: var(--un-font-weight-bold);
+}
+
+.app-goal-card__description {
+  color: var(--app-muted);
+  font-size: var(--un-font-size-sm);
+}
+
+.app-goal-card__facts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--un-space-2);
+}
+
+.app-goal-card__progress {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.app-goal-card__progress-label {
+  color: var(--app-ink);
+  font-size: var(--un-font-size-sm);
+  font-weight: var(--un-font-weight-semibold);
+  font-variant-numeric: tabular-nums;
+}
+
+.app-goal-card__actions-title {
+  font-size: var(--un-font-size-xs);
+}
+
+.app-goal-card__actions {
+  display: flex;
+  flex-direction: column;
+  gap: var(--un-space-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.app-goal-action {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--un-space-2);
+  min-block-size: var(--un-control-sm);
+  padding-inline-start: var(--un-space-3);
+  border-inline-start: 3px solid var(--app-hairline);
+  color: var(--app-ink);
+  font-size: var(--un-font-size-sm);
+}
+
+.app-goal-action--done {
+  border-inline-start-color: var(--app-lime-line);
+}
+
+.app-goal-action__state {
+  padding: 2px var(--un-space-2);
+  border-radius: var(--un-radius-pill);
+  background: var(--app-track-bg);
+  color: var(--app-muted-strong);
+  font-size: var(--un-font-size-xs);
+  font-weight: var(--un-font-weight-bold);
+}
+
+.app-goal-action--done .app-goal-action__state {
+  background: var(--app-lime-soft);
+  color: var(--app-lime-text);
+}
+
+.app-goal-action__text {
+  flex: 1 1 12rem;
+}
+
+.app-goal-action__due {
+  color: var(--app-muted);
+  font-size: var(--un-font-size-xs);
 }

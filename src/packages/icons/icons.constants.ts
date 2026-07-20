@@ -3,6 +3,7 @@ import {
   calendarOutline,
   checkmarkCircleOutline,
   chevronDownOutline,
+  clipboardOutline,
   cloudOfflineOutline,
   ellipseOutline,
   eyeOffOutline,
@@ -23,6 +24,7 @@ import {
   shieldCheckmarkOutline,
   sunnyOutline,
   timeOutline,
+  trendingUpOutline,
   warningOutline,
 } from 'ionicons/icons';
 
@@ -32,6 +34,7 @@ export const APP_ICONS = {
   calendar: calendarOutline,
   checkmark: checkmarkCircleOutline,
   chevronDown: chevronDownOutline,
+  clipboard: clipboardOutline,
   dot: ellipseOutline,
   offline: cloudOfflineOutline,
   empty: fileTrayOutline,
@@ -52,6 +55,7 @@ export const APP_ICONS = {
   shield: shieldCheckmarkOutline,
   sun: sunnyOutline,
   time: timeOutline,
+  trendingUp: trendingUpOutline,
   warning: warningOutline,
 } as const;
 

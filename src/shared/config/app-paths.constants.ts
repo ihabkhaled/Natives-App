@@ -18,6 +18,9 @@ export const APP_PATHS = {
   admin: '/admin',
   members: '/members',
   memberProfile: '/members/:membershipId',
+  assessments: '/assessments',
+  assessmentEntry: '/assessments/:assessmentId',
+  performance: '/performance',
   settings: '/settings',
   workbench: '/workbench',
 } as const;

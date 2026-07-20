@@ -13,6 +13,7 @@ import type {
   DashboardMetricView,
   DashboardStatus,
   DashboardTaskView,
+  DashboardWidgetStateKind,
   DashboardWidgetView,
 } from '../types/dashboard-view.types';
 import type {
@@ -91,24 +92,36 @@ function buildFreshnessLabel(t: Translate, locale: string, asOfIso: string | nul
     : t(I18N_KEYS.dashboard.asOf, { when: formatDateTime(asOfIso, locale) });
 }
 
-function buildStateLabel(t: Translate, status: DashboardWidgetStatus): string {
+function buildStateKind(status: DashboardWidgetStatus): DashboardWidgetStateKind | null {
   if (status === 'empty') {
+    return 'empty';
+  }
+  return status === 'unavailable' ? 'unavailable' : null;
+}
+
+function buildStateLabel(t: Translate, kind: DashboardWidgetStateKind | null): string {
+  if (kind === 'empty') {
     return t(I18N_KEYS.dashboard.widgetEmpty);
   }
-  if (status === 'unavailable') {
-    return t(I18N_KEYS.dashboard.widgetUnavailable);
-  }
-  return '';
+  return kind === 'unavailable' ? t(I18N_KEYS.dashboard.widgetUnavailable) : '';
+}
+
+/** Only a failed section earns a supporting line; an empty one stays quiet. */
+function buildStateMessage(t: Translate, kind: DashboardWidgetStateKind | null): string | null {
+  return kind === 'unavailable' ? t(I18N_KEYS.dashboard.widgetUnavailableMessage) : null;
 }
 
 function buildSharedView(t: Translate, locale: string, widget: DashboardWidget, title: string) {
+  const stateKind = buildStateKind(widget.status);
   return {
     kind: widget.kind,
     testId: `${TEST_IDS.dashboardWidget}-${widget.kind}`,
     title,
     freshnessLabel: buildFreshnessLabel(t, locale, widget.asOfIso),
     showsContent: widget.status === 'ready' || widget.status === 'partial',
-    stateLabel: buildStateLabel(t, widget.status),
+    stateKind,
+    stateLabel: buildStateLabel(t, stateKind),
+    stateMessage: buildStateMessage(t, stateKind),
     partialLabel: widget.status === 'partial' ? t(I18N_KEYS.dashboard.widgetPartial) : null,
   };
 }

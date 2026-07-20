@@ -4,6 +4,8 @@ import { buildAuthUser, type AuthUser } from '@/modules/auth';
 import { getEnvironment } from '@/packages/environment';
 import { PERMISSIONS } from '@/shared/security';
 
+import { assessmentsHandlers } from './assessments-handlers';
+import { resetMockAssessmentsState } from './assessments.fixture';
 import { buildDashboardSummaryResponse } from './dashboard-summary.fixture';
 import { attendanceHandlers } from './attendance-handlers';
 import { resetMockAttendanceState } from './attendance.fixture';
@@ -36,6 +38,13 @@ const COACH_PERMISSIONS = [
   PERMISSIONS.practicesRsvpSelf,
   PERMISSIONS.attendanceMark,
   PERMISSIONS.assessmentsManage,
+  PERMISSIONS.assessmentReadTeam,
+  PERMISSIONS.assessmentReadSelfPublished,
+  PERMISSIONS.assessmentCreate,
+  PERMISSIONS.assessmentReview,
+  PERMISSIONS.assessmentPublish,
+  PERMISSIONS.feedbackReadSelf,
+  PERMISSIONS.feedbackManage,
   PERMISSIONS.leaderboardsRead,
 ];
 
@@ -46,6 +55,8 @@ const MEMBER_PERMISSIONS = [
   PERMISSIONS.memberProfileUpdateSelf,
   PERMISSIONS.practicesRead,
   PERMISSIONS.practicesRsvpSelf,
+  PERMISSIONS.assessmentReadSelfPublished,
+  PERMISSIONS.feedbackReadSelf,
   PERMISSIONS.leaderboardsRead,
 ];
 
@@ -107,6 +118,7 @@ export function resetMockAuthState(): void {
   resetMockPracticeState();
   resetMockAttendanceState();
   resetMockMembersState();
+  resetMockAssessmentsState();
 }
 
 function apiUrl(path: string): string {
@@ -298,5 +310,6 @@ export const mockApiHandlers = [
   ...practiceHandlers,
   ...attendanceHandlers,
   ...membersHandlers,
+  ...assessmentsHandlers,
   ...recoveryHandlers,
 ];

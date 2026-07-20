@@ -2,13 +2,7 @@ import { renderHook } from '@testing-library/react';
 import { afterEach, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import type * as AuthModule from '@/modules/auth';
-import {
-  buildAuthUser,
-  useCurrentUserQuery,
-  useLogoutMutation,
-  type CurrentUserQueryView,
-  type LogoutMutationView,
-} from '@/modules/auth';
+import { buildAuthUser, useCurrentUserQuery, type CurrentUserQueryView } from '@/modules/auth';
 import { useAppNavigation } from '@/packages/router';
 
 import { initTestI18n } from '../../../../tests/setup/i18n-test.helper';
@@ -17,11 +11,9 @@ import { useHomeScreen } from './use-home-screen.hook';
 vi.mock('@/modules/auth', async (importOriginal) => ({
   ...(await importOriginal<typeof AuthModule>()),
   useCurrentUserQuery: vi.fn(),
-  useLogoutMutation: vi.fn(),
 }));
 vi.mock('@/packages/router', () => ({ useAppNavigation: vi.fn() }));
 
-const logout = vi.fn();
 const push = vi.fn();
 
 function mockCurrentUser(overrides: Partial<CurrentUserQueryView> = {}): void {
@@ -31,10 +23,6 @@ function mockCurrentUser(overrides: Partial<CurrentUserQueryView> = {}): void {
     isError: false,
     ...overrides,
   });
-}
-
-function mockLogout(overrides: Partial<LogoutMutationView> = {}): void {
-  vi.mocked(useLogoutMutation).mockReturnValue({ logout, isLoggingOut: false, ...overrides });
 }
 
 beforeAll(async () => {
@@ -49,7 +37,6 @@ beforeEach(() => {
     currentPath: '/home',
   });
   mockCurrentUser();
-  mockLogout();
 });
 
 afterEach(() => {
@@ -62,7 +49,6 @@ describe('useHomeScreen', () => {
 
     expect(result.current.title).toBe('Home');
     expect(result.current.loadingLabel).toBe('Loading…');
-    expect(result.current.logoutLabel).toBe('Sign out');
     expect(result.current.manageSessionsLabel).toBe('Manage your devices');
     expect(result.current.practiceCalendarLabel).toBe('Open the practice calendar');
   });
@@ -100,12 +86,11 @@ describe('useHomeScreen', () => {
     expect(result.current.isLoadingUser).toBe(false);
   });
 
-  it('delegates sign-out to the logout mutation', () => {
+  it('never owns sign-out: the shell chrome is its single home', () => {
     const { result } = renderHook(() => useHomeScreen());
 
-    result.current.onLogout();
-
-    expect(logout).toHaveBeenCalledOnce();
+    expect(result.current).not.toHaveProperty('onLogout');
+    expect(result.current).not.toHaveProperty('logoutLabel');
   });
 
   it('navigates to device-session management', () => {
@@ -124,12 +109,10 @@ describe('useHomeScreen', () => {
     expect(push).toHaveBeenCalledExactlyOnceWith('/practices');
   });
 
-  it('mirrors the in-flight logout flag', () => {
-    mockLogout({ isLoggingOut: true });
-
+  it('never exposes an in-flight logout flag', () => {
     const { result } = renderHook(() => useHomeScreen());
 
-    expect(result.current.isLoggingOut).toBe(true);
+    expect(result.current).not.toHaveProperty('isLoggingOut');
   });
 
   it('never exposes the raw profile, only the prepared greeting', () => {
@@ -140,11 +123,8 @@ describe('useHomeScreen', () => {
       'avatarLabel',
       'greeting',
       'isLoadingUser',
-      'isLoggingOut',
       'loadingLabel',
-      'logoutLabel',
       'manageSessionsLabel',
-      'onLogout',
       'onManageSessions',
       'onOpenPracticeCalendar',
       'practiceCalendarLabel',

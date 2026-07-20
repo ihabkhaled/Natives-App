@@ -18,7 +18,6 @@ vi.mock('@/modules/dashboard', () => ({
 }));
 vi.mock('@/modules/practice', () => ({ practicesPath: () => '/practices' }));
 
-const onLogout = vi.fn();
 const onManageSessions = vi.fn();
 const onOpenPracticeCalendar = vi.fn();
 
@@ -30,11 +29,8 @@ function mockScreen(overrides: Partial<HomeScreenView> = {}): void {
     avatarLabel: 'Your profile',
     isLoadingUser: false,
     loadingLabel: 'Loading…',
-    logoutLabel: 'Sign out',
     manageSessionsLabel: 'Manage your devices',
     practiceCalendarLabel: 'Open the practice calendar',
-    isLoggingOut: false,
-    onLogout,
     onManageSessions,
     onOpenPracticeCalendar,
     ...overrides,
@@ -88,20 +84,19 @@ describe('HomeContainer', () => {
     expect(screen.queryByTestId(HOME_VIEW_TEST_IDS.greeting)).not.toBeInTheDocument();
   });
 
-  it('wires sign-out back to the screen hook', async () => {
+  it('never renders a floating sign-out on the home canvas', () => {
     renderWithProviders(<HomeContainer />);
 
-    await userEvent.click(screen.getByTestId(HOME_VIEW_TEST_IDS.logout));
-
-    expect(onLogout).toHaveBeenCalledOnce();
+    expect(screen.queryByTestId(TEST_IDS.homeLogoutButton)).not.toBeInTheDocument();
   });
 
-  it('reflects an in-flight sign-out', () => {
-    mockScreen({ isLoggingOut: true });
-
+  it('keeps the home canvas to hero, dashboard, and health only', () => {
     renderWithProviders(<HomeContainer />);
 
-    expect(screen.getByTestId(HOME_VIEW_TEST_IDS.logout)).toHaveAttribute('aria-busy', 'true');
+    expect(screen.getByRole('main')).toBeInTheDocument();
+    expect(screen.getByTestId(TEST_IDS.dashboardView)).toBeInTheDocument();
+    expect(screen.getByTestId(TEST_IDS.healthCard)).toBeInTheDocument();
+    expect(screen.queryByTestId(TEST_IDS.homeLogoutButton)).not.toBeInTheDocument();
   });
 
   it('offers a link to manage device sessions', async () => {

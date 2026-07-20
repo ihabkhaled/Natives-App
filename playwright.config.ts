@@ -49,6 +49,12 @@ export default defineConfig({
       testDir: 'tests/visual',
       use: { ...devices['Desktop Chrome'], locale: 'en-US' },
     },
+    {
+      // Design evidence, not a gate: writes the review gallery frames.
+      name: 'design-capture',
+      testDir: 'tests/design',
+      use: { ...devices['Desktop Chrome'], locale: 'en-US' },
+    },
   ],
   webServer: {
     command: 'npm run dev -- --host 127.0.0.1 --port 4173 --strictPort',

@@ -1,4 +1,4 @@
-export type AppInputType = 'text' | 'email' | 'password';
+export type AppInputType = 'text' | 'email' | 'password' | 'number';
 
 type AppInputAutocomplete = 'email' | 'current-password' | 'name' | 'off' | 'username';
 
@@ -12,5 +12,6 @@ export interface AppInputProps {
   readonly placeholder?: string | undefined;
   readonly errorMessage?: string | undefined;
   readonly autocomplete?: AppInputAutocomplete;
+  readonly disabled?: boolean | undefined;
   readonly testId?: string | undefined;
 }

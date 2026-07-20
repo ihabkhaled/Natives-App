@@ -9,6 +9,7 @@ describe('APP_ICONS', () => {
       'calendar',
       'checkmark',
       'chevronDown',
+      'clipboard',
       'dot',
       'empty',
       'eye',
@@ -29,6 +30,7 @@ describe('APP_ICONS', () => {
       'shield',
       'sun',
       'time',
+      'trendingUp',
       'warning',
     ]);
   });

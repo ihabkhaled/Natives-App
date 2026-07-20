@@ -1,6 +1,9 @@
-import type { DashboardWidgetView } from '../../types/dashboard-view.types';
+import type {
+  DashboardWidgetRetryCopy,
+  DashboardWidgetView,
+} from '../../types/dashboard-view.types';
 
-export interface DashboardWidgetListProps {
+export interface DashboardWidgetListProps extends DashboardWidgetRetryCopy {
   readonly widgets: readonly DashboardWidgetView[];
   readonly isOffline: boolean;
   readonly offlineNoticeLabel: string;

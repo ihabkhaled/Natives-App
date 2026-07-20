@@ -1,11 +1,13 @@
 import { render, screen } from '@testing-library/react';
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 
 import {
   buildMetricWidgetView,
   buildTasksWidgetView,
 } from '../../../../../tests/factories/dashboard-view.factory';
 import { DashboardWidgetList } from './dashboard-widget-list.component';
+
+const onRetry = vi.fn();
 
 describe('DashboardWidgetList', () => {
   it('renders every prepared widget card', () => {
@@ -16,6 +18,8 @@ describe('DashboardWidgetList', () => {
         widgets={[tasks, metric]}
         isOffline={false}
         offlineNoticeLabel="Showing your last saved dashboard."
+        retryLabel="Try again"
+        onRetry={onRetry}
       />,
     );
 
@@ -29,6 +33,8 @@ describe('DashboardWidgetList', () => {
         widgets={[buildTasksWidgetView()]}
         isOffline
         offlineNoticeLabel="Showing your last saved dashboard."
+        retryLabel="Try again"
+        onRetry={onRetry}
       />,
     );
 
@@ -41,6 +47,8 @@ describe('DashboardWidgetList', () => {
         widgets={[buildTasksWidgetView()]}
         isOffline={false}
         offlineNoticeLabel="Showing your last saved dashboard."
+        retryLabel="Try again"
+        onRetry={onRetry}
       />,
     );
 

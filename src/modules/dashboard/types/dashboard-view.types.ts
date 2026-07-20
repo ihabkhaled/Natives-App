@@ -30,6 +30,13 @@ export interface DashboardTaskView {
   readonly timeText: string | null;
 }
 
+/**
+ * Which designed state a widget presents instead of its body. `null` means the
+ * body renders. `unavailable` is a failure — it gets the error disc plus a
+ * retry action; `empty` is a calm, non-alarming absence of data.
+ */
+export type DashboardWidgetStateKind = 'empty' | 'unavailable';
+
 interface DashboardWidgetViewShared {
   readonly kind: string;
   readonly testId: string;
@@ -37,7 +44,9 @@ interface DashboardWidgetViewShared {
   readonly freshnessLabel: string | null;
   /** ready|partial content is shown; empty|unavailable shows the state note. */
   readonly showsContent: boolean;
+  readonly stateKind: DashboardWidgetStateKind | null;
   readonly stateLabel: string;
+  readonly stateMessage: string | null;
   readonly partialLabel: string | null;
 }
 
@@ -60,6 +69,11 @@ export interface DashboardTasksWidgetView extends DashboardWidgetViewShared {
 
 export type DashboardWidgetView =
   DashboardMetricWidgetView | DashboardBreakdownWidgetView | DashboardTasksWidgetView;
+
+export interface DashboardWidgetRetryCopy {
+  readonly retryLabel: string;
+  readonly onRetry: () => void;
+}
 
 export interface DashboardView extends AsyncViewCopy {
   readonly title: string;

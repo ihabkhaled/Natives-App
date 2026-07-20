@@ -110,6 +110,34 @@ test.describe('accessibility (WCAG 2.2 AA)', () => {
     expect((await analyze(page)).violations).toEqual([]);
   });
 
+  test('assessment workspace and entry screens have no violations', async ({ page }) => {
+    await login(page);
+    await page.getByTestId(`${TEST_IDS.primaryNavItem}-assessments`).click();
+    await expect(page.getByTestId(TEST_IDS.assessmentsList)).toBeVisible();
+    await waitForAppAnimations(page);
+    expect((await analyze(page)).violations).toEqual([]);
+
+    await page.getByTestId(TEST_IDS.assessmentSummaryCard).first().getByText('Open').click();
+    await expect(page.getByTestId(TEST_IDS.assessmentMetricGrid)).toBeVisible();
+    await waitForAppAnimations(page);
+    expect((await analyze(page)).violations).toEqual([]);
+  });
+
+  test('player performance charts have no violations and keep their data tables', async ({
+    page,
+  }) => {
+    await login(page);
+    await gotoApp(page, APP_ROUTES.performance);
+    await expect(page.getByTestId(TEST_IDS.performanceTrendChart)).toBeVisible();
+    await waitForAppAnimations(page);
+    expect((await analyze(page)).violations).toEqual([]);
+
+    await expect(page.getByTestId(TEST_IDS.chartDataTable)).toHaveCount(2);
+    await page.getByTestId(TEST_IDS.chartDataToggle).first().click();
+    await expect(page.getByTestId(TEST_IDS.chartDataTable).first()).toBeVisible();
+    expect((await analyze(page)).violations).toEqual([]);
+  });
+
   test('dark palette has no contrast violations', async ({ page }) => {
     await gotoApp(page, APP_ROUTES.settings);
     await page
