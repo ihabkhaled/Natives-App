@@ -531,7 +531,22 @@
     "profileLabel": "Your profile",
     "home": "Home",
     "admin": "Admin",
-    "settings": "Settings"
+    "settings": "Settings",
+    "groupOverview": "Overview",
+    "groupTeam": "Team",
+    "groupManage": "Manage",
+    "signOut": "Sign out"
+  },
+  "appBar": {
+    "label": "Page actions",
+    "switchToDark": "Switch to dark theme",
+    "switchToLight": "Switch to light theme",
+    "notifications": "Notifications",
+    "notificationsEmptyTitle": "You are all caught up",
+    "notificationsEmptyMessage": "New practice and roster updates will land here.",
+    "userMenu": "Account menu",
+    "settings": "Settings",
+    "signOut": "Sign out"
   },
   "admin": {
     "title": "Admin",

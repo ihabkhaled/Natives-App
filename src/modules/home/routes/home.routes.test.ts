@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { ROUTE_ACCESS } from '@/shared/types';
+import { NAV_GROUP, ROUTE_ACCESS } from '@/shared/types';
 
 import { HomeContainer } from '../containers/home.container';
 import { NotFoundContainer } from '../containers/not-found.container';
@@ -38,7 +38,12 @@ describe('getHomeRouteDefinitions', () => {
     const [, home] = getHomeRouteDefinitions();
 
     expect(home!.meta?.permissions).toEqual([]);
-    expect(home!.meta?.nav).toEqual({ order: 0, iconName: 'home', labelKey: 'nav.home' });
+    expect(home!.meta?.nav).toEqual({
+      order: 0,
+      group: NAV_GROUP.Overview,
+      iconName: 'home',
+      labelKey: 'nav.home',
+    });
   });
 
   it('never includes the catch-all, which the app router appends last', () => {

@@ -3,6 +3,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import { APP_ICONS } from '@/packages/icons';
 import { TEST_IDS } from '@/shared/config';
+import { NAV_GROUP } from '@/shared/types';
 
 import type { PrimaryNavigationView } from './navigation.types';
 import { PrimaryNavigationContainer } from './primary-navigation.container';
@@ -15,9 +16,10 @@ function mockView(view: Partial<PrimaryNavigationView>): void {
     isVisible: false,
     ariaLabel: 'Primary',
     appName: 'Ultimate Natives',
+    tagline: 'Elite ultimate. One community.',
     logoLabel: 'Ultimate Natives logo',
     profile: null,
-    items: [],
+    groups: [],
     ...view,
   });
 }
@@ -38,14 +40,20 @@ describe('PrimaryNavigationContainer', () => {
   it('renders the navigation bar once it is visible', () => {
     mockView({
       isVisible: true,
-      items: [
+      groups: [
         {
-          key: 'home',
-          label: 'Home',
-          icon: APP_ICONS.home,
-          testId: `${TEST_IDS.primaryNavItem}-home`,
-          isActive: true,
-          onSelect: vi.fn(),
+          key: NAV_GROUP.Overview,
+          label: 'Overview',
+          items: [
+            {
+              key: 'home',
+              label: 'Home',
+              icon: APP_ICONS.home,
+              testId: `${TEST_IDS.primaryNavItem}-home`,
+              isActive: true,
+              onSelect: vi.fn(),
+            },
+          ],
         },
       ],
     });

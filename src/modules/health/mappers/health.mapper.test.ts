@@ -13,6 +13,16 @@ describe('mapHealthResponseToStatus', () => {
     ).toEqual({ isHealthy: true, version: '1.4.2', checkedAtIso: '2026-07-16T10:15:00.000Z' });
   });
 
+  it('maps the deployed probe payload, which reports uptime and no version', () => {
+    expect(
+      mapHealthResponseToStatus({
+        status: 'ok',
+        uptimeSeconds: 413,
+        timestamp: '2026-07-16T10:15:00.000Z',
+      }),
+    ).toEqual({ isHealthy: true, version: null, checkedAtIso: '2026-07-16T10:15:00.000Z' });
+  });
+
   it('maps an error status to an unhealthy domain snapshot', () => {
     const status = mapHealthResponseToStatus({
       status: 'error',

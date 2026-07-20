@@ -50,7 +50,7 @@ export function HomeView(props: HomeViewProps): React.JSX.Element {
         <footer className="app-home-footer">
           <AppButton
             label={props.logoutLabel}
-            tone="secondary"
+            tone="ghost"
             onClick={props.onLogout}
             loading={props.isLoggingOut}
             testId={HOME_VIEW_TEST_IDS.logout}

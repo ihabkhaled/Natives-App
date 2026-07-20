@@ -5,7 +5,7 @@ import type { AttendanceActionBarProps } from './attendance-action-bar.types';
 
 export function AttendanceActionBar(props: AttendanceActionBarProps): React.JSX.Element {
   return (
-    <div className="sticky bottom-3 z-10 flex flex-wrap justify-end gap-2 rounded-2xl border bg-[color:var(--ion-background-color)] p-3 shadow-xl">
+    <div className="app-attendance-action-bar sticky bottom-4 z-10 flex flex-wrap justify-end gap-2 p-3">
       {props.canRetryQueue ? (
         <AppButton
           label={props.retryQueueLabel}

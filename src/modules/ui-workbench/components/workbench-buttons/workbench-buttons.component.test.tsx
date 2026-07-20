@@ -45,7 +45,7 @@ describe('WorkbenchButtons', () => {
 
     expect(buttonsOf().map((button) => button.getAttribute('color'))).toEqual([
       'primary',
-      'medium',
+      'secondary',
       'danger',
     ]);
   });

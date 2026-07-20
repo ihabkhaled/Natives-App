@@ -52,7 +52,7 @@ describe('useHealthCard', () => {
 
     expect(result.current.isLoading).toBe(true);
     expect(result.current.errorMessage).toBeUndefined();
-    expect(result.current.version).toBe('');
+    expect(result.current.version).toBeNull();
     expect(result.current.checkedAtText).toBe('');
   });
 

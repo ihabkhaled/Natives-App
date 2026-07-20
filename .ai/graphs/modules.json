@@ -92,6 +92,30 @@
       ]
     },
     {
+      "name": "members",
+      "publicSurface": [
+        "AgeClassification",
+        "LIFECYCLE_ACTION",
+        "LifecycleAction",
+        "MEMBERSHIP_STATUS",
+        "MEMBER_AUDIENCE",
+        "MEMBER_ROLE",
+        "MemberAudience",
+        "MemberRole",
+        "MembershipStatus",
+        "PlayerGender",
+        "getMembersRouteDefinitions",
+        "memberDirectoryListResponseSchema",
+        "memberHistoryResponseSchema",
+        "memberProfilePath",
+        "memberRolesResponseSchema",
+        "memberViewResponseSchema",
+        "membersPath",
+        "membersQueryKeys",
+        "membershipResponseSchema"
+      ]
+    },
+    {
       "name": "practice",
       "publicSurface": [
         "PRACTICE_CHANGE_KIND",
@@ -117,10 +141,12 @@
       "name": "settings",
       "publicSurface": [
         "AppearancePreferences",
+        "ThemeToggleView",
         "getSettingsRouteDefinitions",
         "selectIsDarkTheme",
         "settingsPath",
-        "useAppearancePreferences"
+        "useAppearancePreferences",
+        "useThemeToggle"
       ]
     },
     {

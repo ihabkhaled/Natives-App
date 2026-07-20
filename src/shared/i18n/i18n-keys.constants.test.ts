@@ -60,6 +60,7 @@ describe('I18N_KEYS', () => {
       'workbench',
       'notFound',
       'nav',
+      'appBar',
       'admin',
       'guard',
     ]);

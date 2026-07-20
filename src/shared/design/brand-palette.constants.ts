@@ -1,46 +1,61 @@
 /**
- * Ultimate Natives raw brand palette — the single source of truth for every
- * committed and generated colour derivative (Ionic theme variables, CSS custom
- * properties, favicon, and PWA manifest). The brand identity is black, gold,
- * and white; every colour below is a reviewed, fixed hex value.
+ * Ultimate Natives raw brand palette — "Field & Floodlight". Single source of
+ * truth for every committed and generated colour derivative (Ionic theme
+ * variables, CSS custom properties, favicon, and PWA manifest).
  *
- * Accessibility: gold (`gold`) is an accent for dark surfaces or as a filled
- * background with black text. It is never used as text on white. Contrast of
- * every text-bearing pair is proven in contrast.helper.test.ts.
+ * The direction is taken from the sport itself: cool floodlit slate surfaces,
+ * one electric turf-lime action colour, and a gold that is reserved for
+ * meaning. Every colour below is a reviewed, fixed hex value.
+ *
+ * Accessibility rules encoded here and proven in contrast.helper.test.ts:
+ * - `lime` and `limeBright` always carry near-black `ink` text, never white.
+ * - `gold` is a fill (with ink text) or a dark-surface accent; on light
+ *   surfaces its legible text form is `goldDeep`.
+ * - Every status colour has a light-surface and a dark-surface variant.
  */
 export const BRAND_PALETTE = {
-  /** Brand black — the logo background and the dark theme surface. */
-  black: '#0B0B0B',
-  /** Slightly raised black for elevated dark surfaces (cards, sheets). */
-  blackElevated: '#161616',
-  /** Near-black used for body text on light surfaces. */
-  ink: '#141414',
-  /** Interactive near-black used as the light-theme primary. */
-  inkPrimary: '#1A1A1A',
-  /** Muted grey for secondary text on light surfaces. */
-  slate: '#5B5B5B',
-  /** Signature brand gold. */
-  gold: '#D4AF37',
-  /** Brighter gold for accents on dark surfaces. */
-  goldBright: '#E8C158',
-  /** Deep gold that stays legible as text/fill on white. */
-  goldDeep: '#8A6D00',
-  /** Pure white — the light theme surface and on-gold-free brand white. */
-  white: '#FFFFFF',
-  /** Warm off-white for text and elevated surfaces on dark backgrounds. */
-  offWhite: '#F5F3EF',
-  /** Hairline border on light surfaces. */
-  cloud: '#E7E5E4',
-  /** Muted warm grey for secondary text on dark surfaces. */
-  mist: '#A8A29E',
+  /** Brand night — the dark page canvas and the ink used on every bright fill. */
+  black: '#0B1220',
+  /** Raised night surface for dark-theme cards and sheets. */
+  blackElevated: '#131C2E',
   /** Hairline border on dark surfaces. */
-  onyxBorder: '#2A2A2A',
-  successLight: '#2E7D32',
-  successDark: '#5FB865',
-  warningLight: '#8A6D00',
-  warningDark: '#E8C158',
-  dangerLight: '#C62828',
-  dangerDark: '#EF6C6C',
-  infoLight: '#1565C0',
-  infoDark: '#6FA8DC',
+  onyxBorder: '#1E293B',
+  /** Near-black slate used for body text on light surfaces. */
+  ink: '#0F172A',
+  /** Interactive slate used for tonal secondary text. */
+  inkPrimary: '#334155',
+  /** Muted slate for secondary text on light surfaces. */
+  slate: '#475569',
+  /** Muted slate for secondary text on dark surfaces. */
+  mist: '#94A3B8',
+  /** Electric turf lime — the signature primary action colour. */
+  lime: '#84CC16',
+  /** Brighter turf lime — the dark-theme primary and gradient start. */
+  limeBright: '#A3E635',
+  /** Deep turf lime — the gradient end and pressed state. */
+  limeDeep: '#65A30D',
+  /** Darkest turf lime that stays legible as text/ring on light surfaces. */
+  limeInk: '#4D7C0F',
+  /** Signature achievement gold. Never a background wash, never a plain button. */
+  gold: '#F5B93B',
+  /** Brighter gold for accents on dark surfaces. */
+  goldBright: '#FBCB63',
+  /** Deep gold that stays legible as text on light surfaces. */
+  goldDeep: '#A16207',
+  /** Pure white — the light-theme card surface. */
+  white: '#FFFFFF',
+  /** Cool page canvas for the light theme. */
+  offWhite: '#F8FAFC',
+  /** Tonal slate surface for secondary controls on light surfaces. */
+  cloudTonal: '#F1F5F9',
+  /** Hairline border on light surfaces. */
+  cloud: '#E2E8F0',
+  successLight: '#15803D',
+  successDark: '#22C55E',
+  warningLight: '#B45309',
+  warningDark: '#F59E0B',
+  dangerLight: '#DC2626',
+  dangerDark: '#F87171',
+  infoLight: '#0369A1',
+  infoDark: '#38BDF8',
 } as const;

@@ -22,6 +22,8 @@ describe('BRAND_TOKENS', () => {
       'typography',
       'spacing',
       'radius',
+      'control',
+      'layout',
       'elevation',
       'motion',
     ]);
@@ -36,10 +38,44 @@ describe('BRAND_TOKENS', () => {
     }
   });
 
-  it('anchors the identity on black, gold, and white', () => {
-    expect(BRAND_PALETTE.black).toBe('#0B0B0B');
-    expect(BRAND_PALETTE.gold).toBe('#D4AF37');
+  it('anchors the identity on brand night, turf lime, and achievement gold', () => {
+    expect(BRAND_PALETTE.black).toBe('#0B1220');
+    expect(BRAND_PALETTE.lime).toBe('#84CC16');
+    expect(BRAND_PALETTE.gold).toBe('#F5B93B');
     expect(BRAND_PALETTE.white).toBe('#FFFFFF');
+  });
+
+  it('keeps the surfaces on the cool slate ramp, never a warm cream', () => {
+    expect(BRAND_TOKENS.themes.light.background).toBe('#F8FAFC');
+    expect(BRAND_TOKENS.themes.light.surfaceElevated).toBe('#FFFFFF');
+    expect(BRAND_TOKENS.themes.dark.background).toBe('#0B1220');
+    expect(BRAND_TOKENS.themes.dark.surfaceElevated).toBe('#131C2E');
+  });
+
+  it('keeps the spacing scale on the 8pt steps', () => {
+    expect(Object.values(BRAND_TOKENS.spacing)).toEqual([
+      '0.25rem',
+      '0.5rem',
+      '0.75rem',
+      '1rem',
+      '1.5rem',
+      '2rem',
+      '3rem',
+      '4rem',
+    ]);
+  });
+
+  it('offers exactly three control heights and card/control radii', () => {
+    expect(Object.values(BRAND_TOKENS.control)).toEqual(['2.25rem', '2.75rem', '3.25rem']);
+    expect(BRAND_TOKENS.radius.md).toBe('0.5rem');
+    expect(BRAND_TOKENS.radius.xl).toBe('1rem');
+    expect(BRAND_TOKENS.radius.pill).toBe('999px');
+  });
+
+  it('frames the page with mobile/desktop gutters and a centred measure', () => {
+    expect(BRAND_TOKENS.layout.gutterMobile).toBe('1rem');
+    expect(BRAND_TOKENS.layout.gutterDesktop).toBe('2rem');
+    expect(BRAND_TOKENS.layout.contentMax).toBe('80rem');
   });
 });
 
@@ -79,9 +115,16 @@ describe('brand themes', () => {
     }
   });
 
-  it('flips the primary between a near-black light theme and gold dark theme', () => {
-    expect(BRAND_THEME_LIGHT.primary.base).not.toBe(BRAND_THEME_DARK.primary.base);
-    expect(BRAND_THEME_DARK.primary.base).toBe(BRAND_PALETTE.gold);
+  it('keeps turf lime as the primary in both themes, always with ink text', () => {
+    expect(BRAND_THEME_LIGHT.primary.base).toBe(BRAND_PALETTE.lime);
+    expect(BRAND_THEME_DARK.primary.base).toBe(BRAND_PALETTE.limeBright);
+    expect(BRAND_THEME_LIGHT.primary.contrast).toBe(BRAND_PALETTE.black);
+    expect(BRAND_THEME_DARK.primary.contrast).toBe(BRAND_PALETTE.black);
+  });
+
+  it('reserves the gold tertiary role for achievements in both themes', () => {
+    expect(BRAND_THEME_LIGHT.tertiary.base).toBe(BRAND_PALETTE.gold);
+    expect(BRAND_THEME_DARK.tertiary.base).toBe(BRAND_PALETTE.gold);
   });
 });
 

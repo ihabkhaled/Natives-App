@@ -34,6 +34,43 @@ npm run knowledge:context -- --task="<exact task>"
   refined components and tasteful motion. Plain/default styling is not acceptable.
 - Report only gates you actually ran. iOS compilation is UNVERIFIED off macOS.
 
+## Subagents
+
+This repository ships 13 runnable Claude Code subagents under
+[`.claude/agents/`](.claude/agents/README.md) (auto-discovered by Claude Code; not just
+documentation). Claude Code may select one automatically by matching the request against each
+subagent's `description:`, or be told explicitly to use one by name. Prefer delegating to the named
+subagent below over improvising the same work inline.
+
+| Situation                                                                                                  | Delegate to                     |
+| ---------------------------------------------------------------------------------------------------------- | ------------------------------- |
+| A new feature module, screen, or flow needs scoping before code is touched                                 | `frontend-planner`              |
+| Deciding which layer new code belongs in, a new vendor's package owner, an import-cycle fix                | `frontend-architect`            |
+| Writing new component/hook/gateway/service/store/query code for an already-scoped change                   | `frontend-implementer`          |
+| Writing/extending unit, integration, contract, or E2E tests, or closing a per-file coverage gap            | `frontend-test-engineer`        |
+| A test fails, a bug is reported, or UI behavior is unexpected — root-cause before fixing                   | `frontend-debugger`             |
+| Final correctness/architecture/UI-mandate verdict before a change is declared done                         | `frontend-code-reviewer`        |
+| Any diff touching tokens, secure storage, deep links, external URLs, error copy, or `VITE_*`/native config | `frontend-security-reviewer`    |
+| A UI change needs focus/announcement/RTL/contrast/touch-target review beyond automated axe                 | `accessibility-reviewer`        |
+| A Capacitor plugin, native listener, native config, or android/ios file changed                            | `native-reviewer`               |
+| Bundle size, startup cost, long lists, render churn, or query-cache policy changed                         | `performance-reviewer`          |
+| A gateway, Zod schema, MSW handler, or error-mapping table changed                                         | `api-contract-reviewer`         |
+| Immediately before commit/push/merge/web deploy/native build — the final GO/NO-GO                          | `frontend-release-gatekeeper`   |
+| Module READMEs, ADRs, context maps, or memory files need updating                                          | `frontend-documentation-writer` |
+
+Model policy: `frontend-architect`, `frontend-planner`, `frontend-debugger`,
+`frontend-code-reviewer`, `frontend-security-reviewer`, `accessibility-reviewer`, `native-reviewer`,
+`performance-reviewer`, `api-contract-reviewer`, and `frontend-release-gatekeeper` run on **opus**
+(architecture, planning, debugging, and every review/gate agent). `frontend-implementer`,
+`frontend-test-engineer`, and `frontend-documentation-writer` run on **sonnet** (implementation,
+testing, and documentation). No subagent in this repository uses Fable.
+
+Review/gate subagents are read-only by tool grant (`Read, Grep, Glob, Bash` — no `Edit`/`Write`): they
+report itemized findings and a verdict, they do not silently fix what they find. Design/build/fix
+subagents carry `Edit`/`Write` and produce the actual change. See
+[`.claude/agents/README.md`](.claude/agents/README.md) for the full roster and the non-overlap
+rationale.
+
 ## Validation
 
 ```bash

@@ -531,7 +531,22 @@
     "profileLabel": "ملفك الشخصي",
     "home": "الرئيسية",
     "admin": "الإدارة",
-    "settings": "الإعدادات"
+    "settings": "الإعدادات",
+    "groupOverview": "نظرة عامة",
+    "groupTeam": "الفريق",
+    "groupManage": "الإدارة",
+    "signOut": "تسجيل الخروج"
+  },
+  "appBar": {
+    "label": "إجراءات الصفحة",
+    "switchToDark": "التبديل إلى المظهر الداكن",
+    "switchToLight": "التبديل إلى المظهر الفاتح",
+    "notifications": "الإشعارات",
+    "notificationsEmptyTitle": "لا يوجد جديد",
+    "notificationsEmptyMessage": "ستظهر هنا تحديثات التدريبات وقائمة الفريق.",
+    "userMenu": "قائمة الحساب",
+    "settings": "الإعدادات",
+    "signOut": "تسجيل الخروج"
   },
   "admin": {
     "title": "الإدارة",

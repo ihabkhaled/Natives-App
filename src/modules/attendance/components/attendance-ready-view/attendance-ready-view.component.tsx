@@ -31,7 +31,7 @@ export function AttendanceReadyView(props: AttendanceReadyViewProps): React.JSX.
         data-testid={TEST_IDS.attendancePrivacyNotice}
         className="rounded-2xl border border-[color:var(--ion-color-tertiary)] bg-[color:rgba(var(--ion-color-tertiary-rgb),0.08)] p-3"
       >
-        <IonNote color="tertiary">{props.privacyNotice}</IonNote>
+        <IonNote color="medium">{props.privacyNotice}</IonNote>
       </div>
       <AttendanceToolbar
         searchLabel={props.searchLabel}

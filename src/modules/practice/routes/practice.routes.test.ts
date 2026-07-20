@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 
 import { APP_PATHS } from '@/shared/config';
 import { PERMISSIONS } from '@/shared/security';
-import { ROUTE_ACCESS } from '@/shared/types';
+import { NAV_GROUP, ROUTE_ACCESS } from '@/shared/types';
 
 import { getPracticeRouteDefinitions } from './practice.routes';
 
@@ -27,6 +27,7 @@ describe('getPracticeRouteDefinitions', () => {
 
     expect(calendar?.meta?.nav).toEqual({
       order: 10,
+      group: NAV_GROUP.Team,
       iconName: 'calendar',
       labelKey: 'practice.calendarTitle',
     });

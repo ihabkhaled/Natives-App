@@ -1,6 +1,6 @@
 import { I18N_KEYS } from '@/shared/i18n';
 import { PERMISSIONS } from '@/shared/security';
-import { ROUTE_ACCESS, type AppRouteDefinition } from '@/shared/types';
+import { NAV_GROUP, ROUTE_ACCESS, type AppRouteDefinition } from '@/shared/types';
 
 import { MemberProfileContainer } from '../containers/member-profile.container';
 import { MembersDirectoryContainer } from '../containers/members-directory.container';
@@ -29,6 +29,7 @@ export function getMembersRouteDefinitions(): readonly AppRouteDefinition[] {
         featureFlag: null,
         nav: {
           order: 15,
+          group: NAV_GROUP.Team,
           iconName: 'people',
           labelKey: I18N_KEYS.members.title,
         },

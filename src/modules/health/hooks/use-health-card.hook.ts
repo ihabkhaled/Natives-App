@@ -14,7 +14,7 @@ export interface HealthCardView {
   readonly statusLabel: string;
   readonly isHealthy: boolean;
   readonly versionLabel: string;
-  readonly version: string;
+  readonly version: string | null;
   readonly checkedAtLabel: string;
   readonly checkedAtText: string;
   readonly onRefresh: () => void;
@@ -36,7 +36,7 @@ export function useHealthCard(): HealthCardView {
       health?.isHealthy === true ? t(I18N_KEYS.health.statusUp) : t(I18N_KEYS.health.statusDown),
     isHealthy: health?.isHealthy === true,
     versionLabel: t(I18N_KEYS.health.version),
-    version: health?.version ?? '',
+    version: health?.version ?? null,
     checkedAtLabel: t(I18N_KEYS.health.checkedAt),
     checkedAtText: health === undefined ? '' : formatDateTime(health.checkedAtIso, locale),
     onRefresh: healthQuery.refetch,

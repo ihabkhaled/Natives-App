@@ -1,6 +1,6 @@
 import { I18N_KEYS } from '@/shared/i18n';
 import { PERMISSIONS } from '@/shared/security';
-import { ROUTE_ACCESS, type AppRouteDefinition } from '@/shared/types';
+import { NAV_GROUP, ROUTE_ACCESS, type AppRouteDefinition } from '@/shared/types';
 
 import { PracticeCalendarContainer } from '../containers/practice-calendar.container';
 import { PracticeSessionDetailsContainer } from '../containers/practice-session-details.container';
@@ -28,6 +28,7 @@ export function getPracticeRouteDefinitions(): readonly AppRouteDefinition[] {
         featureFlag: null,
         nav: {
           order: 10,
+          group: NAV_GROUP.Team,
           iconName: 'calendar',
           labelKey: I18N_KEYS.practice.calendarTitle,
         },

@@ -35,6 +35,13 @@ describe('HealthStatusCard', () => {
     expect(HEALTH_CARD_TEST_IDS.card).toBe(TEST_IDS.healthCard);
   });
 
+  it('omits the version row when the probe does not report a build version', () => {
+    render(<HealthStatusCard {...buildProps({ version: null })} />);
+
+    expect(screen.queryByText(/Version/u)).not.toBeInTheDocument();
+    expect(screen.getByTestId(HEALTH_CARD_TEST_IDS.status)).toHaveTextContent('Operational');
+  });
+
   it('renders only the loading state while the probe is in flight', () => {
     render(<HealthStatusCard {...buildProps({ isLoading: true })} />);
 

@@ -2,6 +2,7 @@ import { IonReactRouter, IonRouterOutlet, Redirect, Route } from '@/packages/rou
 import { APP_PATHS } from '@/shared/config';
 
 import { AppLifecycle } from '../lifecycle/app-lifecycle.provider';
+import { AppBarContainer } from '../shell/app-bar/app-bar.container';
 import { PrimaryNavigationContainer } from '../shell/navigation/primary-navigation.container';
 import { GuardedRoute } from './guarded-route.guard';
 import { RouteChrome } from './route-chrome.provider';
@@ -14,6 +15,7 @@ export function AppRouter(): React.JSX.Element {
     <IonReactRouter>
       <AppLifecycle />
       <RouteChrome />
+      <AppBarContainer />
       <IonRouterOutlet>
         {getAppRouteDefinitions().map((definition) => (
           <Route

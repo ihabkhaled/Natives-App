@@ -45,7 +45,7 @@ describe('ErrorState', () => {
     const retry = screen.getByText('Try again');
     await userEvent.click(retry);
 
-    expect(retry).toHaveAttribute('color', 'medium');
+    expect(retry).toHaveAttribute('color', 'secondary');
     expect(onRetry).toHaveBeenCalledTimes(1);
   });
 

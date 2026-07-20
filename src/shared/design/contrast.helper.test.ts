@@ -75,6 +75,25 @@ describe('brand palette accessibility', () => {
     ).toBeGreaterThanOrEqual(WCAG_AA_LARGE);
   });
 
+  it('carries near-black ink across the whole turf-lime action gradient', () => {
+    for (const stop of [
+      BRAND_PALETTE.limeBright,
+      BRAND_PALETTE.lime,
+      BRAND_PALETTE.limeDeep,
+    ] as const) {
+      expect(contrastRatio(BRAND_PALETTE.black, stop)).toBeGreaterThanOrEqual(WCAG_AA_NORMAL);
+    }
+  });
+
+  it('keeps the legible-on-light lime and gold text tones at AA', () => {
+    expect(contrastRatio(BRAND_PALETTE.limeInk, BRAND_PALETTE.offWhite)).toBeGreaterThanOrEqual(
+      WCAG_AA_LARGE,
+    );
+    expect(contrastRatio(BRAND_PALETTE.goldDeep, BRAND_PALETTE.white)).toBeGreaterThanOrEqual(
+      WCAG_AA_NORMAL,
+    );
+  });
+
   it('reads black text on the signature gold, but never gold as text on white', () => {
     expect(contrastRatio(BRAND_PALETTE.black, BRAND_PALETTE.gold)).toBeGreaterThanOrEqual(
       WCAG_AA_NORMAL,

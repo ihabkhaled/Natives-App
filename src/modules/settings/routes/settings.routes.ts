@@ -1,5 +1,5 @@
 import { I18N_KEYS } from '@/shared/i18n';
-import { ROUTE_ACCESS, type AppRouteDefinition } from '@/shared/types';
+import { NAV_GROUP, ROUTE_ACCESS, type AppRouteDefinition } from '@/shared/types';
 
 import { SettingsContainer } from '../containers/settings.container';
 import { settingsPath } from './settings.paths';
@@ -19,7 +19,12 @@ export function getSettingsRouteDefinitions(): readonly AppRouteDefinition[] {
         offline: true,
         preload: false,
         featureFlag: null,
-        nav: { order: 30, iconName: 'settings', labelKey: I18N_KEYS.nav.settings },
+        nav: {
+          order: 30,
+          group: NAV_GROUP.Manage,
+          iconName: 'settings',
+          labelKey: I18N_KEYS.nav.settings,
+        },
       },
     },
   ];

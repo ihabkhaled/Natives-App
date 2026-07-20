@@ -3,13 +3,14 @@ import { describe, expect, it } from 'vitest';
 import type { FeatureFlag } from '@/shared/config';
 import { PERMISSIONS } from '@/shared/security';
 import {
+  NAV_GROUP,
   ROUTE_ACCESS,
   type AppRouteDefinition,
   type NavMeta,
   type RouteMeta,
 } from '@/shared/types';
 
-import { selectVisibleNavItems } from './nav-visibility.helper';
+import { groupVisibleNavItems, selectVisibleNavItems } from './nav-visibility.helper';
 import type { NavVisibilityContext } from './navigation.types';
 
 function DummyScreen(): React.JSX.Element {
@@ -24,7 +25,13 @@ function route(
   const nav: NavMeta | null =
     navOverrides === null
       ? null
-      : { order: 0, iconName: 'home', labelKey: 'nav.home', ...navOverrides };
+      : {
+          order: 0,
+          group: NAV_GROUP.Overview,
+          iconName: 'home',
+          labelKey: 'nav.home',
+          ...navOverrides,
+        };
   const base: AppRouteDefinition = {
     path,
     exact: true,
@@ -114,7 +121,48 @@ describe('selectVisibleNavItems', () => {
     ];
 
     expect(selectVisibleNavItems(routes, adminContext)).toEqual([
-      { path: '/admin', key: 'admin', order: 20, iconName: 'shield', labelKey: 'nav.admin' },
+      {
+        path: '/admin',
+        key: 'admin',
+        order: 20,
+        group: NAV_GROUP.Overview,
+        iconName: 'shield',
+        labelKey: 'nav.admin',
+      },
     ]);
+  });
+});
+
+describe('groupVisibleNavItems', () => {
+  it('buckets destinations into the declared section order', () => {
+    const items = selectVisibleNavItems(
+      [
+        route('/settings', { key: 'settings' }, { order: 30, group: NAV_GROUP.Manage }),
+        route('/home', { key: 'home' }, { order: 0, group: NAV_GROUP.Overview }),
+        route('/members', { key: 'members' }, { order: 15, group: NAV_GROUP.Team }),
+      ],
+      adminContext,
+    );
+
+    expect(groupVisibleNavItems(items).map((group) => group.key)).toEqual([
+      NAV_GROUP.Overview,
+      NAV_GROUP.Team,
+      NAV_GROUP.Manage,
+    ]);
+  });
+
+  it('drops a section that has no permitted destination', () => {
+    const items = selectVisibleNavItems(
+      [route('/home', { key: 'home' }, { order: 0, group: NAV_GROUP.Overview })],
+      adminContext,
+    );
+
+    const groups = groupVisibleNavItems(items);
+    expect(groups).toHaveLength(1);
+    expect(groups[0]?.items.map((item) => item.key)).toEqual(['home']);
+  });
+
+  it('returns nothing when no destination survived filtering', () => {
+    expect(groupVisibleNavItems([])).toEqual([]);
   });
 });

@@ -8,7 +8,7 @@ export function mapHealthResponseToStatus(
 ): HealthStatus {
   return {
     isHealthy: dto.status === 'ok',
-    version: dto.version,
+    version: dto.version ?? null,
     checkedAtIso: dto.timestamp,
   };
 }

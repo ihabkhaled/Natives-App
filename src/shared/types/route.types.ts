@@ -13,9 +13,22 @@ export const ROUTE_ACCESS = {
 
 export type RouteAccess = (typeof ROUTE_ACCESS)[keyof typeof ROUTE_ACCESS];
 
+/**
+ * The sidebar sections destinations are grouped under. The order of the keys
+ * is the order the sections render in.
+ */
+export const NAV_GROUP = {
+  Overview: 'overview',
+  Team: 'team',
+  Manage: 'manage',
+} as const;
+
+export type NavGroup = (typeof NAV_GROUP)[keyof typeof NAV_GROUP];
+
 /** Presence in the primary navigation, with its stable ordering and icon. */
 export interface NavMeta {
   readonly order: number;
+  readonly group: NavGroup;
   readonly iconName: AppIconName;
   readonly labelKey: I18nKey;
 }

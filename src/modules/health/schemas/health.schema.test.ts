@@ -35,10 +35,18 @@ describe('healthResponseSchema', () => {
     ).toBe(false);
   });
 
-  it('rejects a payload missing the version', () => {
+  it('accepts the deployed probe payload, which carries uptime instead of a version', () => {
+    const payload = { status: 'ok', uptimeSeconds: 413, timestamp: validPayload.timestamp };
+
+    expect(safeParseWithSchema(healthResponseSchema, payload)).toEqual({
+      success: true,
+      data: payload,
+    });
+  });
+
+  it('rejects a negative uptime', () => {
     expect(
-      safeParseWithSchema(healthResponseSchema, { status: 'ok', timestamp: validPayload.timestamp })
-        .success,
+      safeParseWithSchema(healthResponseSchema, { ...validPayload, uptimeSeconds: -1 }).success,
     ).toBe(false);
   });
 

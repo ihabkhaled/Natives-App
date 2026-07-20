@@ -1,3 +1,4 @@
+import { I18N_KEYS } from '@/shared/i18n';
 import { ROUTE_ACCESS, type AppRouteDefinition } from '@/shared/types';
 
 import { AcceptInvitationContainer } from '../containers/accept-invitation.container';
@@ -44,6 +45,16 @@ export function getAuthRouteDefinitions(): readonly AppRouteDefinition[] {
       exact: true,
       access: ROUTE_ACCESS.Protected,
       component: SessionsContainer,
+      meta: {
+        key: 'sessions',
+        titleKey: I18N_KEYS.sessions.title,
+        permissions: [],
+        requiresTeamContext: false,
+        offline: false,
+        preload: false,
+        featureFlag: null,
+        nav: null,
+      },
     },
   ];
 }

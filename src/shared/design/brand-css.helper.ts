@@ -27,6 +27,13 @@ function renderConstantColorVars(palette: BrandTokens['palette']): readonly stri
     line('--un-brand-white', palette.white),
     line('--un-on-brand-gold', palette.black),
     line('--un-logo-safe-bg', palette.black),
+    line('--un-brand-lime', palette.lime),
+    line('--un-brand-lime-bright', palette.limeBright),
+    line('--un-brand-lime-deep', palette.limeDeep),
+    line('--un-brand-lime-ink', palette.limeInk),
+    line('--un-on-brand-lime', palette.black),
+    line('--un-brand-gold-bright', palette.goldBright),
+    line('--un-brand-gold-deep', palette.goldDeep),
   ];
 }
 
@@ -55,21 +62,45 @@ function renderTypographyVars(typography: BrandTokens['typography']): readonly s
   ];
 }
 
-function renderScaleVars(tokens: BrandTokens): readonly string[] {
-  const { spacing, radius, elevation, motion } = tokens;
+function renderSpacingVars(spacing: BrandTokens['spacing']): readonly string[] {
   return [
-    line('--un-space-xs', spacing.xs),
-    line('--un-space-sm', spacing.sm),
-    line('--un-space-md', spacing.md),
-    line('--un-space-lg', spacing.lg),
-    line('--un-space-xl', spacing.xl),
-    line('--un-space-xxl', spacing.xxl),
+    line('--un-space-1', spacing.step1),
+    line('--un-space-2', spacing.step2),
+    line('--un-space-3', spacing.step3),
+    line('--un-space-4', spacing.step4),
+    line('--un-space-6', spacing.step6),
+    line('--un-space-8', spacing.step8),
+    line('--un-space-12', spacing.step12),
+    line('--un-space-16', spacing.step16),
+  ];
+}
+
+function renderFrameVars(tokens: BrandTokens): readonly string[] {
+  const { control, layout } = tokens;
+  return [
+    line('--un-control-sm', control.heightSm),
+    line('--un-control-md', control.heightMd),
+    line('--un-control-lg', control.heightLg),
+    line('--un-gutter-mobile', layout.gutterMobile),
+    line('--un-gutter-desktop', layout.gutterDesktop),
+    line('--un-content-max', layout.contentMax),
+    line('--un-sidebar-width', layout.sidebarWidth),
+    line('--un-appbar-height', layout.appBarHeight),
+    line('--un-tabbar-height', layout.tabBarHeight),
+  ];
+}
+
+function renderScaleVars(tokens: BrandTokens): readonly string[] {
+  const { radius, elevation, motion } = tokens;
+  return [
+    ...renderSpacingVars(tokens.spacing),
     line('--un-radius-sm', radius.sm),
     line('--un-radius-md', radius.md),
     line('--un-radius-lg', radius.lg),
     line('--un-radius-xl', radius.xl),
     line('--un-radius-pill', radius.pill),
     line('--un-radius-circle', radius.circle),
+    ...renderFrameVars(tokens),
     line('--un-elevation-none', elevation.none),
     line('--un-elevation-sm', elevation.sm),
     line('--un-elevation-md', elevation.md),

@@ -1,8 +1,15 @@
 import { isFeatureEnabled } from '@/shared/config';
 import { hasAllPermissions } from '@/shared/security';
-import type { AppRouteDefinition } from '@/shared/types';
+import { NAV_GROUP, type AppRouteDefinition, type NavGroup } from '@/shared/types';
 
-import type { NavItemDescriptor, NavVisibilityContext } from './navigation.types';
+import type {
+  NavGroupDescriptor,
+  NavItemDescriptor,
+  NavVisibilityContext,
+} from './navigation.types';
+
+/** Section render order; a section with no permitted destination is dropped. */
+const NAV_GROUP_ORDER: readonly NavGroup[] = [NAV_GROUP.Overview, NAV_GROUP.Team, NAV_GROUP.Manage];
 
 function toVisibleNavItem(
   route: AppRouteDefinition,
@@ -28,6 +35,7 @@ function toVisibleNavItem(
     path: route.path,
     key: meta.key,
     order: meta.nav.order,
+    group: meta.nav.group,
     iconName: meta.nav.iconName,
     labelKey: meta.nav.labelKey,
   };
@@ -48,4 +56,17 @@ export function selectVisibleNavItems(
       return item === null ? [] : [item];
     })
     .sort((first, second) => first.order - second.order);
+}
+
+/**
+ * Bucket already-filtered destinations into their sidebar sections, keeping
+ * the declared section order and dropping sections that ended up empty.
+ */
+export function groupVisibleNavItems(
+  items: readonly NavItemDescriptor[],
+): readonly NavGroupDescriptor[] {
+  return NAV_GROUP_ORDER.flatMap((key) => {
+    const groupItems = items.filter((item) => item.group === key);
+    return groupItems.length === 0 ? [] : [{ key, items: groupItems }];
+  });
 }

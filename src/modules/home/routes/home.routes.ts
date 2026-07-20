@@ -1,5 +1,5 @@
 import { I18N_KEYS } from '@/shared/i18n';
-import { ROUTE_ACCESS, type AppRouteDefinition } from '@/shared/types';
+import { NAV_GROUP, ROUTE_ACCESS, type AppRouteDefinition } from '@/shared/types';
 
 import { HomeContainer } from '../containers/home.container';
 import { NotFoundContainer } from '../containers/not-found.container';
@@ -27,7 +27,12 @@ export function getHomeRouteDefinitions(): readonly AppRouteDefinition[] {
         offline: true,
         preload: true,
         featureFlag: null,
-        nav: { order: 0, iconName: 'home', labelKey: I18N_KEYS.nav.home },
+        nav: {
+          order: 0,
+          group: NAV_GROUP.Overview,
+          iconName: 'home',
+          labelKey: I18N_KEYS.nav.home,
+        },
       },
     },
   ];

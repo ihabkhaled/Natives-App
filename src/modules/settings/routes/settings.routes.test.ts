@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { ROUTE_ACCESS } from '@/shared/types';
+import { NAV_GROUP, ROUTE_ACCESS } from '@/shared/types';
 
 import { SettingsContainer } from '../containers/settings.container';
 import { settingsPath } from './settings.paths';
@@ -35,6 +35,7 @@ describe('getSettingsRouteDefinitions', () => {
     expect(settings!.meta?.permissions).toEqual([]);
     expect(settings!.meta?.nav).toEqual({
       order: 30,
+      group: NAV_GROUP.Manage,
       iconName: 'settings',
       labelKey: 'nav.settings',
     });

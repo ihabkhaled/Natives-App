@@ -35,9 +35,11 @@ export function HealthStatusCard(props: HealthStatusCardProps): React.JSX.Elemen
             >
               {props.statusLabel}
             </IonBadge>
-            <IonNote>
-              {props.versionLabel}: {props.version}
-            </IonNote>
+            {props.version === null ? null : (
+              <IonNote>
+                {props.versionLabel}: {props.version}
+              </IonNote>
+            )}
             <IonNote>
               {props.checkedAtLabel}: {props.checkedAtText}
             </IonNote>

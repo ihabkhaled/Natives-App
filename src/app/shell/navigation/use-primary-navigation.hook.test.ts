@@ -6,13 +6,15 @@ import {
   buildAuthUser,
   useCurrentUserQuery,
   useEffectivePermissions,
+  useLogoutMutation,
   useSession,
-  type CurrentUserQueryView,
 } from '@/modules/auth';
 import { PERMISSIONS } from '@/shared/security';
+import { NAV_GROUP } from '@/shared/types';
 
 import { initTestI18n } from '../../../../tests/setup/i18n-test.helper';
 import { renderHookWithProviders } from '../../../../tests/setup/render-with-providers.helper';
+import type { PrimaryNavItem, PrimaryNavigationView } from './navigation.types';
 import { usePrimaryNavigation } from './use-primary-navigation.hook';
 
 vi.mock('@/modules/auth', async (importOriginal) => ({
@@ -20,14 +22,17 @@ vi.mock('@/modules/auth', async (importOriginal) => ({
   useSession: vi.fn(),
   useEffectivePermissions: vi.fn(),
   useCurrentUserQuery: vi.fn(),
+  useLogoutMutation: vi.fn(),
 }));
 
-function mockCurrentUser(overrides: Partial<CurrentUserQueryView> = {}): void {
+const signOut = vi.fn();
+
+/** Resolve, or fail to resolve, the signed-in display name. */
+function mockProfileName(displayName: string | null): void {
   vi.mocked(useCurrentUserQuery).mockReturnValue({
-    user: buildAuthUser({ displayName: 'Ranger Rick' }),
+    user: displayName === null ? undefined : buildAuthUser({ displayName }),
     isLoading: false,
     isError: false,
-    ...overrides,
   });
 }
 
@@ -51,10 +56,14 @@ function mockEffective(overrides: Partial<ReturnType<typeof useEffectivePermissi
   });
 }
 
+function flatItems(view: PrimaryNavigationView): readonly PrimaryNavItem[] {
+  return view.groups.flatMap((group) => group.items);
+}
+
 function keysAt(path: string): readonly string[] {
-  return renderHookWithProviders(() => usePrimaryNavigation(), {
-    initialPath: path,
-  }).result.current.items.map((item) => item.key);
+  return flatItems(
+    renderHookWithProviders(() => usePrimaryNavigation(), { initialPath: path }).result.current,
+  ).map((item) => item.key);
 }
 
 beforeAll(async () => {
@@ -62,7 +71,8 @@ beforeAll(async () => {
 });
 
 beforeEach(() => {
-  mockCurrentUser();
+  mockProfileName('Ranger Rick');
+  vi.mocked(useLogoutMutation).mockReturnValue({ logout: signOut, isLoggingOut: false });
 });
 
 afterEach(() => {
@@ -113,15 +123,15 @@ describe('usePrimaryNavigation', () => {
     const { result } = renderHookWithProviders(() => usePrimaryNavigation(), {
       initialPath: '/settings',
     });
-    expect(result.current.items.find((item) => item.key === 'settings')?.isActive).toBe(true);
-    expect(result.current.items.find((item) => item.key === 'home')?.isActive).toBe(false);
+    expect(flatItems(result.current).find((item) => item.key === 'settings')?.isActive).toBe(true);
+    expect(flatItems(result.current).find((item) => item.key === 'home')?.isActive).toBe(false);
 
-    const home = result.current.items.find((item) => item.key === 'home');
+    const home = flatItems(result.current).find((item) => item.key === 'home');
     act(() => {
       home?.onSelect();
     });
 
-    expect(result.current.items.find((item) => item.key === 'home')?.isActive).toBe(true);
+    expect(flatItems(result.current).find((item) => item.key === 'home')?.isActive).toBe(true);
   });
 
   it('exposes a translated accessible label for the navigation region', () => {
@@ -145,13 +155,44 @@ describe('usePrimaryNavigation', () => {
       initialPath: '/home',
     });
 
-    expect(result.current.profile).toEqual({ name: 'Ranger Rick', label: 'Your profile' });
+    expect(result.current.profile?.name).toBe('Ranger Rick');
+    expect(result.current.profile?.label).toBe('Your profile');
+    expect(result.current.profile?.signOutLabel).toBe('Sign out');
+  });
+
+  it('groups destinations into the labelled sidebar sections', () => {
+    mockSession(true);
+    mockEffective({ permissions: [PERMISSIONS.usersManage] });
+
+    const { result } = renderHookWithProviders(() => usePrimaryNavigation(), {
+      initialPath: '/home',
+    });
+
+    expect(result.current.groups.map((group) => group.key)).toEqual([
+      NAV_GROUP.Overview,
+      NAV_GROUP.Manage,
+    ]);
+    expect(result.current.groups.map((group) => group.label)).toEqual(['Overview', 'Manage']);
+  });
+
+  it('signs out through the pinned profile action', () => {
+    mockSession(true);
+    mockEffective({ permissions: [PERMISSIONS.usersManage] });
+
+    const { result } = renderHookWithProviders(() => usePrimaryNavigation(), {
+      initialPath: '/home',
+    });
+    act(() => {
+      result.current.profile?.onSignOut();
+    });
+
+    expect(signOut).toHaveBeenCalledOnce();
   });
 
   it('omits the profile until the display name resolves', () => {
     mockSession(true);
     mockEffective({ permissions: [PERMISSIONS.usersManage] });
-    mockCurrentUser({ user: undefined });
+    mockProfileName(null);
 
     const { result } = renderHookWithProviders(() => usePrimaryNavigation(), {
       initialPath: '/home',

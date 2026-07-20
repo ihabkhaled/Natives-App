@@ -1,6 +1,8 @@
 import { BRAND_PALETTE } from './brand-palette.constants';
 import {
+  BRAND_CONTROL,
   BRAND_ELEVATION,
+  BRAND_LAYOUT,
   BRAND_MOTION,
   BRAND_RADIUS,
   BRAND_SPACING,
@@ -25,6 +27,8 @@ export const BRAND_TOKENS = {
   typography: BRAND_TYPOGRAPHY,
   spacing: BRAND_SPACING,
   radius: BRAND_RADIUS,
+  control: BRAND_CONTROL,
+  layout: BRAND_LAYOUT,
   elevation: BRAND_ELEVATION,
   motion: BRAND_MOTION,
 } as const;

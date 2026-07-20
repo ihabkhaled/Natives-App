@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="Ultimate Natives">
-  <rect width="512" height="512" rx="112" fill="#0B0B0B" />
-  <ellipse cx="256" cy="256" rx="150" ry="96" fill="#D4AF37" />
-  <ellipse cx="256" cy="256" rx="150" ry="96" fill="none" stroke="#0B0B0B" stroke-width="16" />
-  <ellipse cx="256" cy="230" rx="94" ry="48" fill="none" stroke="#0B0B0B" stroke-width="10" opacity="0.35" />
+  <rect width="512" height="512" rx="112" fill="#0B1220" />
+  <ellipse cx="256" cy="256" rx="150" ry="96" fill="#F5B93B" />
+  <ellipse cx="256" cy="256" rx="150" ry="96" fill="none" stroke="#0B1220" stroke-width="16" />
+  <ellipse cx="256" cy="230" rx="94" ry="48" fill="none" stroke="#0B1220" stroke-width="10" opacity="0.35" />
 </svg>

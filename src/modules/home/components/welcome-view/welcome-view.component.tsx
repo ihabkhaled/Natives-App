@@ -12,7 +12,7 @@ export function WelcomeView(props: WelcomeViewProps): React.JSX.Element {
         <div className="app-welcome-hero__mark" aria-hidden="true" />
         <div className="app-welcome-hero__content">
           <BrandLogo label={props.logoLabel} size="lg" />
-          <IonText color="secondary">
+          <IonText>
             <p className="app-eyebrow m-0">{props.tagline}</p>
           </IonText>
           <IonText>

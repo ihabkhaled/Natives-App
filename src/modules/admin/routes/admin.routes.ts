@@ -1,7 +1,7 @@
 import { FEATURE_FLAGS } from '@/shared/config';
 import { I18N_KEYS } from '@/shared/i18n';
 import { PERMISSIONS } from '@/shared/security';
-import { ROUTE_ACCESS, type AppRouteDefinition } from '@/shared/types';
+import { NAV_GROUP, ROUTE_ACCESS, type AppRouteDefinition } from '@/shared/types';
 
 import { AdminContainer } from '../containers/admin.container';
 import { adminPath } from './admin.paths';
@@ -26,7 +26,12 @@ export function getAdminRouteDefinitions(): readonly AppRouteDefinition[] {
         offline: false,
         preload: false,
         featureFlag: FEATURE_FLAGS.adminConsole,
-        nav: { order: 20, iconName: 'shield', labelKey: I18N_KEYS.nav.admin },
+        nav: {
+          order: 20,
+          group: NAV_GROUP.Manage,
+          iconName: 'shield',
+          labelKey: I18N_KEYS.nav.admin,
+        },
       },
     },
   ];
