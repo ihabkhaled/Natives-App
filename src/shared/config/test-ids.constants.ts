@@ -6,6 +6,7 @@
 import { ADMIN_TEST_IDS } from './admin-test-ids.constants';
 import { COMPETITIONS_TEST_IDS } from './competitions-test-ids.constants';
 import { FEATURE_TEST_IDS } from './feature-test-ids.constants';
+import { MATCHES_TEST_IDS } from './matches-test-ids.constants';
 import { NOTIFICATIONS_TEST_IDS } from './notifications-test-ids.constants';
 import { TRYOUTS_TEST_IDS } from './tryouts-test-ids.constants';
 
@@ -13,6 +14,7 @@ export const TEST_IDS = {
   ...FEATURE_TEST_IDS,
   ...COMPETITIONS_TEST_IDS,
   ...TRYOUTS_TEST_IDS,
+  ...MATCHES_TEST_IDS,
   ...NOTIFICATIONS_TEST_IDS,
   ...ADMIN_TEST_IDS,
   appShell: 'app-shell',

@@ -225,6 +225,37 @@
       ]
     },
     {
+      "name": "matches",
+      "publicSurface": [
+        "MATCH_OPERATION_OUTCOME",
+        "MATCH_STATUS",
+        "MatchOperationOutcome",
+        "MatchStatus",
+        "SCOREKEEPER_OPERATION_KIND",
+        "SCOREKEEPER_QUEUE_LIMIT",
+        "SCOREKEEPER_QUEUE_STATE",
+        "ScorekeeperOperationKind",
+        "ScorekeeperQueueState",
+        "ScoringSide",
+        "getMatchesRouteDefinitions",
+        "matchEventListResponseSchema",
+        "matchEventResponseSchema",
+        "matchListResponseSchema",
+        "matchOperationResponseSchema",
+        "matchResponseSchema",
+        "matchRulesetListResponseSchema",
+        "matchScoreboardPath",
+        "matchScoreboardResponseSchema",
+        "matchStatisticsPath",
+        "matchStatisticsResponseSchema",
+        "matchesPath",
+        "matchesQueryKeys",
+        "playerMatchStatisticsSchema",
+        "teamMatchStatisticsSchema",
+        "useScorekeeperQueueStore"
+      ]
+    },
+    {
       "name": "members",
       "publicSurface": [
         "AgeClassification",

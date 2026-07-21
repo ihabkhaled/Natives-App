@@ -2,7 +2,13 @@ import { expect, test } from '@playwright/test';
 
 import { TEST_IDS } from '@/shared/config';
 
-import { APP_ROUTES, gotoApp, signIn, waitForAppAnimations } from '../e2e/fixtures/app.fixture';
+import {
+  APP_ROUTES,
+  gotoApp,
+  signIn,
+  switchToArabic,
+  waitForAppAnimations,
+} from '../e2e/fixtures/app.fixture';
 
 /** Deterministic screenshots: animations disabled by the config expectation. */
 test.describe('visual regression', () => {
@@ -233,5 +239,47 @@ test.describe('notifications and admin visual regression', () => {
     await expect(page.getByTestId(TEST_IDS.adminOutboxPanel)).toBeVisible();
     await waitForAppAnimations(page);
     await expect(page).toHaveScreenshot('admin-operations-light.png', { fullPage: true });
+  });
+});
+
+test.describe('matches visual regression', () => {
+  test('match list (light)', async ({ page }) => {
+    await signIn(page);
+    await gotoApp(page, APP_ROUTES.matches);
+    await expect(page.getByTestId(TEST_IDS.matchesList)).toBeVisible();
+    await waitForAppAnimations(page);
+    await expect(page).toHaveScreenshot('matches-list-light.png', { fullPage: true });
+  });
+
+  test('live scoreboard (light)', async ({ page }) => {
+    await signIn(page);
+    await gotoApp(page, APP_ROUTES.matchScoreboard);
+    await expect(page.getByTestId(TEST_IDS.scoreboardScore)).toBeVisible();
+    await waitForAppAnimations(page);
+    await expect(page).toHaveScreenshot('scoreboard-light.png', { fullPage: true });
+  });
+
+  test('live scoreboard (Arabic RTL)', async ({ page }) => {
+    await signIn(page);
+    await gotoApp(page, APP_ROUTES.settings);
+    await switchToArabic(page);
+    await gotoApp(page, APP_ROUTES.matchScoreboard);
+    await expect(page.getByTestId(TEST_IDS.scoreboardScore)).toBeVisible();
+    await waitForAppAnimations(page);
+    await expect(page).toHaveScreenshot('scoreboard-rtl.png', { fullPage: true });
+  });
+
+  test('match statistics (dark)', async ({ page }) => {
+    await signIn(page);
+    await gotoApp(page, APP_ROUTES.settings);
+    await page
+      .getByTestId(TEST_IDS.settingsThemeSelect)
+      .locator('ion-segment-button[value="dark"]')
+      .click();
+    await expect(page.locator('html')).toHaveClass(/ion-palette-dark/u);
+    await gotoApp(page, APP_ROUTES.matchStatistics);
+    await expect(page.getByTestId(TEST_IDS.matchStatsPlayers)).toBeVisible();
+    await waitForAppAnimations(page);
+    await expect(page).toHaveScreenshot('match-statistics-dark.png', { fullPage: true });
   });
 });

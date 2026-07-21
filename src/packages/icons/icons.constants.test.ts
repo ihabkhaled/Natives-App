@@ -29,6 +29,8 @@ describe('APP_ICONS', () => {
       'ribbon',
       'settings',
       'shield',
+      'statsChart',
+      'stopwatch',
       'sun',
       'time',
       'trendingUp',

@@ -113,6 +113,17 @@ const SCREENS = [
     route: APP_ROUTES.adminOperations,
     anchor: TEST_IDS.adminOutboxPanel,
   },
+  { slug: 'matches', route: APP_ROUTES.matches, anchor: TEST_IDS.matchesList },
+  {
+    slug: 'match-scoreboard',
+    route: APP_ROUTES.matchScoreboard,
+    anchor: TEST_IDS.scoreboardScore,
+  },
+  {
+    slug: 'match-statistics',
+    route: APP_ROUTES.matchStatistics,
+    anchor: TEST_IDS.matchStatsPlayers,
+  },
 ];
 
 const VARIANTS = [

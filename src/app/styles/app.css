@@ -182,6 +182,7 @@ ion-content.ion-padding {
 .app-squad-detail__subhead,
 .app-eligibility__subhead,
 .app-roster__table thead th,
+.app-match-stats__table thead th,
 .app-feedback-card__section dt,
 .app-chart-table thead th,
 ion-list-header ion-label {
@@ -193,6 +194,7 @@ ion-list-header ion-label {
 [dir='rtl'] .app-squad-detail__subhead,
 [dir='rtl'] .app-eligibility__subhead,
 [dir='rtl'] .app-roster__table thead th,
+[dir='rtl'] .app-match-stats__table thead th,
 [dir='rtl'] .app-eyebrow,
 [dir='rtl'] .app-feedback-card__section dt,
 [dir='rtl'] .app-chart-table thead th,
@@ -2671,7 +2673,8 @@ ion-spinner {
   color: var(--app-muted-strong);
 }
 
-.app-training-panel {
+.app-training-panel,
+.app-scorekeeper__conflicts {
   display: flex;
   flex-direction: column;
   gap: var(--un-space-2);
@@ -3216,7 +3219,8 @@ ion-spinner {
 }
 
 .app-competition-detail__notice,
-.app-fixture-list__note {
+.app-fixture-list__note,
+.app-scorekeeper__blocked {
   padding: var(--un-space-2) var(--un-space-3);
   border-inline-start: 3px solid var(--ion-color-warning-shade);
   border-radius: var(--un-radius-md);
@@ -3314,7 +3318,8 @@ ion-spinner {
 .app-competition-detail__subhead,
 .app-squad-detail__subhead,
 .app-eligibility__subhead,
-.app-roster__table thead th {
+.app-roster__table thead th,
+.app-match-stats__table thead th {
   margin: 0;
   color: var(--app-muted);
   font-weight: var(--un-font-weight-semibold);
@@ -3563,7 +3568,9 @@ ion-spinner {
 
 .app-consent,
 .app-consent__privacy,
-.app-conversion__preview {
+.app-conversion__preview,
+.app-scorekeeper__undo-form,
+.app-scorekeeper__conflict {
   display: flex;
   flex-direction: column;
   gap: var(--un-space-2);
@@ -3892,4 +3899,328 @@ ion-spinner {
 
 .app-admin-ops__row:last-child {
   border-block-end: none;
+}
+
+/* ----------------------------------------------------------------------------
+   MATCHES — list, live scoreboard, offline scorekeeper, statistics.
+
+   The scoreboard is the one screen read from three metres away with a disc in
+   the air, so the score is the largest type in the product and the two scoring
+   targets are full-width, 72px tall, and thumb-reachable at the bottom of the
+   stack on a phone. Every geometric value is logical, so Arabic mirrors.
+---------------------------------------------------------------------------- */
+.app-matches__list {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--un-space-3);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+@media (min-width: 900px) {
+  .app-matches__list {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.app-match-card {
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--un-space-4);
+}
+
+.app-match-card__main {
+  display: flex;
+  min-inline-size: 0;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.app-match-card__score {
+  color: var(--app-ink);
+  font-size: var(--un-font-size-2xl);
+  font-weight: var(--un-font-weight-bold);
+  font-variant-numeric: tabular-nums;
+  line-height: var(--un-line-height-tight);
+  letter-spacing: var(--un-letter-spacing-tight);
+}
+
+.app-match-card__meta {
+  display: flex;
+  flex: 0 0 auto;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: var(--un-space-2);
+}
+
+.app-match-card__actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: var(--un-space-1);
+}
+
+/* The live match carries the disc-flight arc on its leading edge. */
+.app-match-card--live {
+  border-color: var(--app-lime-line);
+  box-shadow:
+    inset 3px 0 0 var(--app-arc-strong),
+    var(--app-elevation-card);
+}
+
+[dir='rtl'] .app-match-card--live {
+  box-shadow:
+    inset -3px 0 0 var(--app-arc-strong),
+    var(--app-elevation-card);
+}
+
+/* ---- Scoreboard head: the biggest number in the product ---- */
+.app-scoreboard-head {
+  align-items: center;
+  gap: var(--un-space-4);
+  background: var(--app-hero-glow);
+}
+
+.app-scoreboard-head__row {
+  display: flex;
+  inline-size: 100%;
+  align-items: center;
+  justify-content: center;
+  gap: var(--un-space-4);
+}
+
+.app-scoreboard-head__side {
+  display: flex;
+  min-inline-size: 0;
+  flex: 1 1 0;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--un-space-1);
+  text-align: center;
+}
+
+.app-scoreboard-head__value {
+  color: var(--app-ink);
+  font-size: clamp(3.5rem, 18vw, 6rem);
+  font-weight: var(--un-font-weight-bold);
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+  letter-spacing: var(--un-letter-spacing-tight);
+}
+
+.app-scoreboard-head__dash {
+  color: var(--app-muted);
+  font-size: clamp(2rem, 8vw, 3rem);
+  line-height: 1;
+}
+
+.app-scoreboard-head__meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: var(--un-space-2);
+  text-align: center;
+}
+
+/* ---- Scoreboard and statistics panel grids ---- */
+.app-scoreboard__grid,
+.app-match-stats__grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--un-space-4);
+  align-items: start;
+}
+
+@media (min-width: 900px) {
+  .app-scoreboard__grid,
+  .app-match-stats__grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+/* ---- Scorekeeper controls ---- */
+.app-scorekeeper__pickers {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--un-space-2);
+}
+
+@media (min-width: 600px) {
+  .app-scorekeeper__pickers {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.app-scorekeeper__targets,
+.app-scorekeeper__timeouts {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--un-space-3);
+}
+
+/* Field-sized hit areas: well past the 44px minimum, thumb-first. */
+.app-scorekeeper__target ion-button {
+  --padding-top: var(--un-space-4);
+  --padding-bottom: var(--un-space-4);
+
+  min-block-size: 72px;
+  font-size: var(--un-font-size-lg);
+}
+
+.app-scorekeeper__target--us ion-button {
+  --box-shadow: var(--app-cta-shadow);
+}
+
+.app-scorekeeper__timeout {
+  display: flex;
+  flex-direction: column;
+  gap: var(--un-space-1);
+  text-align: center;
+}
+
+.app-scorekeeper__timeout ion-button {
+  min-block-size: 52px;
+}
+
+.app-scorekeeper__transitions,
+.app-scorekeeper__undo-actions,
+.app-scorekeeper__conflict-actions,
+.app-scorekeeper__badge-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--un-space-2);
+}
+
+.app-scorekeeper__undo {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.app-scorekeeper__blocker {
+  padding-block: var(--un-space-2);
+}
+
+.app-scorekeeper__conflict-title {
+  margin: 0;
+  color: var(--ion-color-danger-shade);
+  font-size: var(--un-font-size-base);
+  font-weight: var(--un-font-weight-bold);
+}
+
+.app-scorekeeper__conflict-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--un-space-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.app-scorekeeper__conflict {
+  border-color: var(--ion-color-danger-tint);
+}
+
+.app-scorekeeper__conflict-facts {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: var(--un-space-1) var(--un-space-3);
+  margin: 0;
+  font-size: var(--un-font-size-sm);
+}
+
+.app-scorekeeper__conflict-facts dt {
+  margin: 0;
+  color: var(--app-muted);
+  font-weight: var(--un-font-weight-semibold);
+}
+
+.app-scorekeeper__conflict-facts dd {
+  margin: 0;
+  color: var(--app-ink);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---- Match statistics ---- */
+.app-match-stats__scroll {
+  overflow-x: auto;
+}
+
+.app-match-stats__table {
+  inline-size: 100%;
+  border-collapse: collapse;
+  font-size: var(--un-font-size-sm);
+}
+
+.app-match-stats__table th,
+.app-match-stats__table td {
+  padding: var(--un-space-2);
+  border-block-end: 1px solid var(--app-hairline);
+  color: var(--app-ink);
+  text-align: start;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+/* A rostered player with nothing recorded stays in the table, quietly. */
+.app-match-stats__row--quiet td {
+  color: var(--app-muted);
+}
+
+.app-match-stats__badge {
+  display: block;
+  font-size: var(--un-font-size-xs);
+}
+
+.app-match-stats__report-title {
+  margin: 0;
+  color: var(--app-ink);
+  font-size: var(--un-font-size-base);
+  font-weight: var(--un-font-weight-bold);
+}
+
+/* ---- Bar chart: decorative bars, tabular alternative underneath ---- */
+.app-match-chart {
+  display: flex;
+  flex-direction: column;
+  gap: var(--un-space-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.app-match-chart__row {
+  display: grid;
+  grid-template-columns: minmax(6rem, auto) 1fr auto;
+  align-items: center;
+  gap: var(--un-space-3);
+  font-size: var(--un-font-size-sm);
+}
+
+.app-match-chart__label {
+  color: var(--app-muted);
+}
+
+.app-match-chart__track {
+  display: block;
+  block-size: 10px;
+  border-radius: var(--un-radius-pill);
+  background: var(--app-track-bg);
+}
+
+.app-match-chart__fill {
+  display: block;
+  block-size: 100%;
+  min-inline-size: 2px;
+  border-radius: var(--un-radius-pill);
+  background: var(--app-cta-gradient);
+}
+
+.app-match-chart__value {
+  color: var(--app-ink);
+  font-weight: var(--un-font-weight-semibold);
+  font-variant-numeric: tabular-nums;
 }

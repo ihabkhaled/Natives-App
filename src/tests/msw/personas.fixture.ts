@@ -38,6 +38,11 @@ const COACH_PERMISSIONS = [
   PERMISSIONS.rosterManage,
   PERMISSIONS.tryoutManage,
   PERMISSIONS.tryoutEvaluate,
+  PERMISSIONS.matchRead,
+  PERMISSIONS.matchScore,
+  PERMISSIONS.matchFinalize,
+  PERMISSIONS.matchStatsRead,
+  PERMISSIONS.matchAnalysisReadTeam,
   // A coach reads the team configuration but never changes it: the read-only
   // settings path is a real persona, not a test-only contrivance.
   PERMISSIONS.settingsRead,
@@ -59,6 +64,9 @@ const MEMBER_PERMISSIONS = [
   PERMISSIONS.competitionRead,
   PERMISSIONS.squadRead,
   PERMISSIONS.rosterRead,
+  // A member reads the scoreboard but neither scores it nor reads the
+  // derived statistics: both read-only and forbidden are real personas.
+  PERMISSIONS.matchRead,
 ];
 
 export const ADMIN_PERSONA = buildAuthUser();

@@ -232,6 +232,54 @@ reports in-app delivered/read, which it actually holds, and says plainly that em
 state is not exposed to recipients. Delivery _failures_ are administrative and live in the operations
 centre; the link to it appears only for a principal holding `notification.delivery.read`.
 
+### Matches — live scoring and derived statistics (prompts 811-812)
+
+Every read and write the scoreboard, the offline scorekeeper, and the statistics screen make is a
+published backend route. Nothing on these two screens runs on a fabricated endpoint.
+
+| Endpoint                                           | Method | Used by                                         |
+| -------------------------------------------------- | ------ | ----------------------------------------------- |
+| `/teams/{teamId}/matches`                          | GET    | The bounded match list.                         |
+| `/teams/{teamId}/matches/{matchId}/scoreboard`     | GET    | The authoritative score, caps, and timeouts.    |
+| `/teams/{teamId}/matches/{matchId}/events`         | GET    | The append-only point timeline.                 |
+| `/teams/{teamId}/matches/{matchId}/events/point`   | POST   | One idempotent scoring command.                 |
+| `/teams/{teamId}/matches/{matchId}/events/timeout` | POST   | One idempotent timeout command.                 |
+| `/teams/{teamId}/matches/{matchId}/events/void`    | POST   | The compensating correction behind undo.        |
+| `/teams/{teamId}/matches/{matchId}/transition`     | POST   | The server-owned state machine.                 |
+| `/teams/{teamId}/matches/{matchId}/finalization`   | POST   | Publishing the final, immutable score.          |
+| `/teams/{teamId}/match-rulesets`                   | GET    | Every cap and allowance the scoreboard prints.  |
+| `/teams/{teamId}/matches/{matchId}/statistics`     | GET    | The derived per-team and per-player projection. |
+
+The idempotency contract is honoured rather than approximated. Each scoring command carries a
+client-minted `operationId` and the `expectedStreamVersion` the operator was looking at; the server
+answers `applied`, `replayed`, or a 409. The client treats `replayed` as success **without moving the
+score**, and surfaces a 409 as a conflict the operator resolves — it never merges two divergent
+scores. `tests/contract/matches.contract.test.ts` asserts all three outcomes against the MSW wire
+using the same Zod schemas that parse the remote responses.
+
+#### Contract-snapshot drift, not a gap
+
+`contracts/openapi.json` in this repository is the 503 snapshot and does not yet carry the 504
+statistics and point-lineup routes, which the sibling backend has since published (`MatchPoints.*`
+and `MatchStatistics.get` are in its mapped route table). The client therefore validates
+`/statistics` against schemas written from the shipped `MatchStatisticsResponseDto` rather than from
+the committed snapshot, which is why `npm run contract:check` reports drift locally. Running
+`npm run contract:sync` refreshes the snapshot; no schema, mapper, or screen is expected to change.
+
+### Gap 8 — video analysis is not implemented (prompt 505)
+
+The backend exposes **no** clip, timestamp, tag, comment, or signed-URL route: nothing under
+`/video`, `/analysis`, or `/clips` exists in the mapped route table. The statistics screen therefore
+renders a clearly marked "Video analysis is not available yet" panel
+(`src/modules/matches/components/video-gap-panel`) instead of inventing a player.
+
+Nothing is faked for it: there is no route, no `APP_PATHS` entry, no gateway, no schema, and **no MSW
+handler**. The panel states the surface is unavailable and points here; `tests/e2e/matches.spec.ts`
+and the statistics integration suite both assert that notice is on screen, so the gap cannot be
+quietly closed by mock data later. The `match.analysis.read.self` and `match.analysis.read.team`
+grants are already resolved into the match context so the surface can be gated the day the endpoints
+ship.
+
 ## Reproducing
 
 ```bash

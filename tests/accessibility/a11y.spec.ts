@@ -14,6 +14,7 @@ import {
   APP_ROUTES,
   fillIonInput,
   gotoApp,
+  setOffline,
   signIn,
   waitForAppAnimations,
 } from '../e2e/fixtures/app.fixture';
@@ -350,6 +351,54 @@ test.describe('admin console accessibility', () => {
     await signIn(page);
     await gotoApp(page, APP_ROUTES.adminOperations);
     await expect(page.getByTestId(TEST_IDS.adminOutboxPanel)).toBeVisible();
+    await waitForAppAnimations(page);
+    expect((await analyze(page)).violations).toEqual([]);
+  });
+});
+
+test.describe('matches accessibility', () => {
+  test('the match list has no violations', async ({ page }) => {
+    await signIn(page);
+    await gotoApp(page, APP_ROUTES.matches);
+    await expect(page.getByTestId(TEST_IDS.matchesList)).toBeVisible();
+    await waitForAppAnimations(page);
+    expect((await analyze(page)).violations).toEqual([]);
+  });
+
+  test('the live scoreboard and its scorekeeper controls have no violations', async ({ page }) => {
+    await signIn(page);
+    await gotoApp(page, APP_ROUTES.matchScoreboard);
+    await expect(page.getByTestId(TEST_IDS.scoreboardScore)).toBeVisible();
+    await waitForAppAnimations(page);
+    expect((await analyze(page)).violations).toEqual([]);
+  });
+
+  test('the offline sync panel and its conflict block have no violations', async ({ page }) => {
+    await signIn(page);
+    await gotoApp(page, APP_ROUTES.matchScoreboard);
+    await expect(page.getByTestId(TEST_IDS.scoreboardScore)).toBeVisible();
+    await setOffline(page, true);
+    await page.getByTestId(TEST_IDS.scoreboardPointUs).click();
+    await expect(page.getByTestId(TEST_IDS.scorekeeperQueueRow)).toHaveCount(1);
+    await waitForAppAnimations(page);
+    expect((await analyze(page)).violations).toEqual([]);
+    await setOffline(page, false);
+  });
+
+  test('the undo correction form has no violations', async ({ page }) => {
+    await signIn(page);
+    await gotoApp(page, APP_ROUTES.matchScoreboard);
+    await page.getByTestId(TEST_IDS.scoreboardUndo).click();
+    await expect(page.getByTestId(TEST_IDS.scoreboardUndoReason)).toBeVisible();
+    await waitForAppAnimations(page);
+    expect((await analyze(page)).violations).toEqual([]);
+  });
+
+  test('the statistics table and its chart alternative have no violations', async ({ page }) => {
+    await signIn(page);
+    await gotoApp(page, APP_ROUTES.matchStatistics);
+    await expect(page.getByTestId(TEST_IDS.matchStatsPlayers)).toBeVisible();
+    await page.getByTestId(TEST_IDS.chartDataToggle).click();
     await waitForAppAnimations(page);
     expect((await analyze(page)).violations).toEqual([]);
   });

@@ -20,6 +20,8 @@ import {
   MOCK_TIMEOUT_DELAY_MS,
   MOCK_TOKENS,
 } from './mock-data.constants';
+import { matchesHandlers } from './matches-handlers';
+import { resetMockMatchesState } from './matches.fixture';
 import { membersHandlers } from './members-handlers';
 import { resetMockMembersState } from './members.fixture';
 import { nestErrorResponse } from './nest-error.helper';
@@ -59,6 +61,7 @@ export function resetMockAuthState(): void {
   resetMockNotificationsState();
   resetMockAdminState();
   resetMockOperationsState();
+  resetMockMatchesState();
 }
 
 function apiUrl(path: string): string {
@@ -216,6 +219,7 @@ export const mockApiHandlers = [
   ...trainingHandlers,
   ...competitionsHandlers,
   ...rostersHandlers,
+  ...matchesHandlers,
   ...tryoutsHandlers,
   ...notificationsHandlers,
   ...adminHandlers,
