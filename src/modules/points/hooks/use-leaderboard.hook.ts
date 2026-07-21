@@ -31,7 +31,12 @@ import { usePointsContext } from './use-points-context.hook';
 export function useLeaderboard(): LeaderboardView {
   const { t, locale } = useAppTranslation();
   const context = usePointsContext();
-  const [period, setPeriod] = useState<LeaderboardPeriod>(LEADERBOARD_PERIOD.season);
+  // Defaults to all-time: the backend requires an explicit seasonId when
+  // period=season (UN-403 §7 "an award at a season boundary"), and no season
+  // picker exists yet in this screen (tracked separately). Defaulting to
+  // "season" here previously 400'd every leaderboard load with
+  // errors.points.validation, since no seasonId was ever sent.
+  const [period, setPeriod] = useState<LeaderboardPeriod>(LEADERBOARD_PERIOD.allTime);
   const [cohort, setCohort] = useState<LeaderboardCohort>(LEADERBOARD_COHORT.all);
   const [category, setCategory] = useState<string>(ALL_CATEGORIES);
   const [expandedId, setExpandedId] = useState('');
