@@ -1,33 +1,33 @@
 import { fireEvent, screen, waitFor, within } from '@testing-library/react';
 import { http, HttpResponse } from 'msw';
-import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { describe, expect, it } from 'vitest';
 
 import { AdminRolesContainer } from '@/modules/admin/containers/admin-roles.container';
-import { getEnvironment } from '@/packages/environment';
 import { APP_PATHS, TEST_IDS } from '@/shared/config';
 import { MOCK_PERSONA_EMAILS } from '@/tests/msw/mock-data.constants';
 
-import { initTestI18n } from '../setup/i18n-test.helper';
 import {
-  clearSessionAfterTest,
-  resetSessionForTest,
-  signInAs,
-} from '../setup/integration-session.helper';
-import { fireIonChange, fireIonCheckboxChange, fireIonInput } from '../setup/ionic-events.helper';
+  apiUrl,
+  retryFromErrorState,
+  registerIntegrationSession,
+} from '../setup/integration-api.helper';
+import { signInAs } from '../setup/integration-session.helper';
+import {
+  fireIonChange,
+  fireIonCheckboxChange,
+  fireIonInput,
+  fireIonInputCleared,
+} from '../setup/ionic-events.helper';
 import { mockApiServer } from '../setup/msw-server.setup';
 import { renderRoute } from '../setup/render-with-providers.helper';
 
 const WAIT = { timeout: 5000 };
 
-function apiUrl(path: string): string {
-  return `${getEnvironment().apiBaseUrl}${path}`;
-}
-
 function useRoles(roles: readonly string[], assignableRoles: readonly string[]): void {
   mockApiServer.use(
     http.get(apiUrl('/teams/:teamId/members/:membershipId/roles'), ({ params }) =>
       HttpResponse.json({
-        membershipId: String(params.membershipId),
+        membershipId: String(params['membershipId']),
         roles: [...roles],
         assignableRoles: [...assignableRoles],
       }),
@@ -46,14 +46,16 @@ async function selectFirstMember(): Promise<void> {
   await screen.findByTestId(TEST_IDS.adminRolesPanel, {}, WAIT);
 }
 
-beforeEach(async () => {
-  await initTestI18n();
-  await resetSessionForTest();
-});
+/** Give the audited reason and commit the draft. */
+async function saveWithReason(): Promise<void> {
+  fireIonInput(screen.getByTestId(TEST_IDS.adminRolesReason), 'Promoted after the AGM');
+  await waitFor(() => {
+    expect(screen.getByTestId(TEST_IDS.adminRolesSave)).toBeEnabled();
+  }, WAIT);
+  fireEvent.click(screen.getByTestId(TEST_IDS.adminRolesSave));
+}
 
-afterEach(async () => {
-  await clearSessionAfterTest();
-});
+registerIntegrationSession();
 
 describe('role assignment respects the privilege ceiling', () => {
   it('prompts for a member before showing any roles', async () => {
@@ -143,14 +145,17 @@ describe('an audited change needs a reason', () => {
     let submitted: unknown = null;
     useRoles(['member'], ['member', 'coach']);
     mockApiServer.use(
-      http.put(apiUrl('/teams/:teamId/members/:membershipId/roles'), async ({ request, params }) => {
-        submitted = await request.json();
-        return HttpResponse.json({
-          membershipId: String(params.membershipId),
-          roles: ['member', 'coach'],
-          assignableRoles: ['member', 'coach'],
-        });
-      }),
+      http.put(
+        apiUrl('/teams/:teamId/members/:membershipId/roles'),
+        async ({ request, params }) => {
+          submitted = await request.json();
+          return HttpResponse.json({
+            membershipId: String(params['membershipId']),
+            roles: ['member', 'coach'],
+            assignableRoles: ['member', 'coach'],
+          });
+        },
+      ),
     );
     await openRoles();
     await selectFirstMember();
@@ -159,12 +164,7 @@ describe('an audited change needs a reason', () => {
       TEST_IDS.adminRolesToggle,
     )[1]!;
     fireIonCheckboxChange(coach, true);
-    fireIonInput(screen.getByTestId(TEST_IDS.adminRolesReason), 'Promoted after the AGM');
-
-    await waitFor(() => {
-      expect(screen.getByTestId(TEST_IDS.adminRolesSave)).toBeEnabled();
-    }, WAIT);
-    fireEvent.click(screen.getByTestId(TEST_IDS.adminRolesSave));
+    await saveWithReason();
 
     await waitFor(() => {
       expect(submitted).toEqual({ roles: ['member', 'coach'] });
@@ -210,5 +210,61 @@ describe('designed states', () => {
     renderRoute(APP_PATHS.adminRoles, APP_PATHS.adminRoles, <AdminRolesContainer />);
 
     expect(await screen.findByTestId(TEST_IDS.adminRolesError, {}, WAIT)).toBeInTheDocument();
+  });
+});
+
+describe('a rejected assignment is reported', () => {
+  it('keeps the panel usable when the server refuses the change', async () => {
+    useRoles(['member'], ['member', 'coach']);
+    mockApiServer.use(
+      http.put(apiUrl('/teams/:teamId/members/:membershipId/roles'), () =>
+        HttpResponse.json({ bad: true }, { status: 403 }),
+      ),
+    );
+    await openRoles();
+    await selectFirstMember();
+
+    await saveWithReason();
+
+    await waitFor(() => {
+      expect(screen.getByTestId(TEST_IDS.adminRolesPanel)).toBeInTheDocument();
+    }, WAIT);
+  });
+});
+
+describe('clearing the reason', () => {
+  it('treats a cleared reason as empty and blocks the save', async () => {
+    useRoles(['member'], ['member', 'coach']);
+    await openRoles();
+    await selectFirstMember();
+
+    fireIonInput(screen.getByTestId(TEST_IDS.adminRolesReason), 'Promoted after the AGM');
+    await waitFor(() => {
+      expect(screen.getByTestId(TEST_IDS.adminRolesSave)).toBeEnabled();
+    }, WAIT);
+
+    fireIonInputCleared(screen.getByTestId(TEST_IDS.adminRolesReason));
+
+    await waitFor(() => {
+      expect(screen.getByTestId(TEST_IDS.adminRolesSave)).toBeDisabled();
+    }, WAIT);
+    expect(screen.getByTestId(TEST_IDS.adminRolesPanel)).toHaveTextContent('Give a reason');
+  });
+});
+
+describe('a failed read offers a retry', () => {
+  it('re-issues the member directory from the designed error state', async () => {
+    const attempts = await retryFromErrorState({
+      path: '/teams/:teamId/members',
+      errorTestId: TEST_IDS.adminRolesError,
+      signIn: async () => {
+        await signInAs(MOCK_PERSONA_EMAILS.admin);
+      },
+      render: () => {
+        renderRoute(APP_PATHS.adminRoles, APP_PATHS.adminRoles, <AdminRolesContainer />);
+      },
+    });
+
+    expect(attempts.after).toBeGreaterThan(attempts.before);
   });
 });

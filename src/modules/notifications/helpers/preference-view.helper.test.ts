@@ -55,9 +55,11 @@ describe('buildPreferenceRows', () => {
     const toggle = vi.fn();
     const rows = buildPreferenceRows(t, STORED, toggle);
 
-    rows.find((row) => row.key === 'system')?.cells.forEach((cell) => {
-      cell.onToggle();
-    });
+    rows
+      .find((row) => row.key === 'system')
+      ?.cells.forEach((cell) => {
+        cell.onToggle();
+      });
     rows.find((row) => row.key === 'practice')?.cells[0]?.onToggle();
 
     expect(toggle).not.toHaveBeenCalled();

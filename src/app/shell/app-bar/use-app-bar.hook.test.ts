@@ -190,10 +190,10 @@ describe('useAppBar', () => {
       isLoading: false,
       latest: [],
     });
-    const badged = renderAppBar();
+    const { result } = renderAppBar();
 
-    expect(badged.result.current.notificationsUnreadCount).toBe(3);
-    expect(badged.result.current.notificationsBadgeLabel).toBe('3 unread');
+    expect(result.current.notificationsUnreadCount).toBe(3);
+    expect(result.current.notificationsBadgeLabel).toBe('3 unread');
   });
 
   it('previews the latest inbox rows without any target content', () => {
@@ -244,17 +244,17 @@ describe('useAppBar', () => {
   });
 
   it('routes to the inbox and to the preference screen from the popover', () => {
-    const inbox = renderAppBar();
+    const { result } = renderAppBar();
     act(() => {
-      inbox.result.current.onViewAllNotifications();
+      result.current.onViewAllNotifications();
     });
-    expect(inbox.result.current.title).toBe('Notifications');
+    expect(result.current.title).toBe('Notifications');
 
-    const preferences = renderAppBar();
+    const view = renderAppBar();
     act(() => {
-      preferences.result.current.onOpenNotificationPreferences();
+      view.result.current.onOpenNotificationPreferences();
     });
-    expect(preferences.result.current.title).toBe('Notification preferences');
+    expect(view.result.current.title).toBe('Notification preferences');
   });
 
   it('exposes the signed-in display name for the avatar', () => {

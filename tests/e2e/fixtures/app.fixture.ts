@@ -26,7 +26,13 @@ export const APP_ROUTES = {
   rosters: '/rosters',
   tryoutRegistration: '/tryout-registration',
   tryouts: '/tryouts',
+  notifications: '/notifications',
+  notificationPreferences: '/notifications/preferences',
   admin: '/admin',
+  adminSettings: '/admin/settings',
+  adminRoles: '/admin/roles',
+  adminRules: '/admin/rules',
+  adminOperations: '/admin/operations',
   settings: '/settings',
   workbench: '/workbench',
 } as const;

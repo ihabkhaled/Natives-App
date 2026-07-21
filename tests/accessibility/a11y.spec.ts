@@ -2,7 +2,13 @@ import AxeBuilder from '@axe-core/playwright';
 import { expect, test, type Page } from '@playwright/test';
 
 import { TEST_IDS } from '@/shared/config';
-import { MOCK_INVITATION, MOCK_RESET } from '@/tests/msw/mock-data.constants';
+import {
+  MOCK_CREDENTIALS,
+  MOCK_INVITATION,
+  MOCK_PERSONA_EMAILS,
+  MOCK_RESET,
+} from '@/tests/msw/mock-data.constants';
+import { MOCK_NOTIFICATIONS } from '@/tests/msw/notifications.fixture';
 
 import {
   APP_ROUTES,
@@ -262,6 +268,88 @@ test.describe('competitions, squads, and tryouts accessibility', () => {
 
     await page.getByTestId(TEST_IDS.tryoutCandidateOpen).first().click();
     await expect(page.getByTestId(TEST_IDS.tryoutCandidatePanel)).toBeVisible();
+    await waitForAppAnimations(page);
+    expect((await analyze(page)).violations).toEqual([]);
+  });
+});
+
+test.describe('notifications accessibility', () => {
+  test('the inbox and its filters have no violations', async ({ page }) => {
+    await signIn(page);
+    await gotoApp(page, APP_ROUTES.notifications);
+    await expect(page.getByTestId(TEST_IDS.notificationsView)).toBeVisible();
+    await waitForAppAnimations(page);
+    expect((await analyze(page)).violations).toEqual([]);
+  });
+
+  test('the app bar notification popover has no violations', async ({ page }) => {
+    await signIn(page);
+    await expect(page.getByTestId(TEST_IDS.homePage)).toBeVisible();
+    await page.getByTestId(TEST_IDS.appBarNotifications).click();
+    await expect(page.getByTestId(TEST_IDS.appBarNotificationsPanel)).toBeVisible();
+    await waitForAppAnimations(page);
+    expect((await analyze(page)).violations).toEqual([]);
+  });
+
+  test('the preference matrix and quiet hours have no violations', async ({ page }) => {
+    await signIn(page);
+    await gotoApp(page, APP_ROUTES.notificationPreferences);
+    await expect(page.getByTestId(TEST_IDS.notificationPrefsMatrix)).toBeVisible();
+    await waitForAppAnimations(page);
+    expect((await analyze(page)).violations).toEqual([]);
+  });
+
+  test('the designed forbidden arrival state has no violations', async ({ page }) => {
+    await signIn(page, {
+      email: MOCK_PERSONA_EMAILS.member,
+      password: MOCK_CREDENTIALS.password,
+    });
+    await gotoApp(page, `/notifications/open/${MOCK_NOTIFICATIONS.forbiddenAttendanceId}`);
+    await expect(page.getByTestId(TEST_IDS.notificationLinkForbidden)).toBeVisible();
+    await waitForAppAnimations(page);
+    expect((await analyze(page)).violations).toEqual([]);
+  });
+});
+
+test.describe('admin console accessibility', () => {
+  test('the admin hub has no violations', async ({ page }) => {
+    await signIn(page);
+    await gotoApp(page, APP_ROUTES.admin);
+    await expect(page.getByTestId(TEST_IDS.adminHubView)).toBeVisible();
+    await waitForAppAnimations(page);
+    expect((await analyze(page)).violations).toEqual([]);
+  });
+
+  test('team settings and its scheduling form have no violations', async ({ page }) => {
+    await signIn(page);
+    await gotoApp(page, APP_ROUTES.adminSettings);
+    await expect(page.getByTestId(TEST_IDS.adminEffectivePanel)).toBeVisible();
+    await waitForAppAnimations(page);
+    expect((await analyze(page)).violations).toEqual([]);
+  });
+
+  test('role assignment has no violations', async ({ page }) => {
+    await signIn(page);
+    await gotoApp(page, APP_ROUTES.adminRoles);
+    await expect(page.getByTestId(TEST_IDS.adminRolesMemberSelect)).toBeVisible();
+    await waitForAppAnimations(page);
+    expect((await analyze(page)).violations).toEqual([]);
+  });
+
+  test('rule governance and its dry-run panel have no violations', async ({ page }) => {
+    await signIn(page);
+    await gotoApp(page, APP_ROUTES.adminRules);
+    await expect(page.getByTestId(TEST_IDS.adminRuleRow).first()).toBeVisible();
+    await page.getByTestId(TEST_IDS.adminRuleOpen).first().click();
+    await expect(page.getByTestId(TEST_IDS.adminRulePanel)).toBeVisible();
+    await waitForAppAnimations(page);
+    expect((await analyze(page)).violations).toEqual([]);
+  });
+
+  test('the operations centre has no violations', async ({ page }) => {
+    await signIn(page);
+    await gotoApp(page, APP_ROUTES.adminOperations);
+    await expect(page.getByTestId(TEST_IDS.adminOutboxPanel)).toBeVisible();
     await waitForAppAnimations(page);
     expect((await analyze(page)).violations).toEqual([]);
   });

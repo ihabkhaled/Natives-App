@@ -86,6 +86,33 @@ const SCREENS = [
     anchor: TEST_IDS.tryoutRegistrationSubmit,
   },
   { slug: 'tryouts', route: APP_ROUTES.tryouts, anchor: TEST_IDS.tryoutsList },
+  {
+    slug: 'notifications-inbox',
+    route: APP_ROUTES.notifications,
+    anchor: TEST_IDS.notificationsView,
+  },
+  {
+    slug: 'notification-preferences',
+    route: APP_ROUTES.notificationPreferences,
+    anchor: TEST_IDS.notificationPrefsMatrix,
+  },
+  { slug: 'admin-hub', route: APP_ROUTES.admin, anchor: TEST_IDS.adminHubView },
+  {
+    slug: 'admin-settings',
+    route: APP_ROUTES.adminSettings,
+    anchor: TEST_IDS.adminEffectivePanel,
+  },
+  {
+    slug: 'admin-roles',
+    route: APP_ROUTES.adminRoles,
+    anchor: TEST_IDS.adminRolesMemberSelect,
+  },
+  { slug: 'admin-rules', route: APP_ROUTES.adminRules, anchor: TEST_IDS.adminRuleRow },
+  {
+    slug: 'admin-operations',
+    route: APP_ROUTES.adminOperations,
+    anchor: TEST_IDS.adminOutboxPanel,
+  },
 ];
 
 const VARIANTS = [

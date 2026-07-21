@@ -1,26 +1,21 @@
 import { fireEvent, screen, waitFor, within } from '@testing-library/react';
 import { http, HttpResponse } from 'msw';
-import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { describe, expect, it } from 'vitest';
 
 import { AdminOperationsContainer } from '@/modules/admin/containers/admin-operations.container';
-import { getEnvironment } from '@/packages/environment';
 import { APP_PATHS, TEST_IDS } from '@/shared/config';
 import { MOCK_PERSONA_EMAILS } from '@/tests/msw/mock-data.constants';
 
-import { initTestI18n } from '../setup/i18n-test.helper';
 import {
-  clearSessionAfterTest,
-  resetSessionForTest,
-  signInAs,
-} from '../setup/integration-session.helper';
+  apiUrl,
+  retryFromErrorState,
+  registerIntegrationSession,
+} from '../setup/integration-api.helper';
+import { signInAs } from '../setup/integration-session.helper';
 import { mockApiServer } from '../setup/msw-server.setup';
 import { renderRoute } from '../setup/render-with-providers.helper';
 
 const WAIT = { timeout: 5000 };
-
-function apiUrl(path: string): string {
-  return `${getEnvironment().apiBaseUrl}${path}`;
-}
 
 async function openOperations(email: string = MOCK_PERSONA_EMAILS.admin): Promise<void> {
   await signInAs(email);
@@ -28,14 +23,7 @@ async function openOperations(email: string = MOCK_PERSONA_EMAILS.admin): Promis
   await screen.findByTestId(TEST_IDS.adminOutboxPanel, {}, WAIT);
 }
 
-beforeEach(async () => {
-  await initTestI18n();
-  await resetSessionForTest();
-});
-
-afterEach(async () => {
-  await clearSessionAfterTest();
-});
+registerIntegrationSession();
 
 describe('outbox health', () => {
   it('reports every queue depth', async () => {
@@ -80,7 +68,7 @@ describe('dead letters never carry a payload', () => {
     let replayed: string | null = null;
     mockApiServer.use(
       http.post(apiUrl('/admin/outbox/:eventId/replay'), ({ params }) => {
-        replayed = String(params.eventId);
+        replayed = String(params['eventId']);
         return HttpResponse.json({ eventId: replayed, requeued: true });
       }),
     );
@@ -186,5 +174,53 @@ describe('designed states', () => {
     renderRoute(APP_PATHS.adminOperations, APP_PATHS.adminOperations, <AdminOperationsContainer />);
 
     expect(await screen.findByTestId(TEST_IDS.adminOpsError, {}, WAIT)).toBeInTheDocument();
+  });
+});
+
+describe('a failed replay is reported, not silently dropped', () => {
+  it('keeps the dead letter listed when the replay is refused', async () => {
+    mockApiServer.use(
+      http.post(apiUrl('/admin/outbox/:eventId/replay'), () =>
+        HttpResponse.json({ bad: true }, { status: 500 }),
+      ),
+    );
+    await openOperations();
+
+    fireEvent.click(
+      within(
+        within(screen.getByTestId(TEST_IDS.adminDeadLetterPanel)).getAllByTestId(
+          TEST_IDS.adminDeadLetterRow,
+        )[0]!,
+      ).getByTestId(TEST_IDS.adminDeadLetterReplay),
+    );
+
+    await waitFor(() => {
+      expect(
+        within(screen.getByTestId(TEST_IDS.adminDeadLetterPanel)).getAllByTestId(
+          TEST_IDS.adminDeadLetterRow,
+        ),
+      ).toHaveLength(2);
+    }, WAIT);
+  });
+});
+
+describe('a failed read offers a retry', () => {
+  it('re-issues the outbox metrics from the designed error state', async () => {
+    const attempts = await retryFromErrorState({
+      path: '/admin/outbox/metrics',
+      errorTestId: TEST_IDS.adminOpsError,
+      signIn: async () => {
+        await signInAs(MOCK_PERSONA_EMAILS.admin);
+      },
+      render: () => {
+        renderRoute(
+          APP_PATHS.adminOperations,
+          APP_PATHS.adminOperations,
+          <AdminOperationsContainer />,
+        );
+      },
+    });
+
+    expect(attempts.after).toBeGreaterThan(attempts.before);
   });
 });

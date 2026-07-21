@@ -12,6 +12,7 @@ describe('buildMemberOptions', () => {
       buildMemberOptions([
         {
           membershipId: 'm-1',
+          teamId: 'team-1',
           status: 'active',
           displayName: 'Omar Hassan',
           nickname: null,

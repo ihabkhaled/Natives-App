@@ -148,6 +148,12 @@ export interface CreateSettingVersionCommand {
   readonly note: string;
 }
 
+/** A dry run addresses one rule version for one member. */
+export interface SimulationCommand {
+  readonly ruleId: string;
+  readonly membershipId: string;
+}
+
 export interface RuleTransitionCommand {
   readonly ruleId: string;
   readonly transition: string;

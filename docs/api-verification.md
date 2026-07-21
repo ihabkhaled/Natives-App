@@ -164,6 +164,74 @@ the persona bearer token, so the forbidden path is exercised by the integration 
 Switching to the live service when it ships is a configuration change (`VITE_API_MODE=remote`) plus
 a `npm run contract:sync`; no screen, hook, or schema is expected to change.
 
+### Gap 6 — the operations centre has two surfaces the backend has not published (prompt 814)
+
+The admin operations centre (`/admin/operations`) is mostly live. Published and consumed against the
+real contract:
+
+| Endpoint                         | Method | Used by                                 |
+| -------------------------------- | ------ | --------------------------------------- |
+| `/admin/outbox/metrics`          | GET    | Queue depth and dead-letter counters.   |
+| `/admin/outbox/{eventId}/replay` | POST   | Re-queue one dead-lettered event by id. |
+| `/teams/{teamId}/audit`          | GET    | The audit log panel.                    |
+
+Two surfaces the screen needs are **not** in the published contract, so they run on NestJS-shaped
+MSW handlers (`src/tests/msw/admin-handlers.ts`) validated by the same Zod schemas
+(`src/modules/admin/schemas/operations.schema.ts`) that will parse the remote responses:
+
+| Endpoint                     | Method | Purpose                                                         |
+| ---------------------------- | ------ | --------------------------------------------------------------- |
+| `/admin/outbox/dead-letters` | GET    | The listing behind the dead-letter counter (id, type, failure). |
+| `/admin/jobs/health`         | GET    | Scheduled-job status and last successful run.                   |
+
+Neither is presented as live: both panels carry a visible "not served by the backend yet" notice on
+screen (`adminOperations.deadLetterPendingNotice`, `adminOperations.jobHealthPendingNotice`), and the
+e2e and integration tests assert that notice is rendered.
+
+Privacy is encoded in the shape rather than only in the UI. A dead letter carries an event id, an
+event type, an attempt count, and a failure code — the DTO has **no payload field at all**, so a
+handler or a screen cannot leak an event body by mistake. Replay addresses the event by id. The audit
+`diff` is reduced to a changed-field _count_ in `src/modules/admin/mappers/operations.mapper.ts`; no
+changed value ever reaches a view model.
+
+Switching either to the live service is a `npm run contract:sync` plus deleting the corresponding
+MSW handler; no screen, hook, or schema is expected to change.
+
+### Gap 7 — governance, jerseys, private imports, and reports are not built (prompts 603-604, 701-705)
+
+These four admin sub-surfaces have no backend module and, deliberately, **no frontend screen**. They
+were scoped out rather than shipped against fabricated data: no route, no `APP_PATHS` entry, no
+navigation entry, and no mock handler exists for any of them. The admin hub advertises only the four
+surfaces that are real — team settings, roles and access, rule governance, operations centre —
+because `src/modules/admin/helpers/hub-cards.helper.ts` filters cards on the same grants the route
+guards use, so the hub can never point at a screen that does not exist.
+
+They remain deferred work:
+
+| Surface                               | Backend prompt | Frontend state                   |
+| ------------------------------------- | -------------- | -------------------------------- |
+| Governance (positions, meetings)      | 603            | Not built — no screen, no mocks. |
+| Jerseys (products, orders, conflicts) | 604            | Not built — no screen, no mocks. |
+| Private imports (redacted dry runs)   | 702-705        | Not built — no screen, no mocks. |
+| Reports (catalog, queue, downloads)   | 701            | Not built — no screen, no mocks. |
+
+### Notifications — live, not pending (prompt 815)
+
+Recorded here for completeness because it is the counter-example: the whole notification surface is
+published and consumed live.
+
+| Endpoint                     | Method  | Used by                              |
+| ---------------------------- | ------- | ------------------------------------ |
+| `/notifications`             | GET     | The bounded inbox window.            |
+| `/notifications/{id}/read`   | POST    | Idempotent read state.               |
+| `/notifications/preferences` | GET/PUT | The category × channel matrix.       |
+| `/notifications/quiet-hours` | GET/PUT | Quiet hours and the urgent override. |
+
+The contract carries no per-channel delivery state for a recipient, so the inbox claims none: it
+reports in-app delivered/read, which it actually holds, and says plainly that email and push delivery
+state is not exposed to recipients. Delivery _failures_ are administrative and live in the operations
+centre; the link to it appears only for a principal holding `notification.delivery.read`.
+
 ## Reproducing
 
 ```bash

@@ -1,11 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import {
-  mapAuditPage,
-  mapDeadLetters,
-  mapJobHealth,
-  mapOutboxMetrics,
-} from './operations.mapper';
+import { mapAuditPage, mapDeadLetters, mapJobHealth, mapOutboxMetrics } from './operations.mapper';
 
 describe('mapOutboxMetrics', () => {
   it('copies every queue depth', () => {
@@ -45,9 +40,7 @@ describe('mapDeadLetters', () => {
 describe('mapJobHealth', () => {
   it('preserves a job that has never run as null, not as an epoch', () => {
     const mapped = mapJobHealth({
-      items: [
-        { jobKey: 'reports.expiry', status: 'failed', lastRunAt: null, failureCount: 7 },
-      ],
+      items: [{ jobKey: 'reports.expiry', status: 'failed', lastRunAt: null, failureCount: 7 }],
     });
 
     expect(mapped[0]?.lastRunAt).toBeNull();

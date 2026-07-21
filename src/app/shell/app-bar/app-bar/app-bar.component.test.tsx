@@ -126,9 +126,7 @@ describe('AppBar notifications affordance', () => {
   });
 
   it('shows the loading label while the inbox is still resolving', () => {
-    render(
-      <AppBar {...view({ isNotificationsOpen: true, isNotificationsLoading: true })} />,
-    );
+    render(<AppBar {...view({ isNotificationsOpen: true, isNotificationsLoading: true })} />);
 
     expect(screen.getByTestId(TEST_IDS.appBarNotificationsPanel)).toHaveTextContent(
       'Loading notifications',

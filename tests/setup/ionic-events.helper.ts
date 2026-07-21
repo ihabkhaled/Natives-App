@@ -17,3 +17,8 @@ export function fireIonChange(element: Element, value: string): void {
 export function fireIonCheckboxChange(element: Element, checked: boolean): void {
   fireEvent(element, new CustomEvent('ionChange', { detail: { checked } }));
 }
+
+/** Fire an ion-input clear, which Ionic reports as a null detail value. */
+export function fireIonInputCleared(element: Element): void {
+  fireEvent(element, new CustomEvent('ionInput', { detail: { value: null } }));
+}

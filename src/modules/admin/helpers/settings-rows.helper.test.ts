@@ -7,7 +7,11 @@ const formatInstant = (iso: string): string => `formatted:${iso}`;
 
 const SOURCES = {
   settings: [
-    { settingKey: 'roster_limits' as const, effectiveFrom: '2026-01-01T00:00:00.000Z', value: { max: 27 } },
+    {
+      settingKey: 'roster_limits' as const,
+      effectiveFrom: '2026-01-01T00:00:00.000Z',
+      value: { max: 27 },
+    },
     { settingKey: 'badge_tiers' as const, effectiveFrom: null, value: 'bronze' },
   ],
   versions: [
@@ -108,6 +112,15 @@ describe('buildSettingsRowGroups', () => {
 
   it('shows how often a catalog entry is referenced', () => {
     expect(groups.catalogRows[0]?.detail).toBe('adminSettings.referenceCountLabel');
+  });
+
+  it('renders a value the server omitted as null rather than as "undefined"', () => {
+    const rows = buildSettingsRowGroups(t, formatInstant, {
+      ...SOURCES,
+      settings: [{ settingKey: 'badge_tiers' as const, effectiveFrom: null, value: undefined }],
+    }).effectiveRows;
+
+    expect(rows[0]?.value).toBe('null');
   });
 
   it('produces empty groups when nothing has resolved yet', () => {

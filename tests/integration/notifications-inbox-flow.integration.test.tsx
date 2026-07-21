@@ -1,22 +1,22 @@
 import { fireEvent, screen, waitFor, within } from '@testing-library/react';
 import { http, HttpResponse } from 'msw';
-import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { describe, expect, it } from 'vitest';
 
 import { NotificationsInboxContainer } from '@/modules/notifications/containers/notifications-inbox.container';
-import { getEnvironment } from '@/packages/environment';
+import { Route } from '@/packages/router';
 import { APP_PATHS, TEST_IDS } from '@/shared/config';
 import { MOCK_PERSONA_EMAILS } from '@/tests/msw/mock-data.constants';
 import { MOCK_NOTIFICATIONS } from '@/tests/msw/notifications.fixture';
 
-import { initTestI18n } from '../setup/i18n-test.helper';
 import {
-  clearSessionAfterTest,
-  resetSessionForTest,
-  signInAs,
-} from '../setup/integration-session.helper';
+  apiUrl,
+  retryFromErrorState,
+  registerIntegrationSession,
+} from '../setup/integration-api.helper';
+import { signInAs } from '../setup/integration-session.helper';
 import { fireIonChange } from '../setup/ionic-events.helper';
 import { mockApiServer } from '../setup/msw-server.setup';
-import { renderRoute } from '../setup/render-with-providers.helper';
+import { renderRoute, renderWithProviders } from '../setup/render-with-providers.helper';
 
 const WAIT = { timeout: 5000 };
 
@@ -30,26 +30,43 @@ async function openInbox(email: string = MOCK_PERSONA_EMAILS.admin): Promise<voi
   await screen.findByTestId(TEST_IDS.notificationsView, {}, WAIT);
 }
 
-function apiUrl(path: string): string {
-  return `${getEnvironment().apiBaseUrl}${path}`;
+/**
+ * The inbox plus a probe at each destination it can route to, so a navigation
+ * assertion proves the arrival rather than the absence of a prefix match.
+ */
+function renderInboxWithProbes(): void {
+  renderWithProviders(
+    <>
+      <Route path={APP_PATHS.notifications} exact>
+        <NotificationsInboxContainer />
+      </Route>
+      <Route path={APP_PATHS.notificationPreferences} exact>
+        <p data-testid={TEST_IDS.notificationPrefsPage}>preferences</p>
+      </Route>
+      <Route path={APP_PATHS.notificationLink} exact>
+        <p data-testid={TEST_IDS.notificationLinkPage}>arrival</p>
+      </Route>
+    </>,
+    { initialPath: APP_PATHS.notifications },
+  );
 }
 
-beforeEach(async () => {
-  await initTestI18n();
-  await resetSessionForTest();
-});
-
-afterEach(async () => {
-  await clearSessionAfterTest();
-});
+registerIntegrationSession();
 
 describe('the inbox lists what arrived, grouped and bounded', () => {
   it('groups arrivals by day instead of one undifferentiated list', async () => {
     await openInbox();
 
     const groups = await screen.findAllByTestId(TEST_IDS.notificationsGroup, {}, WAIT);
+    const headings = groups.map((group) => group.getAttribute('aria-label'));
+
+    // The fixture instants are fixed, so which buckets exist depends on the
+    // wall clock; the invariant under test is that arrivals are bucketed and
+    // that the buckets stay in newest-first order.
     expect(groups.length).toBeGreaterThan(1);
-    expect(groups[0]).toHaveAccessibleName('Today');
+    expect(headings).toEqual(
+      ['Today', 'Yesterday', 'Earlier'].filter((label) => headings.includes(label)),
+    );
   });
 
   it('renders designed copy for each entry, never the wire event type', async () => {
@@ -62,17 +79,17 @@ describe('the inbox lists what arrived, grouped and bounded', () => {
   it('states the bounded window rather than pretending the list is complete', async () => {
     await openInbox();
 
-    expect(await screen.findByTestId(TEST_IDS.notificationsBoundedNotice, {}, WAIT)).toHaveTextContent(
-      'bounded page',
-    );
+    expect(
+      await screen.findByTestId(TEST_IDS.notificationsBoundedNotice, {}, WAIT),
+    ).toHaveTextContent('bounded page');
   });
 
   it('shows in-app delivery state per entry', async () => {
     await openInbox();
 
     const chips = await screen.findAllByTestId(TEST_IDS.notificationDelivery, {}, WAIT);
-    expect(chips.some((chip) => chip.textContent?.includes('Delivered in app'))).toBe(true);
-    expect(chips.some((chip) => chip.textContent?.includes('Read'))).toBe(true);
+    expect(chips.some((chip) => chip.textContent.includes('Delivered in app'))).toBe(true);
+    expect(chips.some((chip) => chip.textContent.includes('Read'))).toBe(true);
   });
 });
 
@@ -107,14 +124,9 @@ describe('read state is idempotent and filterable', () => {
     const before = await screen.findAllByTestId(TEST_IDS.notificationMarkRead, {}, WAIT);
     fireEvent.click(before[0]!);
 
-    await waitFor(
-      () => {
-        expect(screen.getAllByTestId(TEST_IDS.notificationMarkRead).length).toBe(
-          before.length - 1,
-        );
-      },
-      WAIT,
-    );
+    await waitFor(() => {
+      expect(screen.getAllByTestId(TEST_IDS.notificationMarkRead).length).toBe(before.length - 1);
+    }, WAIT);
   });
 
   it('narrows to unread only', async () => {
@@ -176,5 +188,123 @@ describe('the inbox designs its non-ready states', () => {
 
   it('pins the fixture ids the deep-link tests navigate to', () => {
     expect(MOCK_NOTIFICATIONS.unreadPracticeId).toBe('ntf-0000-0000-0001');
+  });
+});
+
+describe('the bounded window grows one page at a time', () => {
+  it('offers to load more only while a further page could exist', async () => {
+    mockApiServer.use(
+      http.get(apiUrl('/notifications'), ({ request }) => {
+        const limit = Number(new URL(request.url).searchParams.get('limit') ?? '20');
+        return HttpResponse.json({
+          items: Array.from({ length: limit }, (_unused, index) => ({
+            id: `ntf-page-${String(index)}`,
+            teamId: 'team-1',
+            category: 'practice',
+            eventType: 'practice.session.published',
+            titleKey: 'notifications.eventPracticePublished',
+            bodyKey: 'notifications.bodyGeneric',
+            params: { sessionId: 'session-1' },
+            readAt: '2026-07-20T10:00:00.000Z',
+            createdAt: '2026-07-20T09:00:00.000Z',
+          })),
+          total: 100,
+          limit,
+          offset: 0,
+        });
+      }),
+    );
+    await openInbox();
+
+    const loadMore = await screen.findByTestId(TEST_IDS.notificationsLoadMore, {}, WAIT);
+    fireEvent.click(loadMore);
+
+    await waitFor(() => {
+      expect(screen.getAllByTestId(TEST_IDS.notificationItem)).toHaveLength(40);
+    }, WAIT);
+  });
+
+  it('hides the load-more affordance once the page is not full', async () => {
+    await openInbox();
+
+    await waitFor(() => {
+      expect(screen.queryByTestId(TEST_IDS.notificationsLoadMore)).not.toBeInTheDocument();
+    }, WAIT);
+  });
+});
+
+describe('opening an entry and reporting a failed command', () => {
+  it('opens an entry through the arrival screen rather than at the target', async () => {
+    await signInAs(MOCK_PERSONA_EMAILS.admin);
+    renderInboxWithProbes();
+
+    const openButtons = await screen.findAllByTestId(TEST_IDS.notificationOpen, {}, WAIT);
+    fireEvent.click(openButtons[0]!);
+
+    expect(await screen.findByTestId(TEST_IDS.notificationLinkPage, {}, WAIT)).toBeInTheDocument();
+  });
+
+  it('offers no open affordance for an entry that routes nowhere', async () => {
+    await openInbox();
+
+    const rows = await screen.findAllByTestId(TEST_IDS.notificationItem, {}, WAIT);
+    const security = rows.find((row) => row.textContent.includes('Security alert'));
+    expect(security).toBeDefined();
+    expect(within(security!).queryByTestId(TEST_IDS.notificationOpen)).not.toBeInTheDocument();
+  });
+
+  it('reports a failed mark-read without losing the entry', async () => {
+    mockApiServer.use(
+      http.post(apiUrl('/notifications/:notificationId/read'), () =>
+        HttpResponse.json({ bad: true }, { status: 500 }),
+      ),
+    );
+    await openInbox();
+
+    const marks = await screen.findAllByTestId(TEST_IDS.notificationMarkRead, {}, WAIT);
+    const before = marks.length;
+    fireEvent.click(marks[0]!);
+
+    await waitFor(() => {
+      expect(screen.getAllByTestId(TEST_IDS.notificationMarkRead)).toHaveLength(before);
+    }, WAIT);
+  });
+
+  it('routes an authorized administrator to the operations centre for delivery failures', async () => {
+    await openInbox();
+
+    const notice = await screen.findByTestId(TEST_IDS.notificationsDeliveryNotice, {}, WAIT);
+    fireEvent.click(within(notice).getByText('Open the operations centre'));
+
+    await waitFor(() => {
+      expect(screen.queryByTestId(TEST_IDS.notificationsView)).not.toBeInTheDocument();
+    }, WAIT);
+  });
+
+  it('routes to the preference screen from the inbox toolbar', async () => {
+    await signInAs(MOCK_PERSONA_EMAILS.admin);
+    renderInboxWithProbes();
+    await screen.findByTestId(TEST_IDS.notificationsPreferencesLink, {}, WAIT);
+
+    fireEvent.click(screen.getByTestId(TEST_IDS.notificationsPreferencesLink));
+
+    expect(await screen.findByTestId(TEST_IDS.notificationPrefsPage, {}, WAIT)).toBeInTheDocument();
+  });
+});
+
+describe('a failed read offers a retry', () => {
+  it('re-issues the inbox read from the designed error state', async () => {
+    const attempts = await retryFromErrorState({
+      path: '/notifications',
+      errorTestId: TEST_IDS.notificationsError,
+      signIn: async () => {
+        await signInAs(MOCK_PERSONA_EMAILS.admin);
+      },
+      render: () => {
+        renderInbox();
+      },
+    });
+
+    expect(attempts.after).toBeGreaterThan(attempts.before);
   });
 });

@@ -1,28 +1,24 @@
 import { fireEvent, screen, waitFor, within } from '@testing-library/react';
 import { http, HttpResponse } from 'msw';
-import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { describe, expect, it } from 'vitest';
 
 import { AdminContainer } from '@/modules/admin/containers/admin.container';
 import { AdminSettingsContainer } from '@/modules/admin/containers/admin-settings.container';
-import { getEnvironment } from '@/packages/environment';
+import { Route } from '@/packages/router';
 import { APP_PATHS, TEST_IDS } from '@/shared/config';
 import { MOCK_PERSONA_EMAILS } from '@/tests/msw/mock-data.constants';
 
-import { initTestI18n } from '../setup/i18n-test.helper';
 import {
-  clearSessionAfterTest,
-  resetSessionForTest,
-  signInAs,
-} from '../setup/integration-session.helper';
-import { fireIonChange, fireIonInput } from '../setup/ionic-events.helper';
+  apiUrl,
+  retryFromErrorState,
+  registerIntegrationSession,
+} from '../setup/integration-api.helper';
+import { signInAs } from '../setup/integration-session.helper';
+import { fireIonChange, fireIonInput, fireIonInputCleared } from '../setup/ionic-events.helper';
 import { mockApiServer } from '../setup/msw-server.setup';
-import { renderRoute } from '../setup/render-with-providers.helper';
+import { renderRoute, renderWithProviders } from '../setup/render-with-providers.helper';
 
 const WAIT = { timeout: 5000 };
-
-function apiUrl(path: string): string {
-  return `${getEnvironment().apiBaseUrl}${path}`;
-}
 
 async function openSettings(email: string = MOCK_PERSONA_EMAILS.admin): Promise<void> {
   await signInAs(email);
@@ -30,14 +26,17 @@ async function openSettings(email: string = MOCK_PERSONA_EMAILS.admin): Promise<
   await screen.findByTestId(TEST_IDS.adminEffectivePanel, {}, WAIT);
 }
 
-beforeEach(async () => {
-  await initTestI18n();
-  await resetSessionForTest();
-});
+/** Fill a valid effective-dated change and submit it. */
+async function submitVersionChange(): Promise<void> {
+  fireIonInput(screen.getByTestId(TEST_IDS.adminVersionValue), '{"max":30}');
+  fireIonInput(screen.getByTestId(TEST_IDS.adminVersionNote), 'Squad expansion');
+  await waitFor(() => {
+    expect(screen.getByTestId(TEST_IDS.adminVersionSubmit)).toBeEnabled();
+  }, WAIT);
+  fireEvent.click(screen.getByTestId(TEST_IDS.adminVersionSubmit));
+}
 
-afterEach(async () => {
-  await clearSessionAfterTest();
-});
+registerIntegrationSession();
 
 describe('the admin hub only advertises what the guard would allow', () => {
   it('shows every surface to a fully granted administrator', async () => {
@@ -140,12 +139,7 @@ describe('scheduling a configuration change', () => {
     );
     await openSettings();
 
-    fireIonInput(screen.getByTestId(TEST_IDS.adminVersionValue), '{"max":30}');
-    fireIonInput(screen.getByTestId(TEST_IDS.adminVersionNote), 'Squad expansion');
-    await waitFor(() => {
-      expect(screen.getByTestId(TEST_IDS.adminVersionSubmit)).toBeEnabled();
-    }, WAIT);
-    fireEvent.click(screen.getByTestId(TEST_IDS.adminVersionSubmit));
+    await submitVersionChange();
 
     await waitFor(() => {
       expect(submitted).toMatchObject({ note: 'Squad expansion', value: { max: 30 } });
@@ -216,5 +210,110 @@ describe('designed states', () => {
     expect(
       await screen.findByTestId(TEST_IDS.adminSettingsForbidden, {}, WAIT),
     ).toBeInTheDocument();
+  });
+});
+
+describe('the hub opens what it advertises', () => {
+  it('routes to the settings screen from its card', async () => {
+    await signInAs(MOCK_PERSONA_EMAILS.admin);
+    renderWithProviders(
+      <>
+        <Route path={APP_PATHS.admin} exact>
+          <AdminContainer />
+        </Route>
+        <Route path={APP_PATHS.adminSettings} exact>
+          <p data-testid={TEST_IDS.adminSettingsPage}>settings</p>
+        </Route>
+      </>,
+      { initialPath: APP_PATHS.admin },
+    );
+    const cards = await screen.findAllByTestId(TEST_IDS.adminHubCard, {}, WAIT);
+
+    fireEvent.click(within(cards[0]!).getByText('Open'));
+
+    expect(await screen.findByTestId(TEST_IDS.adminSettingsPage, {}, WAIT)).toBeInTheDocument();
+  });
+});
+
+describe('scheduling reports its outcome', () => {
+  it('keeps the form usable when the change is rejected', async () => {
+    mockApiServer.use(
+      http.post(apiUrl('/teams/:teamId/settings/versions'), () =>
+        HttpResponse.json({ bad: true }, { status: 500 }),
+      ),
+    );
+    await openSettings();
+
+    await submitVersionChange();
+
+    await waitFor(() => {
+      expect(screen.getByTestId(TEST_IDS.adminVersionForm)).toBeInTheDocument();
+    }, WAIT);
+  });
+
+  it('lets the effective instant be chosen', async () => {
+    await openSettings();
+
+    fireIonInput(
+      screen.getByTestId(TEST_IDS.adminVersionEffectiveFrom),
+      '2026-09-01T00:00:00.000Z',
+    );
+
+    await waitFor(() => {
+      expect(screen.getByTestId(TEST_IDS.adminVersionEffectiveFrom)).toHaveAttribute(
+        'value',
+        '2026-09-01T00:00:00.000Z',
+      );
+    }, WAIT);
+  });
+});
+
+describe('clearing a scheduling field', () => {
+  it('treats a cleared value as empty and refuses to submit', async () => {
+    await openSettings();
+
+    fireIonInputCleared(screen.getByTestId(TEST_IDS.adminVersionValue));
+
+    await waitFor(() => {
+      expect(screen.getByTestId(TEST_IDS.adminVersionSubmit)).toBeDisabled();
+    }, WAIT);
+  });
+
+  it('treats a cleared reason as empty and refuses to submit', async () => {
+    await openSettings();
+
+    fireIonInput(screen.getByTestId(TEST_IDS.adminVersionValue), '{"max":30}');
+    fireIonInputCleared(screen.getByTestId(TEST_IDS.adminVersionNote));
+
+    await waitFor(() => {
+      expect(screen.getByTestId(TEST_IDS.adminVersionForm)).toHaveTextContent('reason');
+    }, WAIT);
+  });
+
+  it('treats a cleared effective instant as empty', async () => {
+    await openSettings();
+
+    fireIonInputCleared(screen.getByTestId(TEST_IDS.adminVersionEffectiveFrom));
+
+    await waitFor(() => {
+      expect(screen.getByTestId(TEST_IDS.adminVersionEffectiveFrom)).toHaveAttribute('value', '');
+    }, WAIT);
+  });
+});
+
+describe('a failed read offers a retry', () => {
+  it('re-issues the settings snapshot from the designed error state', async () => {
+    const attempts = await retryFromErrorState({
+      path: '/teams/:teamId/settings/snapshot',
+      errorTestId: TEST_IDS.adminSettingsError,
+      signIn: async () => {
+        await signInAs(MOCK_PERSONA_EMAILS.admin);
+      },
+      render: () => {
+        renderRoute(APP_PATHS.adminSettings, APP_PATHS.adminSettings, <AdminSettingsContainer />);
+      },
+    });
+
+    expect(attempts.after).toBeGreaterThan(attempts.before);
   });
 });

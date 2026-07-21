@@ -1,27 +1,26 @@
 import { fireEvent, screen, waitFor, within } from '@testing-library/react';
 import { http, HttpResponse } from 'msw';
-import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { describe, expect, it } from 'vitest';
 
 import { NotificationPreferencesContainer } from '@/modules/notifications/containers/notification-preferences.container';
-import { getEnvironment } from '@/packages/environment';
 import { APP_PATHS, TEST_IDS } from '@/shared/config';
 import { MOCK_PERSONA_EMAILS } from '@/tests/msw/mock-data.constants';
 
-import { initTestI18n } from '../setup/i18n-test.helper';
 import {
-  clearSessionAfterTest,
-  resetSessionForTest,
-  signInAs,
-} from '../setup/integration-session.helper';
-import { fireIonCheckboxChange, fireIonInput } from '../setup/ionic-events.helper';
+  apiUrl,
+  retryFromErrorState,
+  registerIntegrationSession,
+} from '../setup/integration-api.helper';
+import { signInAs } from '../setup/integration-session.helper';
+import {
+  fireIonCheckboxChange,
+  fireIonInput,
+  fireIonInputCleared,
+} from '../setup/ionic-events.helper';
 import { mockApiServer } from '../setup/msw-server.setup';
 import { renderRoute } from '../setup/render-with-providers.helper';
 
 const WAIT = { timeout: 5000 };
-
-function apiUrl(path: string): string {
-  return `${getEnvironment().apiBaseUrl}${path}`;
-}
 
 async function openPreferences(): Promise<void> {
   await signInAs(MOCK_PERSONA_EMAILS.admin);
@@ -36,19 +35,12 @@ async function openPreferences(): Promise<void> {
 /** The switch grid row for one category, found by its heading. */
 function rowFor(category: string): HTMLElement {
   const rows = screen.getAllByTestId(TEST_IDS.notificationPrefsRow);
-  const match = rows.find((row) => row.textContent?.startsWith(category));
+  const match = rows.find((row) => row.textContent.startsWith(category));
   expect(match).toBeDefined();
   return match!;
 }
 
-beforeEach(async () => {
-  await initTestI18n();
-  await resetSessionForTest();
-});
-
-afterEach(async () => {
-  await clearSessionAfterTest();
-});
+registerIntegrationSession();
 
 describe('mandatory categories cannot be muted, and the UI says so', () => {
   it('locks every channel of the security and system category', async () => {
@@ -130,9 +122,7 @@ describe('optional preferences round-trip', () => {
   it('shows a channel the server never persisted as explicitly off', async () => {
     await openPreferences();
 
-    const push = within(rowFor('Membership')).getAllByTestId(
-      TEST_IDS.notificationPrefsToggle,
-    )[2];
+    const push = within(rowFor('Membership')).getAllByTestId(TEST_IDS.notificationPrefsToggle)[2];
 
     expect(push).not.toBeChecked();
     expect(push).toHaveProperty('disabled', false);
@@ -207,5 +197,111 @@ describe('scope and designed states', () => {
     expect(
       await screen.findByTestId(TEST_IDS.notificationPrefsError, {}, WAIT),
     ).toBeInTheDocument();
+  });
+});
+
+describe('failed commands are reported, not swallowed', () => {
+  it('keeps the switch as the server has it when the update fails', async () => {
+    mockApiServer.use(
+      http.put(apiUrl('/notifications/preferences'), () =>
+        HttpResponse.json({ bad: true }, { status: 500 }),
+      ),
+    );
+    await openPreferences();
+
+    const email = within(rowFor('Practice')).getAllByTestId(TEST_IDS.notificationPrefsToggle)[1]!;
+    fireIonCheckboxChange(email, false);
+
+    await waitFor(() => {
+      expect(
+        within(rowFor('Practice')).getAllByTestId(TEST_IDS.notificationPrefsToggle)[1],
+      ).toBeChecked();
+    }, WAIT);
+  });
+
+  it('keeps the quiet-hours window when the save fails', async () => {
+    mockApiServer.use(
+      http.put(apiUrl('/notifications/quiet-hours'), () =>
+        HttpResponse.json({ bad: true }, { status: 500 }),
+      ),
+    );
+    await openPreferences();
+
+    fireIonInput(screen.getByTestId(TEST_IDS.quietHoursEnd), '06:30');
+    await waitFor(() => {
+      expect(screen.getByTestId(TEST_IDS.quietHoursSave)).toBeEnabled();
+    }, WAIT);
+    fireEvent.click(screen.getByTestId(TEST_IDS.quietHoursSave));
+
+    await waitFor(() => {
+      expect(screen.getByTestId(TEST_IDS.quietHoursEnd)).toHaveAttribute('value', '06:30');
+    }, WAIT);
+  });
+
+  it('offers a way back to the inbox', async () => {
+    await openPreferences();
+
+    fireEvent.click(screen.getByText('Back to notifications'));
+
+    await waitFor(() => {
+      expect(screen.queryByTestId(TEST_IDS.notificationPrefsMatrix)).not.toBeInTheDocument();
+    }, WAIT);
+  });
+});
+
+describe('clearing a quiet-hours field', () => {
+  it('treats a cleared start time as empty and blocks the save', async () => {
+    await openPreferences();
+
+    fireIonInputCleared(screen.getByTestId(TEST_IDS.quietHoursStart));
+
+    await waitFor(() => {
+      expect(screen.getByTestId(TEST_IDS.quietHoursSave)).toBeDisabled();
+    }, WAIT);
+  });
+
+  it('treats a cleared end time as empty and blocks the save', async () => {
+    await openPreferences();
+
+    fireIonInputCleared(screen.getByTestId(TEST_IDS.quietHoursEnd));
+
+    await waitFor(() => {
+      expect(screen.getByTestId(TEST_IDS.quietHoursSave)).toBeDisabled();
+    }, WAIT);
+  });
+
+  it('refuses to save while the window is invalid, even if the button is forced', async () => {
+    await openPreferences();
+
+    fireIonInputCleared(screen.getByTestId(TEST_IDS.quietHoursStart));
+    await waitFor(() => {
+      expect(screen.getByTestId(TEST_IDS.quietHoursSave)).toBeDisabled();
+    }, WAIT);
+    fireEvent.click(screen.getByTestId(TEST_IDS.quietHoursSave));
+
+    await waitFor(() => {
+      expect(screen.getByTestId(TEST_IDS.quietHoursPanel)).toHaveTextContent('24-hour time');
+    }, WAIT);
+  });
+});
+
+describe('a failed read offers a retry', () => {
+  it('re-issues the preference read from the designed error state', async () => {
+    const attempts = await retryFromErrorState({
+      path: '/notifications/preferences',
+      errorTestId: TEST_IDS.notificationPrefsError,
+      signIn: async () => {
+        await signInAs(MOCK_PERSONA_EMAILS.admin);
+      },
+      render: () => {
+        renderRoute(
+          APP_PATHS.notificationPreferences,
+          APP_PATHS.notificationPreferences,
+          <NotificationPreferencesContainer />,
+        );
+      },
+    });
+
+    expect(attempts.after).toBeGreaterThan(attempts.before);
   });
 });

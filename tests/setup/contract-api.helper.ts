@@ -6,6 +6,20 @@ export function apiUrl(path: string): string {
   return `${getEnvironment().apiBaseUrl}${path}`;
 }
 
+/** The one JSON sender every authenticated contract call goes through. */
+function sendJson(
+  method: 'POST' | 'PUT',
+  path: string,
+  token: string,
+  body: unknown,
+): Promise<Response> {
+  return fetch(apiUrl(path), {
+    method,
+    headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+    body: JSON.stringify(body),
+  });
+}
+
 /** Log a persona in and return its access token. */
 export async function loginAs(email: string): Promise<string> {
   const response = await fetch(apiUrl('/auth/login'), {
@@ -24,23 +38,15 @@ export function authGet(path: string, token: string): Promise<Response> {
 
 /** Authenticated POST against a mock-mode path. */
 export function authPost(path: string, token: string, body: unknown): Promise<Response> {
-  return fetch(apiUrl(path), {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
-    body: JSON.stringify(body),
-  });
+  return sendJson('POST', path, token, body);
+}
+
+/** Authenticated PUT against a mock-mode path. */
+export function authPut(path: string, token: string, body: unknown): Promise<Response> {
+  return sendJson('PUT', path, token, body);
 }
 
 /** Team-scoped path builder shared by every team-scoped contract test. */
 export function teamScopedPath(teamId: string, suffix: string): string {
   return `/teams/${teamId}${suffix}`;
-}
-
-/** Authenticated PUT against a mock-mode path. */
-export function authPut(path: string, token: string, body: unknown): Promise<Response> {
-  return fetch(apiUrl(path), {
-    method: 'PUT',
-    headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
-    body: JSON.stringify(body),
-  });
 }

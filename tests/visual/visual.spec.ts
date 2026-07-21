@@ -177,3 +177,61 @@ test.describe('visual regression', () => {
     await expect(page).toHaveScreenshot('tryout-workspace-light.png', { fullPage: true });
   });
 });
+
+test.describe('notifications and admin visual regression', () => {
+  test('notifications inbox (light)', async ({ page }) => {
+    await signIn(page);
+    await gotoApp(page, APP_ROUTES.notifications);
+    await expect(page.getByTestId(TEST_IDS.notificationsView)).toBeVisible();
+    await waitForAppAnimations(page);
+    await expect(page).toHaveScreenshot('notifications-inbox-light.png', { fullPage: true });
+  });
+
+  test('notification preferences (light)', async ({ page }) => {
+    await signIn(page);
+    await gotoApp(page, APP_ROUTES.notificationPreferences);
+    await expect(page.getByTestId(TEST_IDS.notificationPrefsMatrix)).toBeVisible();
+    await waitForAppAnimations(page);
+    await expect(page).toHaveScreenshot('notification-preferences-light.png', { fullPage: true });
+  });
+
+  test('admin hub (light)', async ({ page }) => {
+    await signIn(page);
+    await gotoApp(page, APP_ROUTES.admin);
+    await expect(page.getByTestId(TEST_IDS.adminHubView)).toBeVisible();
+    await waitForAppAnimations(page);
+    await expect(page).toHaveScreenshot('admin-hub-light.png', { fullPage: true });
+  });
+
+  test('team settings (light)', async ({ page }) => {
+    await signIn(page);
+    await gotoApp(page, APP_ROUTES.adminSettings);
+    await expect(page.getByTestId(TEST_IDS.adminEffectivePanel)).toBeVisible();
+    await waitForAppAnimations(page);
+    await expect(page).toHaveScreenshot('admin-settings-light.png', { fullPage: true });
+  });
+
+  test('role assignment (light)', async ({ page }) => {
+    await signIn(page);
+    await gotoApp(page, APP_ROUTES.adminRoles);
+    await expect(page.getByTestId(TEST_IDS.adminRolesMemberSelect)).toBeVisible();
+    await waitForAppAnimations(page);
+    await expect(page).toHaveScreenshot('admin-roles-light.png', { fullPage: true });
+  });
+
+  test('rule governance (light)', async ({ page }) => {
+    await signIn(page);
+    await gotoApp(page, APP_ROUTES.adminRules);
+    await expect(page.getByTestId(TEST_IDS.adminRuleRow).first()).toBeVisible();
+    await waitForAppAnimations(page);
+    await expect(page).toHaveScreenshot('admin-rules-light.png', { fullPage: true });
+  });
+
+  test('operations centre (light)', async ({ page }) => {
+    await signIn(page);
+    await gotoApp(page, APP_ROUTES.adminOperations);
+    await expect(page.getByTestId(TEST_IDS.adminOutboxPanel)).toBeVisible();
+    await waitForAppAnimations(page);
+    await expect(page).toHaveScreenshot('admin-operations-light.png', { fullPage: true });
+  });
+});

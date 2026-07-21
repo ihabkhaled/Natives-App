@@ -4,7 +4,34 @@
     {
       "name": "admin",
       "publicSurface": [
-        "getAdminRouteDefinitions"
+        "ADMIN_LIMITS",
+        "RULE_FAMILIES",
+        "RULE_STATUSES",
+        "RULE_TRANSITIONS",
+        "RuleFamily",
+        "RuleStatus",
+        "RuleTransition",
+        "SETTING_KEYS",
+        "SettingKey",
+        "adminOperationsPath",
+        "adminPath",
+        "adminQueryKeys",
+        "adminRolesPath",
+        "adminRulesPath",
+        "adminSettingsPath",
+        "auditListResponseSchema",
+        "catalogEntryListResponseSchema",
+        "deadLetterListResponseSchema",
+        "getAdminRouteDefinitions",
+        "jobHealthListResponseSchema",
+        "outboxMetricsResponseSchema",
+        "replayResponseSchema",
+        "ruleListResponseSchema",
+        "seasonListResponseSchema",
+        "settingVersionListResponseSchema",
+        "settingsSnapshotResponseSchema",
+        "simulationResponseSchema",
+        "venueListResponseSchema"
       ]
     },
     {
@@ -206,10 +233,15 @@
         "MEMBERSHIP_STATUS",
         "MEMBER_AUDIENCE",
         "MEMBER_ROLE",
+        "MEMBER_ROLE_LABEL_KEYS",
+        "MEMBER_ROLE_OPTIONS",
         "MemberAudience",
         "MemberRole",
         "MembershipStatus",
         "PlayerGender",
+        "assignMemberRoles",
+        "buildMemberRolesQueryOptions",
+        "buildMembersDirectoryQueryOptions",
         "getMembersRouteDefinitions",
         "memberDirectoryListResponseSchema",
         "memberHistoryResponseSchema",
@@ -219,6 +251,27 @@
         "membersPath",
         "membersQueryKeys",
         "membershipResponseSchema"
+      ]
+    },
+    {
+      "name": "notifications",
+      "publicSurface": [
+        "MANDATORY_CATEGORIES",
+        "NOTIFICATION_CATEGORIES",
+        "NOTIFICATION_CHANNELS",
+        "NOTIFICATION_LIMITS",
+        "NotificationCategory",
+        "NotificationChannel",
+        "getNotificationsRouteDefinitions",
+        "notificationLinkPath",
+        "notificationListResponseSchema",
+        "notificationPreferencesPagePath",
+        "notificationPreferencesResponseSchema",
+        "notificationResponseSchema",
+        "notificationsPagePath",
+        "notificationsQueryKeys",
+        "quietHoursResponseSchema",
+        "useUnreadNotifications"
       ]
     },
     {

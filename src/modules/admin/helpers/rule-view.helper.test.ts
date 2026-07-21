@@ -1,6 +1,8 @@
 import { describe, expect, it, vi } from 'vitest';
 
-import type { GovernedRule, SimulationResult } from '../types/admin.types';
+import { buildGovernedRule } from '../../../../tests/factories/admin.factory';
+import type { SimulationResult } from '../types/admin.types';
+
 import {
   buildEntryRows,
   buildRuleRows,
@@ -11,29 +13,20 @@ import {
 
 const t = (key: string): string => key;
 
-function rule(overrides: Partial<GovernedRule> = {}): GovernedRule {
-  return {
-    ruleId: 'rule-1',
-    ruleKey: 'points.v1',
-    name: 'Points rule v1',
-    description: null,
-    version: 1,
-    status: 'draft',
-    pointEntries: [],
-    effectiveFrom: null,
-    effectiveTo: null,
-    recordVersion: 1,
-    ...overrides,
-  };
-}
-
 const BASE_TRANSITION = { hasSimulated: false, canManage: true, isRunning: false };
 
 describe('buildRuleRows', () => {
   it('marks the selected rule and labels its status and window', () => {
     const rows = buildRuleRows(
       t,
-      [rule({ ruleId: 'a', status: 'published', effectiveFrom: '2026-01-01', effectiveTo: '2026-12-31' })],
+      [
+        buildGovernedRule({
+          ruleId: 'a',
+          status: 'published',
+          effectiveFrom: '2026-01-01',
+          effectiveTo: '2026-12-31',
+        }),
+      ],
       'a',
     );
 
@@ -44,10 +37,12 @@ describe('buildRuleRows', () => {
   });
 
   it('describes an open-ended window and an unset one distinctly', () => {
-    expect(buildRuleRows(t, [rule({ effectiveFrom: '2026-01-01' })], '')[0]?.effectiveLabel).toBe(
-      'adminRules.effectiveOpenEnded',
+    expect(
+      buildRuleRows(t, [buildGovernedRule({ effectiveFrom: '2026-01-01' })], '')[0]?.effectiveLabel,
+    ).toBe('adminRules.effectiveOpenEnded');
+    expect(buildRuleRows(t, [buildGovernedRule()], '')[0]?.effectiveLabel).toBe(
+      'adminRules.effectiveUnset',
     );
-    expect(buildRuleRows(t, [rule()], '')[0]?.effectiveLabel).toBe('adminRules.effectiveUnset');
   });
 });
 
@@ -120,11 +115,7 @@ describe('buildTransitionActions', () => {
   });
 
   it('leaves revert available without a dry run', () => {
-    const actions = buildTransitionActions(
-      t,
-      { ...BASE_TRANSITION, status: 'approved' },
-      vi.fn(),
-    );
+    const actions = buildTransitionActions(t, { ...BASE_TRANSITION, status: 'approved' }, vi.fn());
 
     expect(actions.find((action) => action.key === 'revert')?.disabled).toBe(false);
   });

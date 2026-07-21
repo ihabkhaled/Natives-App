@@ -1,27 +1,12 @@
 import { describe, expect, it } from 'vitest';
 
+import { rulesResponse } from '@/tests/msw/admin-rules.fixture';
+
 import { mapRule, mapRulePage, mapSimulation } from './rules.mapper';
 
-const DTO = {
-  ruleId: 'rule-1',
-  teamId: 'team-1',
-  seasonId: null,
-  ruleKey: 'points.v3',
-  version: 3,
-  name: 'Points rule v3',
-  description: 'Adds a gym category.',
-  status: 'draft' as const,
-  pointEntries: [
-    { activityCategory: 'practice', points: 10, dailyCap: 1, cooldownDays: null },
-    { activityCategory: 'gym', points: null, dailyCap: null, cooldownDays: 2 },
-  ],
-  effectiveFrom: null,
-  effectiveTo: null,
-  recordVersion: 1,
-  publishedAt: null,
-  retiredAt: null,
-  updatedAt: '2026-07-20T09:00:00.000Z',
-};
+// Derived from the MSW fixture so the mapper is exercised against the exact
+// wire shape the handlers serve, rather than a restatement of it.
+const DTO = rulesResponse().items.find((rule) => rule.status === 'draft')!;
 
 describe('mapRule', () => {
   it('keeps an unscored category as null, never as zero', () => {

@@ -6,15 +6,17 @@ const t = (key: string): string => key;
 
 describe('buildInboxLabels', () => {
   it('states "all caught up" when nothing is unread', () => {
-    expect(buildInboxLabels(t, { unread: 0, shown: 3, total: 3, canReadDeliveryFailures: false }).unreadLabel).toBe(
-      'notifications.allReadLabel',
-    );
+    expect(
+      buildInboxLabels(t, { unread: 0, shown: 3, total: 3, canReadDeliveryFailures: false })
+        .unreadLabel,
+    ).toBe('notifications.allReadLabel');
   });
 
   it('states the unread count when there is one', () => {
-    expect(buildInboxLabels(t, { unread: 2, shown: 3, total: 9, canReadDeliveryFailures: false }).unreadLabel).toBe(
-      'notifications.unreadCount',
-    );
+    expect(
+      buildInboxLabels(t, { unread: 2, shown: 3, total: 9, canReadDeliveryFailures: false })
+        .unreadLabel,
+    ).toBe('notifications.unreadCount');
   });
 
   it('offers the operations-centre link only to an authorized administrator', () => {

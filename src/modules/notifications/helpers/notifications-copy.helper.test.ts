@@ -58,9 +58,9 @@ describe('buildNotificationsScreenCopy', () => {
 
 describe('resolveNotificationsScreenStatus', () => {
   it('is ready once the inbox has entries', () => {
-    expect(
-      resolveNotificationsScreenStatus(CONTEXT, query({ data: {} }), true, true),
-    ).toBe('ready');
+    expect(resolveNotificationsScreenStatus(CONTEXT, query({ data: {} }), true, true)).toBe(
+      'ready',
+    );
   });
 
   it('is empty once the inbox resolved with nothing in it', () => {
@@ -70,8 +70,8 @@ describe('resolveNotificationsScreenStatus', () => {
   });
 
   it('is forbidden ahead of everything else', () => {
-    expect(
-      resolveNotificationsScreenStatus(CONTEXT, query({ data: {} }), false, true),
-    ).toBe('forbidden');
+    expect(resolveNotificationsScreenStatus(CONTEXT, query({ data: {} }), false, true)).toBe(
+      'forbidden',
+    );
   });
 });

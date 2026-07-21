@@ -8,7 +8,11 @@ export default defineConfig({
   fullyParallel: true,
   forbidOnly: isCi,
   retries: isCi ? 2 : 0,
-  ...(isCi ? { workers: 2 } : {}),
+  // Every worker drives its own browser against one shared dev server. Letting
+  // Playwright scale to the core count starves that server on a many-core
+  // machine, so boot exceeds the expect timeout even though nothing is wrong.
+  // Bounding the pool keeps the local run both representative of CI and faster.
+  workers: isCi ? 2 : 4,
   reporter: isCi ? [['list'], ['html', { open: 'never' }]] : [['list']],
   expect: {
     // Full-page capture of a dozen screens in parallel starves the renderer on
