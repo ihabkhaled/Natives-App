@@ -1,6 +1,8 @@
 import { renderHook } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
+import { PERMISSIONS } from '@/shared/security';
+
 import { buildAuthUser } from '../factories/auth.factory';
 import { useCurrentUserQuery } from './use-current-user-query.hook';
 import { useEffectivePermissions } from './use-effective-permissions.hook';
@@ -66,7 +68,7 @@ describe('useEffectivePermissions', () => {
 
     const { result } = renderHook(() => useEffectivePermissions());
 
-    expect(result.current.permissions).toContain('users.manage');
+    expect(result.current.permissions).toContain(PERMISSIONS.memberLifecycleManage);
     expect(result.current.accountActive).toBe(true);
     expect(result.current.onboardingComplete).toBe(true);
     expect(result.current.hasTeamContext).toBe(true);

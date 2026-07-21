@@ -3,13 +3,14 @@
  * navigation and route guards reason about these values so a persona's shell
  * follows its effective grants rather than a hard-coded role column.
  *
- * Mirrors 02-PRODUCT/rbac-permission-matrix.md. The backend remains the sole
- * authority: these strings gate convenience UI only, never authorization.
+ * The backend `Permission` enum is the sole authority. Every value below MUST
+ * exist in that catalog: a value the backend never emits can only ever evaluate
+ * to "not granted", which silently forbids the route and hides its nav entry.
+ * `tests/contract/permissions.contract.test.ts` pins this file against the
+ * catalog the backend publishes in `contracts/openapi.json`, so this class of
+ * drift fails the contract gate instead of reaching a user as a dead screen.
  */
 export const PERMISSIONS = {
-  usersManage: 'users.manage',
-  membersRead: 'members.read',
-  membersManage: 'members.manage',
   memberList: 'member.list',
   memberProfileReadPublic: 'member.profile.read.public',
   memberProfileReadCoach: 'member.profile.read.coach',
@@ -19,11 +20,10 @@ export const PERMISSIONS = {
   memberLifecycleManage: 'member.lifecycle.manage',
   memberRolesManage: 'member.roles.manage',
   memberAliasesManage: 'member.aliases.manage',
-  practicesRead: 'practices.read',
-  practicesManage: 'practices.manage',
-  practicesRsvpSelf: 'practices.rsvp.self',
-  attendanceMark: 'attendance.mark',
-  assessmentsManage: 'assessments.manage',
+  practicesRead: 'practice.read',
+  practicesManage: 'practice.manage',
+  practicesRsvpSelf: 'practice.rsvp.self',
+  attendanceMark: 'attendance.record',
   assessmentReadSelfPublished: 'assessment.read.self.published',
   assessmentReadTeam: 'assessment.read.team',
   assessmentCreate: 'assessment.create',
@@ -45,7 +45,7 @@ export const PERMISSIONS = {
   matchStatsRead: 'match.stats.read',
   matchAnalysisReadSelf: 'match.analysis.read.self',
   matchAnalysisReadTeam: 'match.analysis.read.team',
-  reportsGenerate: 'reports.generate',
+  reportsGenerate: 'report.generate',
   competitionRead: 'competition.read',
   competitionManage: 'competition.manage',
   squadRead: 'squad.read',
@@ -62,15 +62,13 @@ export const PERMISSIONS = {
   tryoutEvaluate: 'tryout.evaluate',
   tryoutDecide: 'tryout.decide',
   tryoutConvert: 'tryout.convert',
-  notificationDeliveryRead: 'notification.delivery.read',
-  settingsRead: 'settings.read',
-  settingsManage: 'settings.manage',
+  settingsRead: 'team.settings.read',
+  settingsManage: 'team.settings.manage',
   seasonManage: 'season.manage',
   venueManage: 'venue.manage',
-  catalogManage: 'catalog.manage',
-  pointsRuleManage: 'points_rule.manage',
-  calculationRuleManage: 'calculation_rule.manage',
+  pointsRuleManage: 'points.rules.manage',
+  calculationRuleManage: 'rules.manage',
   auditRead: 'audit.read',
-  outboxManage: 'outbox.manage',
+  outboxManage: 'jobs.manage',
 } as const;
 export type Permission = (typeof PERMISSIONS)[keyof typeof PERMISSIONS];

@@ -281,16 +281,103 @@ The admin never sets a password; the invitee sets their own on acceptance and is
 The acceptance UI (`src/modules/auth/components/accept-invitation-view`) collects password + confirm
 with strength/policy feedback and shows a generic invalid/expired/used state for a bad token.
 
-#### Gap — invite token delivery is manual until an email provider ships (OD-002)
+#### Invitation email is sent automatically — console transport until a provider ships (OD-002)
 
-No email/SMS/push provider is configured (open decision **OD-002**). Rather than silently drop the
-one-time token or fake a send, the **create and resend responses now return the plaintext `token`
-once** so a privileged admin can hand the invitee the link
-`/accept-invitation?token=<token>` directly. The database still stores only the token's SHA-256 hash,
-no read path ever returns it, and the acceptance flow is otherwise unchanged. When OD-002 is resolved,
-the provider adapter sends the same link and the token can be dropped from the response with no change
-to the acceptance screen. Backed by `Natives-Backend/test/identity.e2e-spec.ts` (create returns the
-token, invitee-set password activates and logs in, the token cannot be replayed).
+Creating or resending an invitation now **sends the email as part of the same request**; there is no
+separate delivery step. Both use cases call `SendInvitationEmailService` after their transaction
+commits, which renders the message
+(`Natives-Backend/src/modules/identity/domain/invitation-email.template.ts`) and hands it to
+`EmailSenderPort`.
+
+No email provider is contracted (open decision **OD-002**), so the port is bound to
+`ConsoleEmailSenderService`, which writes the rendered message — recipient, subject, body, action URL
+— to the structured log at `info`. Selection is configuration, not a call-site branch:
+`EMAIL_PROVIDER` (default `console`) picks the adapter and `WEB_BASE_URL` (default
+`http://localhost:5173`) is the origin the accept link is built against. Swapping in a real provider
+is one new adapter plus one `case` in `selectSender` — no use case, controller, or test changes. The
+full procedure is in `Natives-Backend/docs/product/open-decisions.md` under "OD-002 stand-in".
+
+The **create and resend responses still return the plaintext `token` once**. That is deliberate and
+remains the fallback: `AppLogger` redacts `token=`
+assignments, so the console transport's logged link has its one-time credential censored — a live
+invitation credential must not sit in a log file. While `EMAIL_PROVIDER=console`, the API response is
+where the usable link comes from, and the logged `notice` field says exactly that. The database still
+stores only the token's SHA-256 hash and no read path ever returns it. When OD-002 is resolved, a real
+adapter sends the same rendered message and the token can be dropped from the response with no change
+to the acceptance screen. Backed by `Natives-Backend/test/identity.e2e-spec.ts` plus unit specs for
+the template, the sender service, the console adapter, and provider selection.
+
+**No client copy changed, because there is no invite-link screen to change.** The only "invite" UI in
+the client is `src/modules/members/components/member-invite-form`, which creates a _member record_
+(`fullName`/`nickname`/`jersey`) against the members module — it never calls `/invitations` and never
+receives or displays a token. No screen currently frames "share this link" as the primary action, so
+there was nothing to reword. Building a dedicated admin screen for `POST /invitations` that shows
+"an email was sent to {email} — you can also copy the link" is genuinely absent work, recorded under
+_Gap 9_ below rather than faked here.
+
+### Gap 9 — "where is the page to …": four screens existed but were unreachable, three are genuinely absent
+
+The owner reported five capabilities as missing screens. Investigating them found a single root cause
+behind most of it, plus a smaller set of real gaps.
+
+**Root cause — the client permission catalog had drifted from the backend's.**
+`src/shared/security/permissions.constants.ts` carried strings the backend never emits
+(`practices.read` vs `practice.read`, `settings.read` vs `team.settings.read`, `points_rule.manage`
+vs `points.rules.manage`, `outbox.manage` vs `jobs.manage`, `attendance.mark` vs `attendance.record`,
+`users.manage` — no equivalent at all). A permission the backend never emits is never granted, so
+`hasAllPermissions` reads it as denied: the route guard returns the forbidden state and
+`nav-visibility.helper` hides the entry — for _every_ persona, including a full system administrator.
+
+Confirmed live against the seeded backend: signed in as the seeded admin (90 effective permissions),
+`/practices` rendered "You do not have access" while `GET /teams/{id}/practice-sessions` returned 200.
+Correcting the strings restored, in one change, the practice calendar **and** four admin screens that
+had been built but were invisible: **Admin**, **Team settings**, **Rules**, and **Operations**.
+`tests/contract/permissions.contract.test.ts` now pins every client permission against the catalog the
+backend publishes in `contracts/openapi.json`, so this class of drift fails the contract gate.
+
+Item by item:
+
+| Asked for           | Finding                                                                                                                                              | Status                      |
+| ------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------- |
+| Season list/detail  | Exists — the **Team settings** screen lists seasons via `GET /teams/{id}/seasons` (`admin/gateways/catalog.gateway.ts`). It was hidden by the drift. | **Fixed** (discoverability) |
+| **Create** a season | Genuinely absent. Backend supports `POST/PATCH/DELETE /teams/{id}/seasons` (`season.manage`); the client gateway is read-only.                       | **Not built** — see below   |
+| Users list          | Exists — the member directory at `/members` (`member.list`), reachable as **Members** in the Team nav.                                               | **Already present**         |
+| Permissions matrix  | `/admin/roles` ("Roles and access") exists and was never hidden, but shows role _assignment_, not a catalog × bundle matrix.                         | **Blocked** — see below     |
+| Create a team       | Genuinely absent in the client. Backend **does** model it: `POST /teams` gated on `team.settings.manage`.                                            | **Not built** — see below   |
+| Attendance hub      | Only `/practices/:sessionId/attendance` exists, nested under one session with `nav: null`. No standalone hub or nav entry.                           | **Not built** — see below   |
+
+#### Not built, and why — no faked screens
+
+These are recorded rather than stubbed, because a screen that cannot complete its job is worse than an
+honest gap:
+
+- **Create/edit/delete a season.** The backend contract is complete, so this is purely client work: a
+  form plus three gateway calls on the existing Team settings screen. Nothing blocks it; it was not
+  built in this pass. It is the cheapest of the three to land next.
+- **Create a team.** `POST /teams` exists and is permission-gated, so this is _not_ out of scope for
+  the product shape — the earlier assumption that this install is single-team is wrong. A team
+  creation screen also needs a team switcher to be useful: `usePracticeTeamContext` and
+  `useActiveTeamScope` both silently pick the _first_ membership, so a second team would be
+  unreachable in the UI even once created. Shipping creation without switching would produce exactly
+  the dead end this note exists to avoid. Both should land together.
+- **Permissions matrix.** This one is genuinely **blocked on the backend**. `/rbac/*` exposes
+  assignment create/delete/list and `GET /rbac/me/permissions`, but there is **no endpoint returning
+  the permission catalog or the role→permission bundles**. `ROLE_BUNDLES` is compiled into the
+  backend and seeded into `roles`/`role_permissions`, never served. The full catalog is now published
+  as an enum on `EffectivePermissionsResponseDto`, so the _columns_ are available — the _rows_ (which
+  bundle grants what) are not. A matrix cannot be rendered truthfully without a
+  `GET /rbac/roles` (or similar) returning each role with its permission keys. Recorded as a backend
+  gap; no matrix screen was built against invented data.
+- **Attendance hub.** The per-session attendance screen works. A hub needs a "sessions awaiting
+  attendance" query the backend does not expose as such; it would have to be synthesized client-side
+  by listing sessions and probing each one's attendance state, which is an N+1 the calendar already
+  suffers from. Deferred pending a backend list endpoint.
+
+#### Invitation admin screen
+
+Also absent, as noted in the invitations section above: no client screen calls `POST /invitations`, so
+there is no place to show "an email was sent to {email} — you can also copy the link". The backend
+flow (including automatic sending) is complete and covered by tests.
 
 ### Gap 8 — video analysis is not implemented (prompt 505)
 

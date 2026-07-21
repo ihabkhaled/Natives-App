@@ -1,4 +1,4 @@
-import { expect, test } from '@playwright/test';
+import { expect, type Page, test } from '@playwright/test';
 
 import { TEST_IDS } from '@/shared/config';
 import { MOCK_CREDENTIALS, MOCK_PERSONA_EMAILS } from '@/tests/msw/mock-data.constants';
@@ -7,16 +7,16 @@ import {
   APP_ROUTES,
   expectPresentedPage,
   gotoApp,
-  login,
   setOffline,
+  signIn,
 } from './fixtures/app.fixture';
 
 function personaLogin(email: string): { email: string; password: string } {
   return { email, password: MOCK_CREDENTIALS.password };
 }
 
-async function openCoachAttendance(page: Parameters<typeof login>[0]): Promise<void> {
-  await login(page, personaLogin(MOCK_PERSONA_EMAILS.coach));
+async function openCoachAttendance(page: Page): Promise<void> {
+  await signIn(page, personaLogin(MOCK_PERSONA_EMAILS.coach));
   await expectPresentedPage(page, TEST_IDS.homePage);
   await gotoApp(page, APP_ROUTES.attendance);
   await expectPresentedPage(page, TEST_IDS.attendancePage);
@@ -85,7 +85,7 @@ test.describe('coach attendance experience', () => {
   });
 
   test('blocks a regular member before attendance data renders', async ({ page }) => {
-    await login(page, personaLogin(MOCK_PERSONA_EMAILS.member));
+    await signIn(page, personaLogin(MOCK_PERSONA_EMAILS.member));
     await expectPresentedPage(page, TEST_IDS.homePage);
     await gotoApp(page, APP_ROUTES.attendance);
 

@@ -24,7 +24,21 @@ describe('PERMISSIONS', () => {
   });
 
   it('pins the admin-only capability the shell keys navigation on', () => {
-    expect(PERMISSIONS.usersManage).toBe('users.manage');
+    expect(PERMISSIONS.memberLifecycleManage).toBe('member.lifecycle.manage');
+  });
+
+  it('pins the grants whose backend spelling the shell previously got wrong', () => {
+    // Each of these once carried a string the backend never emits, which reads
+    // as "not granted" and silently forbade the screen it gates. See
+    // tests/contract/permissions.contract.test.ts for the standing guard.
+    expect(PERMISSIONS.practicesRead).toBe('practice.read');
+    expect(PERMISSIONS.practicesManage).toBe('practice.manage');
+    expect(PERMISSIONS.practicesRsvpSelf).toBe('practice.rsvp.self');
+    expect(PERMISSIONS.attendanceMark).toBe('attendance.record');
+    expect(PERMISSIONS.settingsRead).toBe('team.settings.read');
+    expect(PERMISSIONS.settingsManage).toBe('team.settings.manage');
+    expect(PERMISSIONS.pointsRuleManage).toBe('points.rules.manage');
+    expect(PERMISSIONS.outboxManage).toBe('jobs.manage');
   });
 
   it('pins the squad and tryout grants the selection and privacy rules key on', () => {

@@ -211,10 +211,10 @@ const WIDGETS_BY_PERSONA: Record<DashboardPersona, readonly WidgetDto[]> = {
 /** Classify the persona from effective grants; the widget set follows from it. */
 function personaFor(user: AuthUser): DashboardPersona {
   const granted = new Set(user.permissions);
-  if (granted.has(PERMISSIONS.usersManage)) {
+  if (granted.has(PERMISSIONS.memberLifecycleManage)) {
     return 'administrator';
   }
-  if (granted.has(PERMISSIONS.practicesManage) || granted.has(PERMISSIONS.assessmentsManage)) {
+  if (granted.has(PERMISSIONS.practicesManage) || granted.has(PERMISSIONS.assessmentReview)) {
     return 'coach';
   }
   return 'member';

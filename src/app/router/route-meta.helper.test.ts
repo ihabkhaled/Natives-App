@@ -9,7 +9,7 @@ import { normalizeRouteMeta } from './route-meta.helper';
 const fullMeta: RouteMeta = {
   key: 'admin',
   titleKey: 'admin.title',
-  permissions: [PERMISSIONS.usersManage],
+  permissions: [PERMISSIONS.memberLifecycleManage],
   requiresTeamContext: true,
   offline: false,
   preload: false,
@@ -20,7 +20,7 @@ const fullMeta: RouteMeta = {
 describe('normalizeRouteMeta', () => {
   it('reads permissions, team requirement, and flag state from present metadata', () => {
     expect(normalizeRouteMeta(fullMeta)).toEqual({
-      requiredPermissions: [PERMISSIONS.usersManage],
+      requiredPermissions: [PERMISSIONS.memberLifecycleManage],
       requiresTeamContext: true,
       featureEnabled: true,
     });

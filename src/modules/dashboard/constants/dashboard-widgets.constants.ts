@@ -77,11 +77,11 @@ export const DASHBOARD_WIDGET_REGISTRY: Record<string, DashboardWidgetDescriptor
   },
   [DASHBOARD_WIDGET_KIND.coachAssessments]: {
     titleKey: I18N_KEYS.dashboard.coachAssessmentsTitle,
-    permission: PERMISSIONS.assessmentsManage,
+    permission: PERMISSIONS.assessmentReview,
   },
   [DASHBOARD_WIDGET_KIND.coachRoster]: {
     titleKey: I18N_KEYS.dashboard.coachRosterTitle,
-    permission: PERMISSIONS.membersRead,
+    permission: PERMISSIONS.memberList,
   },
   [DASHBOARD_WIDGET_KIND.coachDataQuality]: {
     titleKey: I18N_KEYS.dashboard.coachDataQualityTitle,
@@ -89,11 +89,11 @@ export const DASHBOARD_WIDGET_REGISTRY: Record<string, DashboardWidgetDescriptor
   },
   [DASHBOARD_WIDGET_KIND.adminLifecycle]: {
     titleKey: I18N_KEYS.dashboard.adminLifecycleTitle,
-    permission: PERMISSIONS.usersManage,
+    permission: PERMISSIONS.memberLifecycleManage,
   },
   [DASHBOARD_WIDGET_KIND.adminConfig]: {
     titleKey: I18N_KEYS.dashboard.adminConfigTitle,
-    permission: PERMISSIONS.usersManage,
+    permission: PERMISSIONS.memberLifecycleManage,
   },
   [DASHBOARD_WIDGET_KIND.adminOperations]: {
     titleKey: I18N_KEYS.dashboard.adminOperationsTitle,
@@ -101,7 +101,7 @@ export const DASHBOARD_WIDGET_REGISTRY: Record<string, DashboardWidgetDescriptor
   },
   [DASHBOARD_WIDGET_KIND.adminSecurity]: {
     titleKey: I18N_KEYS.dashboard.adminSecurityTitle,
-    permission: PERMISSIONS.usersManage,
+    permission: PERMISSIONS.memberLifecycleManage,
   },
 };
 

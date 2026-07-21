@@ -58,7 +58,7 @@ function route(
 }
 
 const adminContext: NavVisibilityContext = {
-  permissions: [PERMISSIONS.usersManage],
+  permissions: [PERMISSIONS.memberLifecycleManage],
   hasTeamContext: true,
 };
 
@@ -88,9 +88,9 @@ describe('selectVisibleNavItems', () => {
   });
 
   it('hides a route whose required permission is not granted', () => {
-    const routes = [route('/admin', { permissions: [PERMISSIONS.usersManage] })];
+    const routes = [route('/admin', { permissions: [PERMISSIONS.memberLifecycleManage] })];
     const memberContext: NavVisibilityContext = {
-      permissions: [PERMISSIONS.membersRead],
+      permissions: [PERMISSIONS.memberList],
       hasTeamContext: true,
     };
 
@@ -100,7 +100,7 @@ describe('selectVisibleNavItems', () => {
   it('hides a team-scoped route when there is no active team context', () => {
     const routes = [route('/roster', { requiresTeamContext: true })];
     const noTeamContext: NavVisibilityContext = {
-      permissions: [PERMISSIONS.usersManage],
+      permissions: [PERMISSIONS.memberLifecycleManage],
       hasTeamContext: false,
     };
 
@@ -111,7 +111,7 @@ describe('selectVisibleNavItems', () => {
     const routes = [
       route(
         '/admin',
-        { key: 'admin', permissions: [PERMISSIONS.usersManage] },
+        { key: 'admin', permissions: [PERMISSIONS.memberLifecycleManage] },
         {
           order: 20,
           iconName: 'shield',

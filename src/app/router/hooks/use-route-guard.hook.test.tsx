@@ -100,10 +100,10 @@ describe('useRouteGuard', () => {
 
   it('renders the screen for an authorized, fully-onboarded session', () => {
     mockSession({ isAuthenticated: true, isResolved: true });
-    mockEffective({ permissions: [PERMISSIONS.usersManage] });
+    mockEffective({ permissions: [PERMISSIONS.memberLifecycleManage] });
 
     const instruction = guardOf(
-      definition({ meta: meta({ permissions: [PERMISSIONS.usersManage] }) }),
+      definition({ meta: meta({ permissions: [PERMISSIONS.memberLifecycleManage] }) }),
     );
 
     expect(instruction).toEqual({ kind: 'screen', Screen: DummyScreen });
@@ -118,12 +118,12 @@ describe('useRouteGuard', () => {
 
   it('shows the forbidden state when a required permission is missing', () => {
     mockSession({ isAuthenticated: true, isResolved: true });
-    mockEffective({ permissions: [PERMISSIONS.membersRead] });
+    mockEffective({ permissions: [PERMISSIONS.memberList] });
 
     const instruction = guardOf(
       definition({
         meta: meta({
-          permissions: [PERMISSIONS.usersManage],
+          permissions: [PERMISSIONS.memberLifecycleManage],
           featureFlag: FEATURE_FLAGS.adminConsole,
         }),
       }),

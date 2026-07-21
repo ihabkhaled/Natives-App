@@ -36,12 +36,12 @@ const TARGET_RULES: Readonly<Record<string, TargetRule>> = {
   },
   'member.invited': {
     paramKey: 'membershipId',
-    permissions: [PERMISSIONS.membersRead],
+    permissions: [PERMISSIONS.memberList],
     build: (id) => memberProfilePath(id),
   },
   'member.activated': {
     paramKey: 'membershipId',
-    permissions: [PERMISSIONS.membersRead],
+    permissions: [PERMISSIONS.memberList],
     build: (id) => memberProfilePath(id),
   },
   'assessment.published': {

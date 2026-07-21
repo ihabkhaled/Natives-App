@@ -34,7 +34,7 @@ describe('getAdminRouteDefinitions', () => {
   });
 
   it('carries the grant each screen actually needs, never a role name', () => {
-    expect(routeAt(APP_PATHS.admin).meta?.permissions).toEqual([PERMISSIONS.usersManage]);
+    expect(routeAt(APP_PATHS.admin).meta?.permissions).toEqual([PERMISSIONS.memberLifecycleManage]);
     expect(routeAt(APP_PATHS.adminSettings).meta?.permissions).toEqual([PERMISSIONS.settingsRead]);
     expect(routeAt(APP_PATHS.adminRoles).meta?.permissions).toEqual([
       PERMISSIONS.memberRolesManage,

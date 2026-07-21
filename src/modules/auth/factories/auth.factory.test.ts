@@ -18,21 +18,21 @@ describe('buildAuthUser', () => {
   });
 
   it('grants the default persona the manage-users capability', () => {
-    expect(buildAuthUser().permissions).toContain(PERMISSIONS.usersManage);
+    expect(buildAuthUser().permissions).toContain(PERMISSIONS.memberLifecycleManage);
   });
 
   it('applies overrides on top of the defaults', () => {
     const user = buildAuthUser({
       id: 'user-2',
       displayName: 'Ranger Two',
-      permissions: [PERMISSIONS.membersRead],
+      permissions: [PERMISSIONS.memberList],
       onboardingComplete: false,
       memberships: [],
     });
 
     expect(user.id).toBe('user-2');
     expect(user.displayName).toBe('Ranger Two');
-    expect(user.permissions).toEqual([PERMISSIONS.membersRead]);
+    expect(user.permissions).toEqual([PERMISSIONS.memberList]);
     expect(user.onboardingComplete).toBe(false);
     expect(user.memberships).toEqual([]);
     expect(user.email).toBe('ranger@example.com');

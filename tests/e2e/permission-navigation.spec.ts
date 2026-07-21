@@ -3,7 +3,7 @@ import { expect, test } from '@playwright/test';
 import { TEST_IDS } from '@/shared/config';
 import { MOCK_CREDENTIALS, MOCK_PERSONA_EMAILS } from '@/tests/msw/mock-data.constants';
 
-import { APP_ROUTES, expectPresentedPage, gotoApp, login } from './fixtures/app.fixture';
+import { APP_ROUTES, expectPresentedPage, gotoApp, login, signIn } from './fixtures/app.fixture';
 
 const HOME_NAV_ITEM = `${TEST_IDS.primaryNavItem}-home`;
 const ADMIN_NAV_ITEM = `${TEST_IDS.primaryNavItem}-admin`;
@@ -33,7 +33,7 @@ test.describe('permission-aware navigation', () => {
   });
 
   test('a direct admin URL reveals no admin content to a member persona', async ({ page }) => {
-    await login(page, personaLogin(MOCK_PERSONA_EMAILS.member));
+    await signIn(page, personaLogin(MOCK_PERSONA_EMAILS.member));
     await expectPresentedPage(page, TEST_IDS.homePage);
 
     await gotoApp(page, APP_ROUTES.admin);

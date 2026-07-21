@@ -104,21 +104,22 @@ describe('usePrimaryNavigation', () => {
 
   it('shows the admin destination only for a manage-users session', () => {
     mockSession(true);
-    mockEffective({ permissions: [PERMISSIONS.usersManage] });
+    mockEffective({ permissions: [PERMISSIONS.memberLifecycleManage] });
 
     expect(keysAt('/home')).toEqual(['home', 'notifications', 'admin', 'settings']);
   });
 
   it('hides the admin destination from a member session', () => {
     mockSession(true);
-    mockEffective({ permissions: [PERMISSIONS.membersRead] });
+    mockEffective({ permissions: [PERMISSIONS.memberList] });
 
-    expect(keysAt('/home')).toEqual(['home', 'notifications', 'settings']);
+    // The directory is a member-level grant, so it stays; only `admin` is gone.
+    expect(keysAt('/home')).toEqual(['home', 'notifications', 'members', 'settings']);
   });
 
   it('marks the active destination and follows a selection', () => {
     mockSession(true);
-    mockEffective({ permissions: [PERMISSIONS.usersManage] });
+    mockEffective({ permissions: [PERMISSIONS.memberLifecycleManage] });
 
     const { result } = renderHookWithProviders(() => usePrimaryNavigation(), {
       initialPath: '/settings',
@@ -136,7 +137,7 @@ describe('usePrimaryNavigation', () => {
 
   it('exposes a translated accessible label for the navigation region', () => {
     mockSession(true);
-    mockEffective({ permissions: [PERMISSIONS.usersManage] });
+    mockEffective({ permissions: [PERMISSIONS.memberLifecycleManage] });
 
     const { result } = renderHookWithProviders(() => usePrimaryNavigation(), {
       initialPath: '/home',
@@ -149,7 +150,7 @@ describe('usePrimaryNavigation', () => {
 
   it('exposes the signed-in profile for the sidebar block', () => {
     mockSession(true);
-    mockEffective({ permissions: [PERMISSIONS.usersManage] });
+    mockEffective({ permissions: [PERMISSIONS.memberLifecycleManage] });
 
     const { result } = renderHookWithProviders(() => usePrimaryNavigation(), {
       initialPath: '/home',
@@ -162,7 +163,7 @@ describe('usePrimaryNavigation', () => {
 
   it('groups destinations into the labelled sidebar sections', () => {
     mockSession(true);
-    mockEffective({ permissions: [PERMISSIONS.usersManage] });
+    mockEffective({ permissions: [PERMISSIONS.memberLifecycleManage] });
 
     const { result } = renderHookWithProviders(() => usePrimaryNavigation(), {
       initialPath: '/home',
@@ -177,7 +178,7 @@ describe('usePrimaryNavigation', () => {
 
   it('signs out through the pinned profile action', () => {
     mockSession(true);
-    mockEffective({ permissions: [PERMISSIONS.usersManage] });
+    mockEffective({ permissions: [PERMISSIONS.memberLifecycleManage] });
 
     const { result } = renderHookWithProviders(() => usePrimaryNavigation(), {
       initialPath: '/home',
@@ -191,7 +192,7 @@ describe('usePrimaryNavigation', () => {
 
   it('omits the profile until the display name resolves', () => {
     mockSession(true);
-    mockEffective({ permissions: [PERMISSIONS.usersManage] });
+    mockEffective({ permissions: [PERMISSIONS.memberLifecycleManage] });
     mockProfileName(null);
 
     const { result } = renderHookWithProviders(() => usePrimaryNavigation(), {

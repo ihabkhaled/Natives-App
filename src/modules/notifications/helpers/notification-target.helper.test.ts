@@ -85,13 +85,13 @@ describe('isTargetAuthorized', () => {
   const target = { path: '/practices/session-1', permissions: [PERMISSIONS.practicesRead] };
 
   it('admits a principal holding every required grant', () => {
-    expect(isTargetAuthorized(target, [PERMISSIONS.practicesRead, PERMISSIONS.membersRead])).toBe(
+    expect(isTargetAuthorized(target, [PERMISSIONS.practicesRead, PERMISSIONS.memberList])).toBe(
       true,
     );
   });
 
   it('refuses a principal whose grant was revoked', () => {
-    expect(isTargetAuthorized(target, [PERMISSIONS.membersRead])).toBe(false);
+    expect(isTargetAuthorized(target, [PERMISSIONS.memberList])).toBe(false);
   });
 
   it('admits a target that demands nothing', () => {

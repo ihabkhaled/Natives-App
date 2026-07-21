@@ -2,11 +2,11 @@ import { expect, test } from '@playwright/test';
 
 import { TEST_IDS } from '@/shared/config';
 
-import { APP_ROUTES, gotoApp, login, waitForAppAnimations } from './fixtures/app.fixture';
+import { APP_ROUTES, gotoApp, signIn, waitForAppAnimations } from './fixtures/app.fixture';
 
 test.describe('external training and points', () => {
   test('logs a session honestly: candidate points, never a guessed number', async ({ page }) => {
-    await login(page);
+    await signIn(page);
     await gotoApp(page, APP_ROUTES.training);
 
     const composer = page.getByTestId(TEST_IDS.trainingComposer);
@@ -18,7 +18,7 @@ test.describe('external training and points', () => {
   });
 
   test('lists the member own claims with their review state', async ({ page }) => {
-    await login(page);
+    await signIn(page);
     await gotoApp(page, APP_ROUTES.training);
 
     await expect(page.getByTestId(TEST_IDS.trainingSubmissionList)).toBeVisible();
@@ -26,7 +26,7 @@ test.describe('external training and points', () => {
   });
 
   test('opens one claim with its evidence, buddies, and history', async ({ page }) => {
-    await login(page);
+    await signIn(page);
     await gotoApp(page, APP_ROUTES.training);
     await page.getByTestId(TEST_IDS.trainingSubmissionOpen).first().click();
 
@@ -35,7 +35,7 @@ test.describe('external training and points', () => {
   });
 
   test('shows the reviewer queue with its advisory signals', async ({ page }) => {
-    await login(page);
+    await signIn(page);
     await gotoApp(page, APP_ROUTES.trainingReview);
 
     await expect(page.getByTestId(TEST_IDS.trainingReviewQueue)).toBeVisible();
@@ -46,7 +46,7 @@ test.describe('external training and points', () => {
   });
 
   test('keeps a zero-contribution member visible on the leaderboard', async ({ page }) => {
-    await login(page);
+    await signIn(page);
     await gotoApp(page, APP_ROUTES.leaderboard);
 
     await expect(page.getByTestId(TEST_IDS.leaderboardTable)).toBeVisible();
@@ -58,7 +58,7 @@ test.describe('external training and points', () => {
   });
 
   test('explains one rank from the server contributions', async ({ page }) => {
-    await login(page);
+    await signIn(page);
     await gotoApp(page, APP_ROUTES.leaderboard);
     await page.getByTestId(TEST_IDS.leaderboardExplainToggle).first().click();
 
@@ -68,7 +68,7 @@ test.describe('external training and points', () => {
   });
 
   test('shows awards, reversals, and adjustments as separate ledger entries', async ({ page }) => {
-    await login(page);
+    await signIn(page);
     await gotoApp(page, APP_ROUTES.points);
 
     await expect(page.getByTestId(TEST_IDS.pointsLedger)).toBeVisible();
@@ -78,7 +78,7 @@ test.describe('external training and points', () => {
   });
 
   test('never shows the unresolved legacy badge tier', async ({ page }) => {
-    await login(page);
+    await signIn(page);
     await gotoApp(page, APP_ROUTES.points);
 
     await expect(page.getByTestId(TEST_IDS.pointsBadgeList)).toBeVisible();

@@ -4,7 +4,7 @@ import { PERMISSIONS } from '@/shared/security';
 import { MOCK_INVITATION, MOCK_PERSONA_EMAILS } from './mock-data.constants';
 
 const COACH_PERMISSIONS = [
-  PERMISSIONS.membersRead,
+  PERMISSIONS.memberList,
   PERMISSIONS.memberList,
   PERMISSIONS.memberProfileReadPublic,
   PERMISSIONS.memberProfileReadCoach,
@@ -15,7 +15,7 @@ const COACH_PERMISSIONS = [
   PERMISSIONS.practicesManage,
   PERMISSIONS.practicesRsvpSelf,
   PERMISSIONS.attendanceMark,
-  PERMISSIONS.assessmentsManage,
+  PERMISSIONS.assessmentReview,
   PERMISSIONS.assessmentReadTeam,
   PERMISSIONS.assessmentReadSelfPublished,
   PERMISSIONS.assessmentCreate,
@@ -49,7 +49,7 @@ const COACH_PERMISSIONS = [
 ];
 
 const MEMBER_PERMISSIONS = [
-  PERMISSIONS.membersRead,
+  PERMISSIONS.memberList,
   PERMISSIONS.memberList,
   PERMISSIONS.memberProfileReadPublic,
   PERMISSIONS.memberProfileUpdateSelf,

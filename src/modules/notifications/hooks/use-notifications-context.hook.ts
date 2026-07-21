@@ -16,7 +16,7 @@ export function useNotificationsContext(): NotificationsContextView {
   return {
     teamName: scope.teamName,
     isOffline: !network.isOnline,
-    canReadDeliveryFailures: permissions.permissions.includes(PERMISSIONS.notificationDeliveryRead),
+    canReadDeliveryFailures: permissions.permissions.includes(PERMISSIONS.outboxManage),
     isLoading: permissions.isLoading,
   };
 }

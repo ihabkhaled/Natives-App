@@ -22,7 +22,7 @@ describe('dashboard widget registry', () => {
       DASHBOARD_WIDGET_REGISTRY[DASHBOARD_WIDGET_KIND.memberAttendance]?.permission,
     ).toBeNull();
     expect(DASHBOARD_WIDGET_REGISTRY[DASHBOARD_WIDGET_KIND.adminLifecycle]?.permission).toBe(
-      PERMISSIONS.usersManage,
+      PERMISSIONS.memberLifecycleManage,
     );
     expect(DASHBOARD_WIDGET_REGISTRY[DASHBOARD_WIDGET_KIND.coachAttention]?.permission).toBe(
       PERMISSIONS.attendanceMark,

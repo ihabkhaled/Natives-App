@@ -4,11 +4,11 @@ import { TEST_IDS } from '@/shared/config';
 import { MOCK_CREDENTIALS, MOCK_PERSONA_EMAILS } from '@/tests/msw/mock-data.constants';
 import { MOCK_NOTIFICATIONS } from '@/tests/msw/notifications.fixture';
 
-import { APP_ROUTES, expectPresentedPage, gotoApp, login } from './fixtures/app.fixture';
+import { APP_ROUTES, expectPresentedPage, gotoApp, login, signIn } from './fixtures/app.fixture';
 
 test.describe('notifications inbox', () => {
   test('lists grouped arrivals with their in-app delivery state', async ({ page }) => {
-    await login(page);
+    await signIn(page);
     await gotoApp(page, APP_ROUTES.notifications);
     await expectPresentedPage(page, TEST_IDS.notificationsPage);
 
@@ -31,7 +31,7 @@ test.describe('notifications inbox', () => {
   });
 
   test('locks the mandatory security category on every channel', async ({ page }) => {
-    await login(page);
+    await signIn(page);
     await gotoApp(page, APP_ROUTES.notificationPreferences);
     await expectPresentedPage(page, TEST_IDS.notificationPrefsPage);
 
@@ -43,7 +43,7 @@ test.describe('notifications inbox', () => {
   });
 
   test('re-checks authorization on arrival and refuses a revoked deep link', async ({ page }) => {
-    await login(page, {
+    await signIn(page, {
       email: MOCK_PERSONA_EMAILS.member,
       password: MOCK_CREDENTIALS.password,
     });
@@ -56,7 +56,7 @@ test.describe('notifications inbox', () => {
   });
 
   test('routes an authorized deep link on to its target', async ({ page }) => {
-    await login(page);
+    await signIn(page);
     await gotoApp(page, `/notifications/open/${MOCK_NOTIFICATIONS.unreadPracticeId}`);
 
     await expect(page).toHaveURL(/\/practices\//u);

@@ -21,7 +21,7 @@ vi.mock('@/modules/auth', () => ({ useEffectivePermissions: vi.fn() }));
 vi.mock('@/platform', () => ({ useNetworkStatus: vi.fn() }));
 
 const MEMBER_PERMISSIONS = [
-  PERMISSIONS.membersRead,
+  PERMISSIONS.memberList,
   PERMISSIONS.practicesRead,
   PERMISSIONS.leaderboardsRead,
 ];

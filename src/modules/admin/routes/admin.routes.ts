@@ -25,7 +25,7 @@ function hubRoute(): AppRouteDefinition {
     meta: {
       key: 'admin',
       titleKey: I18N_KEYS.admin.title,
-      permissions: [PERMISSIONS.usersManage],
+      permissions: [PERMISSIONS.memberLifecycleManage],
       requiresTeamContext: false,
       offline: false,
       preload: false,

@@ -9,6 +9,7 @@ import {
   expectPresentedPage,
   gotoApp,
   login,
+  signIn,
   switchToArabic,
 } from './fixtures/app.fixture';
 
@@ -39,7 +40,7 @@ test.describe('assessment entry and player performance', () => {
   });
 
   test('walks a draft through submit and into review', async ({ page }) => {
-    await login(page);
+    await signIn(page);
     await gotoApp(page, `${APP_ROUTES.assessments}/${MOCK_ASSESSMENT_IDS.draft}`);
     await expectPresentedPage(page, TEST_IDS.assessmentEntryPage);
 
@@ -49,7 +50,7 @@ test.describe('assessment entry and player performance', () => {
   });
 
   test('shows the player performance charts with their tabular alternatives', async ({ page }) => {
-    await login(page, { email: MOCK_PERSONA_EMAILS.member, password: MOCK_CREDENTIALS.password });
+    await signIn(page, { email: MOCK_PERSONA_EMAILS.member, password: MOCK_CREDENTIALS.password });
     await gotoApp(page, APP_ROUTES.performance);
     await expectPresentedPage(page, TEST_IDS.performancePage);
 
@@ -61,7 +62,7 @@ test.describe('assessment entry and player performance', () => {
   });
 
   test('keeps a member persona out of the coach workspace', async ({ page }) => {
-    await login(page, { email: MOCK_PERSONA_EMAILS.member, password: MOCK_CREDENTIALS.password });
+    await signIn(page, { email: MOCK_PERSONA_EMAILS.member, password: MOCK_CREDENTIALS.password });
     await gotoApp(page, APP_ROUTES.assessments);
 
     await expect(page.getByTestId(TEST_IDS.assessmentsList)).toHaveCount(0);
@@ -69,7 +70,7 @@ test.describe('assessment entry and player performance', () => {
 
   test('renders the Arabic assessment workspace right-to-left @rtl', async ({ page }) => {
     // Direction follows the persisted locale, so switch to Arabic first.
-    await login(page);
+    await signIn(page);
     await gotoApp(page, APP_ROUTES.settings);
     await switchToArabic(page);
 

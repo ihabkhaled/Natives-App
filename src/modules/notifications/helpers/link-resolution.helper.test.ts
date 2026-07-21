@@ -41,7 +41,7 @@ describe('resolveLink', () => {
         isLoading: false,
         hasError: false,
         item: ROUTABLE,
-        grantedPermissions: [PERMISSIONS.membersRead],
+        grantedPermissions: [PERMISSIONS.memberList],
       }),
     ).toEqual({ outcome: 'forbidden', path: null });
   });

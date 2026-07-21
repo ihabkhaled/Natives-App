@@ -2,14 +2,14 @@ import { expect, test } from '@playwright/test';
 
 import { TEST_IDS } from '@/shared/config';
 
-import { APP_ROUTES, gotoApp, login, waitForAppAnimations } from './fixtures/app.fixture';
+import { APP_ROUTES, gotoApp, signIn, waitForAppAnimations } from './fixtures/app.fixture';
 
 const LEAGUE_ID = '60000000-0000-4000-8000-000000000001';
 const DRAFT_SQUAD_ID = 'b0000000-0000-4000-8000-000000000001';
 
 test.describe('competitions and squads', () => {
   test('lists the team competitions and opens one', async ({ page }) => {
-    await login(page);
+    await signIn(page);
     await gotoApp(page, APP_ROUTES.competitions);
 
     await expect(page.getByTestId(TEST_IDS.competitionsList)).toBeVisible();
@@ -20,7 +20,7 @@ test.describe('competitions and squads', () => {
   });
 
   test('shows stages, fixtures in Cairo time, and the opponent directory', async ({ page }) => {
-    await login(page);
+    await signIn(page);
     await gotoApp(page, `${APP_ROUTES.competitions}/${LEAGUE_ID}`);
 
     await expect(page.getByTestId(TEST_IDS.competitionStages)).toBeVisible();
@@ -30,7 +30,7 @@ test.describe('competitions and squads', () => {
   });
 
   test('presents eligibility as advisory and never as an exclusion', async ({ page }) => {
-    await login(page);
+    await signIn(page);
     await gotoApp(page, `${APP_ROUTES.squads}/${DRAFT_SQUAD_ID}`);
 
     await expect(page.getByTestId(TEST_IDS.squadEligibilityAdvisory)).toContainText(
@@ -42,7 +42,7 @@ test.describe('competitions and squads', () => {
   });
 
   test('demands a written reason before recording a coach override', async ({ page }) => {
-    await login(page);
+    await signIn(page);
     await gotoApp(page, `${APP_ROUTES.squads}/${DRAFT_SQUAD_ID}`);
 
     const flagged = page
@@ -68,7 +68,7 @@ test.describe('competitions and squads', () => {
   });
 
   test('shows the roster preview with its backend-pending notice', async ({ page }) => {
-    await login(page);
+    await signIn(page);
     await gotoApp(page, `${APP_ROUTES.squads}/${DRAFT_SQUAD_ID}`);
 
     await expect(page.getByTestId(TEST_IDS.squadRosterPendingNotice)).toContainText(
@@ -78,7 +78,7 @@ test.describe('competitions and squads', () => {
   });
 
   test('@rtl mirrors the squad workspace for Arabic', async ({ page }) => {
-    await login(page);
+    await signIn(page);
     await gotoApp(page, `${APP_ROUTES.squads}/${DRAFT_SQUAD_ID}`);
     await waitForAppAnimations(page);
 
@@ -115,7 +115,7 @@ test.describe('tryouts', () => {
   });
 
   test('keeps candidate contacts and readiness out of the staff roll', async ({ page }) => {
-    await login(page);
+    await signIn(page);
     await gotoApp(page, APP_ROUTES.tryouts);
     await page.getByTestId(TEST_IDS.tryoutOpen).first().click();
 
@@ -126,7 +126,7 @@ test.describe('tryouts', () => {
   });
 
   test('reveals restricted candidate data only to a holder of the grants', async ({ page }) => {
-    await login(page);
+    await signIn(page);
     await gotoApp(page, APP_ROUTES.tryouts);
     await page.getByTestId(TEST_IDS.tryoutOpen).first().click();
     await page.getByTestId(TEST_IDS.tryoutCandidateOpen).first().click();

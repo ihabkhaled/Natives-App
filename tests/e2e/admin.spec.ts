@@ -2,11 +2,11 @@ import { expect, test } from '@playwright/test';
 
 import { TEST_IDS } from '@/shared/config';
 
-import { APP_ROUTES, expectPresentedPage, gotoApp, login } from './fixtures/app.fixture';
+import { APP_ROUTES, expectPresentedPage, gotoApp, signIn } from './fixtures/app.fixture';
 
 test.describe('admin console', () => {
   test('offers one card per surface the administrator may open', async ({ page }) => {
-    await login(page);
+    await signIn(page);
     await gotoApp(page, APP_ROUTES.admin);
     await expectPresentedPage(page, TEST_IDS.adminPage);
 
@@ -14,7 +14,7 @@ test.describe('admin console', () => {
   });
 
   test('shows effective configuration, its history, and the reference data', async ({ page }) => {
-    await login(page);
+    await signIn(page);
     await gotoApp(page, APP_ROUTES.adminSettings);
     await expectPresentedPage(page, TEST_IDS.adminSettingsPage);
 
@@ -25,7 +25,7 @@ test.describe('admin console', () => {
   });
 
   test('bounds role assignment by the privilege ceiling', async ({ page }) => {
-    await login(page);
+    await signIn(page);
     await gotoApp(page, APP_ROUTES.adminRoles);
     await expectPresentedPage(page, TEST_IDS.adminRolesPage);
 
@@ -34,7 +34,7 @@ test.describe('admin console', () => {
   });
 
   test('blocks a rule publish until a dry run has been seen', async ({ page }) => {
-    await login(page);
+    await signIn(page);
     await gotoApp(page, APP_ROUTES.adminRules);
     await expectPresentedPage(page, TEST_IDS.adminRulesPage);
 
@@ -51,7 +51,7 @@ test.describe('admin console', () => {
   });
 
   test('reports operations state without ever showing an event payload', async ({ page }) => {
-    await login(page);
+    await signIn(page);
     await gotoApp(page, APP_ROUTES.adminOperations);
     await expectPresentedPage(page, TEST_IDS.adminOpsPage);
 

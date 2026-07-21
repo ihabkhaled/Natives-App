@@ -174,13 +174,13 @@ describe('buildDashboardWidgetViews', () => {
 
   it('drops permission-gated widgets the session lacks', () => {
     expect(
-      buildDashboardWidgetViews([ADMIN_WIDGET], [PERMISSIONS.membersRead], t, LOCALE),
+      buildDashboardWidgetViews([ADMIN_WIDGET], [PERMISSIONS.memberList], t, LOCALE),
     ).toHaveLength(0);
   });
 
   it('keeps a permission-gated widget the session holds', () => {
     expect(
-      buildDashboardWidgetViews([ADMIN_WIDGET], [PERMISSIONS.usersManage], t, LOCALE),
+      buildDashboardWidgetViews([ADMIN_WIDGET], [PERMISSIONS.memberLifecycleManage], t, LOCALE),
     ).toHaveLength(1);
   });
 });

@@ -9,6 +9,7 @@ import {
   fillIonInput,
   gotoApp,
   login,
+  signIn,
 } from './fixtures/app.fixture';
 
 test.describe('authentication', () => {
@@ -55,7 +56,7 @@ test.describe('authentication', () => {
   });
 
   test('keeps an authenticated visitor away from the login route', async ({ page }) => {
-    await login(page);
+    await signIn(page);
     await expectPresentedPage(page, TEST_IDS.homePage);
 
     await gotoApp(page, APP_ROUTES.login);

@@ -8,8 +8,14 @@ import { practicesPath, practiceSessionPattern } from './practice.paths';
 
 /**
  * Practice calendar and session-detail routes. Both are gated on the
- * practices.read permission; the guard blocks a direct URL for any persona
+ * `practice.read` permission; the guard blocks a direct URL for any persona
  * without that grant. The backend re-authorises every read regardless.
+ *
+ * The string must match the backend catalog exactly. It once read
+ * `practices.read`, which the backend never emits, so the guard forbade both
+ * screens for every persona — including a full administrator — while the
+ * endpoints behind them answered 200. See
+ * tests/contract/permissions.contract.test.ts.
  */
 export function getPracticeRouteDefinitions(): readonly AppRouteDefinition[] {
   return [
