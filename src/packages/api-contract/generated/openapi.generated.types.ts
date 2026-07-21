@@ -1519,6 +1519,212 @@ export interface paths {
         readonly patch?: never;
         readonly trace?: never;
     };
+    readonly "/teams/{teamId}/match-rulesets": {
+        readonly parameters: {
+            readonly query?: never;
+            readonly header?: never;
+            readonly path?: never;
+            readonly cookie?: never;
+        };
+        /** List every published scoring rule set version */
+        readonly get: operations["MatchRulesets.list"];
+        readonly put?: never;
+        /** Publish a new version of a scoring rule set */
+        readonly post: operations["MatchRulesets.create"];
+        readonly delete?: never;
+        readonly options?: never;
+        readonly head?: never;
+        readonly patch?: never;
+        readonly trace?: never;
+    };
+    readonly "/teams/{teamId}/matches": {
+        readonly parameters: {
+            readonly query?: never;
+            readonly header?: never;
+            readonly path?: never;
+            readonly cookie?: never;
+        };
+        /** List a team’s matches */
+        readonly get: operations["Matches.list"];
+        readonly put?: never;
+        /** Create the match record for a fixture */
+        readonly post: operations["Matches.create"];
+        readonly delete?: never;
+        readonly options?: never;
+        readonly head?: never;
+        readonly patch?: never;
+        readonly trace?: never;
+    };
+    readonly "/teams/{teamId}/matches/{matchId}": {
+        readonly parameters: {
+            readonly query?: never;
+            readonly header?: never;
+            readonly path?: never;
+            readonly cookie?: never;
+        };
+        /** Get one match */
+        readonly get: operations["Matches.get"];
+        readonly put?: never;
+        readonly post?: never;
+        readonly delete?: never;
+        readonly options?: never;
+        readonly head?: never;
+        readonly patch?: never;
+        readonly trace?: never;
+    };
+    readonly "/teams/{teamId}/matches/{matchId}/events": {
+        readonly parameters: {
+            readonly query?: never;
+            readonly header?: never;
+            readonly path?: never;
+            readonly cookie?: never;
+        };
+        /** List the append-only stream of a match */
+        readonly get: operations["MatchEvents.list"];
+        readonly put?: never;
+        readonly post?: never;
+        readonly delete?: never;
+        readonly options?: never;
+        readonly head?: never;
+        readonly patch?: never;
+        readonly trace?: never;
+    };
+    readonly "/teams/{teamId}/matches/{matchId}/events/point": {
+        readonly parameters: {
+            readonly query?: never;
+            readonly header?: never;
+            readonly path?: never;
+            readonly cookie?: never;
+        };
+        readonly get?: never;
+        readonly put?: never;
+        /** Record one point (idempotent on the operation id) */
+        readonly post: operations["MatchEvents.point"];
+        readonly delete?: never;
+        readonly options?: never;
+        readonly head?: never;
+        readonly patch?: never;
+        readonly trace?: never;
+    };
+    readonly "/teams/{teamId}/matches/{matchId}/events/timeout": {
+        readonly parameters: {
+            readonly query?: never;
+            readonly header?: never;
+            readonly path?: never;
+            readonly cookie?: never;
+        };
+        readonly get?: never;
+        readonly put?: never;
+        /** Record a timeout against the ruleset allowance */
+        readonly post: operations["MatchEvents.timeout"];
+        readonly delete?: never;
+        readonly options?: never;
+        readonly head?: never;
+        readonly patch?: never;
+        readonly trace?: never;
+    };
+    readonly "/teams/{teamId}/matches/{matchId}/events/void": {
+        readonly parameters: {
+            readonly query?: never;
+            readonly header?: never;
+            readonly path?: never;
+            readonly cookie?: never;
+        };
+        readonly get?: never;
+        readonly put?: never;
+        /** Undo a recorded fact by appending a void */
+        readonly post: operations["MatchEvents.voidFact"];
+        readonly delete?: never;
+        readonly options?: never;
+        readonly head?: never;
+        readonly patch?: never;
+        readonly trace?: never;
+    };
+    readonly "/teams/{teamId}/matches/{matchId}/finalization": {
+        readonly parameters: {
+            readonly query?: never;
+            readonly header?: never;
+            readonly path?: never;
+            readonly cookie?: never;
+        };
+        readonly get?: never;
+        readonly put?: never;
+        /** Publish the authoritative result of a match */
+        readonly post: operations["Matches.finalize"];
+        readonly delete?: never;
+        readonly options?: never;
+        readonly head?: never;
+        readonly patch?: never;
+        readonly trace?: never;
+    };
+    readonly "/teams/{teamId}/matches/{matchId}/reopening": {
+        readonly parameters: {
+            readonly query?: never;
+            readonly header?: never;
+            readonly path?: never;
+            readonly cookie?: never;
+        };
+        readonly get?: never;
+        readonly put?: never;
+        /** Reopen a finalized match for an audited correction */
+        readonly post: operations["Matches.reopen"];
+        readonly delete?: never;
+        readonly options?: never;
+        readonly head?: never;
+        readonly patch?: never;
+        readonly trace?: never;
+    };
+    readonly "/teams/{teamId}/matches/{matchId}/revisions": {
+        readonly parameters: {
+            readonly query?: never;
+            readonly header?: never;
+            readonly path?: never;
+            readonly cookie?: never;
+        };
+        /** List the immutable correction trail of a match */
+        readonly get: operations["Matches.listRevisions"];
+        readonly put?: never;
+        readonly post?: never;
+        readonly delete?: never;
+        readonly options?: never;
+        readonly head?: never;
+        readonly patch?: never;
+        readonly trace?: never;
+    };
+    readonly "/teams/{teamId}/matches/{matchId}/scoreboard": {
+        readonly parameters: {
+            readonly query?: never;
+            readonly header?: never;
+            readonly path?: never;
+            readonly cookie?: never;
+        };
+        /** Project the live scoreboard, caps, and timeouts */
+        readonly get: operations["Matches.scoreboardFor"];
+        readonly put?: never;
+        readonly post?: never;
+        readonly delete?: never;
+        readonly options?: never;
+        readonly head?: never;
+        readonly patch?: never;
+        readonly trace?: never;
+    };
+    readonly "/teams/{teamId}/matches/{matchId}/transition": {
+        readonly parameters: {
+            readonly query?: never;
+            readonly header?: never;
+            readonly path?: never;
+            readonly cookie?: never;
+        };
+        readonly get?: never;
+        readonly put?: never;
+        /** Ready, start, pause, resume, halftime, complete, or abandon */
+        readonly post: operations["Matches.transition"];
+        readonly delete?: never;
+        readonly options?: never;
+        readonly head?: never;
+        readonly patch?: never;
+        readonly trace?: never;
+    };
     readonly "/teams/{teamId}/measurement-history/{membershipId}": {
         readonly parameters: {
             readonly query?: never;
@@ -4292,6 +4498,15 @@ export interface components {
             /** @enum {string} */
             readonly role?: "admin" | "user";
         };
+        readonly CreateMatchDto: {
+            /** Format: uuid */
+            readonly fixtureId: string;
+            readonly notes?: Record<string, never> | null;
+            /** Format: uuid */
+            readonly rosterId?: Record<string, never> | null;
+            /** Format: uuid */
+            readonly rulesetId?: Record<string, never> | null;
+        };
         readonly CreateMatchRosterDto: {
             /** @enum {string} */
             readonly division?: "open" | "women" | "mixed" | "unspecified";
@@ -4308,6 +4523,26 @@ export interface components {
             readonly requireCaptain: boolean;
             /** Format: uuid */
             readonly sourceRosterId?: Record<string, never> | null;
+        };
+        readonly CreateMatchRulesetDto: {
+            readonly gameTo: number;
+            readonly halftimeAt?: Record<string, never> | null;
+            readonly hardCap?: Record<string, never> | null;
+            readonly name: string;
+            readonly notes?: Record<string, never> | null;
+            /** @default 1 */
+            readonly periods: Record<string, never>;
+            readonly rulesetKey: string;
+            /** Format: uuid */
+            readonly seasonId?: Record<string, never> | null;
+            readonly softCapMinutes?: Record<string, never> | null;
+            readonly softCapPlus?: Record<string, never> | null;
+            readonly timeCapMinutes?: Record<string, never> | null;
+            readonly timeoutsPerPeriod?: Record<string, never> | null;
+            /** @default 0 */
+            readonly timeoutsPerTeam: Record<string, never>;
+            /** @default 1 */
+            readonly winBy: Record<string, never>;
         };
         readonly CreateMeasurementSessionDto: {
             readonly conditions?: Record<string, never> | null;
@@ -4776,6 +5011,11 @@ export interface components {
         readonly FinalizeAttendanceDto: {
             readonly expectedVersion: number;
         };
+        readonly FinalizeMatchDto: {
+            readonly expectedRecordVersion: number;
+            readonly opponentScore?: Record<string, never> | null;
+            readonly ourScore?: Record<string, never> | null;
+        };
         readonly FixtureResponseDto: {
             readonly cancellationReason: string | null;
             /** Format: date-time */
@@ -5015,6 +5255,30 @@ export interface components {
             readonly offset: number;
             readonly total: number;
         };
+        readonly ListMatchesResponseDto: {
+            readonly items: readonly components["schemas"]["MatchResponseDto"][];
+            readonly limit: number;
+            readonly offset: number;
+            readonly total: number;
+        };
+        readonly ListMatchEventsResponseDto: {
+            readonly items: readonly components["schemas"]["MatchEventResponseDto"][];
+            readonly limit: number;
+            readonly offset: number;
+            readonly total: number;
+        };
+        readonly ListMatchRevisionsResponseDto: {
+            readonly items: readonly components["schemas"]["MatchRevisionResponseDto"][];
+            readonly limit: number;
+            readonly offset: number;
+            readonly total: number;
+        };
+        readonly ListMatchRulesetsResponseDto: {
+            readonly items: readonly components["schemas"]["MatchRulesetResponseDto"][];
+            readonly limit: number;
+            readonly offset: number;
+            readonly total: number;
+        };
         readonly ListMembersResponseDto: {
             readonly items: readonly components["schemas"]["MemberDirectoryItemDto"][];
             readonly limit: number;
@@ -5211,6 +5475,194 @@ export interface components {
             readonly note?: string;
             /** @enum {string} */
             readonly status: "present_on_time" | "present_late" | "excused" | "injured" | "absent" | "remote_approved" | "other_approved";
+        };
+        readonly MatchEventResponseDto: {
+            /** Format: uuid */
+            readonly assistMembershipId: string | null;
+            /** Format: uuid */
+            readonly eventId: string;
+            /** @enum {string} */
+            readonly eventType: "point" | "timeout" | "period_start" | "period_end" | "cap_applied" | "void";
+            /** Format: uuid */
+            readonly matchId: string;
+            /** Format: date-time */
+            readonly occurredAt: string | null;
+            readonly operationId: string;
+            readonly opponentScoreAfter: number;
+            readonly ourScoreAfter: number;
+            readonly period: number;
+            readonly points: number | null;
+            /** Format: date-time */
+            readonly recordedAt: string;
+            /** Format: uuid */
+            readonly recordedBy: string | null;
+            /** Format: uuid */
+            readonly scorerMembershipId: string | null;
+            /** @enum {string|null} */
+            readonly scoringSide: "us" | "them" | null;
+            readonly sequence: number;
+            /** Format: uuid */
+            readonly teamId: string;
+            readonly voided: boolean;
+            readonly voidReason: string | null;
+            /** Format: uuid */
+            readonly voidsEventId: string | null;
+        };
+        readonly MatchOperationResponseDto: {
+            readonly event: components["schemas"]["MatchEventResponseDto"];
+            readonly opponentScore: number;
+            readonly ourScore: number;
+            /** @enum {string} */
+            readonly outcome: "applied" | "replayed" | "conflict";
+            readonly streamVersion: number;
+        };
+        readonly MatchResponseDto: {
+            /** Format: date-time */
+            readonly abandonedAt: string | null;
+            readonly abandonReason: string | null;
+            /** @enum {string} */
+            readonly capApplied: "none" | "soft" | "hard" | "time";
+            /** Format: uuid */
+            readonly competitionId: string;
+            /** Format: date-time */
+            readonly completedAt: string | null;
+            /** Format: date-time */
+            readonly createdAt: string;
+            /** Format: uuid */
+            readonly createdBy: string | null;
+            readonly engineVersion: string;
+            /** Format: date-time */
+            readonly finalizedAt: string | null;
+            /** Format: uuid */
+            readonly finalizedBy: string | null;
+            /** Format: uuid */
+            readonly fixtureId: string;
+            /** Format: date-time */
+            readonly halftimeAt: string | null;
+            readonly homeAway: string;
+            /** Format: uuid */
+            readonly matchId: string;
+            readonly notes: string | null;
+            readonly opponentScore: number;
+            readonly ourScore: number;
+            /** Format: date-time */
+            readonly pausedAt: string | null;
+            readonly period: number;
+            readonly recordVersion: number;
+            /** Format: date-time */
+            readonly reopenedAt: string | null;
+            /** Format: uuid */
+            readonly reopenedBy: string | null;
+            readonly reopenReason: string | null;
+            /** @enum {string} */
+            readonly result: "win" | "loss" | "draw" | "undecided";
+            /** Format: date-time */
+            readonly resumedAt: string | null;
+            readonly revision: number;
+            /** Format: uuid */
+            readonly rosterId: string | null;
+            /** Format: uuid */
+            readonly rulesetId: string;
+            /** Format: uuid */
+            readonly seasonId: string;
+            /** Format: date-time */
+            readonly startedAt: string | null;
+            /** @enum {string} */
+            readonly status: "scheduled" | "ready" | "live" | "paused" | "halftime" | "completed" | "finalized" | "abandoned";
+            readonly streamVersion: number;
+            /** Format: uuid */
+            readonly supersedesMatchId: string | null;
+            /** Format: uuid */
+            readonly teamId: string;
+            /** Format: date-time */
+            readonly updatedAt: string;
+        };
+        readonly MatchRevisionResponseDto: {
+            /** @enum {string} */
+            readonly action: "finalized" | "reopened" | "corrected";
+            /** Format: uuid */
+            readonly actorUserId: string | null;
+            /** Format: date-time */
+            readonly createdAt: string;
+            /** @enum {string} */
+            readonly fromStatus: "scheduled" | "ready" | "live" | "paused" | "halftime" | "completed" | "finalized" | "abandoned";
+            /** Format: uuid */
+            readonly matchId: string;
+            readonly opponentScoreAfter: number;
+            readonly opponentScoreBefore: number;
+            readonly ourScoreAfter: number;
+            readonly ourScoreBefore: number;
+            readonly reason: string;
+            readonly revision: number;
+            /** Format: uuid */
+            readonly revisionId: string;
+            readonly sequence: number;
+            readonly streamVersion: number;
+            /** Format: uuid */
+            readonly teamId: string;
+            /** @enum {string} */
+            readonly toStatus: "scheduled" | "ready" | "live" | "paused" | "halftime" | "completed" | "finalized" | "abandoned";
+        };
+        readonly MatchRulesetResponseDto: {
+            /** Format: date-time */
+            readonly createdAt: string;
+            /** Format: uuid */
+            readonly createdBy: string | null;
+            readonly gameTo: number;
+            readonly halftimeAt: number | null;
+            readonly hardCap: number | null;
+            readonly name: string;
+            readonly notes: string | null;
+            readonly periods: number;
+            /** Format: uuid */
+            readonly rulesetId: string;
+            readonly rulesetKey: string;
+            readonly rulesetVersion: number;
+            /** Format: uuid */
+            readonly seasonId: string | null;
+            readonly softCapMinutes: number | null;
+            readonly softCapPlus: number | null;
+            /** @enum {string} */
+            readonly status: "draft" | "active" | "archived";
+            /** Format: uuid */
+            readonly teamId: string;
+            readonly timeCapMinutes: number | null;
+            readonly timeoutsPerPeriod: number | null;
+            readonly timeoutsPerTeam: number;
+            /** Format: date-time */
+            readonly updatedAt: string;
+            readonly winBy: number;
+        };
+        readonly MatchScoreboardResponseDto: {
+            /** @enum {string} */
+            readonly capApplied: "none" | "soft" | "hard" | "time";
+            readonly complete: boolean;
+            readonly engineVersion: string;
+            readonly halftimeReached: boolean;
+            /** Format: uuid */
+            readonly matchId: string;
+            readonly opponentScore: number;
+            readonly ourScore: number;
+            readonly period: number;
+            readonly recordVersion: number;
+            /** @enum {string} */
+            readonly result: "win" | "loss" | "draw" | "undecided";
+            readonly revision: number;
+            readonly rulesetKey: string;
+            readonly rulesetVersion: number;
+            readonly scoringOpen: boolean;
+            /** @enum {string} */
+            readonly status: "scheduled" | "ready" | "live" | "paused" | "halftime" | "completed" | "finalized" | "abandoned";
+            readonly streamVersion: number;
+            readonly target: number;
+            readonly timeouts: components["schemas"]["MatchTimeoutStateDto"];
+        };
+        readonly MatchTimeoutStateDto: {
+            readonly allowance: number;
+            readonly remainingForThem: number;
+            readonly remainingForUs: number;
+            readonly usedByThem: number;
+            readonly usedByUs: number;
         };
         readonly MeasurementSessionResponseDto: {
             readonly conditions: string | null;
@@ -5837,6 +6289,27 @@ export interface components {
             /** Format: uuid */
             readonly sessionId: string;
         };
+        readonly RecordMatchPointDto: {
+            /** Format: uuid */
+            readonly assistMembershipId?: Record<string, never> | null;
+            readonly expectedStreamVersion?: Record<string, never> | null;
+            /** Format: date-time */
+            readonly occurredAt?: Record<string, never> | null;
+            readonly operationId: string;
+            /** @default 1 */
+            readonly points: Record<string, never>;
+            /** Format: uuid */
+            readonly scorerMembershipId?: Record<string, never> | null;
+            /** @enum {string} */
+            readonly scoringSide: "us" | "them";
+        };
+        readonly RecordMatchTimeoutDto: {
+            /** Format: date-time */
+            readonly occurredAt?: Record<string, never> | null;
+            readonly operationId: string;
+            /** @enum {string} */
+            readonly scoringSide: "us" | "them";
+        };
         readonly RecordMeasurementDto: {
             readonly attempts: readonly components["schemas"]["AttemptInputDto"][];
             /** Format: uuid */
@@ -5880,6 +6353,10 @@ export interface components {
         };
         readonly RemoveSelectionDto: {
             readonly reason?: Record<string, never> | null;
+        };
+        readonly ReopenMatchDto: {
+            readonly expectedRecordVersion: number;
+            readonly reason: string;
         };
         readonly ReorderBlocksDto: {
             readonly blockIds: readonly string[];
@@ -6800,6 +7277,12 @@ export interface components {
             /** @enum {string} */
             readonly transition: "activate" | "achieve" | "miss" | "cancel" | "reopen";
         };
+        readonly TransitionMatchDto: {
+            readonly expectedRecordVersion: number;
+            readonly reason?: Record<string, never> | null;
+            /** @enum {string} */
+            readonly transition: "ready" | "start" | "pause" | "resume" | "halftime" | "complete" | "abandon";
+        };
         readonly TransitionRosterDto: {
             readonly expectedRecordVersion: number;
             /** @enum {string} */
@@ -7024,6 +7507,12 @@ export interface components {
             readonly updatedAt: string;
             readonly updatedBy: string | null;
             readonly version: number;
+        };
+        readonly VoidMatchEventDto: {
+            /** Format: uuid */
+            readonly eventId: string;
+            readonly operationId: string;
+            readonly reason: string;
         };
     };
     responses: never;
@@ -10715,6 +11204,556 @@ export interface operations {
             };
             /** @description Forbidden */
             readonly 403: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    readonly "MatchRulesets.list": {
+        readonly parameters: {
+            readonly query?: {
+                readonly competitionId?: string;
+                readonly fixtureId?: string;
+                readonly limit?: number;
+                readonly offset?: number;
+                readonly status?: "scheduled" | "ready" | "live" | "paused" | "halftime" | "completed" | "finalized" | "abandoned";
+            };
+            readonly header?: never;
+            readonly path: {
+                readonly teamId: string;
+            };
+            readonly cookie?: never;
+        };
+        readonly requestBody?: never;
+        readonly responses: {
+            readonly 200: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content: {
+                    readonly "application/json": components["schemas"]["ListMatchRulesetsResponseDto"];
+                };
+            };
+            /** @description Unauthorized */
+            readonly 401: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    readonly "MatchRulesets.create": {
+        readonly parameters: {
+            readonly query?: never;
+            readonly header?: never;
+            readonly path: {
+                readonly teamId: string;
+            };
+            readonly cookie?: never;
+        };
+        readonly requestBody: {
+            readonly content: {
+                readonly "application/json": components["schemas"]["CreateMatchRulesetDto"];
+            };
+        };
+        readonly responses: {
+            readonly 201: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content: {
+                    readonly "application/json": components["schemas"]["MatchRulesetResponseDto"];
+                };
+            };
+            /** @description Unauthorized */
+            readonly 401: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Forbidden */
+            readonly 403: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    readonly "Matches.list": {
+        readonly parameters: {
+            readonly query?: {
+                readonly competitionId?: string;
+                readonly fixtureId?: string;
+                readonly limit?: number;
+                readonly offset?: number;
+                readonly status?: "scheduled" | "ready" | "live" | "paused" | "halftime" | "completed" | "finalized" | "abandoned";
+            };
+            readonly header?: never;
+            readonly path: {
+                readonly teamId: string;
+            };
+            readonly cookie?: never;
+        };
+        readonly requestBody?: never;
+        readonly responses: {
+            readonly 200: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content: {
+                    readonly "application/json": components["schemas"]["ListMatchesResponseDto"];
+                };
+            };
+            /** @description Unauthorized */
+            readonly 401: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    readonly "Matches.create": {
+        readonly parameters: {
+            readonly query?: never;
+            readonly header?: never;
+            readonly path: {
+                readonly teamId: string;
+            };
+            readonly cookie?: never;
+        };
+        readonly requestBody: {
+            readonly content: {
+                readonly "application/json": components["schemas"]["CreateMatchDto"];
+            };
+        };
+        readonly responses: {
+            readonly 201: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content: {
+                    readonly "application/json": components["schemas"]["MatchResponseDto"];
+                };
+            };
+            /** @description Unauthorized */
+            readonly 401: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Forbidden */
+            readonly 403: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    readonly "Matches.get": {
+        readonly parameters: {
+            readonly query?: never;
+            readonly header?: never;
+            readonly path: {
+                readonly matchId: string;
+                readonly teamId: string;
+            };
+            readonly cookie?: never;
+        };
+        readonly requestBody?: never;
+        readonly responses: {
+            readonly 200: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content: {
+                    readonly "application/json": components["schemas"]["MatchResponseDto"];
+                };
+            };
+            /** @description Unauthorized */
+            readonly 401: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    readonly "MatchEvents.list": {
+        readonly parameters: {
+            readonly query?: {
+                readonly limit?: number;
+                readonly offset?: number;
+            };
+            readonly header?: never;
+            readonly path: {
+                readonly matchId: string;
+                readonly teamId: string;
+            };
+            readonly cookie?: never;
+        };
+        readonly requestBody?: never;
+        readonly responses: {
+            readonly 200: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content: {
+                    readonly "application/json": components["schemas"]["ListMatchEventsResponseDto"];
+                };
+            };
+            /** @description Unauthorized */
+            readonly 401: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    readonly "MatchEvents.point": {
+        readonly parameters: {
+            readonly query?: never;
+            readonly header?: never;
+            readonly path: {
+                readonly matchId: string;
+                readonly teamId: string;
+            };
+            readonly cookie?: never;
+        };
+        readonly requestBody: {
+            readonly content: {
+                readonly "application/json": components["schemas"]["RecordMatchPointDto"];
+            };
+        };
+        readonly responses: {
+            readonly 201: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content: {
+                    readonly "application/json": components["schemas"]["MatchOperationResponseDto"];
+                };
+            };
+            /** @description Unauthorized */
+            readonly 401: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Forbidden */
+            readonly 403: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Operation or stream version conflict */
+            readonly 409: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    readonly "MatchEvents.timeout": {
+        readonly parameters: {
+            readonly query?: never;
+            readonly header?: never;
+            readonly path: {
+                readonly matchId: string;
+                readonly teamId: string;
+            };
+            readonly cookie?: never;
+        };
+        readonly requestBody: {
+            readonly content: {
+                readonly "application/json": components["schemas"]["RecordMatchTimeoutDto"];
+            };
+        };
+        readonly responses: {
+            readonly 201: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content: {
+                    readonly "application/json": components["schemas"]["MatchOperationResponseDto"];
+                };
+            };
+            /** @description Unauthorized */
+            readonly 401: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Forbidden */
+            readonly 403: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description No timeouts remain in this period */
+            readonly 409: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    readonly "MatchEvents.voidFact": {
+        readonly parameters: {
+            readonly query?: never;
+            readonly header?: never;
+            readonly path: {
+                readonly matchId: string;
+                readonly teamId: string;
+            };
+            readonly cookie?: never;
+        };
+        readonly requestBody: {
+            readonly content: {
+                readonly "application/json": components["schemas"]["VoidMatchEventDto"];
+            };
+        };
+        readonly responses: {
+            readonly 201: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content: {
+                    readonly "application/json": components["schemas"]["MatchOperationResponseDto"];
+                };
+            };
+            /** @description Unauthorized */
+            readonly 401: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Forbidden */
+            readonly 403: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Already voided or match not live */
+            readonly 409: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    readonly "Matches.finalize": {
+        readonly parameters: {
+            readonly query?: never;
+            readonly header?: never;
+            readonly path: {
+                readonly matchId: string;
+                readonly teamId: string;
+            };
+            readonly cookie?: never;
+        };
+        readonly requestBody: {
+            readonly content: {
+                readonly "application/json": components["schemas"]["FinalizeMatchDto"];
+            };
+        };
+        readonly responses: {
+            readonly 200: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content: {
+                    readonly "application/json": components["schemas"]["MatchResponseDto"];
+                };
+            };
+            /** @description Unauthorized */
+            readonly 401: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Forbidden */
+            readonly 403: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Conflicting or already published score */
+            readonly 409: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    readonly "Matches.reopen": {
+        readonly parameters: {
+            readonly query?: never;
+            readonly header?: never;
+            readonly path: {
+                readonly matchId: string;
+                readonly teamId: string;
+            };
+            readonly cookie?: never;
+        };
+        readonly requestBody: {
+            readonly content: {
+                readonly "application/json": components["schemas"]["ReopenMatchDto"];
+            };
+        };
+        readonly responses: {
+            readonly 200: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content: {
+                    readonly "application/json": components["schemas"]["MatchResponseDto"];
+                };
+            };
+            /** @description Unauthorized */
+            readonly 401: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Forbidden */
+            readonly 403: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description The match is not finalized */
+            readonly 409: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    readonly "Matches.listRevisions": {
+        readonly parameters: {
+            readonly query?: {
+                readonly limit?: number;
+                readonly offset?: number;
+            };
+            readonly header?: never;
+            readonly path: {
+                readonly matchId: string;
+                readonly teamId: string;
+            };
+            readonly cookie?: never;
+        };
+        readonly requestBody?: never;
+        readonly responses: {
+            readonly 200: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content: {
+                    readonly "application/json": components["schemas"]["ListMatchRevisionsResponseDto"];
+                };
+            };
+            /** @description Unauthorized */
+            readonly 401: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    readonly "Matches.scoreboardFor": {
+        readonly parameters: {
+            readonly query?: never;
+            readonly header?: never;
+            readonly path: {
+                readonly matchId: string;
+                readonly teamId: string;
+            };
+            readonly cookie?: never;
+        };
+        readonly requestBody?: never;
+        readonly responses: {
+            readonly 200: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content: {
+                    readonly "application/json": components["schemas"]["MatchScoreboardResponseDto"];
+                };
+            };
+            /** @description Unauthorized */
+            readonly 401: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    readonly "Matches.transition": {
+        readonly parameters: {
+            readonly query?: never;
+            readonly header?: never;
+            readonly path: {
+                readonly matchId: string;
+                readonly teamId: string;
+            };
+            readonly cookie?: never;
+        };
+        readonly requestBody: {
+            readonly content: {
+                readonly "application/json": components["schemas"]["TransitionMatchDto"];
+            };
+        };
+        readonly responses: {
+            readonly 200: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content: {
+                    readonly "application/json": components["schemas"]["MatchResponseDto"];
+                };
+            };
+            /** @description Unauthorized */
+            readonly 401: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Forbidden */
+            readonly 403: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Invalid transition or stale version */
+            readonly 409: {
                 headers: {
                     readonly [name: string]: unknown;
                 };

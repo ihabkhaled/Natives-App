@@ -5,6 +5,7 @@ import { getAuthRouteDefinitions } from '@/modules/auth';
 import { getCompetitionsRouteDefinitions } from '@/modules/competitions';
 import { getHomeRouteDefinitions, getNotFoundRouteDefinition } from '@/modules/home';
 import { getMembersRouteDefinitions } from '@/modules/members';
+import { getNotificationsRouteDefinitions } from '@/modules/notifications';
 import { getPointsRouteDefinitions } from '@/modules/points';
 import { getPracticeRouteDefinitions } from '@/modules/practice';
 import { getSettingsRouteDefinitions } from '@/modules/settings';
@@ -26,6 +27,7 @@ export function getAppRouteDefinitions(): readonly AppRouteDefinition[] {
     ...getPointsRouteDefinitions(),
     ...getCompetitionsRouteDefinitions(),
     ...getTryoutsRouteDefinitions(),
+    ...getNotificationsRouteDefinitions(),
     ...getAdminRouteDefinitions(),
     ...getSettingsRouteDefinitions(),
     ...getWorkbenchRouteDefinitions(),

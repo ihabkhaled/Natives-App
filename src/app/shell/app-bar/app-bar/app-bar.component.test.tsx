@@ -5,39 +5,13 @@ import { describe, expect, it, vi } from 'vitest';
 import { APP_ICONS } from '@/packages/icons';
 import { TEST_IDS } from '@/shared/config';
 
+import { buildAppBarView } from '../../../../../tests/factories/app-bar-view.factory';
+
 import type { AppBarView } from '../app-bar.types';
 import { AppBar } from './app-bar.component';
 
 function view(overrides: Partial<AppBarView> = {}): AppBarView {
-  return {
-    isVisible: true,
-    ariaLabel: 'Page actions',
-    title: 'Home',
-    context: 'Ultimate Natives',
-    themeToggleLabel: 'Switch to dark theme',
-    isDark: false,
-    onToggleTheme: vi.fn(),
-    notificationsLabel: 'Notifications',
-    isNotificationsOpen: false,
-    onToggleNotifications: vi.fn(),
-    notificationsEmptyTitle: 'You are all caught up',
-    notificationsEmptyMessage: 'New practice and roster updates will land here.',
-    userName: 'Ranger Rick',
-    avatarLabel: 'Your profile',
-    userMenuLabel: 'Account menu',
-    isUserMenuOpen: false,
-    onToggleUserMenu: vi.fn(),
-    userMenuItems: [
-      {
-        key: 'settings',
-        label: 'Settings',
-        icon: APP_ICONS.settings,
-        testId: TEST_IDS.appBarSettings,
-        onSelect: vi.fn(),
-      },
-    ],
-    ...overrides,
-  };
+  return buildAppBarView(overrides);
 }
 
 describe('AppBar', () => {
@@ -133,5 +107,83 @@ describe('AppBar', () => {
     expect(screen.getAllByRole('menuitem')).toHaveLength(2);
     await userEvent.click(screen.getByTestId(TEST_IDS.appBarSettings));
     expect(onSelect).toHaveBeenCalledOnce();
+  });
+});
+
+describe('AppBar notifications affordance', () => {
+  it('shows no badge while the inbox is clear', () => {
+    render(<AppBar {...view()} />);
+
+    expect(screen.queryByTestId(TEST_IDS.appBarNotificationsBadge)).not.toBeInTheDocument();
+  });
+
+  it('badges the icon button with the unread count', () => {
+    render(
+      <AppBar {...view({ notificationsBadgeLabel: '3 unread', notificationsUnreadCount: 3 })} />,
+    );
+
+    expect(screen.getByTestId(TEST_IDS.appBarNotificationsBadge)).toHaveTextContent('3');
+  });
+
+  it('shows the loading label while the inbox is still resolving', () => {
+    render(
+      <AppBar {...view({ isNotificationsOpen: true, isNotificationsLoading: true })} />,
+    );
+
+    expect(screen.getByTestId(TEST_IDS.appBarNotificationsPanel)).toHaveTextContent(
+      'Loading notifications',
+    );
+  });
+
+  it('shows the designed empty copy when nothing has arrived', () => {
+    render(<AppBar {...view({ isNotificationsOpen: true })} />);
+
+    expect(screen.getByTestId(TEST_IDS.appBarNotificationsPanel)).toHaveTextContent(
+      'You are all caught up',
+    );
+  });
+
+  it('previews each entry and opens it through the arrival screen', async () => {
+    const onOpenNotification = vi.fn();
+    render(
+      <AppBar
+        {...view({
+          isNotificationsOpen: true,
+          onOpenNotification,
+          notificationsLatest: [
+            {
+              id: 'ntf-1',
+              title: 'Practice published',
+              receivedLabel: 'Received: today',
+              isUnread: true,
+            },
+          ],
+        })}
+      />,
+    );
+
+    await userEvent.click(screen.getByTestId(TEST_IDS.appBarNotificationItem));
+
+    expect(onOpenNotification).toHaveBeenCalledWith('ntf-1');
+  });
+
+  it('offers both routes out of the popover', async () => {
+    const onViewAllNotifications = vi.fn();
+    const onOpenNotificationPreferences = vi.fn();
+    render(
+      <AppBar
+        {...view({
+          isNotificationsOpen: true,
+          onViewAllNotifications,
+          onOpenNotificationPreferences,
+        })}
+      />,
+    );
+
+    await userEvent.click(screen.getByTestId(TEST_IDS.appBarNotificationsViewAll));
+    await userEvent.click(screen.getByTestId(TEST_IDS.appBarNotificationsPreferences));
+
+    expect(onViewAllNotifications).toHaveBeenCalledOnce();
+    expect(onOpenNotificationPreferences).toHaveBeenCalledOnce();
   });
 });

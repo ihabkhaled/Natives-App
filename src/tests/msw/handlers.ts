@@ -3,6 +3,9 @@ import { delay, http, HttpResponse } from 'msw';
 import type { AuthUser } from '@/modules/auth';
 import { getEnvironment } from '@/packages/environment';
 
+import { adminHandlers } from './admin-handlers';
+import { resetMockAdminState } from './admin-rules.fixture';
+import { resetMockOperationsState } from './admin-operations.fixture';
 import { assessmentsHandlers } from './assessments-handlers';
 import { resetMockAssessmentsState } from './assessments.fixture';
 import { competitionsHandlers } from './competitions-handlers';
@@ -35,6 +38,8 @@ import { recoveryHandlers, resetMockRecoveryState } from './recovery-handlers';
 import { rostersHandlers } from './rosters-handlers';
 import { resetMockRostersState } from './rosters.fixture';
 import { resetMockSquadsState } from './squads.fixture';
+import { notificationsHandlers } from './notifications-handlers';
+import { resetMockNotificationsState } from './notifications.fixture';
 import { tryoutsHandlers } from './tryouts-handlers';
 import { resetMockTryoutsState } from './tryouts.fixture';
 import { trainingHandlers } from './training-handlers';
@@ -51,6 +56,9 @@ export function resetMockAuthState(): void {
   resetMockSquadsState();
   resetMockRostersState();
   resetMockTryoutsState();
+  resetMockNotificationsState();
+  resetMockAdminState();
+  resetMockOperationsState();
 }
 
 function apiUrl(path: string): string {
@@ -209,6 +217,8 @@ export const mockApiHandlers = [
   ...competitionsHandlers,
   ...rostersHandlers,
   ...tryoutsHandlers,
+  ...notificationsHandlers,
+  ...adminHandlers,
   ...pointsHandlers,
   ...recoveryHandlers,
 ];

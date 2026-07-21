@@ -3,14 +3,18 @@
  * Raw test ids are forbidden everywhere else (ESLint:
  * architecture/no-inline-test-ids).
  */
+import { ADMIN_TEST_IDS } from './admin-test-ids.constants';
 import { COMPETITIONS_TEST_IDS } from './competitions-test-ids.constants';
 import { FEATURE_TEST_IDS } from './feature-test-ids.constants';
+import { NOTIFICATIONS_TEST_IDS } from './notifications-test-ids.constants';
 import { TRYOUTS_TEST_IDS } from './tryouts-test-ids.constants';
 
 export const TEST_IDS = {
   ...FEATURE_TEST_IDS,
   ...COMPETITIONS_TEST_IDS,
   ...TRYOUTS_TEST_IDS,
+  ...NOTIFICATIONS_TEST_IDS,
+  ...ADMIN_TEST_IDS,
   appShell: 'app-shell',
   skipLink: 'skip-link',
   mainContent: 'main-content',
@@ -21,6 +25,10 @@ export const TEST_IDS = {
   appBarThemeToggle: 'app-bar-theme-toggle',
   appBarNotifications: 'app-bar-notifications',
   appBarNotificationsPanel: 'app-bar-notifications-panel',
+  appBarNotificationItem: 'app-bar-notification-item',
+  appBarNotificationsViewAll: 'app-bar-notifications-view-all',
+  appBarNotificationsPreferences: 'app-bar-notifications-preferences',
+  appBarNotificationsBadge: 'app-bar-notifications-badge',
   appBarUserMenuButton: 'app-bar-user-menu-button',
   appBarUserMenu: 'app-bar-user-menu',
   appBarSettings: 'app-bar-settings',

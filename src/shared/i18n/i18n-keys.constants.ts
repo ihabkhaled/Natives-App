@@ -1,7 +1,9 @@
+import { ADMIN_I18N_KEYS } from './admin-keys.constants';
 import { ASSESSMENTS_I18N_KEYS } from './assessments-keys.constants';
 import { ATTENDANCE_I18N_KEYS } from './attendance-keys.constants';
 import { COMPETITIONS_I18N_KEYS } from './competitions-keys.constants';
 import { MEMBERS_I18N_KEYS } from './members-keys.constants';
+import { NOTIFICATIONS_I18N_KEYS } from './notifications-keys.constants';
 import { POINTS_I18N_KEYS } from './points-keys.constants';
 import { PRACTICE_I18N_KEYS } from './practice-keys.constants';
 import { ROSTERS_I18N_KEYS } from './rosters-keys.constants';
@@ -198,6 +200,8 @@ export const I18N_KEYS = {
   squads: SQUADS_I18N_KEYS,
   rosters: ROSTERS_I18N_KEYS,
   tryouts: TRYOUTS_I18N_KEYS,
+  ...NOTIFICATIONS_I18N_KEYS,
+  ...ADMIN_I18N_KEYS,
   health: {
     title: 'health.title',
     statusUp: 'health.statusUp',
@@ -268,6 +272,11 @@ export const I18N_KEYS = {
     notifications: 'appBar.notifications',
     notificationsEmptyTitle: 'appBar.notificationsEmptyTitle',
     notificationsEmptyMessage: 'appBar.notificationsEmptyMessage',
+    notificationsUnreadBadge: 'appBar.notificationsUnreadBadge',
+    notificationsPanelTitle: 'appBar.notificationsPanelTitle',
+    notificationsViewAll: 'appBar.notificationsViewAll',
+    notificationsPreferences: 'appBar.notificationsPreferences',
+    notificationsLoading: 'appBar.notificationsLoading',
     userMenu: 'appBar.userMenu',
     settings: 'appBar.settings',
     signOut: 'appBar.signOut',

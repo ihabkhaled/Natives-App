@@ -35,6 +35,13 @@ export const APP_PATHS = {
   tryoutRegistration: '/tryout-registration',
   tryouts: '/tryouts',
   tryoutDetail: '/tryouts/:tryoutId',
+  notifications: '/notifications',
+  notificationPreferences: '/notifications/preferences',
+  notificationLink: '/notifications/open/:notificationId',
+  adminSettings: '/admin/settings',
+  adminRoles: '/admin/roles',
+  adminRules: '/admin/rules',
+  adminOperations: '/admin/operations',
   settings: '/settings',
   workbench: '/workbench',
 } as const;

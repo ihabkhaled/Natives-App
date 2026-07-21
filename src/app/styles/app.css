@@ -267,6 +267,7 @@ ion-list-header ion-label {
 }
 
 .app-bar__icon-button {
+  position: relative;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -3584,4 +3585,311 @@ ion-spinner {
   font-weight: var(--un-font-weight-bold);
   font-variant-numeric: tabular-nums;
   letter-spacing: var(--un-letter-spacing-wide);
+}
+
+/* ---- Shared bounded record list (settings, rules, operations) ---- */
+.app-record-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--un-space-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.app-record-list__row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--un-space-3);
+  padding: var(--un-space-2) 0;
+  border-block-end: 1px solid var(--app-hairline);
+}
+
+.app-record-list__row:last-child {
+  border-block-end: none;
+}
+
+.app-record-list__main {
+  display: flex;
+  min-inline-size: 0;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.app-record-list__label {
+  color: var(--app-muted-strong);
+  font-size: var(--un-font-size-sm);
+}
+
+.app-record-list__value {
+  overflow-wrap: anywhere;
+  color: var(--app-ink);
+  font-size: var(--un-font-size-base);
+  font-weight: var(--un-font-weight-semibold);
+}
+
+/* ---- Notifications inbox ---- */
+.app-notifications__toolbar,
+.app-admin-rules__filters {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: end;
+  gap: var(--un-space-3);
+}
+
+.app-notifications__toolbar-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--un-space-2);
+  margin-inline-start: auto;
+}
+
+.app-notifications__delivery-notice {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--un-space-2);
+}
+
+.app-notifications__group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--un-space-2);
+}
+
+.app-notifications__group-title {
+  color: var(--app-muted-strong);
+  font-size: var(--un-font-size-sm);
+  font-weight: var(--un-font-weight-bold);
+  letter-spacing: var(--un-letter-spacing-wide);
+  text-transform: uppercase;
+}
+
+.app-notifications__list,
+.app-admin-hub__list,
+.app-admin-rules__list,
+.app-admin-ops__list,
+.app-prefs__rows {
+  display: flex;
+  flex-direction: column;
+  gap: var(--un-space-3);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.app-notification-row {
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--un-space-4);
+}
+
+.app-notification-row--unread {
+  border-inline-start: 3px solid var(--app-lime-line);
+}
+
+.app-notification-row__main {
+  display: flex;
+  min-inline-size: 0;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.app-notification-row__chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--un-space-1);
+}
+
+.app-notification-row__title {
+  color: var(--app-ink);
+  font-size: var(--un-font-size-base);
+  font-weight: var(--un-font-weight-bold);
+  line-height: var(--un-line-height-tight);
+}
+
+.app-notification-row__actions {
+  display: flex;
+  flex: 0 0 auto;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: var(--un-space-2);
+}
+
+/* ---- Notification preferences ---- */
+.app-prefs__row {
+  display: flex;
+  flex-direction: column;
+  gap: var(--un-space-2);
+  padding-block-end: var(--un-space-2);
+  border-block-end: 1px solid var(--app-hairline);
+}
+
+.app-prefs__row:last-child {
+  border-block-end: none;
+}
+
+.app-prefs__row-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--un-space-2);
+}
+
+.app-prefs__row-title {
+  color: var(--app-ink);
+  font-size: var(--un-font-size-base);
+  font-weight: var(--un-font-weight-bold);
+}
+
+.app-prefs__cells {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--un-space-4);
+}
+
+.app-prefs__cell,
+.app-admin-roles__toggles ion-checkbox {
+  min-block-size: var(--un-control-md);
+}
+
+.app-quiet-hours__fields {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--un-space-3);
+}
+
+.app-quiet-hours__timezone {
+  color: var(--app-muted-strong);
+  font-size: var(--un-font-size-sm);
+}
+
+/* ---- App bar notification popover ---- */
+.app-bar__badge {
+  position: absolute;
+  inset-block-start: 2px;
+  inset-inline-end: 2px;
+  min-inline-size: 18px;
+  padding-inline: 4px;
+  border-radius: var(--un-radius-pill);
+  background: var(--ion-color-primary);
+  color: var(--ion-color-primary-contrast);
+  font-size: var(--un-font-size-xs);
+  font-weight: var(--un-font-weight-bold);
+  line-height: 18px;
+  text-align: center;
+}
+
+.app-bar__notification-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--un-space-1);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.app-bar__notification {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--un-space-2);
+}
+
+.app-bar__notification-button {
+  display: flex;
+  min-block-size: var(--un-control-md);
+  flex: 1 1 auto;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: var(--un-space-1) var(--un-space-2);
+  border: none;
+  border-radius: var(--un-radius-md);
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+  text-align: start;
+}
+
+.app-bar__notification-button:hover {
+  background: var(--app-lime-soft);
+}
+
+.app-bar__notification-title {
+  color: var(--app-ink);
+  font-size: var(--un-font-size-sm);
+  font-weight: var(--un-font-weight-semibold);
+}
+
+.app-bar__popover-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--un-space-1);
+  padding-block-start: var(--un-space-1);
+  border-block-start: 1px solid var(--app-hairline);
+}
+
+/* ---- Admin hub, settings, rules, operations ---- */
+.app-admin-hub__card,
+.app-admin-rules__row {
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--un-space-4);
+}
+
+.app-admin-hub__card-main,
+.app-admin-rules__row-main,
+.app-admin-ops__row-main {
+  display: flex;
+  min-inline-size: 0;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.app-admin-hub__card-title,
+.app-admin-rules__row-title,
+.app-admin-ops__row-title {
+  color: var(--app-ink);
+  font-size: var(--un-font-size-base);
+  font-weight: var(--un-font-weight-bold);
+  line-height: var(--un-line-height-tight);
+}
+
+@media (min-width: 900px) {
+  .app-admin-hub__list {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.app-admin-rules__row-meta {
+  display: flex;
+  flex: 0 0 auto;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: var(--un-space-2);
+}
+
+.app-admin-rules__actions,
+.app-admin-roles__toggles {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--un-space-3);
+}
+
+.app-admin-ops__row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--un-space-3);
+  padding-block-end: var(--un-space-2);
+  border-block-end: 1px solid var(--app-hairline);
+}
+
+.app-admin-ops__row:last-child {
+  border-block-end: none;
 }

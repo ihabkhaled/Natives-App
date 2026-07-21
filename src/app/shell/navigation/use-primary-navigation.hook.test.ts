@@ -106,14 +106,14 @@ describe('usePrimaryNavigation', () => {
     mockSession(true);
     mockEffective({ permissions: [PERMISSIONS.usersManage] });
 
-    expect(keysAt('/home')).toEqual(['home', 'admin', 'settings']);
+    expect(keysAt('/home')).toEqual(['home', 'notifications', 'admin', 'settings']);
   });
 
   it('hides the admin destination from a member session', () => {
     mockSession(true);
     mockEffective({ permissions: [PERMISSIONS.membersRead] });
 
-    expect(keysAt('/home')).toEqual(['home', 'settings']);
+    expect(keysAt('/home')).toEqual(['home', 'notifications', 'settings']);
   });
 
   it('marks the active destination and follows a selection', () => {

@@ -2,6 +2,8 @@ import { APP_ICONS } from '@/packages/icons';
 import { IonIcon } from '@/packages/ionic';
 import { AvatarFallback } from '@/shared/ui';
 
+import { NotificationsPanel } from '../notifications-panel';
+
 import { APP_BAR_TEST_IDS } from './app-bar.constants';
 import type { AppBarProps } from './app-bar.types';
 
@@ -39,12 +41,31 @@ export function AppBar(props: AppBarProps): React.JSX.Element | null {
             onClick={props.onToggleNotifications}
           >
             <IonIcon icon={APP_ICONS.notifications} aria-hidden="true" />
+            {props.notificationsBadgeLabel === null ? null : (
+              <span
+                className="app-bar__badge"
+                data-testid={APP_BAR_TEST_IDS.notificationsBadge}
+                aria-hidden="true"
+              >
+                {props.notificationsUnreadCount}
+              </span>
+            )}
           </button>
           {props.isNotificationsOpen ? (
-            <div className="app-bar__popover" data-testid={APP_BAR_TEST_IDS.notificationsPanel}>
-              <p className="app-bar__popover-title">{props.notificationsEmptyTitle}</p>
-              <p className="app-bar__popover-note">{props.notificationsEmptyMessage}</p>
-            </div>
+            <NotificationsPanel
+              panelTitle={props.notificationsPanelTitle}
+              emptyTitle={props.notificationsEmptyTitle}
+              emptyMessage={props.notificationsEmptyMessage}
+              loadingLabel={props.notificationsLoadingLabel}
+              isLoading={props.isNotificationsLoading}
+              items={props.notificationsLatest}
+              unreadChipLabel={props.notificationsLabel}
+              viewAllLabel={props.notificationsViewAllLabel}
+              preferencesLabel={props.notificationsPreferencesLabel}
+              onOpen={props.onOpenNotification}
+              onViewAll={props.onViewAllNotifications}
+              onOpenPreferences={props.onOpenNotificationPreferences}
+            />
           ) : null}
         </div>
         <div className="app-bar__slot">

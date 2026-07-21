@@ -3,6 +3,8 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import { TEST_IDS } from '@/shared/config';
 
+import { buildAppBarView } from '../../../../tests/factories/app-bar-view.factory';
+
 import { AppBarContainer } from './app-bar.container';
 import type { AppBarView } from './app-bar.types';
 import { useAppBar } from './use-app-bar.hook';
@@ -10,27 +12,9 @@ import { useAppBar } from './use-app-bar.hook';
 vi.mock('./use-app-bar.hook', () => ({ useAppBar: vi.fn() }));
 
 function mockView(overrides: Partial<AppBarView>): void {
-  vi.mocked(useAppBar).mockReturnValue({
-    isVisible: false,
-    ariaLabel: 'Page actions',
-    title: 'Home',
-    context: 'Ultimate Natives',
-    themeToggleLabel: 'Switch to dark theme',
-    isDark: false,
-    onToggleTheme: vi.fn(),
-    notificationsLabel: 'Notifications',
-    isNotificationsOpen: false,
-    onToggleNotifications: vi.fn(),
-    notificationsEmptyTitle: 'You are all caught up',
-    notificationsEmptyMessage: 'Updates land here.',
-    userName: 'Ranger Rick',
-    avatarLabel: 'Your profile',
-    userMenuLabel: 'Account menu',
-    isUserMenuOpen: false,
-    onToggleUserMenu: vi.fn(),
-    userMenuItems: [],
-    ...overrides,
-  });
+  vi.mocked(useAppBar).mockReturnValue(
+    buildAppBarView({ isVisible: false, userMenuItems: [], ...overrides }),
+  );
 }
 
 afterEach(() => {

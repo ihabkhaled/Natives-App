@@ -1,0 +1,79 @@
+import { describe, expect, it } from 'vitest';
+
+import { mapRule, mapRulePage, mapSimulation } from './rules.mapper';
+
+const DTO = {
+  ruleId: 'rule-1',
+  teamId: 'team-1',
+  seasonId: null,
+  ruleKey: 'points.v3',
+  version: 3,
+  name: 'Points rule v3',
+  description: 'Adds a gym category.',
+  status: 'draft' as const,
+  pointEntries: [
+    { activityCategory: 'practice', points: 10, dailyCap: 1, cooldownDays: null },
+    { activityCategory: 'gym', points: null, dailyCap: null, cooldownDays: 2 },
+  ],
+  effectiveFrom: null,
+  effectiveTo: null,
+  recordVersion: 1,
+  publishedAt: null,
+  retiredAt: null,
+  updatedAt: '2026-07-20T09:00:00.000Z',
+};
+
+describe('mapRule', () => {
+  it('keeps an unscored category as null, never as zero', () => {
+    const mapped = mapRule(DTO);
+
+    expect(mapped.pointEntries[1]?.points).toBeNull();
+    expect(mapped.pointEntries[1]?.cooldownDays).toBe(2);
+  });
+
+  it('carries the record version the optimistic-concurrency check needs', () => {
+    expect(mapRule(DTO).recordVersion).toBe(1);
+  });
+
+  it('preserves an unset effective window', () => {
+    const mapped = mapRule(DTO);
+
+    expect(mapped.effectiveFrom).toBeNull();
+    expect(mapped.effectiveTo).toBeNull();
+  });
+});
+
+describe('mapRulePage', () => {
+  it('carries the total alongside the rules', () => {
+    expect(mapRulePage({ items: [DTO], total: 5, limit: 50, offset: 0 })).toEqual({
+      total: 5,
+      items: [mapRule(DTO)],
+    });
+  });
+});
+
+describe('mapSimulation', () => {
+  it('keeps a missing baseline as null instead of a zero comparison', () => {
+    const mapped = mapSimulation({
+      membershipId: 'm-1',
+      draft: { completeness: 0.8, confidence: 'medium', formulaVersion: 3 },
+      published: null,
+      delta: null,
+    });
+
+    expect(mapped.published).toBeNull();
+    expect(mapped.delta).toBeNull();
+  });
+
+  it('copies both explanations when a baseline exists', () => {
+    const mapped = mapSimulation({
+      membershipId: 'm-1',
+      draft: { completeness: 0.8, confidence: 'medium', formulaVersion: 3 },
+      published: { completeness: 0.7, confidence: 'low', formulaVersion: 1 },
+      delta: 6,
+    });
+
+    expect(mapped.published?.confidence).toBe('low');
+    expect(mapped.delta).toBe(6);
+  });
+});

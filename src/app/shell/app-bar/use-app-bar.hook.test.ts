@@ -9,6 +9,8 @@ import {
   useLogoutMutation,
   useSession,
 } from '@/modules/auth';
+import type * as NotificationsModule from '@/modules/notifications';
+import { useUnreadNotifications } from '@/modules/notifications';
 import type * as SettingsModule from '@/modules/settings';
 import { useThemeToggle } from '@/modules/settings';
 
@@ -26,6 +28,11 @@ vi.mock('@/modules/auth', async (importOriginal) => {
     useLogoutMutation: vi.fn(),
   };
 });
+
+vi.mock('@/modules/notifications', async (importOriginal) => ({
+  ...(await importOriginal<typeof NotificationsModule>()),
+  useUnreadNotifications: vi.fn(),
+}));
 
 vi.mock('@/modules/settings', async (importOriginal) => ({
   ...(await importOriginal<typeof SettingsModule>()),
@@ -72,6 +79,11 @@ beforeEach(() => {
   });
   vi.mocked(useLogoutMutation).mockReturnValue({ logout, isLoggingOut: false });
   vi.mocked(useThemeToggle).mockReturnValue({ isDark: false, toggle: toggleTheme });
+  vi.mocked(useUnreadNotifications).mockReturnValue({
+    unreadCount: 0,
+    isLoading: false,
+    latest: [],
+  });
 });
 
 afterEach(() => {
@@ -168,6 +180,81 @@ describe('useAppBar', () => {
     });
 
     expect(logout).toHaveBeenCalledOnce();
+  });
+
+  it('badges the unread count from the real inbox, and nothing when it is clear', () => {
+    expect(renderAppBar().result.current.notificationsBadgeLabel).toBeNull();
+
+    vi.mocked(useUnreadNotifications).mockReturnValue({
+      unreadCount: 3,
+      isLoading: false,
+      latest: [],
+    });
+    const badged = renderAppBar();
+
+    expect(badged.result.current.notificationsUnreadCount).toBe(3);
+    expect(badged.result.current.notificationsBadgeLabel).toBe('3 unread');
+  });
+
+  it('previews the latest inbox rows without any target content', () => {
+    vi.mocked(useUnreadNotifications).mockReturnValue({
+      unreadCount: 1,
+      isLoading: false,
+      latest: [
+        {
+          id: 'ntf-1',
+          title: 'Practice published',
+          body: 'Open this notification to go to the related screen.',
+          categoryLabel: 'Practice',
+          categoryTone: 'primary',
+          receivedLabel: 'Received: today',
+          deliveryLabel: 'Delivered in app',
+          deliveryTone: 'primary',
+          readLabel: null,
+          isUnread: true,
+          openLabel: 'Open',
+          canOpen: true,
+          markReadLabel: 'Mark as read',
+        },
+      ],
+    });
+
+    expect(renderAppBar().result.current.notificationsLatest).toEqual([
+      {
+        id: 'ntf-1',
+        title: 'Practice published',
+        receivedLabel: 'Received: today',
+        isUnread: true,
+      },
+    ]);
+  });
+
+  it('opens a notification through the arrival screen, never at the target', () => {
+    const { result } = renderAppBar();
+
+    act(() => {
+      result.current.onToggleNotifications();
+    });
+    act(() => {
+      result.current.onOpenNotification('ntf-1');
+    });
+
+    expect(result.current.isNotificationsOpen).toBe(false);
+    expect(result.current.title).toBe('Opening notification');
+  });
+
+  it('routes to the inbox and to the preference screen from the popover', () => {
+    const inbox = renderAppBar();
+    act(() => {
+      inbox.result.current.onViewAllNotifications();
+    });
+    expect(inbox.result.current.title).toBe('Notifications');
+
+    const preferences = renderAppBar();
+    act(() => {
+      preferences.result.current.onOpenNotificationPreferences();
+    });
+    expect(preferences.result.current.title).toBe('Notification preferences');
   });
 
   it('exposes the signed-in display name for the avatar', () => {

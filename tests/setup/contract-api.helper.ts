@@ -35,3 +35,12 @@ export function authPost(path: string, token: string, body: unknown): Promise<Re
 export function teamScopedPath(teamId: string, suffix: string): string {
   return `/teams/${teamId}${suffix}`;
 }
+
+/** Authenticated PUT against a mock-mode path. */
+export function authPut(path: string, token: string, body: unknown): Promise<Response> {
+  return fetch(apiUrl(path), {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+    body: JSON.stringify(body),
+  });
+}

@@ -56,6 +56,15 @@ export const PERMISSIONS = {
   tryoutEvaluate: 'tryout.evaluate',
   tryoutDecide: 'tryout.decide',
   tryoutConvert: 'tryout.convert',
+  notificationDeliveryRead: 'notification.delivery.read',
+  settingsRead: 'settings.read',
+  settingsManage: 'settings.manage',
+  seasonManage: 'season.manage',
+  venueManage: 'venue.manage',
+  catalogManage: 'catalog.manage',
+  pointsRuleManage: 'points_rule.manage',
+  calculationRuleManage: 'calculation_rule.manage',
+  auditRead: 'audit.read',
+  outboxManage: 'outbox.manage',
 } as const;
-
 export type Permission = (typeof PERMISSIONS)[keyof typeof PERMISSIONS];

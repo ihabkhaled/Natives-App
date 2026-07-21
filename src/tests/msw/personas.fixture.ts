@@ -38,6 +38,9 @@ const COACH_PERMISSIONS = [
   PERMISSIONS.rosterManage,
   PERMISSIONS.tryoutManage,
   PERMISSIONS.tryoutEvaluate,
+  // A coach reads the team configuration but never changes it: the read-only
+  // settings path is a real persona, not a test-only contrivance.
+  PERMISSIONS.settingsRead,
 ];
 
 const MEMBER_PERMISSIONS = [
