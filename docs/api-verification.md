@@ -266,6 +266,32 @@ and `MatchStatistics.get` are in its mapped route table). The client therefore v
 the committed snapshot, which is why `npm run contract:check` reports drift locally. Running
 `npm run contract:sync` refreshes the snapshot; no schema, mapper, or screen is expected to change.
 
+### Invitations — email-first onboarding, honest token delivery (prompt 802)
+
+The invitation flow is email-first end to end and was verified against the live backend:
+
+| Endpoint                    | Method | Shape                                                                                  |
+| --------------------------- | ------ | -------------------------------------------------------------------------------------- |
+| `/invitations`              | POST   | Body is `{ email, role? }` only — a `password` field is rejected by the DTO whitelist. |
+| `/invitations/{id}/resend`  | POST   | Re-mints the token; the previous link is invalidated.                                  |
+| `/auth/invitations/{token}` | GET    | Public, minimal pending details (email, role, inviter, expiry) — never the token.      |
+| `/invitations/accept`       | POST   | Body is `{ token, password }`; the **invitee** chooses the password (policy enforced). |
+
+The admin never sets a password; the invitee sets their own on acceptance and is issued a session.
+The acceptance UI (`src/modules/auth/components/accept-invitation-view`) collects password + confirm
+with strength/policy feedback and shows a generic invalid/expired/used state for a bad token.
+
+#### Gap — invite token delivery is manual until an email provider ships (OD-002)
+
+No email/SMS/push provider is configured (open decision **OD-002**). Rather than silently drop the
+one-time token or fake a send, the **create and resend responses now return the plaintext `token`
+once** so a privileged admin can hand the invitee the link
+`/accept-invitation?token=<token>` directly. The database still stores only the token's SHA-256 hash,
+no read path ever returns it, and the acceptance flow is otherwise unchanged. When OD-002 is resolved,
+the provider adapter sends the same link and the token can be dropped from the response with no change
+to the acceptance screen. Backed by `Natives-Backend/test/identity.e2e-spec.ts` (create returns the
+token, invitee-set password activates and logs in, the token cannot be replayed).
+
 ### Gap 8 — video analysis is not implemented (prompt 505)
 
 The backend exposes **no** clip, timestamp, tag, comment, or signed-URL route: nothing under

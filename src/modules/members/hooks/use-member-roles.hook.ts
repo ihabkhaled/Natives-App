@@ -6,6 +6,7 @@ import { I18N_KEYS } from '@/shared/i18n';
 import { useAppToast } from '@/shared/ui';
 
 import type { MemberRole } from '../constants/members.constants';
+import { resolveRoleErrorKey } from '../helpers/role-error.helper';
 import { buildRoleToggles, rolesDiffer, toggleRole } from '../helpers/role-toggle.helper';
 import { membersQueryKeys } from '../queries/members.keys';
 import { buildMemberRolesQueryOptions } from '../queries/member-roles.query';
@@ -33,8 +34,8 @@ export function useMemberRoles(
       setDraft(null);
       void showToast({ message: t(I18N_KEYS.members.roleAssignedToast), tone: 'success' });
     },
-    onError: () => {
-      void showToast({ message: t(I18N_KEYS.members.roleErrorToast), tone: 'danger' });
+    onError: (error) => {
+      void showToast({ message: t(resolveRoleErrorKey(error)), tone: 'danger' });
     },
   });
   return {

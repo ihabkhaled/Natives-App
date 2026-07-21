@@ -13,6 +13,7 @@ export const FEATURE_TEST_IDS = {
   trainingEmpty: 'training-empty',
   trainingComposer: 'training-composer',
   trainingTypeSelect: 'training-type-select',
+  trainingDateField: 'training-date-field',
   trainingDateInput: 'training-date-input',
   trainingDurationInput: 'training-duration-input',
   trainingQuantityInput: 'training-quantity-input',

@@ -62,10 +62,21 @@ describe('mapHttpErrorToAppError', () => {
     expect(appError.fieldErrors).toEqual(fieldErrors);
   });
 
+  it('carries the backend message key to the UI layer', () => {
+    const httpError = new HttpError({
+      kind: HTTP_ERROR_KIND.Conflict,
+      status: 409,
+      messageKey: 'errors.members.accountRequired',
+    });
+
+    expect(mapHttpErrorToAppError(httpError).messageKey).toBe('errors.members.accountRequired');
+  });
+
   it('defaults the request id and field errors when the transport omits them', () => {
     const appError = mapHttpErrorToAppError(new HttpError({ kind: HTTP_ERROR_KIND.Server }));
 
     expect(appError.requestId).toBeUndefined();
+    expect(appError.messageKey).toBeUndefined();
     expect(appError.fieldErrors).toEqual([]);
     expect(appError.message).toBe(HTTP_ERROR_KIND.Server);
   });

@@ -97,6 +97,8 @@ export interface TrainingComposerView extends ComposerCallbacks {
   readonly typeOptions: readonly ActivityTypeOptionView[];
   readonly dateLabel: string;
   readonly dateValue: string;
+  readonly dateMax: string;
+  readonly dateLocale: string;
   readonly durationLabel: string;
   readonly durationValue: string;
   readonly durationHint: string | null;

@@ -64,6 +64,20 @@ describe('mapResponseToHttpError', () => {
     expect(error.fieldErrors).toEqual([{ field: 'email', code: 'INVALID_EMAIL' }]);
   });
 
+  it('captures the backend messageKey and prefers it as the message detail', () => {
+    const error = mapResponseToHttpError(409, {
+      statusCode: 409,
+      messageKey: 'errors.members.accountRequired',
+    });
+
+    expect(error.messageKey).toBe('errors.members.accountRequired');
+    expect(error.message).toBe('HTTP 409 (errors.members.accountRequired)');
+  });
+
+  it('leaves the messageKey undefined when the envelope omits it', () => {
+    expect(mapResponseToHttpError(500, { statusCode: 500 }).messageKey).toBeUndefined();
+  });
+
   it('accepts a nest envelope without field errors', () => {
     const error = mapResponseToHttpError(403, { statusCode: 403, code: 'FORBIDDEN' });
 

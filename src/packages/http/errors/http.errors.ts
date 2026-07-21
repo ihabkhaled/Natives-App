@@ -6,6 +6,7 @@ export interface HttpErrorOptions {
   readonly message?: string;
   readonly status?: number | undefined;
   readonly requestId?: string | undefined;
+  readonly messageKey?: string | undefined;
   readonly fieldErrors?: readonly HttpFieldError[] | undefined;
   readonly cause?: unknown;
 }
@@ -19,6 +20,7 @@ export class HttpError extends Error {
   public readonly kind: HttpErrorKind;
   public readonly status: number | undefined;
   public readonly requestId: string | undefined;
+  public readonly messageKey: string | undefined;
   public readonly fieldErrors: readonly HttpFieldError[];
 
   public constructor(options: HttpErrorOptions) {
@@ -27,6 +29,7 @@ export class HttpError extends Error {
     this.kind = options.kind;
     this.status = options.status;
     this.requestId = options.requestId;
+    this.messageKey = options.messageKey;
     this.fieldErrors = options.fieldErrors ?? [];
   }
 }

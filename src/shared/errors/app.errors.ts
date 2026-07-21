@@ -9,6 +9,7 @@ import type { AppErrorOptions, AppFieldError } from './app-error.types';
 export class AppError extends Error {
   public readonly code: AppErrorCode;
   public readonly requestId: string | undefined;
+  public readonly messageKey: string | undefined;
   public readonly fieldErrors: readonly AppFieldError[];
 
   public constructor(options: AppErrorOptions) {
@@ -16,6 +17,7 @@ export class AppError extends Error {
     this.name = 'AppError';
     this.code = options.code;
     this.requestId = options.requestId;
+    this.messageKey = options.messageKey;
     this.fieldErrors = options.fieldErrors ?? [];
   }
 }

@@ -1,6 +1,8 @@
 import { act, waitFor } from '@testing-library/react';
 import { afterEach, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
 
+import { APP_ERROR_CODE, AppError } from '@/shared/errors';
+
 import { MEMBER_ROLE } from '../constants/members.constants';
 import { assignMemberRoles } from '../services/assign-member-roles.service';
 import { getMemberRoles } from '../services/get-member-roles.service';
@@ -22,6 +24,21 @@ const rolesState = {
 
 function renderRoles() {
   return renderHookWithProviders(() => useMemberRoles('t', 'm', true));
+}
+
+/** Render, wait for the roles to load, then toggle a role and trigger a save. */
+async function renderToggleAndSave() {
+  const { result } = renderRoles();
+  await waitFor(() => {
+    expect(result.current.roles.length).toBeGreaterThan(0);
+  });
+  act(() => {
+    result.current.onToggle(MEMBER_ROLE.coach);
+  });
+  act(() => {
+    result.current.onSave();
+  });
+  return result;
 }
 
 beforeAll(async () => {
@@ -62,18 +79,36 @@ describe('useMemberRoles', () => {
 
   it('toasts an error when saving roles fails', async () => {
     vi.mocked(assignMemberRoles).mockRejectedValue(new Error('boom'));
-    const { result } = renderRoles();
-    await waitFor(() => {
-      expect(result.current.roles.length).toBeGreaterThan(0);
-    });
-    act(() => {
-      result.current.onToggle(MEMBER_ROLE.coach);
-    });
-    act(() => {
-      result.current.onSave();
-    });
+
+    await renderToggleAndSave();
+
     await waitFor(() => {
       expect(showToast).toHaveBeenCalledWith(expect.objectContaining({ tone: 'danger' }));
     });
+  });
+
+  it('surfaces the real backend reason (accountless membership) instead of a generic retry', async () => {
+    vi.mocked(assignMemberRoles).mockRejectedValue(
+      new AppError({
+        code: APP_ERROR_CODE.Conflict,
+        messageKey: 'errors.members.accountRequired',
+      }),
+    );
+
+    await renderToggleAndSave();
+
+    await waitFor(() => {
+      expect(showToast).toHaveBeenCalledWith(
+        expect.objectContaining({
+          tone: 'danger',
+          message: expect.stringMatching(/account/i) as unknown as string,
+        }),
+      );
+    });
+    expect(showToast).not.toHaveBeenCalledWith(
+      expect.objectContaining({
+        message: expect.stringMatching(/try again/i) as unknown as string,
+      }),
+    );
   });
 });

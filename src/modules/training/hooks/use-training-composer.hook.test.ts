@@ -6,6 +6,7 @@ import { useTrainingComposer } from './use-training-composer.hook';
 
 vi.mock('@/packages/i18n', () => ({
   useAppTranslation: () => ({ t: (key: string) => key, locale: 'en' }),
+  getActiveLocale: () => 'en',
 }));
 
 vi.mock('@/packages/date', () => ({
@@ -86,6 +87,13 @@ describe('useTrainingComposer', () => {
     expect(result.current.quantityValue).toBe('30');
     expect(result.current.notesValue).toBe('Tempo run.');
     expect(result.current.canSave).toBe(true);
+  });
+
+  it('caps the date picker at the current Cairo day and carries the active locale', () => {
+    const { result } = setup();
+
+    expect(result.current.dateMax).toBe('2026-07-13');
+    expect(result.current.dateLocale).toBe('en');
   });
 
   it('adds and removes an evidence metadata row', () => {

@@ -33,6 +33,7 @@ function kindFromStatus(status: number): HttpErrorKind {
 
 interface ParsedErrorBody {
   readonly requestId: string | undefined;
+  readonly messageKey: string | undefined;
   readonly fieldErrors: readonly HttpFieldError[];
   readonly detail: string | undefined;
 }
@@ -42,18 +43,24 @@ function parseErrorBody(body: unknown): ParsedErrorBody {
   if (nest.success) {
     return {
       requestId: nest.data.requestId,
+      messageKey: nest.data.messageKey,
       fieldErrors: (nest.data.errors ?? []).map((entry) => ({
         field: entry.field,
         code: entry.code,
       })),
-      detail: nest.data.code,
+      detail: nest.data.messageKey ?? nest.data.code,
     };
   }
   const problem = safeParseWithSchema(problemDetailsSchema, body);
   if (problem.success) {
-    return { requestId: undefined, fieldErrors: [], detail: problem.data.title };
+    return {
+      requestId: undefined,
+      messageKey: undefined,
+      fieldErrors: [],
+      detail: problem.data.title,
+    };
   }
-  return { requestId: undefined, fieldErrors: [], detail: undefined };
+  return { requestId: undefined, messageKey: undefined, fieldErrors: [], detail: undefined };
 }
 
 export function mapResponseToHttpError(status: number, body: unknown, cause?: unknown): HttpError {
@@ -63,6 +70,7 @@ export function mapResponseToHttpError(status: number, body: unknown, cause?: un
     message: parsed.detail === undefined ? `HTTP ${status}` : `HTTP ${status} (${parsed.detail})`,
     status,
     requestId: parsed.requestId,
+    messageKey: parsed.messageKey,
     fieldErrors: parsed.fieldErrors,
     cause,
   });

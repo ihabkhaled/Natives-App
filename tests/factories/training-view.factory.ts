@@ -97,6 +97,8 @@ export function buildComposerView(
     ],
     dateLabel: 'Date performed',
     dateValue: '',
+    dateMax: '2026-07-21',
+    dateLocale: 'en',
     durationLabel: 'Duration (minutes)',
     durationValue: '',
     durationHint: null,

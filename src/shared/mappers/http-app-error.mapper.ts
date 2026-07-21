@@ -22,6 +22,7 @@ export function mapHttpErrorToAppError(error: HttpError): AppError {
     code: HTTP_KIND_TO_APP_CODE[error.kind],
     message: error.message,
     requestId: error.requestId,
+    messageKey: error.messageKey,
     fieldErrors: error.fieldErrors,
     cause: error,
   });

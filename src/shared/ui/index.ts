@@ -8,6 +8,7 @@ export {
 export { BrandLogo, type BrandLogoProps, type BrandLogoSize } from './brand-logo';
 export { ChartDataTable, type ChartDataTableProps, type ChartTableRow } from './chart-data-table';
 export { AppButton, type AppButtonProps, type AppButtonTone } from './button';
+export { AppDateField, type AppDateFieldProps } from './date-field';
 export { DetailScreen, type DetailScreenProps } from './detail-screen';
 export { EmptyState, type EmptyStateProps } from './empty-state';
 export { ErrorState, type ErrorStateProps } from './error-state';

@@ -23,8 +23,18 @@ describe('HttpError', () => {
 
     expect(error.status).toBeUndefined();
     expect(error.requestId).toBeUndefined();
+    expect(error.messageKey).toBeUndefined();
     expect(error.fieldErrors).toEqual([]);
     expect(error.cause).toBeUndefined();
+  });
+
+  it('carries a backend message key', () => {
+    const error = new HttpError({
+      kind: HTTP_ERROR_KIND.Conflict,
+      messageKey: 'errors.members.accountRequired',
+    });
+
+    expect(error.messageKey).toBe('errors.members.accountRequired');
   });
 
   it('carries the full failure detail', () => {

@@ -38,6 +38,8 @@ export interface ComposerViewInput {
   readonly selectedType: ActivityType | null;
   readonly validationKey: string | null;
   readonly isSaving: boolean;
+  readonly dateMax: string;
+  readonly dateLocale: string;
   readonly evidence: TrainingEvidenceEditorView;
   readonly buddies: TrainingBuddyEditorView;
 }
@@ -60,6 +62,8 @@ export function buildComposerView(
     typeOptions: buildActivityTypeOptions(t, input.activityTypes),
     dateLabel: t(I18N_KEYS.training.performedOnLabel),
     dateValue: input.form.performedOn,
+    dateMax: input.dateMax,
+    dateLocale: input.dateLocale,
     durationLabel: `${t(I18N_KEYS.training.durationLabel)} (${t(I18N_KEYS.training.durationUnit)})`,
     durationValue: input.form.duration,
     durationHint: durationHint(t, input.selectedType),

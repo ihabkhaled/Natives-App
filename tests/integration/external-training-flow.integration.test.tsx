@@ -48,7 +48,7 @@ function renderReview(): void {
 /** Fill the composer with a valid gym claim and wait for save to unlock. */
 async function fillValidClaim(): Promise<void> {
   fireIonChange(screen.getByTestId(TEST_IDS.trainingTypeSelect), MOCK_TRAINING.gymTypeId);
-  fireIonInput(screen.getByTestId(TEST_IDS.trainingDateInput), '2026-07-11');
+  fireIonChange(screen.getByTestId(TEST_IDS.trainingDateInput), '2026-07-11');
   await waitFor(() => {
     expect(screen.getByTestId(TEST_IDS.trainingSaveDraft)).not.toBeDisabled();
   });
@@ -136,7 +136,7 @@ describe('external training flow (real client + MSW)', () => {
 
     await screen.findByTestId(TEST_IDS.trainingSubmissionList, {}, WAIT);
     fireIonChange(screen.getByTestId(TEST_IDS.trainingTypeSelect), MOCK_TRAINING.wfdfTypeId);
-    fireIonInput(screen.getByTestId(TEST_IDS.trainingDateInput), '2026-07-11');
+    fireIonChange(screen.getByTestId(TEST_IDS.trainingDateInput), '2026-07-11');
 
     await waitFor(() => {
       expect(screen.getByTestId(TEST_IDS.trainingComposer)).toHaveTextContent(
@@ -152,7 +152,7 @@ describe('external training flow (real client + MSW)', () => {
 
     await screen.findByTestId(TEST_IDS.trainingComposer, {}, WAIT);
     fireIonChange(screen.getByTestId(TEST_IDS.trainingTypeSelect), MOCK_TRAINING.gymTypeId);
-    fireIonInput(screen.getByTestId(TEST_IDS.trainingDateInput), '2099-01-01');
+    fireIonChange(screen.getByTestId(TEST_IDS.trainingDateInput), '2099-01-01');
 
     await waitFor(() => {
       expect(screen.getByTestId(TEST_IDS.trainingComposer)).toHaveTextContent(

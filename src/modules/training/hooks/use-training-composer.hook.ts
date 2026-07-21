@@ -1,7 +1,7 @@
 import { useState } from 'react';
 
 import { cairoDayKey, nowIso } from '@/packages/date';
-import { useAppTranslation } from '@/packages/i18n';
+import { getActiveLocale, useAppTranslation } from '@/packages/i18n';
 
 import {
   EMPTY_COMPOSER_STATE,
@@ -42,7 +42,8 @@ export function useTrainingComposer(input: ComposerInput): TrainingComposerView 
   const [buddyValue, setBuddyValue] = useState('');
 
   const selectedType = findActivityType(input.activityTypes, form.activityTypeId);
-  const validationKey = validateComposer(form, selectedType, cairoDayKey(nowIso()));
+  const todayCairo = cairoDayKey(nowIso());
+  const validationKey = validateComposer(form, selectedType, todayCairo);
 
   function patch(changes: Partial<ComposerFormState>): void {
     setForm((current) => ({ ...current, ...changes }));
@@ -93,6 +94,8 @@ export function useTrainingComposer(input: ComposerInput): TrainingComposerView 
       selectedType,
       validationKey,
       isSaving: input.isSaving,
+      dateMax: todayCairo,
+      dateLocale: getActiveLocale(),
       evidence,
       buddies,
     },

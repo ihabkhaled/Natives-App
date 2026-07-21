@@ -1,9 +1,10 @@
 import { IonNote, IonText, IonTextarea } from '@/packages/ionic';
 import { TEST_IDS } from '@/shared/config';
-import { AppButton, AppInput, SelectField } from '@/shared/ui';
+import { AppButton, AppDateField, AppInput, SelectField } from '@/shared/ui';
 
 import { TrainingBuddyEditor } from '../training-buddy-editor';
 import { TrainingEvidenceEditor } from '../training-evidence-editor';
+import { PERFORMED_ON_DATETIME_ID } from './training-composer.constants';
 import type { TrainingComposerProps } from './training-composer.types';
 
 /**
@@ -36,12 +37,15 @@ export function TrainingComposer(props: TrainingComposerProps): React.JSX.Elemen
           onChange={view.onTypeChange}
         />
 
-        <AppInput
+        <AppDateField
           label={view.dateLabel}
-          name="training-performed-on"
+          datetimeId={PERFORMED_ON_DATETIME_ID}
           value={view.dateValue}
           onValueChange={view.onDateChange}
-          testId={TEST_IDS.trainingDateInput}
+          max={view.dateMax}
+          locale={view.dateLocale}
+          testId={TEST_IDS.trainingDateField}
+          inputTestId={TEST_IDS.trainingDateInput}
         />
 
         <AppInput

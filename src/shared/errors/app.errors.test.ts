@@ -22,6 +22,7 @@ describe('AppError', () => {
 
     expect(error.fieldErrors).toEqual([]);
     expect(error.requestId).toBeUndefined();
+    expect(error.messageKey).toBeUndefined();
   });
 
   it('carries the request id and field errors used by form and support surfaces', () => {
@@ -29,10 +30,12 @@ describe('AppError', () => {
     const error = new AppError({
       code: APP_ERROR_CODE.Validation,
       requestId: 'req-42',
+      messageKey: 'errors.members.accountRequired',
       fieldErrors,
     });
 
     expect(error.requestId).toBe('req-42');
+    expect(error.messageKey).toBe('errors.members.accountRequired');
     expect(error.fieldErrors).toEqual(fieldErrors);
   });
 

@@ -15,6 +15,7 @@ describe('nestErrorEnvelopeSchema', () => {
     const envelope = {
       statusCode: 400,
       code: 'VALIDATION_ERROR',
+      messageKey: 'errors.validation.failed',
       message: 'Validation failed',
       errors: [{ field: 'email', code: 'INVALID_EMAIL', message: 'bad' }],
       path: '/api/v1/things',
@@ -25,6 +26,18 @@ describe('nestErrorEnvelopeSchema', () => {
     expect(safeParseWithSchema(nestErrorEnvelopeSchema, envelope)).toEqual({
       success: true,
       data: envelope,
+    });
+  });
+
+  it('carries the backend messageKey when present', () => {
+    const result = safeParseWithSchema(nestErrorEnvelopeSchema, {
+      statusCode: 409,
+      messageKey: 'errors.members.accountRequired',
+    });
+
+    expect(result).toEqual({
+      success: true,
+      data: { statusCode: 409, messageKey: 'errors.members.accountRequired' },
     });
   });
 
