@@ -195,6 +195,7 @@
     },
     "eslint-plugin-react": {
       "eslint": "$eslint"
-    }
+    },
+    "js-yaml": "^4.3.0"
   }
 }
