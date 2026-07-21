@@ -11,6 +11,7 @@ export const MOCK_CREDENTIALS = {
  */
 export const MOCK_PERSONA_EMAILS = {
   admin: MOCK_CREDENTIALS.email,
+  teamAdmin: 'team-admin@example.com',
   coach: 'coach@example.com',
   member: 'member@example.com',
   pending: 'pending@example.com',

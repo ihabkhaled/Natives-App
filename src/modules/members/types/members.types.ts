@@ -1,6 +1,8 @@
 import type {
   AgeClassification,
   AliasSource,
+  InvitationRole,
+  InvitationStatus,
   LifecycleAction,
   MemberAudience,
   MemberRole,
@@ -111,6 +113,26 @@ export interface InviteMemberInput {
   readonly fullName: string;
   readonly nickname: string | null;
   readonly jerseyNumber: number | null;
+}
+
+/** The identity-layer invitation an administrator sends by email. */
+export interface CreateInvitationInput {
+  readonly email: string;
+  readonly role: InvitationRole;
+}
+
+/** What one issued invitation gives the administrator to act on. */
+export interface InvitationDelivery {
+  readonly id: string;
+  readonly email: string;
+  readonly role: InvitationRole;
+  readonly status: InvitationStatus;
+  readonly expiresAt: string;
+  /**
+   * The absolute accept link, already built from this build's origin. Shown
+   * once as the manual fallback when email delivery is a console adapter.
+   */
+  readonly acceptUrl: string;
 }
 
 /** Profile-edit payload guarded by optimistic concurrency. */

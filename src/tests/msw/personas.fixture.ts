@@ -48,6 +48,21 @@ const COACH_PERMISSIONS = [
   PERMISSIONS.settingsRead,
 ];
 
+/**
+ * A team administrator: everything inside one team, and nothing at the platform
+ * level. The distinction is not cosmetic — `/teams` (browse-all) and creating a
+ * team are platform routes that answer 403 for this persona, and the shell has
+ * to agree with that rather than offering controls the server refuses.
+ */
+const TEAM_ADMIN_PERMISSIONS = [
+  ...COACH_PERMISSIONS,
+  PERMISSIONS.memberInvite,
+  PERMISSIONS.memberLifecycleManage,
+  PERMISSIONS.teamRead,
+  PERMISSIONS.settingsManage,
+  PERMISSIONS.seasonManage,
+];
+
 const MEMBER_PERMISSIONS = [
   PERMISSIONS.memberList,
   PERMISSIONS.memberList,
@@ -81,6 +96,12 @@ const INVITED_PERSONA = buildAuthUser({
 
 export const PERSONA_USERS: Record<string, AuthUser> = {
   [MOCK_PERSONA_EMAILS.admin]: ADMIN_PERSONA,
+  [MOCK_PERSONA_EMAILS.teamAdmin]: buildAuthUser({
+    id: 'user-team-admin',
+    email: MOCK_PERSONA_EMAILS.teamAdmin,
+    displayName: 'Team Admin Tarek',
+    permissions: TEAM_ADMIN_PERMISSIONS,
+  }),
   [MOCK_PERSONA_EMAILS.coach]: buildAuthUser({
     id: 'user-coach',
     email: MOCK_PERSONA_EMAILS.coach,

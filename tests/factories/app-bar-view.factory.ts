@@ -1,13 +1,31 @@
 import { vi } from 'vitest';
 
 import type { AppBarView } from '@/app/shell/app-bar/app-bar.types';
+import type { TeamSwitcherView } from '@/modules/auth';
 import { APP_ICONS } from '@/packages/icons';
 import { TEST_IDS } from '@/shared/config';
+
+/** Deterministic team-switcher view; single-team by default, so it collapses. */
+export function buildTeamSwitcherView(overrides: Partial<TeamSwitcherView> = {}): TeamSwitcherView {
+  return {
+    isAvailable: false,
+    isOpen: false,
+    label: 'Switch team',
+    ariaLabel: 'Switch the team you are working in',
+    activeTeamName: 'Ultimate Natives',
+    activeTeamDetail: 'Season 2026',
+    options: [],
+    onToggle: vi.fn(),
+    onSelect: vi.fn(),
+    ...overrides,
+  };
+}
 
 /** Deterministic app-bar view model shared by the container and component tests. */
 export function buildAppBarView(overrides: Partial<AppBarView> = {}): AppBarView {
   return {
     isVisible: true,
+    teamSwitcher: buildTeamSwitcherView(),
     ariaLabel: 'Page actions',
     title: 'Home',
     context: 'Ultimate Natives',

@@ -9,6 +9,7 @@ describe('STORAGE_KEYS', () => {
   it('pins every persisted key', () => {
     expect(STORAGE_KEYS).toEqual({
       settings: 'ultimate-natives.settings.v1',
+      activeTeam: 'ultimate-natives.active-team.v1',
       attendanceQueue: 'ultimate-natives.attendance-queue.v1',
       scorekeeperQueue: 'ultimate-natives.scorekeeper-queue.v1',
       authAccessToken: 'ultimate-natives.auth.access-token',

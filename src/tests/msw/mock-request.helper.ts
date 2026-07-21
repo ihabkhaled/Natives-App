@@ -14,8 +14,19 @@ export function isAuthorized(request: Request): boolean {
 }
 
 /** NestJS-shaped failure envelope for a mock route. */
-export function failRequest(status: number, code: string, path: string): Response {
-  return nestErrorResponse({ statusCode: status, code, message: code, path: `/api/v1${path}` });
+export function failRequest(
+  status: number,
+  code: string,
+  path: string,
+  messageKey?: string,
+): Response {
+  return nestErrorResponse({
+    statusCode: status,
+    code,
+    message: code,
+    path: `/api/v1${path}`,
+    ...(messageKey === undefined ? {} : { messageKey }),
+  });
 }
 
 /** One path parameter as a string; MSW hands them over untyped. */

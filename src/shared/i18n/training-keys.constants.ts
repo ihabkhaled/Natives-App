@@ -31,6 +31,7 @@ export const TRAINING_I18N_KEYS = {
   activityTypeLabel: 'training.activityTypeLabel',
   activityTypePlaceholder: 'training.activityTypePlaceholder',
   performedOnLabel: 'training.performedOnLabel',
+  performedOnHint: 'training.performedOnHint',
   durationLabel: 'training.durationLabel',
   durationUnit: 'training.durationUnit',
   durationHint: 'training.durationHint',

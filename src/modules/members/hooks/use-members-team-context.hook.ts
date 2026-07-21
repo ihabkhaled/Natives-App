@@ -1,4 +1,4 @@
-import { useCurrentUserQuery, useEffectivePermissions } from '@/modules/auth';
+import { useActiveTeamScope, useEffectivePermissions } from '@/modules/auth';
 import { hasAllPermissions, PERMISSIONS } from '@/shared/security';
 
 export interface MembersTeamContextView {
@@ -13,15 +13,19 @@ export interface MembersTeamContextView {
   readonly canEditSelf: boolean;
 }
 
-/** The authenticated member's team scope plus their effective member grants. */
+/**
+ * The authenticated member's team scope plus their effective member grants.
+ * The scope follows the team the principal switched to, not whichever
+ * membership the identity endpoint happened to list first.
+ */
 export function useMembersTeamContext(): MembersTeamContextView {
-  const currentUser = useCurrentUserQuery();
+  const scope = useActiveTeamScope();
   const effective = useEffectivePermissions();
   const permissions = effective.permissions;
   return {
-    teamId: currentUser.user?.memberships[0]?.teamId ?? '',
-    isLoading: currentUser.isLoading,
-    isError: currentUser.isError,
+    teamId: scope.teamId,
+    isLoading: scope.isLoading,
+    isError: scope.isError,
     permissions,
     canInvite: hasAllPermissions(permissions, [PERMISSIONS.memberInvite]),
     canManageLifecycle: hasAllPermissions(permissions, [PERMISSIONS.memberLifecycleManage]),

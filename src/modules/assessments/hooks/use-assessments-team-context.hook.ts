@@ -1,4 +1,4 @@
-import { useCurrentUserQuery } from '@/modules/auth';
+import { useActiveTeamScope } from '@/modules/auth';
 
 export interface AssessmentsTeamContextView {
   readonly teamId: string;
@@ -6,12 +6,13 @@ export interface AssessmentsTeamContextView {
   readonly isError: boolean;
 }
 
-/** The signed-in principal first team; every cache key is scoped to it. */
+/**
+ * The team scope this module works inside. Resolved by the shared
+ * active-team scope so a multi-team principal follows the team they switched
+ * to, instead of whichever membership the identity endpoint happened to list
+ * first.
+ */
 export function useAssessmentsTeamContext(): AssessmentsTeamContextView {
-  const currentUser = useCurrentUserQuery();
-  return {
-    teamId: currentUser.user?.memberships[0]?.teamId ?? '',
-    isLoading: currentUser.isLoading,
-    isError: currentUser.isError,
-  };
+  const scope = useActiveTeamScope();
+  return { teamId: scope.teamId, isLoading: scope.isLoading, isError: scope.isError };
 }

@@ -13,6 +13,7 @@ import {
   memberRolesPath,
   memberTransitionPath,
   membersPath,
+  invitationsPath,
 } from '../constants/members-api.constants';
 import {
   aliasListResponseSchema,
@@ -22,10 +23,15 @@ import {
   memberDirectoryListResponseSchema,
   memberHistoryResponseSchema,
   memberRolesResponseSchema,
+  invitationDeliveryResponseSchema,
   memberViewResponseSchema,
   membershipResponseSchema,
 } from '../schemas/member.schema';
-import type { InviteMemberInput, UpdateProfileInput } from '../types/members.types';
+import type {
+  CreateInvitationInput,
+  InviteMemberInput,
+  UpdateProfileInput,
+} from '../types/members.types';
 
 type DirectoryListDto = SchemaOutput<typeof memberDirectoryListResponseSchema>;
 type MemberViewDto = SchemaOutput<typeof memberViewResponseSchema>;
@@ -36,6 +42,7 @@ type AliasListDto = SchemaOutput<typeof aliasListResponseSchema>;
 type RolesDto = SchemaOutput<typeof memberRolesResponseSchema>;
 type AvatarTicketDto = SchemaOutput<typeof avatarTicketResponseSchema>;
 type AvatarAccessDto = SchemaOutput<typeof avatarAccessResponseSchema>;
+type InvitationDeliveryDto = SchemaOutput<typeof invitationDeliveryResponseSchema>;
 
 function buildProfileBody(input: InviteMemberInput | UpdateProfileInput): Record<string, unknown> {
   return {
@@ -70,6 +77,21 @@ export function requestInviteMember(
     memberInvitePath(teamId),
     { profile: buildProfileBody(input) },
     membershipResponseSchema,
+  );
+}
+
+/**
+ * Create an account invitation by email. The response carries the one-time
+ * accept token so an administrator can deliver the link by hand when the
+ * console email adapter is the one in use.
+ */
+export function requestCreateInvitation(
+  input: CreateInvitationInput,
+): Promise<InvitationDeliveryDto> {
+  return getAppHttpClient().post(
+    invitationsPath(),
+    { email: input.email, role: input.role },
+    invitationDeliveryResponseSchema,
   );
 }
 

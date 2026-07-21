@@ -1,5 +1,7 @@
 import { schemaBuilder } from '@/packages/schema';
 
+import { INVITATION_ROLES, INVITATION_STATUSES } from '../constants/members.constants';
+
 /** Exact runtime mirrors of the generated NestJS members DTOs. */
 const isoInstant = schemaBuilder.iso.datetime({ offset: true });
 
@@ -143,4 +145,21 @@ export const memberRolesResponseSchema = schemaBuilder.object({
   membershipId: schemaBuilder.string().min(1),
   roles: schemaBuilder.array(memberRoleSchema),
   assignableRoles: schemaBuilder.array(memberRoleSchema),
+});
+
+/**
+ * The identity layer's response to creating (or resending) an invitation.
+ *
+ * `token` is the one-time plaintext token, returned exactly once so an admin
+ * can hand the accept link over manually when email delivery is not wired up
+ * (the dev console adapter). It is never persisted and never logged.
+ */
+export const invitationDeliveryResponseSchema = schemaBuilder.object({
+  id: schemaBuilder.string().min(1),
+  email: schemaBuilder.string().min(1),
+  role: schemaBuilder.enum(INVITATION_ROLES),
+  status: schemaBuilder.enum(INVITATION_STATUSES),
+  expiresAt: isoInstant,
+  createdAt: isoInstant,
+  token: schemaBuilder.string().min(1),
 });

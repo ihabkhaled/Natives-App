@@ -68,6 +68,33 @@ function membersUrl(suffix: string): string {
   return apiUrl(`/teams/:teamId/members${suffix}`);
 }
 
+/**
+ * The identity-layer invitation. Deliberately separate from the team's member
+ * record: inviting a real person creates both, and the composer calls this one
+ * first because it is the step that can legitimately be refused.
+ */
+const invitationHandlers = [
+  http.post(apiUrl('/invitations'), async ({ request }) => {
+    const actor = resolveActor(request);
+    if (actor?.tier !== 'admin') {
+      return failRequest(actor === null ? 401 : 403, 'FORBIDDEN', '/invitations');
+    }
+    const body = await readJsonBody<{ email?: string; role?: string }>(request);
+    return HttpResponse.json(
+      {
+        id: 'invitation-mock-1',
+        email: body.email ?? 'recruit@example.com',
+        role: body.role === 'admin' ? 'admin' : 'user',
+        status: 'pending',
+        expiresAt: '2026-07-28T13:38:53.984Z',
+        createdAt: '2026-07-21T13:38:53.984Z',
+        token: 'mock-invitation-token-0123456789',
+      },
+      { status: 201 },
+    );
+  }),
+];
+
 const directoryHandlers = [
   http.get(membersUrl(''), ({ request }) => {
     if (resolveActor(request) === null) {
@@ -233,6 +260,7 @@ const transitionHandler = http.post(
 
 /** NestJS-shaped member directory, profile, lifecycle, roles, and media handlers. */
 export const membersHandlers = [
+  ...invitationHandlers,
   ...directoryHandlers,
   ...aliasHandlers,
   ...roleHandlers,

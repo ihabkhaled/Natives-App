@@ -5,6 +5,7 @@ import {
   useEffectivePermissions,
   useLogoutMutation,
   useSession,
+  useTeamSwitcher,
 } from '@/modules/auth';
 import {
   notificationLinkPath,
@@ -20,6 +21,7 @@ import { TEST_IDS } from '@/shared/config';
 import { I18N_KEYS } from '@/shared/i18n';
 
 import { getAppRouteDefinitions } from '../../router/route-registry';
+import { buildAppBarNotifications } from './app-bar-notifications.helper';
 import { selectRouteTitleKey } from './app-bar-title.helper';
 import type { AppBarView } from './app-bar.types';
 
@@ -44,6 +46,7 @@ export function useAppBar(): AppBarView {
   const navigation = useAppNavigation();
   const { t } = useAppTranslation();
   const inbox = useUnreadNotifications();
+  const teamSwitcher = useTeamSwitcher();
   const [openPanel, setOpenPanel] = useState<PanelName>(null);
   const titleKey = selectRouteTitleKey(getAppRouteDefinitions(), navigation.currentPath);
   const toggle = (panel: Exclude<PanelName, null>): void => {
@@ -63,29 +66,21 @@ export function useAppBar(): AppBarView {
     ),
     isDark: theme.isDark,
     onToggleTheme: theme.toggle,
-    notificationsLabel: t(I18N_KEYS.appBar.notifications),
+    teamSwitcher,
+    ...buildAppBarNotifications(t, {
+      unreadCount: inbox.unreadCount,
+      isLoading: inbox.isLoading,
+      latest: inbox.latest.map((row) => ({
+        id: row.id,
+        title: row.title,
+        receivedLabel: row.receivedLabel,
+        isUnread: row.isUnread,
+      })),
+    }),
     isNotificationsOpen: openPanel === 'notifications',
     onToggleNotifications: () => {
       toggle('notifications');
     },
-    notificationsEmptyTitle: t(I18N_KEYS.appBar.notificationsEmptyTitle),
-    notificationsEmptyMessage: t(I18N_KEYS.appBar.notificationsEmptyMessage),
-    notificationsPanelTitle: t(I18N_KEYS.appBar.notificationsPanelTitle),
-    notificationsBadgeLabel:
-      inbox.unreadCount === 0
-        ? null
-        : t(I18N_KEYS.appBar.notificationsUnreadBadge, { count: inbox.unreadCount }),
-    notificationsUnreadCount: inbox.unreadCount,
-    isNotificationsLoading: inbox.isLoading,
-    notificationsLoadingLabel: t(I18N_KEYS.appBar.notificationsLoading),
-    notificationsLatest: inbox.latest.map((row) => ({
-      id: row.id,
-      title: row.title,
-      receivedLabel: row.receivedLabel,
-      isUnread: row.isUnread,
-    })),
-    notificationsViewAllLabel: t(I18N_KEYS.appBar.notificationsViewAll),
-    notificationsPreferencesLabel: t(I18N_KEYS.appBar.notificationsPreferences),
     onOpenNotification: (notificationId: string) => {
       go(notificationLinkPath(notificationId));
     },

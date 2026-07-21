@@ -393,6 +393,56 @@ quietly closed by mock data later. The `match.analysis.read.self` and `match.ana
 grants are already resolved into the match context so the surface can be gated the day the endpoints
 ship.
 
+## 2026-07-21 — live re-verification against backend `a82002c`
+
+Driven end to end through the real UI; the full route-by-route result is in
+[docs/e2e-audit.md](e2e-audit.md). Only the API-level findings are recorded here.
+
+### Now verified working
+
+| Flow                  | Endpoint                                                      | Result                                                                                                                       |
+| --------------------- | ------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------- |
+| Invite by email       | `POST /invitations`                                           | **works** — 201; the response carries the one-time token and the client turns it into an accept link. Gap 8 above is closed. |
+| Accept invitation     | `POST /invitations/accept`                                    | **works** — a real invitation was accepted through the browser and issued a working session.                                 |
+| Effective permissions | `GET /rbac/me/permissions?teamId=`                            | **works** — and is now the app's authorization source; see the drift below.                                                  |
+| Role matrix           | `GET /rbac/role-bundles`                                      | **works** — 91 permissions x 6 role bundles at policy version 5. Powers `/admin/permissions`.                                |
+| Teams                 | `GET/POST /teams`, `GET /teams/mine`, `PATCH /teams/{id}`     | **works** — platform reads/writes gate on `team.browse.all` / `team.create`; `/teams/mine` is the team-scoped read.          |
+| Team lifecycle        | `POST /teams/{id}/activate                                    | deactivate                                                                                                                   | archive  | remove`                                                                                                        | **works** — `remove` only from archived, otherwise 409 `errors.teams.teamInvalidTransition`. |
+| Seasons               | `GET/POST /teams/{t}/seasons`, `PATCH /teams/{t}/seasons/{s}` | **works**                                                                                                                    |
+| Season lifecycle      | `POST /teams/{t}/seasons/{s}/activate                         | close                                                                                                                        | archive` | **works** — a second activation returns 409 `errors.teams.seasonAlreadyActive`; the screen states that reason. |
+
+### Drift found and fixed on the client
+
+**`/auth/me` carries only GLOBAL permissions.** For the seeded `teamadmin` persona it
+returns 23; `GET /rbac/me/permissions?teamId=…` returns 81 for the same principal.
+The client derived every route guard and every navigation entry from the first
+set, so a team administrator saw an almost empty application.
+`useEffectivePermissions` now takes the union of both sources. Full detail in
+[docs/e2e-audit.md](e2e-audit.md) (D-1).
+
+### Still backend-pending
+
+| Endpoint                                           | Status                                                                                        |
+| -------------------------------------------------- | --------------------------------------------------------------------------------------------- |
+| `/teams/{id}/tryouts`, `/public/tryout-events`     | 404. The tryouts screens render a designed "not deployed yet" notice; nothing is faked.       |
+| `/admin/outbox/dead-letters`, `/admin/jobs/health` | 404. The operations centre renders per-panel pending notices; the outbox metrics panel works. |
+
+### Backend data defect (no client workaround, and none wanted)
+
+`GET /teams/fedb67b4-…/members` (the seeded `un` team) answers
+`{ "items": [], "total": 1 }` — the envelope counts a membership the page does not
+return, and `GET …/members/09e2f88a-…` answers 404 for the membership `/auth/me`
+reports. The membership row exists; the members read model does not project it.
+The client renders its designed empty state, which is correct for an empty page.
+Recorded here for the backend owner.
+
+### Environment note
+
+Dev `CORS_ORIGIN` is `http://localhost:3000,http://localhost:5173`. Any other origin —
+including `127.0.0.1:5173`, the same host by another name — fails the preflight, and
+every request then dies as `net::ERR_FAILED` with no status code, which looks exactly
+like a dead backend. Live-backend runs must use `localhost:5173`.
+
 ## Reproducing
 
 ```bash

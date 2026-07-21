@@ -11,6 +11,11 @@
  * drift fails the contract gate instead of reaching a user as a dead screen.
  */
 export const PERMISSIONS = {
+  // Platform scope: only a global (teamless) grant satisfies these, which is
+  // what separates a super administrator from a team administrator.
+  platformAdmin: 'platform.admin',
+  teamCreate: 'team.create',
+  teamBrowseAll: 'team.browse.all',
   memberList: 'member.list',
   memberProfileReadPublic: 'member.profile.read.public',
   memberProfileReadCoach: 'member.profile.read.coach',
@@ -62,6 +67,7 @@ export const PERMISSIONS = {
   tryoutEvaluate: 'tryout.evaluate',
   tryoutDecide: 'tryout.decide',
   tryoutConvert: 'tryout.convert',
+  teamRead: 'team.read',
   settingsRead: 'team.settings.read',
   settingsManage: 'team.settings.manage',
   seasonManage: 'season.manage',

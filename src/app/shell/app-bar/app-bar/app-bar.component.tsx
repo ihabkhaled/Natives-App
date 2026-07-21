@@ -2,6 +2,7 @@ import { APP_ICONS } from '@/packages/icons';
 import { IonIcon } from '@/packages/ionic';
 import { AvatarFallback } from '@/shared/ui';
 
+import { TeamSwitcher } from '../../team-switcher';
 import { NotificationsPanel } from '../notifications-panel';
 
 import { APP_BAR_TEST_IDS } from './app-bar.constants';
@@ -21,6 +22,7 @@ export function AppBar(props: AppBarProps): React.JSX.Element | null {
         <h1 className="app-bar__title">{props.title}</h1>
       </div>
       <div className="app-bar__actions" aria-label={props.ariaLabel} role="group">
+        <TeamSwitcher {...props.teamSwitcher} />
         <button
           type="button"
           className="app-bar__icon-button"

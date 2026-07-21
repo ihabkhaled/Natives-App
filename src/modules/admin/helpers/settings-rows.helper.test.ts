@@ -114,13 +114,27 @@ describe('buildSettingsRowGroups', () => {
     expect(groups.catalogRows[0]?.detail).toBe('adminSettings.referenceCountLabel');
   });
 
-  it('renders a value the server omitted as null rather than as "undefined"', () => {
+  it('says "not set" for an unset value instead of printing the text "null"', () => {
     const rows = buildSettingsRowGroups(t, formatInstant, {
       ...SOURCES,
-      settings: [{ settingKey: 'badge_tiers' as const, effectiveFrom: null, value: undefined }],
+      settings: [
+        { settingKey: 'badge_tiers' as const, effectiveFrom: null, value: null },
+        { settingKey: 'roster_limits' as const, effectiveFrom: null, value: undefined },
+      ],
     }).effectiveRows;
 
-    expect(rows[0]?.value).toBe('null');
+    expect(rows[0]?.value).toBe('adminSettings.notSet');
+    expect(rows[1]?.value).toBe('adminSettings.notSet');
+    expect(rows.map((row) => row.value)).not.toContain('null');
+  });
+
+  it('keeps a falsy-but-real value visible rather than calling it unset', () => {
+    const rows = buildSettingsRowGroups(t, formatInstant, {
+      ...SOURCES,
+      settings: [{ settingKey: 'roster_limits' as const, effectiveFrom: null, value: 0 }],
+    }).effectiveRows;
+
+    expect(rows[0]?.value).toBe('0');
   });
 
   it('produces empty groups when nothing has resolved yet', () => {

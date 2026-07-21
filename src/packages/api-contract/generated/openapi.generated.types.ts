@@ -515,6 +515,23 @@ export interface paths {
         readonly patch?: never;
         readonly trace?: never;
     };
+    readonly "/rbac/role-bundles": {
+        readonly parameters: {
+            readonly query?: never;
+            readonly header?: never;
+            readonly path?: never;
+            readonly cookie?: never;
+        };
+        /** Get the full role x permission matrix from the seeded catalog */
+        readonly get: operations["Rbac.roleBundles"];
+        readonly put?: never;
+        readonly post?: never;
+        readonly delete?: never;
+        readonly options?: never;
+        readonly head?: never;
+        readonly patch?: never;
+        readonly trace?: never;
+    };
     readonly "/rbac/users/{userId}/assignments": {
         readonly parameters: {
             readonly query?: never;
@@ -539,10 +556,10 @@ export interface paths {
             readonly path?: never;
             readonly cookie?: never;
         };
-        /** List teams */
+        /** Browse every team (platform-scoped: super administrators only) */
         readonly get: operations["Teams.list"];
         readonly put?: never;
-        /** Create a team */
+        /** Create a team (platform-scoped: super administrators only) */
         readonly post: operations["Teams.create"];
         readonly delete?: never;
         readonly options?: never;
@@ -561,12 +578,29 @@ export interface paths {
         readonly get: operations["Teams.get"];
         readonly put?: never;
         readonly post?: never;
-        /** Archive a team */
+        /** Archive a team (soft; alias of POST /archive) */
         readonly delete: operations["Teams.archive"];
         readonly options?: never;
         readonly head?: never;
-        /** Update a team */
+        /** Rename or rebrand a team */
         readonly patch: operations["Teams.update"];
+        readonly trace?: never;
+    };
+    readonly "/teams/{teamId}/activate": {
+        readonly parameters: {
+            readonly query?: never;
+            readonly header?: never;
+            readonly path?: never;
+            readonly cookie?: never;
+        };
+        readonly get?: never;
+        readonly put?: never;
+        /** Enable (activate) a disabled or archived team */
+        readonly post: operations["Teams.activate"];
+        readonly delete?: never;
+        readonly options?: never;
+        readonly head?: never;
+        readonly patch?: never;
         readonly trace?: never;
     };
     readonly "/teams/{teamId}/activity-review": {
@@ -786,6 +820,23 @@ export interface paths {
         readonly get: operations["ActivityType.list"];
         readonly put?: never;
         readonly post?: never;
+        readonly delete?: never;
+        readonly options?: never;
+        readonly head?: never;
+        readonly patch?: never;
+        readonly trace?: never;
+    };
+    readonly "/teams/{teamId}/archive": {
+        readonly parameters: {
+            readonly query?: never;
+            readonly header?: never;
+            readonly path?: never;
+            readonly cookie?: never;
+        };
+        readonly get?: never;
+        readonly put?: never;
+        /** Archive a team (history preserved) */
+        readonly post: operations["Teams.archiveTransition"];
         readonly delete?: never;
         readonly options?: never;
         readonly head?: never;
@@ -1373,6 +1424,23 @@ export interface paths {
         readonly put?: never;
         /** Publish, activate, complete, cancel, or archive */
         readonly post: operations["Competitions.transition"];
+        readonly delete?: never;
+        readonly options?: never;
+        readonly head?: never;
+        readonly patch?: never;
+        readonly trace?: never;
+    };
+    readonly "/teams/{teamId}/deactivate": {
+        readonly parameters: {
+            readonly query?: never;
+            readonly header?: never;
+            readonly path?: never;
+            readonly cookie?: never;
+        };
+        readonly get?: never;
+        readonly put?: never;
+        /** Disable (deactivate) an active team */
+        readonly post: operations["Teams.deactivate"];
         readonly delete?: never;
         readonly options?: never;
         readonly head?: never;
@@ -3442,6 +3510,23 @@ export interface paths {
         readonly patch?: never;
         readonly trace?: never;
     };
+    readonly "/teams/{teamId}/remove": {
+        readonly parameters: {
+            readonly query?: never;
+            readonly header?: never;
+            readonly path?: never;
+            readonly cookie?: never;
+        };
+        readonly get?: never;
+        readonly put?: never;
+        /** Soft-remove an archived team (platform-scoped; never a hard delete) */
+        readonly post: operations["Teams.remove"];
+        readonly delete?: never;
+        readonly options?: never;
+        readonly head?: never;
+        readonly patch?: never;
+        readonly trace?: never;
+    };
     readonly "/teams/{teamId}/rosters": {
         readonly parameters: {
             readonly query?: never;
@@ -3677,12 +3762,80 @@ export interface paths {
         readonly get?: never;
         readonly put?: never;
         readonly post?: never;
-        /** Archive a season */
+        /** Archive a season (soft; alias of POST /archive) */
         readonly delete: operations["Seasons.archive"];
         readonly options?: never;
         readonly head?: never;
         /** Update a season */
         readonly patch: operations["Seasons.update"];
+        readonly trace?: never;
+    };
+    readonly "/teams/{teamId}/seasons/{seasonId}/activate": {
+        readonly parameters: {
+            readonly query?: never;
+            readonly header?: never;
+            readonly path?: never;
+            readonly cookie?: never;
+        };
+        readonly get?: never;
+        readonly put?: never;
+        /** Activate a season as the team single current season */
+        readonly post: operations["Seasons.activate"];
+        readonly delete?: never;
+        readonly options?: never;
+        readonly head?: never;
+        readonly patch?: never;
+        readonly trace?: never;
+    };
+    readonly "/teams/{teamId}/seasons/{seasonId}/archive": {
+        readonly parameters: {
+            readonly query?: never;
+            readonly header?: never;
+            readonly path?: never;
+            readonly cookie?: never;
+        };
+        readonly get?: never;
+        readonly put?: never;
+        /** Archive a season (history preserved) */
+        readonly post: operations["Seasons.archiveTransition"];
+        readonly delete?: never;
+        readonly options?: never;
+        readonly head?: never;
+        readonly patch?: never;
+        readonly trace?: never;
+    };
+    readonly "/teams/{teamId}/seasons/{seasonId}/close": {
+        readonly parameters: {
+            readonly query?: never;
+            readonly header?: never;
+            readonly path?: never;
+            readonly cookie?: never;
+        };
+        readonly get?: never;
+        readonly put?: never;
+        /** Close an active season */
+        readonly post: operations["Seasons.close"];
+        readonly delete?: never;
+        readonly options?: never;
+        readonly head?: never;
+        readonly patch?: never;
+        readonly trace?: never;
+    };
+    readonly "/teams/{teamId}/seasons/current": {
+        readonly parameters: {
+            readonly query?: never;
+            readonly header?: never;
+            readonly path?: never;
+            readonly cookie?: never;
+        };
+        /** Resolve the team single current (active) season */
+        readonly get: operations["Seasons.current"];
+        readonly put?: never;
+        readonly post?: never;
+        readonly delete?: never;
+        readonly options?: never;
+        readonly head?: never;
+        readonly patch?: never;
         readonly trace?: never;
     };
     readonly "/teams/{teamId}/settings/snapshot": {
@@ -3895,6 +4048,23 @@ export interface paths {
         readonly patch: operations["Venues.update"];
         readonly trace?: never;
     };
+    readonly "/teams/mine": {
+        readonly parameters: {
+            readonly query?: never;
+            readonly header?: never;
+            readonly path?: never;
+            readonly cookie?: never;
+        };
+        /** List the teams the caller belongs to */
+        readonly get: operations["Teams.listMine"];
+        readonly put?: never;
+        readonly post?: never;
+        readonly delete?: never;
+        readonly options?: never;
+        readonly head?: never;
+        readonly patch?: never;
+        readonly trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -3909,6 +4079,9 @@ export interface components {
             readonly clarificationNote?: Record<string, never> | null;
             /** @default false */
             readonly clarificationRequested: boolean;
+        };
+        readonly ActivityOptimisticVersionDto: {
+            readonly expectedRecordVersion: number;
         };
         readonly ActivityTypeResponseDto: {
             readonly catalogVersion: number;
@@ -4005,6 +4178,9 @@ export interface components {
             readonly status: "draft" | "published";
             readonly title: string;
         };
+        readonly AssessmentOptimisticVersionDto: {
+            readonly expectedRecordVersion: number;
+        };
         readonly AssessmentValueDto: {
             readonly confidence?: number | null;
             /** Format: uuid */
@@ -4025,7 +4201,7 @@ export interface components {
             /** Format: date-time */
             readonly effectiveTo?: string;
             /** @enum {string} */
-            readonly roleKey: "MEMBER" | "COACH" | "TEAM_ADMIN" | "SCOREKEEPER" | "ANALYST";
+            readonly roleKey: "SUPER_ADMIN" | "MEMBER" | "COACH" | "TEAM_ADMIN" | "SCOREKEEPER" | "ANALYST";
             /** Format: uuid */
             readonly userId: string;
         };
@@ -4109,7 +4285,7 @@ export interface components {
         readonly AttendanceSheetResponseDto: {
             /** Format: date-time */
             readonly finalizedAt: string | null;
-            readonly items: readonly components["schemas"]["RosterEntryResponseDto"][];
+            readonly items: readonly components["schemas"]["PracticeRosterEntryResponseDto"][];
             readonly limit: number;
             readonly offset: number;
             readonly sessionId: string;
@@ -4413,6 +4589,46 @@ export interface components {
             readonly startsOn: string | null;
             /** @enum {string} */
             readonly status: "draft" | "published" | "active" | "completed" | "cancelled" | "archived";
+            /** Format: uuid */
+            readonly teamId: string;
+            /** Format: date-time */
+            readonly updatedAt: string;
+        };
+        readonly CompetitionRosterEntryResponseDto: {
+            /** @enum {string|null} */
+            readonly availability: "available" | "unavailable" | "tentative" | null;
+            readonly constraintOverridden: boolean;
+            /** Format: date-time */
+            readonly createdAt: string;
+            /** Format: uuid */
+            readonly entryId: string;
+            /** @enum {string} */
+            readonly entryRole: "player" | "captain" | "spirit_captain" | "coach";
+            /** @enum {string} */
+            readonly fieldPosition: "handler" | "cutter" | "hybrid" | "unspecified";
+            /** @enum {string} */
+            readonly genderBucket: "men" | "women" | "mixed" | "unknown";
+            readonly jerseyNumber: number | null;
+            /** @enum {string} */
+            readonly lineAssignment: "offense" | "defense" | "any";
+            /** Format: uuid */
+            readonly membershipId: string;
+            /** Format: uuid */
+            readonly overriddenBy: string | null;
+            readonly overrideReason: string | null;
+            readonly recordVersion: number;
+            readonly removalReason: string | null;
+            /** Format: date-time */
+            readonly removedAt: string | null;
+            /** Format: uuid */
+            readonly removedBy: string | null;
+            /** Format: uuid */
+            readonly rosterId: string;
+            /** Format: uuid */
+            readonly selectedBy: string | null;
+            readonly selectionReason: string | null;
+            /** @enum {string} */
+            readonly status: "selected" | "withdrawn";
             /** Format: uuid */
             readonly teamId: string;
             /** Format: date-time */
@@ -4827,7 +5043,7 @@ export interface components {
              */
             readonly startsOn: string;
             /** @enum {string} */
-            readonly status?: "draft" | "active" | "archived";
+            readonly status?: "draft" | "active" | "closed" | "archived";
         };
         readonly CreateSettingVersionDto: {
             /** Format: date-time */
@@ -4889,7 +5105,7 @@ export interface components {
         readonly CreateTemplateDto: {
             readonly categoryWeights: readonly components["schemas"]["CategoryWeightDto"][];
             readonly cohort?: Record<string, never> | null;
-            readonly evaluatorRoles: readonly ("MEMBER" | "COACH" | "TEAM_ADMIN" | "SCOREKEEPER" | "ANALYST")[];
+            readonly evaluatorRoles: readonly ("SUPER_ADMIN" | "MEMBER" | "COACH" | "TEAM_ADMIN" | "SCOREKEEPER" | "ANALYST")[];
             readonly key: string;
             readonly metrics: readonly components["schemas"]["TemplateMetricDto"][];
             readonly name: string;
@@ -5008,6 +5224,9 @@ export interface components {
             readonly actions: readonly components["schemas"]["GoalActionResponseDto"][];
             readonly goal: components["schemas"]["DevelopmentGoalRecordResponseDto"];
         };
+        readonly DevelopmentOptimisticVersionDto: {
+            readonly expectedRecordVersion: number;
+        };
         readonly DeviceSessionResponseDto: {
             readonly approxLocation: string;
             readonly current: boolean;
@@ -5036,7 +5255,7 @@ export interface components {
             readonly version: number;
         };
         readonly EffectivePermissionsResponseDto: {
-            readonly permissions: readonly ("team.read" | "team.settings.read" | "team.settings.manage" | "season.manage" | "venue.manage" | "member.list" | "member.profile.read.public" | "member.profile.read.coach" | "member.profile.read.admin" | "member.profile.update.self" | "member.invite" | "member.lifecycle.manage" | "member.roles.manage" | "member.aliases.manage" | "practice.read" | "practice.manage" | "practice.rsvp.self" | "practice.rsvp.override" | "attendance.read.self" | "attendance.read.team" | "attendance.record" | "attendance.finalize" | "attendance.correct" | "drill.manage" | "assessment.read.self.published" | "assessment.read.team" | "assessment.create" | "assessment.review" | "assessment.publish" | "assessment.correct" | "feedback.read.self" | "feedback.manage" | "measurement.record" | "analytics.read.self" | "analytics.read.team" | "activity.submit.self" | "activity.read.self" | "activity.review" | "activity.correct" | "evidence.read.review" | "points.read.self" | "points.read.team" | "points.adjust" | "leaderboard.read" | "points.rules.manage" | "competition.read" | "competition.manage" | "squad.read" | "squad.manage" | "squad.override_eligibility" | "roster.read" | "roster.manage" | "roster.lock" | "match.read" | "match.manage" | "match.score" | "match.finalize" | "match.correct" | "match.stats.read" | "match.analysis.read.self" | "match.analysis.read.team" | "match.analysis.manage" | "tryout.public.register" | "tryout.candidate.read.self" | "tryout.manage" | "tryout.contacts.read" | "tryout.readiness.read" | "tryout.evaluate" | "tryout.decide" | "tryout.convert" | "governance.read" | "governance.manage" | "rules.read" | "rules.manage" | "discipline.read" | "discipline.manage" | "jersey.read" | "jersey.manage" | "notification.read.self" | "notification.preferences.self" | "report.generate" | "report.read" | "import.manage" | "import.signoff" | "audit.read" | "jobs.manage" | "data_quality.manage" | "security.admin" | "article:create" | "article:read")[];
+            readonly permissions: readonly ("platform.admin" | "team.create" | "team.browse.all" | "team.read" | "team.settings.read" | "team.settings.manage" | "season.manage" | "venue.manage" | "member.list" | "member.profile.read.public" | "member.profile.read.coach" | "member.profile.read.admin" | "member.profile.update.self" | "member.invite" | "member.lifecycle.manage" | "member.roles.manage" | "member.aliases.manage" | "practice.read" | "practice.manage" | "practice.rsvp.self" | "practice.rsvp.override" | "attendance.read.self" | "attendance.read.team" | "attendance.record" | "attendance.finalize" | "attendance.correct" | "drill.manage" | "assessment.read.self.published" | "assessment.read.team" | "assessment.create" | "assessment.review" | "assessment.publish" | "assessment.correct" | "feedback.read.self" | "feedback.manage" | "measurement.record" | "analytics.read.self" | "analytics.read.team" | "activity.submit.self" | "activity.read.self" | "activity.review" | "activity.correct" | "evidence.read.review" | "points.read.self" | "points.read.team" | "points.adjust" | "leaderboard.read" | "points.rules.manage" | "competition.read" | "competition.manage" | "squad.read" | "squad.manage" | "squad.override_eligibility" | "roster.read" | "roster.manage" | "roster.lock" | "match.read" | "match.manage" | "match.score" | "match.finalize" | "match.correct" | "match.stats.read" | "match.analysis.read.self" | "match.analysis.read.team" | "match.analysis.manage" | "tryout.public.register" | "tryout.candidate.read.self" | "tryout.manage" | "tryout.contacts.read" | "tryout.readiness.read" | "tryout.evaluate" | "tryout.decide" | "tryout.convert" | "governance.read" | "governance.manage" | "rules.read" | "rules.manage" | "discipline.read" | "discipline.manage" | "jersey.read" | "jersey.manage" | "notification.read.self" | "notification.preferences.self" | "report.generate" | "report.read" | "import.manage" | "import.signoff" | "audit.read" | "jobs.manage" | "data_quality.manage" | "security.admin" | "article:create" | "article:read")[];
             readonly seasonId: string | null;
             readonly teamId: string | null;
             readonly userId: string;
@@ -5480,7 +5699,7 @@ export interface components {
             readonly total: number;
         };
         readonly ListRosterEntriesResponseDto: {
-            readonly items: readonly components["schemas"]["RosterEntryResponseDto"][];
+            readonly items: readonly components["schemas"]["CompetitionRosterEntryResponseDto"][];
             readonly limit: number;
             readonly offset: number;
             readonly total: number;
@@ -5499,12 +5718,6 @@ export interface components {
         };
         readonly ListRsvpsResponseDto: {
             readonly items: readonly components["schemas"]["RsvpParticipantResponseDto"][];
-            readonly limit: number;
-            readonly offset: number;
-            readonly total: number;
-        };
-        readonly ListRulesResponseDto: {
-            readonly items: readonly components["schemas"]["PointsRuleResponseDto"][];
             readonly limit: number;
             readonly offset: number;
             readonly total: number;
@@ -5535,12 +5748,6 @@ export interface components {
         };
         readonly ListSelectionsResponseDto: {
             readonly items: readonly components["schemas"]["SelectionResponseDto"][];
-            readonly limit: number;
-            readonly offset: number;
-            readonly total: number;
-        };
-        readonly ListSessionsResponseDto: {
-            readonly items: readonly components["schemas"]["PracticeSessionResponseDto"][];
             readonly limit: number;
             readonly offset: number;
             readonly total: number;
@@ -5877,6 +6084,12 @@ export interface components {
             readonly usedByThem: number;
             readonly usedByUs: number;
         };
+        readonly MeasurementListSessionsResponseDto: {
+            readonly items: readonly components["schemas"]["MeasurementSessionResponseDto"][];
+            readonly limit: number;
+            readonly offset: number;
+            readonly total: number;
+        };
         readonly MeasurementSessionResponseDto: {
             readonly conditions: string | null;
             /** Format: date-time */
@@ -5992,6 +6205,11 @@ export interface components {
             /** @enum {string} */
             readonly toStatus: "invited" | "active" | "inactive" | "suspended" | "left" | "archived" | "anonymized";
         };
+        readonly MemberTransitionDto: {
+            /** Format: date-time */
+            readonly effectiveAt?: string;
+            readonly reason?: string;
+        };
         readonly MemberViewResponseDto: {
             /** @enum {string|null} */
             readonly ageClassification: "u17" | "u20" | "senior" | "masters" | "grand_masters" | null;
@@ -6100,9 +6318,6 @@ export interface components {
             /** Format: date-time */
             readonly updatedAt: string;
         };
-        readonly OptimisticVersionDto: {
-            readonly expectedRecordVersion: number;
-        };
         readonly OutboxMetricsResponseDto: {
             readonly completed: number;
             readonly deadLettered: number;
@@ -6208,6 +6423,14 @@ export interface components {
             readonly teamId: string;
             /** Format: uuid */
             readonly templateId: string;
+        };
+        readonly PermissionCatalogEntryResponseDto: {
+            /** @description Catalog area the permission is grouped under */
+            readonly area: string;
+            /** @description Short human description of the permission */
+            readonly description: string;
+            /** @description Canonical dot-delimited permission key */
+            readonly key: string;
         };
         readonly PlayerAssessmentRecordResponseDto: {
             /** Format: date-time */
@@ -6368,6 +6591,12 @@ export interface components {
             readonly dailyCap: number | null;
             readonly points: number | null;
         };
+        readonly PointsListRulesResponseDto: {
+            readonly items: readonly components["schemas"]["PointsRuleResponseDto"][];
+            readonly limit: number;
+            readonly offset: number;
+            readonly total: number;
+        };
         readonly PointsRuleResponseDto: {
             /** Format: date-time */
             readonly createdAt: string;
@@ -6406,6 +6635,31 @@ export interface components {
             /** Format: uuid */
             readonly membershipId: string;
             readonly total: number;
+        };
+        readonly PointsTransitionRuleDto: {
+            readonly expectedRecordVersion: number;
+            /** @enum {string} */
+            readonly transition: "approve" | "publish" | "retire" | "revert";
+        };
+        readonly PracticeListSessionsResponseDto: {
+            readonly items: readonly components["schemas"]["PracticeSessionResponseDto"][];
+            readonly limit: number;
+            readonly offset: number;
+            readonly total: number;
+        };
+        readonly PracticeRosterEntryResponseDto: {
+            /** Format: date-time */
+            readonly checkInAt: string | null;
+            /** @enum {string|null} */
+            readonly excuseCategory: "injury" | "illness" | "work" | "travel" | "personal" | "other" | null;
+            readonly latenessMinutes: number | null;
+            readonly membershipId: string;
+            /** @enum {string|null} */
+            readonly source: "self" | "coach" | "admin" | "import" | "system" | null;
+            /** @enum {string|null} */
+            readonly status: "present_on_time" | "present_late" | "excused" | "injured" | "absent" | "remote_approved" | "other_approved" | null;
+            readonly userId: string | null;
+            readonly version: number | null;
         };
         readonly PracticeSessionResponseDto: {
             readonly cancellationReason: string | null;
@@ -6741,11 +6995,26 @@ export interface components {
             /** Format: date-time */
             readonly revokedAt: string | null;
             /** @enum {string} */
-            readonly roleKey: "MEMBER" | "COACH" | "TEAM_ADMIN" | "SCOREKEEPER" | "ANALYST";
+            readonly roleKey: "SUPER_ADMIN" | "MEMBER" | "COACH" | "TEAM_ADMIN" | "SCOREKEEPER" | "ANALYST";
             readonly seasonId: string | null;
             readonly teamId: string | null;
             readonly userId: string;
             readonly version: number;
+        };
+        readonly RoleBundleResponseDto: {
+            readonly description: string;
+            readonly displayName: string;
+            /** @description True for the system-seeded default bundles */
+            readonly isSystem: boolean;
+            /** @description Stable role key stored in the roles table */
+            readonly key: string;
+            readonly permissions: readonly string[];
+        };
+        readonly RoleMatrixResponseDto: {
+            readonly permissions: readonly components["schemas"]["PermissionCatalogEntryResponseDto"][];
+            /** @description RBAC policy version this matrix was read at; changes whenever a role assignment or bundle changes */
+            readonly policyVersion: number;
+            readonly roles: readonly components["schemas"]["RoleBundleResponseDto"][];
         };
         readonly RosterAvailabilityResponseDto: {
             /** @enum {string} */
@@ -6790,46 +7059,6 @@ export interface components {
             readonly count: number | null;
             /** @enum {string} */
             readonly severity: "error" | "warning";
-        };
-        readonly RosterEntryResponseDto: {
-            /** @enum {string|null} */
-            readonly availability: "available" | "unavailable" | "tentative" | null;
-            readonly constraintOverridden: boolean;
-            /** Format: date-time */
-            readonly createdAt: string;
-            /** Format: uuid */
-            readonly entryId: string;
-            /** @enum {string} */
-            readonly entryRole: "player" | "captain" | "spirit_captain" | "coach";
-            /** @enum {string} */
-            readonly fieldPosition: "handler" | "cutter" | "hybrid" | "unspecified";
-            /** @enum {string} */
-            readonly genderBucket: "men" | "women" | "mixed" | "unknown";
-            readonly jerseyNumber: number | null;
-            /** @enum {string} */
-            readonly lineAssignment: "offense" | "defense" | "any";
-            /** Format: uuid */
-            readonly membershipId: string;
-            /** Format: uuid */
-            readonly overriddenBy: string | null;
-            readonly overrideReason: string | null;
-            readonly recordVersion: number;
-            readonly removalReason: string | null;
-            /** Format: date-time */
-            readonly removedAt: string | null;
-            /** Format: uuid */
-            readonly removedBy: string | null;
-            /** Format: uuid */
-            readonly rosterId: string;
-            /** Format: uuid */
-            readonly selectedBy: string | null;
-            readonly selectionReason: string | null;
-            /** @enum {string} */
-            readonly status: "selected" | "withdrawn";
-            /** Format: uuid */
-            readonly teamId: string;
-            /** Format: date-time */
-            readonly updatedAt: string;
         };
         readonly RosterResponseDto: {
             /** Format: date-time */
@@ -7148,6 +7377,12 @@ export interface components {
             readonly ruleKey: string;
             readonly version: number;
         };
+        readonly ScoringListRulesResponseDto: {
+            readonly items: readonly components["schemas"]["ScoringRuleResponseDto"][];
+            readonly limit: number;
+            readonly offset: number;
+            readonly total: number;
+        };
         readonly ScoringRuleResponseDto: {
             readonly components: readonly components["schemas"]["RuleComponentResponseDto"][];
             /** Format: date-time */
@@ -7183,6 +7418,11 @@ export interface components {
             readonly updatedAt: string;
             readonly version: number;
         };
+        readonly ScoringTransitionRuleDto: {
+            readonly expectedRecordVersion: number;
+            /** @enum {string} */
+            readonly transition: "approve" | "publish" | "retire" | "revert";
+        };
         readonly SeasonResponseDto: {
             /** Format: date-time */
             readonly createdAt: string;
@@ -7201,7 +7441,7 @@ export interface components {
              */
             readonly startsOn: string;
             /** @enum {string} */
-            readonly status: "draft" | "active" | "archived";
+            readonly status: "draft" | "active" | "closed" | "archived";
             readonly teamId: string;
             /** Format: date-time */
             readonly updatedAt: string;
@@ -7481,6 +7721,11 @@ export interface components {
             /** Format: date-time */
             readonly createdAt: string;
             readonly createdBy: string | null;
+            /**
+             * Format: date-time
+             * @description Soft-removal instant; null while the team is present
+             */
+            readonly deletedAt: string | null;
             readonly id: string;
             readonly locale: string;
             readonly logoMediaKey: string | null;
@@ -7488,12 +7733,15 @@ export interface components {
             readonly primaryColor: string | null;
             readonly slug: string;
             /** @enum {string} */
-            readonly status: "active" | "archived";
+            readonly status: "active" | "disabled" | "archived";
             readonly timezone: string;
             /** Format: date-time */
             readonly updatedAt: string;
             readonly updatedBy: string | null;
             readonly version: number;
+        };
+        readonly TeamTransitionDto: {
+            readonly expectedVersion?: number;
         };
         readonly TemplateMetricDto: {
             /** Format: uuid */
@@ -7508,7 +7756,7 @@ export interface components {
             readonly createdAt: string;
             /** Format: uuid */
             readonly createdBy: string | null;
-            readonly evaluatorRoles: readonly ("MEMBER" | "COACH" | "TEAM_ADMIN" | "SCOREKEEPER" | "ANALYST")[];
+            readonly evaluatorRoles: readonly ("SUPER_ADMIN" | "MEMBER" | "COACH" | "TEAM_ADMIN" | "SCOREKEEPER" | "ANALYST")[];
             /** Format: uuid */
             readonly familyId: string;
             /** Format: uuid */
@@ -7536,11 +7784,6 @@ export interface components {
             /** @enum {string} */
             readonly transition: "publish" | "activate" | "complete" | "cancel" | "archive";
         };
-        readonly TransitionDto: {
-            /** Format: date-time */
-            readonly effectiveAt?: string;
-            readonly reason?: string;
-        };
         readonly TransitionFixtureDto: {
             readonly expectedRecordVersion: number;
             readonly reason?: Record<string, never> | null;
@@ -7562,11 +7805,6 @@ export interface components {
             readonly expectedRecordVersion: number;
             /** @enum {string} */
             readonly transition: "publish" | "archive";
-        };
-        readonly TransitionRuleDto: {
-            readonly expectedRecordVersion: number;
-            /** @enum {string} */
-            readonly transition: "approve" | "publish" | "retire" | "revert";
         };
         readonly TransitionSessionDto: {
             readonly expectedRecordVersion: number;
@@ -7718,7 +7956,7 @@ export interface components {
              */
             readonly startsOn: string;
             /** @enum {string} */
-            readonly status: "draft" | "active" | "archived";
+            readonly status: "draft" | "active" | "closed" | "archived";
         };
         readonly UpdateSessionDto: {
             readonly capacity?: number;
@@ -8739,6 +8977,40 @@ export interface operations {
             };
         };
     };
+    readonly "Rbac.roleBundles": {
+        readonly parameters: {
+            readonly query?: never;
+            readonly header?: never;
+            readonly path?: never;
+            readonly cookie?: never;
+        };
+        readonly requestBody?: never;
+        readonly responses: {
+            /** @description Role bundles and the permission catalog they draw from */
+            readonly 200: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content: {
+                    readonly "application/json": components["schemas"]["RoleMatrixResponseDto"];
+                };
+            };
+            /** @description Unauthorized */
+            readonly 401: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Forbidden */
+            readonly 403: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
     readonly "Rbac.list": {
         readonly parameters: {
             readonly query?: never;
@@ -8791,6 +9063,13 @@ export interface operations {
             };
             /** @description Unauthorized */
             readonly 401: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Forbidden */
+            readonly 403: {
                 headers: {
                     readonly [name: string]: unknown;
                 };
@@ -8899,6 +9178,13 @@ export interface operations {
                 };
                 content?: never;
             };
+            /** @description Invalid transition */
+            readonly 409: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content?: never;
+            };
         };
     };
     readonly "Teams.update": {
@@ -8934,6 +9220,60 @@ export interface operations {
             };
             /** @description Forbidden */
             readonly 403: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Version conflict */
+            readonly 409: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    readonly "Teams.activate": {
+        readonly parameters: {
+            readonly query?: never;
+            readonly header?: never;
+            readonly path: {
+                readonly teamId: string;
+            };
+            readonly cookie?: never;
+        };
+        readonly requestBody: {
+            readonly content: {
+                readonly "application/json": components["schemas"]["TeamTransitionDto"];
+            };
+        };
+        readonly responses: {
+            /** @description Team activated */
+            readonly 200: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content: {
+                    readonly "application/json": components["schemas"]["TeamResponseDto"];
+                };
+            };
+            /** @description Unauthorized */
+            readonly 401: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Forbidden */
+            readonly 403: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Invalid transition or version conflict */
+            readonly 409: {
                 headers: {
                     readonly [name: string]: unknown;
                 };
@@ -9056,7 +9396,7 @@ export interface operations {
         };
         readonly requestBody: {
             readonly content: {
-                readonly "application/json": components["schemas"]["OptimisticVersionDto"];
+                readonly "application/json": components["schemas"]["ActivityOptimisticVersionDto"];
             };
         };
         readonly responses: {
@@ -9384,7 +9724,7 @@ export interface operations {
         };
         readonly requestBody: {
             readonly content: {
-                readonly "application/json": components["schemas"]["OptimisticVersionDto"];
+                readonly "application/json": components["schemas"]["ActivityOptimisticVersionDto"];
             };
         };
         readonly responses: {
@@ -9424,7 +9764,7 @@ export interface operations {
         };
         readonly requestBody: {
             readonly content: {
-                readonly "application/json": components["schemas"]["OptimisticVersionDto"];
+                readonly "application/json": components["schemas"]["ActivityOptimisticVersionDto"];
             };
         };
         readonly responses: {
@@ -9476,6 +9816,53 @@ export interface operations {
             };
             /** @description Unauthorized */
             readonly 401: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    readonly "Teams.archiveTransition": {
+        readonly parameters: {
+            readonly query?: never;
+            readonly header?: never;
+            readonly path: {
+                readonly teamId: string;
+            };
+            readonly cookie?: never;
+        };
+        readonly requestBody: {
+            readonly content: {
+                readonly "application/json": components["schemas"]["TeamTransitionDto"];
+            };
+        };
+        readonly responses: {
+            /** @description Team archived */
+            readonly 200: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content: {
+                    readonly "application/json": components["schemas"]["TeamResponseDto"];
+                };
+            };
+            /** @description Unauthorized */
+            readonly 401: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Forbidden */
+            readonly 403: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Invalid transition or version conflict */
+            readonly 409: {
                 headers: {
                     readonly [name: string]: unknown;
                 };
@@ -10048,7 +10435,7 @@ export interface operations {
                     readonly [name: string]: unknown;
                 };
                 content: {
-                    readonly "application/json": components["schemas"]["ListRulesResponseDto"];
+                    readonly "application/json": components["schemas"]["ScoringListRulesResponseDto"];
                 };
             };
             /** @description Unauthorized */
@@ -10220,7 +10607,7 @@ export interface operations {
         };
         readonly requestBody: {
             readonly content: {
-                readonly "application/json": components["schemas"]["TransitionRuleDto"];
+                readonly "application/json": components["schemas"]["ScoringTransitionRuleDto"];
             };
         };
         readonly responses: {
@@ -10549,7 +10936,7 @@ export interface operations {
         };
         readonly requestBody: {
             readonly content: {
-                readonly "application/json": components["schemas"]["OptimisticVersionDto"];
+                readonly "application/json": components["schemas"]["DevelopmentOptimisticVersionDto"];
             };
         };
         readonly responses: {
@@ -10618,7 +11005,7 @@ export interface operations {
         };
         readonly requestBody: {
             readonly content: {
-                readonly "application/json": components["schemas"]["OptimisticVersionDto"];
+                readonly "application/json": components["schemas"]["DevelopmentOptimisticVersionDto"];
             };
         };
         readonly responses: {
@@ -11042,6 +11429,53 @@ export interface operations {
             };
             /** @description Forbidden */
             readonly 403: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    readonly "Teams.deactivate": {
+        readonly parameters: {
+            readonly query?: never;
+            readonly header?: never;
+            readonly path: {
+                readonly teamId: string;
+            };
+            readonly cookie?: never;
+        };
+        readonly requestBody: {
+            readonly content: {
+                readonly "application/json": components["schemas"]["TeamTransitionDto"];
+            };
+        };
+        readonly responses: {
+            /** @description Team disabled */
+            readonly 200: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content: {
+                    readonly "application/json": components["schemas"]["TeamResponseDto"];
+                };
+            };
+            /** @description Unauthorized */
+            readonly 401: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Forbidden */
+            readonly 403: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Invalid transition or version conflict */
+            readonly 409: {
                 headers: {
                     readonly [name: string]: unknown;
                 };
@@ -12489,7 +12923,7 @@ export interface operations {
                     readonly [name: string]: unknown;
                 };
                 content: {
-                    readonly "application/json": components["schemas"]["ListSessionsResponseDto"];
+                    readonly "application/json": components["schemas"]["MeasurementListSessionsResponseDto"];
                 };
             };
             /** @description Unauthorized */
@@ -12723,7 +13157,7 @@ export interface operations {
         };
         readonly requestBody: {
             readonly content: {
-                readonly "application/json": components["schemas"]["TransitionDto"];
+                readonly "application/json": components["schemas"]["MemberTransitionDto"];
             };
         };
         readonly responses: {
@@ -12843,7 +13277,7 @@ export interface operations {
         };
         readonly requestBody: {
             readonly content: {
-                readonly "application/json": components["schemas"]["TransitionDto"];
+                readonly "application/json": components["schemas"]["MemberTransitionDto"];
             };
         };
         readonly responses: {
@@ -12877,7 +13311,7 @@ export interface operations {
         };
         readonly requestBody: {
             readonly content: {
-                readonly "application/json": components["schemas"]["TransitionDto"];
+                readonly "application/json": components["schemas"]["MemberTransitionDto"];
             };
         };
         readonly responses: {
@@ -13006,7 +13440,7 @@ export interface operations {
         };
         readonly requestBody: {
             readonly content: {
-                readonly "application/json": components["schemas"]["TransitionDto"];
+                readonly "application/json": components["schemas"]["MemberTransitionDto"];
             };
         };
         readonly responses: {
@@ -13070,7 +13504,7 @@ export interface operations {
         };
         readonly requestBody: {
             readonly content: {
-                readonly "application/json": components["schemas"]["TransitionDto"];
+                readonly "application/json": components["schemas"]["MemberTransitionDto"];
             };
         };
         readonly responses: {
@@ -13279,7 +13713,7 @@ export interface operations {
         };
         readonly requestBody: {
             readonly content: {
-                readonly "application/json": components["schemas"]["TransitionDto"];
+                readonly "application/json": components["schemas"]["MemberTransitionDto"];
             };
         };
         readonly responses: {
@@ -13956,7 +14390,7 @@ export interface operations {
         };
         readonly requestBody: {
             readonly content: {
-                readonly "application/json": components["schemas"]["OptimisticVersionDto"];
+                readonly "application/json": components["schemas"]["AssessmentOptimisticVersionDto"];
             };
         };
         readonly responses: {
@@ -14065,7 +14499,7 @@ export interface operations {
         };
         readonly requestBody: {
             readonly content: {
-                readonly "application/json": components["schemas"]["OptimisticVersionDto"];
+                readonly "application/json": components["schemas"]["AssessmentOptimisticVersionDto"];
             };
         };
         readonly responses: {
@@ -14188,7 +14622,7 @@ export interface operations {
                     readonly [name: string]: unknown;
                 };
                 content: {
-                    readonly "application/json": components["schemas"]["ListRulesResponseDto"];
+                    readonly "application/json": components["schemas"]["PointsListRulesResponseDto"];
                 };
             };
             /** @description Unauthorized */
@@ -14251,7 +14685,7 @@ export interface operations {
         };
         readonly requestBody: {
             readonly content: {
-                readonly "application/json": components["schemas"]["TransitionRuleDto"];
+                readonly "application/json": components["schemas"]["PointsTransitionRuleDto"];
             };
         };
         readonly responses: {
@@ -14665,7 +15099,7 @@ export interface operations {
                     readonly [name: string]: unknown;
                 };
                 content: {
-                    readonly "application/json": components["schemas"]["ListSessionsResponseDto"];
+                    readonly "application/json": components["schemas"]["PracticeListSessionsResponseDto"];
                 };
             };
             /** @description Unauthorized */
@@ -16269,6 +16703,53 @@ export interface operations {
             };
         };
     };
+    readonly "Teams.remove": {
+        readonly parameters: {
+            readonly query?: never;
+            readonly header?: never;
+            readonly path: {
+                readonly teamId: string;
+            };
+            readonly cookie?: never;
+        };
+        readonly requestBody: {
+            readonly content: {
+                readonly "application/json": components["schemas"]["TeamTransitionDto"];
+            };
+        };
+        readonly responses: {
+            /** @description Team soft-removed */
+            readonly 200: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content: {
+                    readonly "application/json": components["schemas"]["TeamResponseDto"];
+                };
+            };
+            /** @description Unauthorized */
+            readonly 401: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Forbidden */
+            readonly 403: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Invalid transition or version conflict */
+            readonly 409: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
     readonly "Rosters.list": {
         readonly parameters: {
             readonly query?: {
@@ -16489,7 +16970,7 @@ export interface operations {
                     readonly [name: string]: unknown;
                 };
                 content: {
-                    readonly "application/json": components["schemas"]["RosterEntryResponseDto"];
+                    readonly "application/json": components["schemas"]["CompetitionRosterEntryResponseDto"];
                 };
             };
             /** @description Unauthorized */
@@ -16530,7 +17011,7 @@ export interface operations {
                     readonly [name: string]: unknown;
                 };
                 content: {
-                    readonly "application/json": components["schemas"]["RosterEntryResponseDto"];
+                    readonly "application/json": components["schemas"]["CompetitionRosterEntryResponseDto"];
                 };
             };
             /** @description Unauthorized */
@@ -16570,7 +17051,7 @@ export interface operations {
                     readonly [name: string]: unknown;
                 };
                 content: {
-                    readonly "application/json": components["schemas"]["RosterEntryResponseDto"];
+                    readonly "application/json": components["schemas"]["CompetitionRosterEntryResponseDto"];
                 };
             };
             /** @description Unauthorized */
@@ -16879,6 +17360,13 @@ export interface operations {
                 };
                 content?: never;
             };
+            /** @description Overlap, slug or active-season conflict */
+            readonly 409: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content?: never;
+            };
         };
     };
     readonly "Seasons.archive": {
@@ -16911,6 +17399,13 @@ export interface operations {
             };
             /** @description Forbidden */
             readonly 403: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Invalid transition */
+            readonly 409: {
                 headers: {
                     readonly [name: string]: unknown;
                 };
@@ -16952,6 +17447,193 @@ export interface operations {
             };
             /** @description Forbidden */
             readonly 403: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Overlap, slug or version conflict */
+            readonly 409: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    readonly "Seasons.activate": {
+        readonly parameters: {
+            readonly query?: never;
+            readonly header?: never;
+            readonly path: {
+                readonly seasonId: string;
+                readonly teamId: string;
+            };
+            readonly cookie?: never;
+        };
+        readonly requestBody: {
+            readonly content: {
+                readonly "application/json": components["schemas"]["TeamTransitionDto"];
+            };
+        };
+        readonly responses: {
+            /** @description Season activated */
+            readonly 200: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content: {
+                    readonly "application/json": components["schemas"]["SeasonResponseDto"];
+                };
+            };
+            /** @description Unauthorized */
+            readonly 401: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Forbidden */
+            readonly 403: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Invalid transition, version conflict or season already active */
+            readonly 409: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    readonly "Seasons.archiveTransition": {
+        readonly parameters: {
+            readonly query?: never;
+            readonly header?: never;
+            readonly path: {
+                readonly seasonId: string;
+                readonly teamId: string;
+            };
+            readonly cookie?: never;
+        };
+        readonly requestBody: {
+            readonly content: {
+                readonly "application/json": components["schemas"]["TeamTransitionDto"];
+            };
+        };
+        readonly responses: {
+            /** @description Season archived */
+            readonly 200: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content: {
+                    readonly "application/json": components["schemas"]["SeasonResponseDto"];
+                };
+            };
+            /** @description Unauthorized */
+            readonly 401: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Forbidden */
+            readonly 403: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Invalid transition or version conflict */
+            readonly 409: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    readonly "Seasons.close": {
+        readonly parameters: {
+            readonly query?: never;
+            readonly header?: never;
+            readonly path: {
+                readonly seasonId: string;
+                readonly teamId: string;
+            };
+            readonly cookie?: never;
+        };
+        readonly requestBody: {
+            readonly content: {
+                readonly "application/json": components["schemas"]["TeamTransitionDto"];
+            };
+        };
+        readonly responses: {
+            /** @description Season closed */
+            readonly 200: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content: {
+                    readonly "application/json": components["schemas"]["SeasonResponseDto"];
+                };
+            };
+            /** @description Unauthorized */
+            readonly 401: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Forbidden */
+            readonly 403: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Invalid transition or version conflict */
+            readonly 409: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    readonly "Seasons.current": {
+        readonly parameters: {
+            readonly query?: never;
+            readonly header?: never;
+            readonly path: {
+                readonly teamId: string;
+            };
+            readonly cookie?: never;
+        };
+        readonly requestBody?: never;
+        readonly responses: {
+            /** @description Current season */
+            readonly 200: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content: {
+                    readonly "application/json": components["schemas"]["SeasonResponseDto"];
+                };
+            };
+            /** @description Unauthorized */
+            readonly 401: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description The team has no active season */
+            readonly 404: {
                 headers: {
                     readonly [name: string]: unknown;
                 };
@@ -17597,6 +18279,36 @@ export interface operations {
             };
             /** @description Forbidden */
             readonly 403: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    readonly "Teams.listMine": {
+        readonly parameters: {
+            readonly query?: {
+                readonly limit?: number;
+                readonly offset?: number;
+            };
+            readonly header?: never;
+            readonly path?: never;
+            readonly cookie?: never;
+        };
+        readonly requestBody?: never;
+        readonly responses: {
+            /** @description Teams */
+            readonly 200: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content: {
+                    readonly "application/json": components["schemas"]["ListTeamsResponseDto"];
+                };
+            };
+            /** @description Unauthorized */
+            readonly 401: {
                 headers: {
                     readonly [name: string]: unknown;
                 };

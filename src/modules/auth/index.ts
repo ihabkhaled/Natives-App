@@ -11,6 +11,8 @@ export {
   type EffectivePermissionsView,
 } from './hooks/use-effective-permissions.hook';
 export { useSession, type SessionView } from './hooks/use-session.hook';
+export { useTeamSwitcher, type TeamSwitcherView } from './hooks/use-team-switcher.hook';
+export type { TeamOptionView } from './helpers/team-switcher.helper';
 export { useLogoutMutation, type LogoutMutationView } from './mutations/use-logout-mutation.hook';
 export { authQueryKeys } from './queries/auth.keys';
 export { createAuthTokenRepository, getAuthTokenRepository } from './repositories/token.repository';

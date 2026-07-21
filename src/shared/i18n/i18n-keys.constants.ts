@@ -15,6 +15,11 @@ import { POINTS_I18N_KEYS } from './points-keys.constants';
 import { PRACTICE_I18N_KEYS } from './practice-keys.constants';
 import { ROSTERS_I18N_KEYS } from './rosters-keys.constants';
 import { SQUADS_I18N_KEYS } from './squads-keys.constants';
+import {
+  PERMISSIONS_MATRIX_I18N_KEYS,
+  SEASONS_ADMIN_I18N_KEYS,
+  TEAMS_ADMIN_I18N_KEYS,
+} from './teams-keys.constants';
 import { TRAINING_I18N_KEYS } from './training-keys.constants';
 import { TRYOUTS_I18N_KEYS } from './tryouts-keys.constants';
 
@@ -29,6 +34,13 @@ export const I18N_KEYS = {
     loading: 'common.loading',
     retry: 'common.retry',
     requestId: 'common.requestId',
+  },
+  /** Copy the shared date picker needs wherever it is used. */
+  dateField: {
+    placeholder: 'dateField.placeholder',
+    openLabel: 'dateField.openLabel',
+    dialogTitle: 'dateField.dialogTitle',
+    close: 'dateField.close',
   },
   brand: {
     logoAlt: 'brand.logoAlt',
@@ -155,6 +167,9 @@ export const I18N_KEYS = {
   matchStats: MATCH_STATS_I18N_KEYS,
   ...NOTIFICATIONS_I18N_KEYS,
   ...ADMIN_I18N_KEYS,
+  teamsAdmin: TEAMS_ADMIN_I18N_KEYS,
+  seasonsAdmin: SEASONS_ADMIN_I18N_KEYS,
+  permissionsMatrix: PERMISSIONS_MATRIX_I18N_KEYS,
   health: {
     title: 'health.title',
     statusUp: 'health.statusUp',
@@ -217,6 +232,12 @@ export const I18N_KEYS = {
     groupTeam: 'nav.groupTeam',
     groupManage: 'nav.groupManage',
     signOut: 'nav.signOut',
+  },
+  /** The multi-team scope switcher pinned in the shell identity block. */
+  teams: {
+    switcherLabel: 'teams.switcherLabel',
+    switcherAriaLabel: 'teams.switcherAriaLabel',
+    switcherCurrent: 'teams.switcherCurrent',
   },
   appBar: {
     label: 'appBar.label',

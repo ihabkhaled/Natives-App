@@ -4,6 +4,7 @@ export {
   type HardwareBackHandlerOptions,
 } from './back-button/back-button.facade';
 export { openUrlInAppBrowser } from './browser/browser.facade';
+export { copyTextToClipboard } from './clipboard/clipboard.facade';
 export {
   startDeepLinkListener,
   type DeepLinkListenerOptions,
@@ -14,6 +15,7 @@ export {
   type DeepLinkRejection,
 } from './deep-links/deep-link.parser';
 export { getDeviceInformation, type DeviceInformation } from './device/device.facade';
+export { getApplicationOrigin } from './environment/application-origin.facade';
 export { getExecutionContext, type ExecutionContext } from './environment/execution-context.facade';
 export { openExternalUrl } from './external-navigation/external-navigation.facade';
 export { reloadApplication } from './lifecycle/app-reload.facade';

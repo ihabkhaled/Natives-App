@@ -1,3 +1,5 @@
+import type { TeamSwitcherView } from '@/modules/auth';
+
 /** One entry of the avatar account menu. */
 interface AppBarMenuItem {
   readonly key: string;
@@ -17,6 +19,8 @@ export interface AppBarNotification {
 
 /** Prepared, translated view model for the global top app bar. */
 export interface AppBarView {
+  /** The multi-team scope switcher; collapses itself for a single-team user. */
+  readonly teamSwitcher: TeamSwitcherView;
   readonly isVisible: boolean;
   readonly ariaLabel: string;
   readonly title: string;

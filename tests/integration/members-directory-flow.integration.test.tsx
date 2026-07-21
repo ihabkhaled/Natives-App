@@ -51,21 +51,28 @@ describe('members directory flow (real client + MSW)', () => {
     });
   });
 
-  it('invites a member and closes the form on success', async () => {
+  it('invites a real person: account invitation, roster record, and the link', async () => {
     await signInAs(MOCK_PERSONA_EMAILS.admin);
     renderDirectory();
 
     await screen.findByTestId(TEST_IDS.membersInviteButton, {}, { timeout: 5000 });
     fireEvent.click(screen.getByTestId(TEST_IDS.membersInviteButton));
 
+    fireIonInput(screen.getByTestId(TEST_IDS.memberInviteEmail), 'recruit@example.com');
     fireIonInput(screen.getByTestId(TEST_IDS.memberInviteFullName), 'New Recruit');
     fireEvent.click(screen.getByTestId(TEST_IDS.memberInviteSubmit));
 
+    // The form gives way to the receipt: the account invitation AND the roster
+    // record both exist, and the one-time accept link is the manual fallback.
     await waitFor(
       () => {
         expect(screen.queryByTestId(TEST_IDS.memberInviteForm)).not.toBeInTheDocument();
       },
       { timeout: 5000 },
+    );
+    expect(screen.getByTestId(TEST_IDS.memberInviteSent)).toBeInTheDocument();
+    expect(screen.getByTestId(TEST_IDS.memberInviteLink)).toHaveTextContent(
+      'accept-invitation?token=mock-invitation-token-0123456789',
     );
     expect(await screen.findByText(/of 9 members/i)).toBeInTheDocument();
   });

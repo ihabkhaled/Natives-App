@@ -1,4 +1,5 @@
 import type { AsyncViewCopy } from '@/shared/types';
+import type { SelectFieldOption } from '@/shared/ui';
 
 import type { LifecycleAction, MemberRole, MembershipStatus } from '../constants/members.constants';
 
@@ -69,9 +70,41 @@ interface MemberEditFormView {
   readonly onSubmit: () => void;
 }
 
+/** The success panel shown once an invitation has actually been issued. */
+export interface InviteSentView {
+  readonly title: string;
+  readonly message: string;
+  readonly linkLabel: string;
+  readonly linkHint: string;
+  readonly acceptUrl: string;
+  readonly copyLabel: string;
+  readonly onCopy: () => void;
+  readonly expiresLabel: string;
+  readonly expiresValue: string;
+  readonly doneLabel: string;
+  readonly onDone: () => void;
+}
+
 export interface InviteFormView extends MemberEditFormView {
   readonly canInvite: boolean;
+  readonly intro: string;
   readonly fullNamePlaceholder: string;
+  readonly emailLabel: string;
+  readonly emailPlaceholder: string;
+  readonly email: string;
+  readonly onEmailChange: (value: string) => void;
+  readonly emailError: string | null;
+  readonly roleLabel: string;
+  readonly roleHint: string;
+  readonly role: string;
+  readonly roleOptions: readonly SelectFieldOption[];
+  readonly onRoleChange: (value: string) => void;
+  readonly profileHeading: string;
+  readonly profileIntro: string;
+  /** Sanitized, translated failure copy; null while nothing has gone wrong. */
+  readonly errorMessage: string | null;
+  /** Non-null once the invitation exists: the form gives way to this panel. */
+  readonly sent: InviteSentView | null;
 }
 
 export interface MembersDirectoryView extends AsyncViewCopy {

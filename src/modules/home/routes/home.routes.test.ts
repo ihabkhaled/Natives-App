@@ -16,12 +16,14 @@ describe('getHomeRouteDefinitions', () => {
     expect(definitions.map((definition) => definition.path)).toEqual([welcomePath(), homePath()]);
   });
 
-  it('keeps the welcome screen public and exactly matched', () => {
+  it('keeps the welcome screen signed-out-only and exactly matched', () => {
     const [welcome] = getHomeRouteDefinitions();
 
     expect(welcome!.path).toBe('/welcome');
     expect(welcome!.exact).toBe(true);
-    expect(welcome!.access).toBe(ROUTE_ACCESS.Public);
+    // `/` redirects to `/welcome`, so a Public welcome screen showed an
+    // authenticated visitor the marketing page and a dead "Sign in" CTA.
+    expect(welcome!.access).toBe(ROUTE_ACCESS.PublicOnly);
     expect(welcome!.component).toBe(WelcomeContainer);
   });
 

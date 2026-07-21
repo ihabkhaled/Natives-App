@@ -1,18 +1,18 @@
 import { renderHook } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
-import { buildAuthUser, useCurrentUserQuery, type CurrentUserQueryView } from '@/modules/auth';
+import { useActiveTeamScope, type ActiveTeamScopeView } from '@/modules/auth';
 
 import { usePracticeTeamContext } from './use-practice-team-context.hook';
 
-vi.mock('@/modules/auth', () => ({
-  buildAuthUser: vi.fn(),
-  useCurrentUserQuery: vi.fn(),
-}));
+vi.mock('@/modules/auth', () => ({ useActiveTeamScope: vi.fn() }));
 
-function mockCurrentUser(overrides: Partial<CurrentUserQueryView> = {}): void {
-  vi.mocked(useCurrentUserQuery).mockReturnValue({
-    user: undefined,
+function mockScope(overrides: Partial<ActiveTeamScopeView> = {}): void {
+  vi.mocked(useActiveTeamScope).mockReturnValue({
+    teamId: '',
+    membershipId: '',
+    seasonId: null,
+    teamName: '',
     isLoading: false,
     isError: false,
     ...overrides,
@@ -24,29 +24,8 @@ afterEach(() => {
 });
 
 describe('usePracticeTeamContext', () => {
-  it('selects the first authenticated membership as the current team scope', () => {
-    vi.mocked(buildAuthUser).mockReturnValue({
-      id: 'user-1',
-      email: 'member@example.com',
-      displayName: 'Member',
-      permissions: [],
-      accountState: 'active',
-      onboardingComplete: true,
-      memberships: [
-        {
-          membershipId: 'membership-1',
-          teamId: 'team-1',
-          teamSlug: 'team-one',
-          teamName: 'Team One',
-          seasonId: 'season-1',
-          seasonSlug: 'season-one',
-          seasonName: 'Season One',
-          status: 'active',
-          roles: ['member'],
-        },
-      ],
-    });
-    mockCurrentUser({ user: buildAuthUser() });
+  it('works inside the team the principal is currently scoped to', () => {
+    mockScope({ teamId: 'team-1', membershipId: 'membership-1', teamName: 'Team One' });
 
     const { result } = renderHook(() => usePracticeTeamContext());
 
@@ -54,8 +33,16 @@ describe('usePracticeTeamContext', () => {
     expect(result.current.isLoading).toBe(false);
   });
 
+  it('follows a switch to another team rather than pinning the first membership', () => {
+    mockScope({ teamId: 'team-2', membershipId: 'membership-2', teamName: 'Team Two' });
+
+    const { result } = renderHook(() => usePracticeTeamContext());
+
+    expect(result.current.teamId).toBe('team-2');
+  });
+
   it('returns an empty team id while membership context is unavailable', () => {
-    mockCurrentUser({ isLoading: true });
+    mockScope({ isLoading: true });
 
     const { result } = renderHook(() => usePracticeTeamContext());
 
@@ -64,7 +51,7 @@ describe('usePracticeTeamContext', () => {
   });
 
   it('preserves a profile-query error for the screen boundary', () => {
-    mockCurrentUser({ isError: true });
+    mockScope({ isError: true });
 
     const { result } = renderHook(() => usePracticeTeamContext());
 

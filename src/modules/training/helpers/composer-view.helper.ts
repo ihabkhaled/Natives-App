@@ -38,6 +38,9 @@ export interface ComposerViewInput {
   readonly selectedType: ActivityType | null;
   readonly validationKey: string | null;
   readonly isSaving: boolean;
+  /** The chosen day already formatted for reading; `''` while none is chosen. */
+  readonly dateDisplayValue: string;
+  readonly isDateOpen: boolean;
   readonly dateMax: string;
   readonly dateLocale: string;
   readonly evidence: TrainingEvidenceEditorView;
@@ -62,6 +65,13 @@ export function buildComposerView(
     typeOptions: buildActivityTypeOptions(t, input.activityTypes),
     dateLabel: t(I18N_KEYS.training.performedOnLabel),
     dateValue: input.form.performedOn,
+    dateDisplayValue: input.dateDisplayValue,
+    datePlaceholder: t(I18N_KEYS.dateField.placeholder),
+    dateOpenLabel: t(I18N_KEYS.dateField.openLabel),
+    dateDialogTitle: t(I18N_KEYS.dateField.dialogTitle),
+    dateCloseLabel: t(I18N_KEYS.dateField.close),
+    dateHint: t(I18N_KEYS.training.performedOnHint),
+    isDateOpen: input.isDateOpen,
     dateMax: input.dateMax,
     dateLocale: input.dateLocale,
     durationLabel: `${t(I18N_KEYS.training.durationLabel)} (${t(I18N_KEYS.training.durationUnit)})`,

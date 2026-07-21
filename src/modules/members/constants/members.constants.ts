@@ -163,3 +163,29 @@ export const MEMBERS_PAGE_SIZE = 20;
 
 /** Fixed pixel height for the virtualized directory viewport. */
 export const MEMBERS_LIST_HEIGHT_PX = 560;
+
+/**
+ * The access level an invitation grants at the identity layer. The backend's
+ * `CreateInvitationDto` accepts exactly these two values; the finer team roles
+ * in `MEMBER_ROLE` are assigned afterwards on the member's profile.
+ */
+export const INVITATION_ROLE = {
+  user: 'user',
+  admin: 'admin',
+} as const;
+
+export type InvitationRole = (typeof INVITATION_ROLE)[keyof typeof INVITATION_ROLE];
+
+export const INVITATION_ROLES: readonly InvitationRole[] = [
+  INVITATION_ROLE.user,
+  INVITATION_ROLE.admin,
+];
+
+export const INVITATION_STATUSES = ['pending', 'accepted', 'revoked', 'expired'] as const;
+
+export type InvitationStatus = (typeof INVITATION_STATUSES)[number];
+
+export const INVITATION_ROLE_LABEL_KEYS: Record<InvitationRole, I18nKey> = {
+  [INVITATION_ROLE.user]: I18N_KEYS.members.inviteRoleUser,
+  [INVITATION_ROLE.admin]: I18N_KEYS.members.inviteRoleAdmin,
+};

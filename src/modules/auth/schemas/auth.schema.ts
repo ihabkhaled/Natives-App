@@ -87,3 +87,15 @@ export const sessionListResponseSchema = schemaBuilder.object({
 export const revokeOthersResponseSchema = schemaBuilder.object({
   revokedCount: schemaBuilder.number().int().nonnegative(),
 });
+
+/**
+ * The principal's effective permissions IN ONE SCOPE.
+ *
+ * `/auth/me` carries only globally-granted permissions; a team-scoped role
+ * (team_admin, coach, …) contributes nothing to it. Asking this endpoint with
+ * the active `teamId` is the only way to learn what the principal may
+ * actually do inside that team.
+ */
+export const effectivePermissionsResponseSchema = schemaBuilder.object({
+  permissions: schemaBuilder.array(schemaBuilder.string()),
+});

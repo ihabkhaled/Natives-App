@@ -8,6 +8,8 @@ import { COMPETITIONS_TEST_IDS } from './competitions-test-ids.constants';
 import { FEATURE_TEST_IDS } from './feature-test-ids.constants';
 import { MATCHES_TEST_IDS } from './matches-test-ids.constants';
 import { NOTIFICATIONS_TEST_IDS } from './notifications-test-ids.constants';
+import { TEAMS_ADMIN_TEST_IDS } from './teams-admin-test-ids.constants';
+import { TEAMS_TEST_IDS } from './teams-test-ids.constants';
 import { TRYOUTS_TEST_IDS } from './tryouts-test-ids.constants';
 
 export const TEST_IDS = {
@@ -17,6 +19,8 @@ export const TEST_IDS = {
   ...MATCHES_TEST_IDS,
   ...NOTIFICATIONS_TEST_IDS,
   ...ADMIN_TEST_IDS,
+  ...TEAMS_TEST_IDS,
+  ...TEAMS_ADMIN_TEST_IDS,
   appShell: 'app-shell',
   skipLink: 'skip-link',
   mainContent: 'main-content',
@@ -173,6 +177,13 @@ export const TEST_IDS = {
   memberInviteFullName: 'member-invite-full-name',
   memberInviteNickname: 'member-invite-nickname',
   memberInviteJersey: 'member-invite-jersey',
+  memberInviteEmail: 'member-invite-email',
+  memberInviteRole: 'member-invite-role',
+  memberInviteError: 'member-invite-error',
+  memberInviteSent: 'member-invite-sent',
+  memberInviteLink: 'member-invite-link',
+  memberInviteCopyLink: 'member-invite-copy-link',
+  memberInviteDone: 'member-invite-done',
   memberInviteSubmit: 'member-invite-submit',
   memberInviteCancel: 'member-invite-cancel',
   memberProfilePage: 'member-profile-page',

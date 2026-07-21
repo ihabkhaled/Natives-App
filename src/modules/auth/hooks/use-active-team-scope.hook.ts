@@ -1,5 +1,6 @@
 import { NO_TEAM_SCOPE } from '../constants/team-scope.constants';
 import { selectActiveMembership } from '../helpers/active-membership.helper';
+import { useActiveTeamStore } from '../store/active-team.store';
 import { useCurrentUserQuery } from './use-current-user-query.hook';
 
 export interface ActiveTeamScopeView {
@@ -15,12 +16,14 @@ export interface ActiveTeamScopeView {
 
 /**
  * The team/season scope the signed-in principal is currently acting inside,
- * resolved from the real `memberships[]` the identity endpoints return. Every
- * team-scoped query keys off `teamId` and every "mine" call off `membershipId`.
+ * resolved from the real `memberships[]` the identity endpoints return and the
+ * team they last switched to. Every team-scoped query keys off `teamId` and
+ * every "mine" call off `membershipId`, so a switch re-keys the whole cache.
  */
 export function useActiveTeamScope(): ActiveTeamScopeView {
   const currentUser = useCurrentUserQuery();
-  const membership = selectActiveMembership(currentUser.user?.memberships ?? []);
+  const selectedTeamId = useActiveTeamStore((state) => state.selectedTeamId);
+  const membership = selectActiveMembership(currentUser.user?.memberships ?? [], selectedTeamId);
   const scope =
     membership === null
       ? NO_TEAM_SCOPE

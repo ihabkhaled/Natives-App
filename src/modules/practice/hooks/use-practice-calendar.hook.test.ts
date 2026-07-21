@@ -1,4 +1,5 @@
 import { act, renderHook } from '@testing-library/react';
+import { createStorageAdapterStub } from '../../../../tests/setup/platform-mock.helper';
 import { afterEach, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { initTestI18n } from '../../../../tests/setup/i18n-test.helper';
@@ -12,7 +13,12 @@ const push = vi.fn();
 
 vi.mock('./use-practice-sessions-query.hook', () => ({ usePracticeSessionsQuery: vi.fn() }));
 vi.mock('./use-practice-team-context.hook', () => ({ usePracticeTeamContext: vi.fn() }));
-vi.mock('@/platform', () => ({ useNetworkStatus: vi.fn(() => ({ isOnline: true })) }));
+// The auth module's persisted active-team store reaches the Preferences
+// adapter through @/platform, so a partial mock of it must still provide one.
+vi.mock('@/platform', () => ({
+  useNetworkStatus: vi.fn(() => ({ isOnline: true })),
+  createPreferencesStorageAdapter: createStorageAdapterStub,
+}));
 vi.mock('@/packages/router', () => ({
   useAppNavigation: vi.fn(() => ({ push, replace: vi.fn(), goBack: vi.fn(), currentPath: '/' })),
 }));

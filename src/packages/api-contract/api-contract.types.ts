@@ -12,7 +12,7 @@ export type RefreshResponseContract = BackendApiSchemas['AuthSessionResponseDto'
 export type LogoutRequestContract = BackendApiSchemas['LogoutDto'];
 export type MessageResponseContract = BackendApiSchemas['MessageResponseDto'];
 export type PracticeSessionContract = BackendApiSchemas['PracticeSessionResponseDto'];
-export type PracticeSessionListContract = BackendApiSchemas['ListSessionsResponseDto'];
+export type PracticeSessionListContract = BackendApiSchemas['PracticeListSessionsResponseDto'];
 export type PracticeRsvpContract = BackendApiSchemas['RsvpResponseDto'];
 export type PracticeSessionListQueryContract = NonNullable<
   BackendApiOperations['PracticeSessions.list']['parameters']['query']
@@ -31,7 +31,7 @@ export type ActivityReviewDetailContract = BackendApiSchemas['ReviewDetailRespon
 export type CreateSubmissionRequestContract = BackendApiSchemas['CreateSubmissionDto'];
 export type UpdateSubmissionRequestContract = BackendApiSchemas['UpdateSubmissionDto'];
 export type ReviewDecisionRequestContract = BackendApiSchemas['ReviewDecisionDto'];
-export type OptimisticVersionRequestContract = BackendApiSchemas['OptimisticVersionDto'];
+export type OptimisticVersionRequestContract = BackendApiSchemas['ActivityOptimisticVersionDto'];
 export type LeaderboardContract = BackendApiSchemas['LeaderboardResponseDto'];
 export type PointsSummaryContract = BackendApiSchemas['PointsSummaryResponseDto'];
 export type LeaderboardQueryContract = NonNullable<

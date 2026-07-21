@@ -83,6 +83,7 @@ export const ADMIN_I18N_KEYS = {
     referenceCountLabel: 'adminSettings.referenceCountLabel',
     statusActive: 'adminSettings.statusActive',
     statusDraft: 'adminSettings.statusDraft',
+    statusClosed: 'adminSettings.statusClosed',
     statusArchived: 'adminSettings.statusArchived',
     readOnlyNotice: 'adminSettings.readOnlyNotice',
   },

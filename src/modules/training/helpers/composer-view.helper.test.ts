@@ -1,4 +1,4 @@
-import { describe, expect, it, vi } from 'vitest';
+import { describe, expect, it } from 'vitest';
 
 import { EMPTY_COMPOSER_STATE } from '../constants/training-form.constants';
 import type {
@@ -7,20 +7,14 @@ import type {
 } from '../types/training-view.types';
 import type { ActivityType } from '../types/training.types';
 import { buildComposerView } from './composer-view.helper';
+import { buildComposerCallbacks } from '../../../../tests/factories/training-view.factory';
 
 const t = (key: string): string => key;
 
 const EVIDENCE = { heading: 'e' } as unknown as TrainingEvidenceEditorView;
 const BUDDIES = { heading: 'b' } as unknown as TrainingBuddyEditorView;
 
-const CALLBACKS = {
-  onTypeChange: vi.fn(),
-  onDateChange: vi.fn(),
-  onDurationChange: vi.fn(),
-  onQuantityChange: vi.fn(),
-  onNotesChange: vi.fn(),
-  onSave: vi.fn(),
-};
+const CALLBACKS = buildComposerCallbacks();
 
 function activityType(overrides: Partial<ActivityType> = {}): ActivityType {
   return {
@@ -49,6 +43,8 @@ function build(selectedType: ActivityType | null, validationKey: string | null, 
       selectedType,
       validationKey,
       isSaving,
+      dateDisplayValue: '',
+      isDateOpen: false,
       dateMax: '2026-07-21',
       dateLocale: 'en',
       evidence: EVIDENCE,

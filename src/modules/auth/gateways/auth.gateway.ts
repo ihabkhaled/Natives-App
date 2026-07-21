@@ -15,6 +15,7 @@ import {
   authAckSchema,
   authUserDtoSchema,
   invitationDetailsDtoSchema,
+  effectivePermissionsResponseSchema,
   loginResponseSchema,
   logoutResponseSchema,
   refreshResponseSchema,
@@ -116,5 +117,22 @@ export function requestSessionsRevokeOthers(): Promise<
     AUTH_API_PATHS.sessionsRevokeOthers,
     {},
     revokeOthersResponseSchema,
+  );
+}
+
+/**
+ * The principal's effective permissions inside one team scope.
+ *
+ * Passing the team id is not optional in practice: without it the server can
+ * only answer with globally-granted permissions, and every team-scoped role
+ * (team_admin, coach, scorekeeper) evaluates to the bare member set.
+ */
+export function requestEffectivePermissions(
+  teamId: string,
+): Promise<SchemaOutput<typeof effectivePermissionsResponseSchema>> {
+  return getAppHttpClient().get(
+    AUTH_API_PATHS.effectivePermissions,
+    effectivePermissionsResponseSchema,
+    { ...(teamId === '' ? {} : { params: { teamId } }) },
   );
 }

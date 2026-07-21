@@ -16,9 +16,11 @@ export const SETTING_KEYS = [
 
 export type SettingKey = (typeof SETTING_KEYS)[number];
 
-export const SEASON_STATUSES = ['draft', 'active', 'archived'] as const;
+// Seasons belong to the teams module; the settings screen only reads them, so
+// it derives the status union from that module rather than re-declaring it.
+type SeasonStatuses = readonly ['draft', 'active', 'closed', 'archived'];
 
-export type SeasonStatus = (typeof SEASON_STATUSES)[number];
+export type SeasonStatus = SeasonStatuses[number];
 
 export const VENUE_STATUSES = ['active', 'archived'] as const;
 

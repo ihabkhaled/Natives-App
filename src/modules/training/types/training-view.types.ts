@@ -82,6 +82,8 @@ export interface BuddyItemView {
 export interface ComposerCallbacks {
   readonly onTypeChange: (value: string) => void;
   readonly onDateChange: (value: string) => void;
+  readonly onDateOpen: () => void;
+  readonly onDateDismiss: () => void;
   readonly onDurationChange: (value: string) => void;
   readonly onQuantityChange: (value: string) => void;
   readonly onNotesChange: (value: string) => void;
@@ -97,6 +99,13 @@ export interface TrainingComposerView extends ComposerCallbacks {
   readonly typeOptions: readonly ActivityTypeOptionView[];
   readonly dateLabel: string;
   readonly dateValue: string;
+  readonly dateDisplayValue: string;
+  readonly datePlaceholder: string;
+  readonly dateOpenLabel: string;
+  readonly dateDialogTitle: string;
+  readonly dateCloseLabel: string;
+  readonly dateHint: string;
+  readonly isDateOpen: boolean;
   readonly dateMax: string;
   readonly dateLocale: string;
   readonly durationLabel: string;

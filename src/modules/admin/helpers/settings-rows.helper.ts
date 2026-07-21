@@ -18,9 +18,19 @@ import type { AdminFactRowView } from '../types/admin-view.types';
 type Translate = (key: string, params?: Record<string, string | number>) => string;
 type FormatInstant = (iso: string) => string;
 
-/** Opaque server-owned JSON, rendered as text and never interpreted. */
-function describeValue(value: unknown): string {
-  return typeof value === 'string' ? value : JSON.stringify(value ?? null);
+/**
+ * Opaque server-owned JSON, rendered as text and never interpreted.
+ *
+ * An unset setting arrives as `null` and `JSON.stringify` turned that into the
+ * literal string "null", which reached the screen as a value. A missing value
+ * is not the text "null": it is translated copy, so the whole `Effective now`
+ * panel reads as configuration rather than as a serialization artefact.
+ */
+function describeValue(t: Translate, value: unknown): string {
+  if (value === null || value === undefined) {
+    return t(I18N_KEYS.adminSettings.notSet);
+  }
+  return typeof value === 'string' ? value : JSON.stringify(value);
 }
 
 function buildEffectiveRows(
@@ -31,7 +41,7 @@ function buildEffectiveRows(
   return settings.map((setting) => ({
     key: setting.settingKey,
     label: t(SETTING_KEY_LABEL_KEYS[setting.settingKey]),
-    value: describeValue(setting.value),
+    value: describeValue(t, setting.value),
     detail:
       setting.effectiveFrom === null
         ? t(I18N_KEYS.adminSettings.notSet)
@@ -48,7 +58,7 @@ function buildVersionRows(
   return versions.map((version) => ({
     key: version.id,
     label: formatInstant(version.effectiveFrom),
-    value: describeValue(version.value),
+    value: describeValue(t, version.value),
     detail:
       version.note === null
         ? t(I18N_KEYS.adminSettings.versionNoNote)

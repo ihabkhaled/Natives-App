@@ -11,7 +11,12 @@ export function getHomeRouteDefinitions(): readonly AppRouteDefinition[] {
     {
       path: welcomePath(),
       exact: true,
-      access: ROUTE_ACCESS.Public,
+      // PublicOnly, not Public: `/` redirects here, so an authenticated visitor
+      // who opens the app root would otherwise land on the signed-out marketing
+      // screen and be offered a "Sign in" CTA that leads nowhere. Every other
+      // signed-out entry point (login, forgot/reset password, invitation) is
+      // already PublicOnly; welcome was the one screen that was not.
+      access: ROUTE_ACCESS.PublicOnly,
       component: WelcomeContainer,
     },
     {

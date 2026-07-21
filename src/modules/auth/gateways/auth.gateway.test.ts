@@ -17,6 +17,7 @@ import {
 import { buildAuthMembership } from '../factories/auth.factory';
 import {
   requestCurrentUser,
+  requestEffectivePermissions,
   requestInvitationAccept,
   requestInvitationDetails,
   requestLogin,
@@ -96,6 +97,9 @@ beforeEach(() => {
           message: 'identity.session.revoked',
         }),
         recordingRoute('GET', AUTH_API_PATHS.currentUser, USER_DTO),
+        recordingRoute('GET', AUTH_API_PATHS.effectivePermissions, {
+          permissions: ['member.list', 'season.manage'],
+        }),
         recordingRoute('POST', AUTH_API_PATHS.passwordForgot, {
           message: 'identity.password.reset.requested',
         }),
@@ -279,6 +283,23 @@ describe('session gateways', () => {
     expect(seenFor(sessionRevokePath('session-2')).headers['Authorization']).toBe(
       'Bearer access-1',
     );
+  });
+
+  it('asks for effective permissions inside the active team scope', async () => {
+    const response = await requestEffectivePermissions('team-1');
+
+    expect(response).toEqual({ permissions: ['member.list', 'season.manage'] });
+    expect(seenFor(AUTH_API_PATHS.effectivePermissions).headers['Authorization']).toBe(
+      'Bearer access-1',
+    );
+  });
+
+  it('omits the scope entirely when no team has resolved yet', async () => {
+    // A teamless answer carries only global grants, which is the wrong answer
+    // for every team-scoped role; the query is disabled rather than guessing.
+    await expect(requestEffectivePermissions('')).resolves.toEqual({
+      permissions: ['member.list', 'season.manage'],
+    });
   });
 
   it('revokes other sessions and returns the revoked count', async () => {

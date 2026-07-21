@@ -1,4 +1,5 @@
 import { renderHook } from '@testing-library/react';
+import { createPlatformMock } from '../../../../tests/setup/platform-mock.helper';
 import { afterEach, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import type * as AuthModule from '@/modules/auth';
@@ -26,7 +27,7 @@ vi.mock('@/modules/auth', async (importOriginal) => ({
   useEffectivePermissions: vi.fn(),
 }));
 vi.mock('@/packages/router', () => ({ useAppNavigation: vi.fn() }));
-vi.mock('@/platform', () => ({ useNetworkStatus: vi.fn() }));
+vi.mock('@/platform', () => createPlatformMock());
 vi.mock('./use-assessments-team-context.hook', () => ({ useAssessmentsTeamContext: vi.fn() }));
 vi.mock('./use-team-assessments-query.hook', () => ({ useTeamAssessmentsQuery: vi.fn() }));
 vi.mock('./use-assessment-catalog-query.hook', () => ({ useAssessmentCatalogQuery: vi.fn() }));

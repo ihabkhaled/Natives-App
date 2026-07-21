@@ -12,6 +12,7 @@ vi.mock('@/packages/i18n', () => ({
 vi.mock('@/packages/date', () => ({
   cairoDayKey: () => '2026-07-13',
   nowIso: () => '2026-07-13T09:00:00.000Z',
+  formatDate: (iso: string, locale: string) => `${locale}:${iso}`,
 }));
 
 const GYM: ActivityType = {
@@ -53,6 +54,49 @@ describe('useTrainingComposer', () => {
     expect(result.current.canSave).toBe(false);
     expect(result.current.hasCandidate).toBe(false);
     expect(result.current.showsQuantity).toBe(false);
+  });
+
+  it('shows no date at all until one is chosen, then shows the formatted day', () => {
+    const { result } = setup();
+
+    expect(result.current.dateValue).toBe('');
+    expect(result.current.dateDisplayValue).toBe('');
+
+    act(() => {
+      result.current.onDateChange('2026-07-12');
+    });
+
+    expect(result.current.dateDisplayValue).toBe('en:2026-07-12');
+  });
+
+  it('opens the picker on demand and closes it the moment a day is chosen', () => {
+    const { result } = setup();
+
+    expect(result.current.isDateOpen).toBe(false);
+
+    act(() => {
+      result.current.onDateOpen();
+    });
+    expect(result.current.isDateOpen).toBe(true);
+
+    act(() => {
+      result.current.onDateChange('2026-07-12');
+    });
+    expect(result.current.isDateOpen).toBe(false);
+  });
+
+  it('closes the picker when it is dismissed without a choice', () => {
+    const { result } = setup();
+
+    act(() => {
+      result.current.onDateOpen();
+    });
+    act(() => {
+      result.current.onDateDismiss();
+    });
+
+    expect(result.current.isDateOpen).toBe(false);
+    expect(result.current.dateValue).toBe('');
   });
 
   it('reveals the candidate value and the amount field once a type is chosen', () => {

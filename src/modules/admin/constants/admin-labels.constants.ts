@@ -25,6 +25,7 @@ export const SETTING_KEY_LABEL_KEYS: Record<SettingKey, string> = {
 export const SEASON_STATUS_LABEL_KEYS: Record<SeasonStatus, string> = {
   draft: I18N_KEYS.adminSettings.statusDraft,
   active: I18N_KEYS.adminSettings.statusActive,
+  closed: I18N_KEYS.adminSettings.statusClosed,
   archived: I18N_KEYS.adminSettings.statusArchived,
 };
 
@@ -32,6 +33,7 @@ export const SEASON_STATUS_LABEL_KEYS: Record<SeasonStatus, string> = {
 export const SEASON_STATUS_TONES: Record<SeasonStatus, string> = {
   draft: 'medium',
   active: 'success',
+  closed: 'medium',
   archived: 'medium',
 };
 

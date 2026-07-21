@@ -10,6 +10,7 @@ export const AUTH_API_PATHS = {
   invitationAccept: '/invitations/accept',
   sessions: '/auth/sessions',
   sessionsRevokeOthers: '/auth/sessions/revoke-others',
+  effectivePermissions: '/rbac/me/permissions',
 } as const;
 
 /** Invitation lookup path for an opaque invitation token. */

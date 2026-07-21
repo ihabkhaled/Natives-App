@@ -53,6 +53,9 @@ describe('getAppRouteDefinitions', () => {
       APP_PATHS.adminRules,
       APP_PATHS.adminOperations,
       APP_PATHS.admin,
+      APP_PATHS.adminTeams,
+      APP_PATHS.adminSeasons,
+      APP_PATHS.adminPermissions,
       APP_PATHS.settings,
       APP_PATHS.workbench,
     ]);
@@ -82,7 +85,9 @@ describe('getAppRouteDefinitions', () => {
     expect(byPath.get(APP_PATHS.sessions)).toBe(ROUTE_ACCESS.Protected);
     expect(byPath.get(APP_PATHS.login)).toBe(ROUTE_ACCESS.PublicOnly);
     expect(byPath.get(APP_PATHS.acceptInvitation)).toBe(ROUTE_ACCESS.PublicOnly);
-    expect(byPath.get(APP_PATHS.welcome)).toBe(ROUTE_ACCESS.Public);
+    // Welcome is signed-out-only: `/` redirects here, so an authenticated
+    // visitor would otherwise land on the marketing page and a dead CTA.
+    expect(byPath.get(APP_PATHS.welcome)).toBe(ROUTE_ACCESS.PublicOnly);
   });
 });
 

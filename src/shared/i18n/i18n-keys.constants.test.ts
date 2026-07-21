@@ -43,6 +43,7 @@ describe('I18N_KEYS', () => {
   it('groups every key under a namespace', () => {
     expect(Object.keys(I18N_KEYS)).toEqual([
       'common',
+      'dateField',
       'brand',
       'errors',
       'states',
@@ -72,11 +73,15 @@ describe('I18N_KEYS', () => {
       'adminRoles',
       'adminRules',
       'adminOperations',
+      'teamsAdmin',
+      'seasonsAdmin',
+      'permissionsMatrix',
       'health',
       'settings',
       'workbench',
       'notFound',
       'nav',
+      'teams',
       'appBar',
       'admin',
       'guard',

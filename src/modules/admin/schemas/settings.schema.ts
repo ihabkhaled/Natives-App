@@ -1,14 +1,9 @@
-import {
-  isoDateField,
-  isoInstantField,
-  pagedEnvelopeFields,
-  schemaBuilder,
-} from '@/packages/schema';
+import { seasonResponseSchema as teamsSeasonResponseSchema } from '@/modules/teams';
+import { isoInstantField, pagedEnvelopeFields, schemaBuilder } from '@/packages/schema';
 
 import {
   CATALOG_KINDS,
   CATALOG_STATUSES,
-  SEASON_STATUSES,
   SETTING_KEYS,
   VENUE_STATUSES,
 } from '../constants/admin.constants';
@@ -48,19 +43,11 @@ export const settingVersionListResponseSchema = schemaBuilder.object({
   ...pagedEnvelopeFields,
 });
 
-const seasonResponseSchema = schemaBuilder.object({
-  id: schemaBuilder.string().min(1),
-  teamId: schemaBuilder.string().min(1),
-  slug: schemaBuilder.string().min(1),
-  name: schemaBuilder.string().min(1),
-  startsOn: isoDateField,
-  endsOn: isoDateField,
-  status: schemaBuilder.enum(SEASON_STATUSES),
-  version: schemaBuilder.number().int().nonnegative(),
-});
-
+// Seasons belong to the teams module, which owns their lifecycle. The settings
+// screen only READS them, so it parses through that module's schema rather than
+// keeping a second definition of the same wire shape in step with it.
 export const seasonListResponseSchema = schemaBuilder.object({
-  items: schemaBuilder.array(seasonResponseSchema),
+  items: schemaBuilder.array(teamsSeasonResponseSchema),
   ...pagedEnvelopeFields,
 });
 

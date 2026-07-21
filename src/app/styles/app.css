@@ -176,6 +176,7 @@ ion-content.ion-padding {
 }
 
 /* The uppercase micro-label above a group of facts. */
+.app-matrix-table thead th,
 .app-eyebrow,
 .app-fact-list__row dt,
 .app-competition-detail__subhead,
@@ -4223,4 +4224,490 @@ ion-spinner {
   color: var(--app-ink);
   font-weight: var(--un-font-weight-semibold);
   font-variant-numeric: tabular-nums;
+}
+
+/* ----------------------------------------------------------------------------
+   Date field — a button that reads as a field, never as a printed value.
+   The calendar glyph, the caret, the border, and the hover/press lift are the
+   affordance: without them an `ion-datetime-button` renders a bare grey pill
+   that people read as a static chip and never try to press.
+---------------------------------------------------------------------------- */
+.app-date-field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--un-space-1);
+  inline-size: 100%;
+}
+
+.app-date-field__label {
+  color: var(--app-muted-strong);
+  font-size: var(--un-font-size-xs);
+  font-weight: var(--un-font-weight-semibold);
+  letter-spacing: var(--un-letter-spacing-wide, 0.02em);
+}
+
+.app-date-field__trigger {
+  display: flex;
+  align-items: center;
+  gap: var(--un-space-3);
+  inline-size: 100%;
+  min-block-size: 44px;
+  padding-block: var(--un-space-2);
+  padding-inline: var(--un-space-3);
+  border: 1px solid var(--app-hairline);
+  border-radius: var(--un-radius-md);
+  background: var(--app-card-bg);
+  color: var(--app-ink);
+  font-size: var(--un-font-size-sm);
+  text-align: start;
+  cursor: pointer;
+  transition:
+    border-color 160ms ease,
+    background-color 160ms ease,
+    box-shadow 160ms ease,
+    transform 120ms ease;
+}
+
+.app-date-field__trigger:hover {
+  border-color: var(--app-lime-line);
+  background: var(--app-hover);
+}
+
+.app-date-field__trigger:active {
+  transform: scale(0.995);
+  background: var(--app-pressed);
+}
+
+.app-date-field__trigger:focus-visible {
+  border-color: var(--app-arc-strong);
+  box-shadow: 0 0 0 3px var(--app-lime-soft);
+}
+
+.app-date-field__icon {
+  flex: none;
+  font-size: 1.25rem;
+  color: var(--app-lime-text);
+}
+
+.app-date-field__value {
+  flex: 1 1 auto;
+  min-inline-size: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-weight: var(--un-font-weight-semibold);
+}
+
+/* Nothing chosen yet: the control asks for a date instead of showing one. */
+.app-date-field__value--placeholder {
+  color: var(--app-muted);
+  font-weight: var(--un-font-weight-regular, 400);
+}
+
+.app-date-field__caret {
+  flex: none;
+  font-size: 1rem;
+  color: var(--app-muted);
+}
+
+.app-date-field__hint,
+.app-date-field__error {
+  font-size: var(--un-font-size-xs);
+}
+
+.app-date-field__hint {
+  color: var(--app-muted);
+}
+
+.app-date-field--invalid .app-date-field__trigger {
+  border-color: var(--ion-color-danger);
+}
+
+/* The calendar expands in place, directly under the control that opened it. */
+.app-date-field__panel {
+  display: flex;
+  flex-direction: column;
+  gap: var(--un-space-2);
+  margin-block-start: var(--un-space-1);
+  padding: var(--un-space-2);
+  border: 1px solid var(--app-lime-line);
+  border-radius: var(--un-radius-lg);
+  background: var(--app-card-bg);
+  box-shadow: var(--app-elevation-pop);
+}
+
+.app-date-field__panel[hidden] {
+  display: none;
+}
+
+.app-date-field__panel ion-datetime {
+  inline-size: 100%;
+  margin-inline: auto;
+  --background: transparent;
+}
+
+@keyframes app-date-field-reveal {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .app-date-field__panel:not([hidden]) {
+    animation: app-date-field-reveal 160ms ease-out;
+  }
+}
+
+/* ----------------------------------------------------------------------------
+   Team switcher — the multi-team scope control in the app bar. It renders only
+   for a principal who actually holds more than one membership, so a
+   single-team shell keeps exactly the chrome it had before.
+---------------------------------------------------------------------------- */
+.app-team-switcher {
+  position: relative;
+  display: inline-flex;
+}
+
+.app-team-switcher__toggle {
+  display: inline-flex;
+  font-size: var(--un-font-size-sm);
+  align-items: center;
+  gap: var(--un-space-2);
+  max-inline-size: 14rem;
+  min-block-size: var(--un-control-md);
+  padding-inline: var(--un-space-3) var(--un-space-2);
+  border: 1px solid var(--app-hairline);
+  border-radius: var(--un-radius-pill);
+  background: var(--app-card-bg);
+  color: var(--app-ink);
+  cursor: pointer;
+  transition:
+    border-color var(--un-motion-duration-fast) var(--un-motion-easing-standard),
+    background var(--un-motion-duration-fast) var(--un-motion-easing-standard);
+}
+
+.app-team-switcher__toggle:hover,
+.app-team-switcher__toggle[aria-expanded='true'] {
+  border-color: var(--app-lime-line);
+  background: var(--app-lime-soft);
+}
+
+.app-team-switcher__icon {
+  flex: none;
+  font-size: 1.125rem;
+  color: var(--app-lime-text);
+}
+
+/* Colour and size are inherited from the toggle; only the truncation is new. */
+.app-team-switcher__name {
+  overflow: hidden;
+  font-weight: var(--un-font-weight-semibold);
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.app-team-switcher__text {
+  display: flex;
+  min-inline-size: 0;
+  flex-direction: column;
+  align-items: flex-start;
+  line-height: var(--un-line-height-snug);
+}
+
+/* The eyebrow is the affordance's name; it collapses on narrow bars where the
+   team name alone still identifies the scope. */
+.app-team-switcher__eyebrow {
+  color: var(--app-muted);
+  font-size: var(--un-font-size-xs);
+}
+
+.app-team-switcher__name {
+  max-inline-size: 9rem;
+}
+
+.app-team-switcher__caret {
+  flex: none;
+  font-size: 0.875rem;
+  color: var(--app-muted);
+}
+
+.app-team-switcher__menu {
+  position: absolute;
+  z-index: 30;
+  inset-block-start: calc(100% + var(--un-space-2));
+  inset-inline-start: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-inline-size: 15rem;
+  margin: 0;
+  padding: var(--un-space-2);
+  border: 1px solid var(--app-hairline);
+  border-radius: var(--un-radius-xl);
+  background: var(--app-card-bg);
+  box-shadow: var(--app-elevation-pop);
+  list-style: none;
+}
+
+.app-team-switcher__menu[hidden] {
+  display: none;
+}
+
+.app-team-switcher__option {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  gap: 0 var(--un-space-2);
+  inline-size: 100%;
+  min-block-size: var(--un-control-md);
+  padding: var(--un-space-2) var(--un-space-3);
+  border: none;
+  border-radius: var(--un-radius-md);
+  background: transparent;
+  color: var(--app-ink);
+  text-align: start;
+  cursor: pointer;
+  transition: background var(--un-motion-duration-fast) var(--un-motion-easing-standard);
+}
+
+.app-team-switcher__option:hover {
+  background: var(--app-hover);
+}
+
+.app-team-switcher__option--active {
+  background: var(--app-lime-soft);
+}
+
+.app-team-switcher__option-name {
+  font-size: var(--un-font-size-sm);
+  font-weight: var(--un-font-weight-semibold);
+}
+
+.app-team-switcher__option-detail {
+  grid-column: 1;
+  color: var(--app-muted);
+  font-size: var(--un-font-size-xs);
+}
+
+.app-team-switcher__check {
+  grid-row: 1 / span 2;
+  grid-column: 2;
+  font-size: 1.125rem;
+  color: var(--app-lime-text);
+  opacity: 0;
+}
+
+.app-team-switcher__option--active .app-team-switcher__check {
+  opacity: 1;
+}
+
+/* Compact bars: the eyebrow goes, the control stays. */
+@media (max-width: 560px) {
+  .app-team-switcher__eyebrow {
+    display: none;
+  }
+
+  .app-team-switcher__name {
+    max-inline-size: 6rem;
+  }
+}
+
+/* ----------------------------------------------------------------------------
+   Invite a member — the account half and the roster half of one submission,
+   then the receipt that carries the one-time accept link.
+---------------------------------------------------------------------------- */
+.app-member-form__intro,
+.app-member-form__hint {
+  color: var(--app-muted);
+  font-size: var(--un-font-size-xs);
+}
+
+.app-member-form__subhead {
+  margin: var(--un-space-3) 0 0;
+  color: var(--app-ink);
+  font-size: var(--un-font-size-sm);
+  font-weight: var(--un-font-weight-bold);
+}
+
+.app-member-form__error {
+  font-size: var(--un-font-size-xs);
+}
+
+.app-invite-sent {
+  display: flex;
+  flex-direction: column;
+  gap: var(--un-space-3);
+  padding: var(--un-space-4);
+  border: 1px solid var(--app-lime-line);
+  border-radius: var(--un-radius-xl);
+  background: var(--app-lime-soft);
+}
+
+.app-invite-sent__head {
+  display: flex;
+  align-items: center;
+  gap: var(--un-space-2);
+}
+
+.app-invite-sent__icon {
+  font-size: 1.25rem;
+  color: var(--app-lime-text);
+}
+
+.app-invite-sent__title {
+  color: var(--app-ink);
+  font-size: var(--un-font-size-md);
+  font-weight: var(--un-font-weight-bold);
+}
+
+.app-invite-sent__message {
+  color: var(--app-ink);
+  font-size: var(--un-font-size-sm);
+}
+
+.app-invite-sent__link-block {
+  display: flex;
+  flex-direction: column;
+  gap: var(--un-space-1);
+}
+
+/* The link stays selectable text, so a refused clipboard never loses it. */
+.app-invite-sent__link {
+  display: block;
+  overflow-wrap: anywhere;
+  padding: var(--un-space-2) var(--un-space-3);
+  border: 1px solid var(--app-hairline);
+  border-radius: var(--un-radius-md);
+  background: var(--app-card-bg);
+  color: var(--app-ink);
+  font-size: var(--un-font-size-xs);
+  user-select: all;
+}
+
+.app-invite-sent__hint {
+  color: var(--app-muted);
+  font-size: var(--un-font-size-xs);
+}
+
+.app-invite-sent__facts {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: var(--un-space-1) var(--un-space-3);
+  margin: 0;
+  font-size: var(--un-font-size-xs);
+}
+
+.app-invite-sent__facts dt {
+  color: var(--app-muted);
+}
+
+.app-invite-sent__facts dd {
+  margin: 0;
+  color: var(--app-ink);
+  font-weight: var(--un-font-weight-semibold);
+}
+
+.app-invite-sent__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--un-space-2);
+}
+
+/* ----------------------------------------------------------------------------
+   Admin record rows — a record list whose rows carry lifecycle controls.
+---------------------------------------------------------------------------- */
+.app-admin-record {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--un-space-2) var(--un-space-3);
+  padding: var(--un-space-3) 0;
+  border-block-end: 1px solid var(--app-hairline);
+}
+
+.app-admin-record:last-child {
+  border-block-end: none;
+}
+
+.app-admin-record__main {
+  display: flex;
+  min-inline-size: 0;
+  flex: 1 1 12rem;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.app-admin-record__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--un-space-2);
+}
+
+/* ----------------------------------------------------------------------------
+   Permissions matrix — a wide grid that scrolls inside its own panel rather
+   than pushing the page sideways.
+---------------------------------------------------------------------------- */
+.app-matrix-scroll {
+  overflow-x: auto;
+  inline-size: 100%;
+}
+
+.app-matrix-table {
+  border-collapse: collapse;
+  inline-size: 100%;
+  min-inline-size: 40rem;
+  font-size: var(--un-font-size-sm);
+}
+
+.app-matrix-table th,
+.app-matrix-table td {
+  padding: var(--un-space-2) var(--un-space-3);
+  border-block-end: 1px solid var(--app-hairline);
+  text-align: start;
+  vertical-align: top;
+}
+
+.app-matrix-table thead th {
+  position: sticky;
+  inset-block-start: 0;
+  background: var(--app-card-bg);
+}
+
+.app-matrix-table__system {
+  display: block;
+  color: var(--app-muted);
+  font-size: var(--un-font-size-xs);
+  font-weight: var(--un-font-weight-regular, 400);
+  letter-spacing: normal;
+  text-transform: none;
+}
+
+.app-matrix-table__permission {
+  display: block;
+  color: var(--app-ink);
+  font-weight: var(--un-font-weight-semibold);
+}
+
+.app-matrix-table__description {
+  display: block;
+  color: var(--app-muted);
+  font-size: var(--un-font-size-xs);
+}
+
+.app-matrix-table__cell {
+  text-align: center;
+}
+
+.app-matrix-table__mark {
+  font-size: 1.125rem;
+  color: var(--app-hairline);
+}
+
+.app-matrix-table__mark--on {
+  color: var(--app-lime-text);
 }

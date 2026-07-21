@@ -1,6 +1,7 @@
 import { vi } from 'vitest';
 
 import type {
+  ComposerCallbacks,
   ReviewDetailPanelView,
   TrainingBuddyEditorView,
   TrainingComposerView,
@@ -76,6 +77,20 @@ export function buildBuddyEditorView(
   };
 }
 
+/** The composer's callback table; the view helper's test reuses it verbatim. */
+export function buildComposerCallbacks(): ComposerCallbacks {
+  return {
+    onTypeChange: vi.fn(),
+    onDateChange: vi.fn(),
+    onDateOpen: vi.fn(),
+    onDateDismiss: vi.fn(),
+    onDurationChange: vi.fn(),
+    onQuantityChange: vi.fn(),
+    onNotesChange: vi.fn(),
+    onSave: vi.fn(),
+  };
+}
+
 export function buildComposerView(
   overrides: Partial<TrainingComposerView> = {},
 ): TrainingComposerView {
@@ -97,6 +112,13 @@ export function buildComposerView(
     ],
     dateLabel: 'Date performed',
     dateValue: '',
+    dateDisplayValue: '',
+    datePlaceholder: 'Select a date',
+    dateOpenLabel: 'Open the date picker',
+    dateDialogTitle: 'Choose a date',
+    dateCloseLabel: 'Done',
+    dateHint: 'Tap to open the calendar.',
+    isDateOpen: false,
     dateMax: '2026-07-21',
     dateLocale: 'en',
     durationLabel: 'Duration (minutes)',
@@ -119,12 +141,7 @@ export function buildComposerView(
     isSaving: false,
     canSave: false,
     validationMessage: null,
-    onTypeChange: vi.fn(),
-    onDateChange: vi.fn(),
-    onDurationChange: vi.fn(),
-    onQuantityChange: vi.fn(),
-    onNotesChange: vi.fn(),
-    onSave: vi.fn(),
+    ...buildComposerCallbacks(),
     ...overrides,
   };
 }

@@ -15,6 +15,9 @@ describe('AUTH_API_PATHS', () => {
       invitationAccept: '/invitations/accept',
       sessions: '/auth/sessions',
       sessionsRevokeOthers: '/auth/sessions/revoke-others',
+      // Not under /auth: authorization is the RBAC module's, and it is the only
+      // endpoint that answers with TEAM-SCOPED grants.
+      effectivePermissions: '/rbac/me/permissions',
     });
   });
 

@@ -41,6 +41,15 @@ export function TrainingComposer(props: TrainingComposerProps): React.JSX.Elemen
           label={view.dateLabel}
           datetimeId={PERFORMED_ON_DATETIME_ID}
           value={view.dateValue}
+          displayValue={view.dateDisplayValue}
+          placeholder={view.datePlaceholder}
+          openLabel={view.dateOpenLabel}
+          dialogTitle={view.dateDialogTitle}
+          closeLabel={view.dateCloseLabel}
+          hint={view.dateHint}
+          isOpen={view.isDateOpen}
+          onOpen={view.onDateOpen}
+          onDismiss={view.onDateDismiss}
           onValueChange={view.onDateChange}
           max={view.dateMax}
           locale={view.dateLocale}

@@ -111,6 +111,7 @@
         "SESSION_STATUS",
         "SessionStatus",
         "SessionView",
+        "TeamSwitcherView",
         "authAckSchema",
         "authMembershipDtoSchema",
         "authQueryKeys",
@@ -136,7 +137,8 @@
         "useCurrentUserQuery",
         "useEffectivePermissions",
         "useLogoutMutation",
-        "useSession"
+        "useSession",
+        "useTeamSwitcher"
       ]
     },
     {
@@ -367,6 +369,31 @@
         "settingsPath",
         "useAppearancePreferences",
         "useThemeToggle"
+      ]
+    },
+    {
+      "name": "teams",
+      "publicSurface": [
+        "SEASON_STATUS",
+        "SEASON_STATUSES",
+        "SEASON_TRANSITION",
+        "SeasonStatus",
+        "SeasonTransition",
+        "TEAM_STATUS",
+        "TEAM_STATUSES",
+        "TEAM_TRANSITION",
+        "TeamStatus",
+        "TeamTransition",
+        "getTeamsRouteDefinitions",
+        "permissionsMatrixPath",
+        "roleMatrixResponseSchema",
+        "seasonListResponseSchema",
+        "seasonResponseSchema",
+        "seasonsAdminPath",
+        "teamListResponseSchema",
+        "teamResponseSchema",
+        "teamsAdminPath",
+        "teamsQueryKeys"
       ]
     },
     {

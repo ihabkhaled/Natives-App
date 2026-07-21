@@ -16,9 +16,11 @@ import {
   buildEvidenceEditorView,
   evidenceRowKey,
 } from '../helpers/composer-editor.helper';
+import { buildComposerCallbacks } from '../helpers/composer-callbacks.helper';
 import { appendBuddy, appendEvidence } from '../helpers/composer-state.helper';
 import { buildComposerView } from '../helpers/composer-view.helper';
-import { toSubmissionDraft, validateComposer } from '../helpers/submission-draft.helper';
+import { validateComposer } from '../helpers/submission-draft.helper';
+import { useComposerDatePicker } from './use-composer-date-picker.hook';
 import type { TrainingComposerView, TrainingOption } from '../types/training-view.types';
 import type { ActivityType, SubmissionDraft } from '../types/training.types';
 
@@ -43,6 +45,8 @@ export function useTrainingComposer(input: ComposerInput): TrainingComposerView 
 
   const selectedType = findActivityType(input.activityTypes, form.activityTypeId);
   const todayCairo = cairoDayKey(nowIso());
+  const locale = getActiveLocale();
+  const datePicker = useComposerDatePicker(form.performedOn, locale);
   const validationKey = validateComposer(form, selectedType, todayCairo);
 
   function patch(changes: Partial<ComposerFormState>): void {
@@ -94,33 +98,22 @@ export function useTrainingComposer(input: ComposerInput): TrainingComposerView 
       selectedType,
       validationKey,
       isSaving: input.isSaving,
+      dateDisplayValue: datePicker.displayValue,
+      isDateOpen: datePicker.isOpen,
       dateMax: todayCairo,
-      dateLocale: getActiveLocale(),
+      dateLocale: locale,
       evidence,
       buddies,
     },
-    {
-      onTypeChange: (value) => {
-        patch({ activityTypeId: value });
+    buildComposerCallbacks({
+      form,
+      validationKey,
+      datePicker,
+      patch,
+      reset: () => {
+        setForm(EMPTY_COMPOSER_STATE);
       },
-      onDateChange: (value) => {
-        patch({ performedOn: value });
-      },
-      onDurationChange: (value) => {
-        patch({ duration: value });
-      },
-      onQuantityChange: (value) => {
-        patch({ quantity: value });
-      },
-      onNotesChange: (value) => {
-        patch({ notes: value });
-      },
-      onSave: () => {
-        if (validationKey === null) {
-          input.onSave(toSubmissionDraft(form));
-          setForm(EMPTY_COMPOSER_STATE);
-        }
-      },
-    },
+      onSave: input.onSave,
+    }),
   );
 }

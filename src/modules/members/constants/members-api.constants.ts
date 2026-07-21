@@ -61,3 +61,12 @@ export function memberAvatarAttachPath(
 export function memberRolesPath(teamId: string, membershipId: string): string {
   return `${memberPath(teamId, membershipId)}/roles`;
 }
+
+/**
+ * Identity-scoped invitation collection. Deliberately NOT team-scoped: the
+ * backend issues an account invitation by email, and the team membership is a
+ * separate record created through `memberInvitePath`.
+ */
+export function invitationsPath(): string {
+  return '/invitations';
+}

@@ -10,6 +10,7 @@ import { getNotificationsRouteDefinitions } from '@/modules/notifications';
 import { getPointsRouteDefinitions } from '@/modules/points';
 import { getPracticeRouteDefinitions } from '@/modules/practice';
 import { getSettingsRouteDefinitions } from '@/modules/settings';
+import { getTeamsRouteDefinitions } from '@/modules/teams';
 import { getTrainingRouteDefinitions } from '@/modules/training';
 import { getTryoutsRouteDefinitions } from '@/modules/tryouts';
 import { getWorkbenchRouteDefinitions } from '@/modules/ui-workbench';
@@ -31,6 +32,7 @@ export function getAppRouteDefinitions(): readonly AppRouteDefinition[] {
     ...getTryoutsRouteDefinitions(),
     ...getNotificationsRouteDefinitions(),
     ...getAdminRouteDefinitions(),
+    ...getTeamsRouteDefinitions(),
     ...getSettingsRouteDefinitions(),
     ...getWorkbenchRouteDefinitions(),
   ];

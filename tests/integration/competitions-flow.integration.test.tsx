@@ -99,14 +99,18 @@ describe('competition list (real client + MSW)', () => {
   });
 
   it('blocks the screen for a principal without the competition read grant', async () => {
+    // Authorization has TWO sources: the global grants on /auth/me and the
+    // team-scoped ones on /rbac/me/permissions. A principal is only genuinely
+    // ungranted when neither carries the permission.
+    const withoutCompetitions = UNGRANTED_USER.permissions.filter(
+      (permission) => !permission.startsWith('competition.'),
+    );
     mockApiServer.use(
       http.get('*/auth/me', () =>
-        HttpResponse.json({
-          ...UNGRANTED_USER,
-          permissions: UNGRANTED_USER.permissions.filter(
-            (permission) => !permission.startsWith('competition.'),
-          ),
-        }),
+        HttpResponse.json({ ...UNGRANTED_USER, permissions: withoutCompetitions }),
+      ),
+      http.get('*/rbac/me/permissions', () =>
+        HttpResponse.json({ permissions: withoutCompetitions }),
       ),
     );
     await signInAs(MOCK_PERSONA_EMAILS.member);
