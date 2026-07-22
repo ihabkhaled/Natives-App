@@ -21,6 +21,7 @@ export function buildEmptyRemoteQuery(noop: () => void) {
 /** The undo/timeline panel input, with every callback supplied by the caller. */
 export function buildTimelineInput(noop: () => void) {
   return {
+    locale: 'en',
     events: [buildMatchEvent()],
     undoableEventId: 'event-1',
     canScore: true,

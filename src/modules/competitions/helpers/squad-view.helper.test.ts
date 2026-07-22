@@ -10,25 +10,27 @@ import {
   transitionLabel,
 } from './squad-view.helper';
 
+const LOCALE = 'en';
+
 const t = (key: string): string => key;
 const instant = (iso: string): string => `cairo:${iso}`;
 
 describe('buildSquadCard', () => {
   it('summarises status, revision, threshold, and deadline', () => {
-    const card = buildSquadCard(t, instant, buildSquad());
+    const card = buildSquadCard(t, LOCALE, instant, buildSquad());
 
     expect(card).toMatchObject({
       id: 'squad-1',
       statusLabel: 'squads.statusDraft',
       statusTone: 'medium',
-      revisionLabel: 'squads.revisionLabel 1',
-      thresholdLabel: 'squads.thresholdLabel: 70%',
+      revisionLabel: 'squads.revisionValue',
+      thresholdLabel: 'squads.thresholdValue',
       deadlineLabel: 'cairo:2026-09-02T18:00:00.000Z',
     });
   });
 
   it('says there is no deadline rather than rendering an empty date', () => {
-    const card = buildSquadCard(t, instant, buildSquad({ selectionDeadline: null }));
+    const card = buildSquadCard(t, LOCALE, instant, buildSquad({ selectionDeadline: null }));
 
     expect(card.deadlineLabel).toBe('squads.deadlineNone');
   });
@@ -36,7 +38,7 @@ describe('buildSquadCard', () => {
 
 describe('buildSquadFacts', () => {
   it('names the competition when the squad belongs to one', () => {
-    const facts = buildSquadFacts(t, instant, buildSquad());
+    const facts = buildSquadFacts(t, LOCALE, instant, buildSquad());
 
     expect(facts[0]).toEqual({
       key: 'competition',
@@ -48,6 +50,7 @@ describe('buildSquadFacts', () => {
   it('marks a season squad with no competition', () => {
     const facts = buildSquadFacts(
       t,
+      LOCALE,
       instant,
       buildSquad({ competitionId: null, selectionDeadline: null }),
     );
@@ -94,7 +97,7 @@ describe('transitionLabel and isSelectionFrozen', () => {
 
 describe('buildSquadHeadline', () => {
   it('degrades to a titled, tone-neutral header while the record is absent', () => {
-    expect(buildSquadHeadline(t, instant, null)).toEqual({
+    expect(buildSquadHeadline(t, LOCALE, instant, null)).toEqual({
       heading: 'squads.detailTitle',
       statusLabel: '',
       statusTone: 'medium',
@@ -106,6 +109,7 @@ describe('buildSquadHeadline', () => {
   it('carries the coach notes when the squad has them', () => {
     const headline = buildSquadHeadline(
       t,
+      LOCALE,
       instant,
       buildSquad({ status: 'locked', notes: 'Two handlers travel.' }),
     );

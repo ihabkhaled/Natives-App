@@ -1,4 +1,5 @@
 import type { TranslateParams } from '@/packages/i18n';
+import { formatNumber } from '@/packages/number';
 import { I18N_KEYS } from '@/shared/i18n';
 
 import {
@@ -59,13 +60,14 @@ export function buildCompetitionFacts(
 /** Stage rows carry their own rounds so the structure reads top-down. */
 export function buildStageRows(
   t: Translate,
+  locale: string,
   structure: CompetitionStructure,
 ): readonly StageRowView[] {
   return structure.stages.map((stage) => ({
     id: stage.stageId,
     name: stage.name,
     formatLabel: t(STAGE_FORMAT_LABEL_KEYS[stage.stageFormat]),
-    ordinalLabel: String(stage.ordinal),
+    ordinalLabel: formatNumber(stage.ordinal, locale),
     roundsLabel: t(I18N_KEYS.competitions.roundsLabel),
     roundsEmptyLabel: t(I18N_KEYS.competitions.roundsEmpty),
     rounds: structure.rounds

@@ -9,6 +9,7 @@ const onCorrect = vi.fn();
 
 function scope(overrides: Record<string, unknown> = {}) {
   return {
+    locale: 'en',
     events: [buildMatchEvent()],
     undoableEvent: buildMatchEvent(),
     canScore: true,

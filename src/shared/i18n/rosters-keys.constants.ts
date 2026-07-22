@@ -32,6 +32,7 @@ export const ROSTERS_I18N_KEYS = {
   sizeLabel: 'rosters.sizeLabel',
   sizeRange: 'rosters.sizeRange',
   revisionLabel: 'rosters.revisionLabel',
+  revisionValue: 'rosters.revisionValue',
   divisionLabel: 'rosters.divisionLabel',
   policyLabel: 'rosters.policyLabel',
   minWomenLabel: 'rosters.minWomenLabel',
@@ -117,4 +118,5 @@ export const ROSTERS_I18N_KEYS = {
   historyLocked: 'rosters.historyLocked',
   historyRevised: 'rosters.historyRevised',
   historyEntryCount: 'rosters.historyEntryCount',
+  historySnapshotLabel: 'rosters.historySnapshotLabel',
 } as const;

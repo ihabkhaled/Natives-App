@@ -1,7 +1,9 @@
 import type { TranslateParams } from '@/packages/i18n';
+import { formatNumber } from '@/packages/number';
 import { I18N_KEYS } from '@/shared/i18n';
 
 import {
+  ROSTER_COMPOSITION_ROWS,
   SEVERITY_LABEL_KEYS,
   SEVERITY_TONES,
   VIOLATION_LABEL_KEYS,
@@ -13,55 +15,16 @@ import type { RosterComposition, RosterValidation } from '../types/rosters.types
 
 type Translate = (key: string, params?: TranslateParams) => string;
 
-function compositionFacts(t: Translate, composition: RosterComposition): readonly FactRowView[] {
-  return [
-    {
-      key: 'selected',
-      label: t(I18N_KEYS.rosters.compositionSelected),
-      value: String(composition.selected),
-    },
-    {
-      key: 'women',
-      label: t(I18N_KEYS.rosters.compositionWomen),
-      value: String(composition.women),
-    },
-    { key: 'men', label: t(I18N_KEYS.rosters.compositionMen), value: String(composition.men) },
-    {
-      key: 'mixed',
-      label: t(I18N_KEYS.rosters.compositionMixed),
-      value: String(composition.mixed),
-    },
-    {
-      key: 'unknown',
-      label: t(I18N_KEYS.rosters.compositionUnknown),
-      value: String(composition.unknownGender),
-    },
-    {
-      key: 'offense',
-      label: t(I18N_KEYS.rosters.compositionOffense),
-      value: String(composition.offense),
-    },
-    {
-      key: 'defense',
-      label: t(I18N_KEYS.rosters.compositionDefense),
-      value: String(composition.defense),
-    },
-    {
-      key: 'flexible',
-      label: t(I18N_KEYS.rosters.compositionFlexible),
-      value: String(composition.flexible),
-    },
-    {
-      key: 'captains',
-      label: t(I18N_KEYS.rosters.compositionCaptains),
-      value: String(composition.captains),
-    },
-    {
-      key: 'missingJersey',
-      label: t(I18N_KEYS.rosters.compositionMissingJersey),
-      value: String(composition.missingJersey),
-    },
-  ];
+function compositionFacts(
+  t: Translate,
+  locale: string,
+  composition: RosterComposition,
+): readonly FactRowView[] {
+  return ROSTER_COMPOSITION_ROWS.map((row) => ({
+    key: row.key,
+    label: t(row.labelKey),
+    value: formatNumber(composition[row.field], locale),
+  }));
 }
 
 /**
@@ -70,6 +33,7 @@ function compositionFacts(t: Translate, composition: RosterComposition): readonl
  */
 export function buildValidationPanel(
   t: Translate,
+  locale: string,
   validation: RosterValidation | null,
 ): RosterValidationPanelView {
   const publishable = validation?.publishable === true;
@@ -81,7 +45,7 @@ export function buildValidationPanel(
       : t(I18N_KEYS.rosters.validationBlocked),
     verdictTone: publishable ? 'success' : 'warning',
     compositionHeading: t(I18N_KEYS.rosters.compositionHeading),
-    composition: compositionFacts(t, validation?.composition ?? EMPTY_COMPOSITION),
+    composition: compositionFacts(t, locale, validation?.composition ?? EMPTY_COMPOSITION),
     violationsHeading: t(I18N_KEYS.rosters.violationsHeading),
     violationsEmptyLabel: t(I18N_KEYS.rosters.violationsEmpty),
     violations: (validation?.violations ?? []).map((violation) => ({

@@ -26,6 +26,7 @@ const ROSTER = buildMatchStatistics({
 
 function input(overrides: Partial<MatchStatisticsViewInput> = {}): MatchStatisticsViewInput {
   return {
+    locale: 'en',
     statistics: ROSTER,
     resolveName: (membershipId: string) => membershipId,
     status: 'ready',

@@ -15,6 +15,8 @@ import {
   buildStageRows,
 } from './competition-detail.helper';
 
+const LOCALE = 'en';
+
 const t = (key: string): string => key;
 const day = (isoDate: string): string => `day:${isoDate}`;
 const instant = (iso: string): string => `cairo:${iso}`;
@@ -46,7 +48,7 @@ describe('buildCompetitionFacts', () => {
 
 describe('buildStageRows', () => {
   it('attaches each stage its own rounds', () => {
-    const rows = buildStageRows(t, STRUCTURE);
+    const rows = buildStageRows(t, LOCALE, STRUCTURE);
 
     expect(rows[0]?.rounds).toEqual(['Round 1', 'Round 2']);
     expect(rows[1]?.rounds).toEqual([]);
@@ -54,7 +56,7 @@ describe('buildStageRows', () => {
   });
 
   it('returns nothing for a competition with no published structure', () => {
-    expect(buildStageRows(t, { stages: [], rounds: [] })).toEqual([]);
+    expect(buildStageRows(t, LOCALE, { stages: [], rounds: [] })).toEqual([]);
   });
 });
 

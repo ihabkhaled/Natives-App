@@ -59,7 +59,7 @@ export function useSquadsList(): SquadsListView {
       SQUAD_STATUS_LABEL_KEYS,
       I18N_KEYS.squads.filterAll,
     ),
-    items: matches.map((item) => buildSquadCard(t, formatInstant, item)),
+    items: matches.map((item) => buildSquadCard(t, locale, formatInstant, item)),
     hasMatches: matches.length > 0,
     noMatchesTitle: t(I18N_KEYS.squads.noMatchesTitle),
     noMatchesMessage: t(I18N_KEYS.squads.noMatchesMessage),

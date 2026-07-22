@@ -19,6 +19,7 @@ export interface TimelinePanelInput {
   readonly onUndoCancel: () => void;
   readonly onUndoReasonChange: (value: string) => void;
   readonly onUndoConfirm: () => void;
+  readonly locale: string;
 }
 
 /**
@@ -34,7 +35,7 @@ export function buildTimelinePanel(t: Translate, input: TimelinePanelInput): Tim
   return {
     heading: t(I18N_KEYS.scoreboard.timelinePanel),
     intro: t(I18N_KEYS.scoreboard.timelineIntro),
-    rows: buildTimelineRows(t, input.events),
+    rows: buildTimelineRows(t, input.locale, input.events),
     emptyLabel: t(I18N_KEYS.scoreboard.timelineEmpty),
     undoLabel: t(I18N_KEYS.scoreboard.undoLabel),
     undoDisabled: !input.canScore || blocked || input.undoableEventId === null,

@@ -165,6 +165,40 @@ export default tseslint.config(
       'max-lines-per-function': ['error', { max: 90, skipBlankLines: true, skipComments: true }],
     },
   },
+  {
+    // `Intl` is a global, so package-ownership.config.mjs (a vendor registry)
+    // cannot reach it. The number owner formats every user-visible figure so a
+    // hand-built `${value}%` can never bypass locale separators and the bidi
+    // marks Arabic needs. `src/packages/date` keeps Day.js for instants.
+    name: 'capacitor-ranger/intl-ownership',
+    files: ['src/**/*.{ts,tsx}'],
+    ignores: ['src/packages/number/**', 'src/**/*.test.{ts,tsx}'],
+    rules: {
+      'no-restricted-globals': [
+        'error',
+        {
+          name: 'Intl',
+          message:
+            'Intl belongs to @/packages/number. Import formatNumber/formatPercent/formatSignedNumber/formatScorePair instead.',
+        },
+      ],
+      'no-restricted-properties': [
+        'error',
+        {
+          property: 'toLocaleString',
+          message: 'Use @/packages/number so every locale formats consistently.',
+        },
+        {
+          property: 'toLocaleDateString',
+          message: 'Use @/packages/date so every instant renders in Africa/Cairo.',
+        },
+        {
+          property: 'toLocaleTimeString',
+          message: 'Use @/packages/date so every instant renders in Africa/Cairo.',
+        },
+      ],
+    },
+  },
   architectureConfig,
   vitestTestConfig,
   playwrightTestConfig,

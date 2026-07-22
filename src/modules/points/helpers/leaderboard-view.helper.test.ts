@@ -11,6 +11,8 @@ import {
   buildTieRuleLabel,
 } from './leaderboard-view.helper';
 
+const LOCALE = 'en';
+
 const t = (key: string): string => key;
 
 function row(overrides: Partial<LeaderboardRow> = {}): LeaderboardRow {
@@ -53,7 +55,7 @@ describe('filter options', () => {
 
 describe('buildLeaderboardRows', () => {
   it('keeps a zero-total member on the board and marks the row', () => {
-    const rows = buildLeaderboardRows(t, {
+    const rows = buildLeaderboardRows(t, LOCALE, {
       rows: [row(), row({ membershipId: 'm-9', total: 0, rank: 2, badgeCount: 0 })],
       expandedId: '',
       ruleVersion: null,
@@ -65,7 +67,7 @@ describe('buildLeaderboardRows', () => {
   });
 
   it('labels rows that share a server rank as tied', () => {
-    const rows = buildLeaderboardRows(t, {
+    const rows = buildLeaderboardRows(t, LOCALE, {
       rows: [row({ rank: 2 }), row({ membershipId: 'm-2', rank: 2 }), row({ rank: 4 })],
       expandedId: '',
       ruleVersion: null,
@@ -77,7 +79,7 @@ describe('buildLeaderboardRows', () => {
   });
 
   it('describes movement without relying on colour', () => {
-    const rows = buildLeaderboardRows(t, {
+    const rows = buildLeaderboardRows(t, LOCALE, {
       rows: [
         row(),
         row({ membershipId: 'm-2', movement: 'steady', rankDelta: 0 }),
@@ -96,7 +98,7 @@ describe('buildLeaderboardRows', () => {
   });
 
   it('expands exactly the requested row and reports the rule version', () => {
-    const rows = buildLeaderboardRows(t, {
+    const rows = buildLeaderboardRows(t, LOCALE, {
       rows: [row(), row({ membershipId: 'm-2', contributions: [] })],
       expandedId: 'm-2',
       ruleVersion: 4,
@@ -109,7 +111,11 @@ describe('buildLeaderboardRows', () => {
   });
 
   it('says so when the server recorded no rule version', () => {
-    const rows = buildLeaderboardRows(t, { rows: [row()], expandedId: '', ruleVersion: null });
+    const rows = buildLeaderboardRows(t, LOCALE, {
+      rows: [row()],
+      expandedId: '',
+      ruleVersion: null,
+    });
 
     expect(rows[0]?.explanation.ruleVersionLabel).toBe('points.explainRuleVersionUnknown');
     expect(rows[0]?.explanation.totalText).toBe('210');

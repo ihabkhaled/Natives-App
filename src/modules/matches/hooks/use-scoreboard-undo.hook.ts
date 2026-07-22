@@ -11,6 +11,7 @@ export interface ScoreboardUndoScope {
   readonly hasQueuedWork: boolean;
   readonly isRunning: boolean;
   readonly onCorrect: (eventId: string, reason: string) => void;
+  readonly locale: string;
 }
 
 /**
@@ -23,6 +24,7 @@ export interface ScoreboardUndoScope {
 export function useScoreboardUndo(scope: ScoreboardUndoScope): TimelinePanelInput {
   const [undoState, setUndoState] = useState({ isOpen: false, reason: '' });
   return {
+    locale: scope.locale,
     events: scope.events,
     undoableEventId: scope.undoableEvent?.eventId ?? null,
     canScore: scope.canScore,

@@ -1,4 +1,5 @@
 import type { TranslateParams } from '@/packages/i18n';
+import { formatNumber } from '@/packages/number';
 import { I18N_KEYS } from '@/shared/i18n';
 
 import type { PointsHistoryBody } from '../types/points-view.types';
@@ -27,7 +28,7 @@ export function buildPointsHistoryBody(
   const total = summary?.total ?? 0;
   return {
     totalHeading: t(I18N_KEYS.points.totalHeading),
-    totalText: String(total),
+    totalText: formatNumber(total, locale),
     ledgerHeading: t(I18N_KEYS.points.ledgerHeading),
     ledgerIntro: t(I18N_KEYS.points.ledgerIntro),
     ledgerEmptyLabel: t(I18N_KEYS.points.ledgerEmpty),
@@ -41,6 +42,6 @@ export function buildPointsHistoryBody(
     candidateHeading: t(I18N_KEYS.points.badgeCandidateHeading),
     candidateIntro: t(I18N_KEYS.points.badgeCandidateIntro),
     candidates: buildBadgeCandidates(t, total, badges),
-    chart: buildCategoryChart(t, entries),
+    chart: buildCategoryChart(t, locale, entries),
   };
 }

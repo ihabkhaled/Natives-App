@@ -13,6 +13,8 @@ import {
   buildSelectionRoleMap,
 } from './roster-view.helper';
 
+const LOCALE = 'en';
+
 const t = (key: string): string => key;
 
 describe('buildSelectionRoleMap', () => {
@@ -31,6 +33,7 @@ describe('buildRosterRows', () => {
   it('includes every selected player, even one with nothing recorded', () => {
     const rows = buildRosterRows(
       t,
+      LOCALE,
       [
         buildCandidate({ selected: true }),
         buildCandidate({
@@ -60,6 +63,7 @@ describe('buildRosterRows', () => {
   it('includes a player the selection list knows about even if the report lags', () => {
     const rows = buildRosterRows(
       t,
+      LOCALE,
       [buildCandidate({ selected: false })],
       [buildSelection({ membershipId: 'm-1' })],
     );
@@ -80,7 +84,7 @@ describe('buildRosterColumns and buildRosterPanel', () => {
   });
 
   it('always carries the pointer to the live roster screens', () => {
-    const panel = buildRosterPanel(t, [], []);
+    const panel = buildRosterPanel(t, LOCALE, [], []);
 
     expect(panel.pendingNotice).toBe('squads.rosterPendingNotice');
     expect(panel.exportNote).toBe('squads.rosterExportNote');

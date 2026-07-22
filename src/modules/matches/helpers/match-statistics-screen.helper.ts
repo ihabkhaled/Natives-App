@@ -29,6 +29,7 @@ export interface MatchStatisticsViewInput {
   readonly onBack: () => void;
   readonly onOpenReport: (membershipId: string) => void;
   readonly onCloseReport: () => void;
+  readonly locale: string;
 }
 
 const PLAYER_COLUMN_KEYS = [
@@ -121,7 +122,7 @@ export function buildMatchStatisticsView(
     status: input.status,
     teamHeading: t(I18N_KEYS.matchStats.teamPanel),
     teamIntro: t(I18N_KEYS.matchStats.teamIntro),
-    teamFacts: buildTeamFacts(t, statistics.team),
+    teamFacts: buildTeamFacts(t, input.locale, statistics.team),
     playersHeading: t(I18N_KEYS.matchStats.playersPanel),
     playersIntro: t(I18N_KEYS.matchStats.playersIntro),
     playersCaption: t(I18N_KEYS.matchStats.playersCaption),

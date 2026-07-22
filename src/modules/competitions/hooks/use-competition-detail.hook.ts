@@ -70,7 +70,7 @@ export function useCompetitionDetail(): CompetitionDetailView {
     stagesHeading: t(I18N_KEYS.competitions.stagesHeading),
     stagesIntro: t(I18N_KEYS.competitions.stagesIntro),
     stagesEmptyLabel: t(I18N_KEYS.competitions.stagesEmpty),
-    stages: buildStageRows(t, structure.data ?? EMPTY_STRUCTURE),
+    stages: buildStageRows(t, locale, structure.data ?? EMPTY_STRUCTURE),
     fixturesHeading: t(I18N_KEYS.competitions.fixturesHeading),
     fixturesIntro: t(I18N_KEYS.competitions.fixturesIntro),
     fixturesEmptyLabel: t(I18N_KEYS.competitions.fixturesEmpty),

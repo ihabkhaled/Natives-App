@@ -22,7 +22,7 @@ import type { MatchesListView } from '../types/matches-view.types';
  * filter over one bounded page, and exactly one screen state.
  */
 export function useMatchesList(): MatchesListView {
-  const { t } = useAppTranslation();
+  const { t, locale } = useAppTranslation();
   const context = useMatchesContext();
   const navigation = useAppNavigation();
   const [statusFilter, setStatusFilter] = useState<string>(ALL_MATCH_FILTER);
@@ -52,7 +52,7 @@ export function useMatchesList(): MatchesListView {
     statusFilterLabel: t(I18N_KEYS.matches.statusFilterLabel),
     statusFilter,
     statusOptions: buildMatchStatusOptions(t),
-    items: matches.map((match) => buildMatchCard(t, match)),
+    items: matches.map((match) => buildMatchCard(t, locale, match)),
     hasMatches: matches.length > 0,
     noMatchesTitle: t(I18N_KEYS.matches.noMatchesTitle),
     noMatchesMessage: t(I18N_KEYS.matches.noMatchesMessage),

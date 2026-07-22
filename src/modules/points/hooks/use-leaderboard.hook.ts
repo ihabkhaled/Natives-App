@@ -73,7 +73,7 @@ export function useLeaderboard(): LeaderboardView {
       hasData: board !== null,
       hasItems: rows.length > 0,
     }),
-    rows: buildLeaderboardRows(t, { rows, expandedId, ruleVersion: null }),
+    rows: buildLeaderboardRows(t, locale, { rows, expandedId, ruleVersion: null }),
     onPeriodChange: (value: string) => {
       setPeriod(value as LeaderboardPeriod);
       setExpandedId('');

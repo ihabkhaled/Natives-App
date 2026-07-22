@@ -1,5 +1,6 @@
 import { formatCairoDate, formatCairoDateTime } from '@/packages/date';
 import type { TranslateParams } from '@/packages/i18n';
+import { formatSignedNumber } from '@/packages/number';
 import { I18N_KEYS } from '@/shared/i18n';
 import type { ChartTableRow } from '@/shared/ui';
 
@@ -21,11 +22,6 @@ import type { LedgerEntry, PlayerBadge } from '../types/points.types';
 
 type Translate = (key: string, params?: TranslateParams) => string;
 
-/** A positive amount is written with an explicit sign so the delta is obvious. */
-function formatSignedAmount(amount: number): string {
-  return amount > 0 ? `+${String(amount)}` : String(amount);
-}
-
 /**
  * Every ledger entry is its own row. A reversal or an adjustment never edits
  * an earlier entry — it appears alongside it, which is exactly what the
@@ -40,7 +36,7 @@ export function buildLedgerEntries(
     id: entry.id,
     typeLabel: t(LEDGER_ENTRY_LABEL_KEYS[entry.entryType]),
     typeTone: LEDGER_ENTRY_TONES[entry.entryType],
-    amountText: formatSignedAmount(entry.amount),
+    amountText: formatSignedNumber(entry.amount, locale),
     sourceLabel: t(LEDGER_SOURCE_LABEL_KEYS[entry.sourceType]),
     categoryLabel: entry.activityCategory,
     reasonText: entry.reason ?? t(I18N_KEYS.points.entryReasonEmpty),
@@ -105,7 +101,10 @@ function summarizeByCategory(entries: readonly LedgerEntry[]): ReadonlyMap<strin
   return totals;
 }
 
-function buildBars(totals: ReadonlyMap<string, number>): readonly PointsCategoryChartBarView[] {
+function buildBars(
+  totals: ReadonlyMap<string, number>,
+  locale: string,
+): readonly PointsCategoryChartBarView[] {
   const rows = [...totals.entries()].sort((left, right) => right[1] - left[1]);
   const widest = Math.max(1, ...rows.map(([, value]) => Math.abs(value)));
   const { chartBarHeight, chartBarGap, chartWidth } = LEADERBOARD_LIMITS;
@@ -114,7 +113,7 @@ function buildBars(totals: ReadonlyMap<string, number>): readonly PointsCategory
     return {
       key: category,
       label: category,
-      valueText: String(value),
+      valueText: formatSignedNumber(value, locale),
       x: 0,
       y,
       width: Math.max(2, Math.round((Math.abs(value) / widest) * chartWidth)),
@@ -124,13 +123,16 @@ function buildBars(totals: ReadonlyMap<string, number>): readonly PointsCategory
   });
 }
 
-function buildTableRows(totals: ReadonlyMap<string, number>): readonly ChartTableRow[] {
+function buildTableRows(
+  totals: ReadonlyMap<string, number>,
+  locale: string,
+): readonly ChartTableRow[] {
   return [...totals.entries()]
     .sort((left, right) => right[1] - left[1])
     .map(([category, value]) => ({
       key: category,
       label: category,
-      valueText: String(value),
+      valueText: formatSignedNumber(value, locale),
     }));
 }
 
@@ -140,10 +142,11 @@ function buildTableRows(totals: ReadonlyMap<string, number>): readonly ChartTabl
  */
 export function buildCategoryChart(
   t: Translate,
+  locale: string,
   entries: readonly LedgerEntry[],
 ): PointsCategoryChartView {
   const totals = summarizeByCategory(entries);
-  const bars = buildBars(totals);
+  const bars = buildBars(totals, locale);
   const { chartBarHeight, chartBarGap, chartWidth } = LEADERBOARD_LIMITS;
   const height = Math.max(chartBarHeight, bars.length * (chartBarHeight + chartBarGap));
   return {
@@ -155,6 +158,6 @@ export function buildCategoryChart(
     tableToggleLabel: t(I18N_KEYS.points.chartTableToggle),
     tableCaption: t(I18N_KEYS.points.chartTableCaption),
     columnLabels: [t(I18N_KEYS.points.chartColumnCategory), t(I18N_KEYS.points.chartColumnPoints)],
-    tableRows: buildTableRows(totals),
+    tableRows: buildTableRows(totals, locale),
   };
 }

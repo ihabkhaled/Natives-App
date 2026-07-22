@@ -1,5 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
+import { I18N_KEYS } from '@/shared/i18n';
+
 import type { Roster, RosterEntry, RosterSnapshot } from '../types/rosters.types';
 import {
   availableRosterActions,
@@ -12,6 +14,8 @@ import {
   buildRosterSections,
 } from './roster-detail.helper';
 import { buildValidationPanel } from './roster-validation.helper';
+
+const LOCALE = 'en';
 
 const t = (key: string): string => key;
 const instant = (iso: string): string => `cairo:${iso}`;
@@ -70,7 +74,7 @@ const SNAPSHOT: RosterSnapshot = {
 
 describe('buildRosterCard', () => {
   it('summarises kind, division, size, and revision', () => {
-    const card = buildRosterCard(t, roster());
+    const card = buildRosterCard(t, LOCALE, roster());
 
     expect(card).toMatchObject({
       id: 'r-1',
@@ -78,7 +82,7 @@ describe('buildRosterCard', () => {
       divisionLabel: 'rosters.divisionMixed',
       statusTone: 'medium',
     });
-    expect(card.revisionLabel).toContain('1');
+    expect(card.revisionLabel).toBe(I18N_KEYS.rosters.revisionValue);
   });
 });
 
@@ -102,12 +106,13 @@ describe('buildRosterHeadline', () => {
 
 describe('buildRosterFacts', () => {
   it('returns nothing while the roster is still loading', () => {
-    expect(buildRosterFacts(t, instant, null)).toEqual([]);
+    expect(buildRosterFacts(t, LOCALE, instant, null)).toEqual([]);
   });
 
   it('says there is no minimum rather than printing a zero', () => {
     const facts = buildRosterFacts(
       t,
+      LOCALE,
       instant,
       roster({ minWomen: null, requireCaptain: false, selectionDeadline: null }),
     );
@@ -118,7 +123,7 @@ describe('buildRosterFacts', () => {
   });
 
   it('renders the policy values when they exist', () => {
-    const facts = buildRosterFacts(t, instant, roster());
+    const facts = buildRosterFacts(t, LOCALE, instant, roster());
 
     expect(facts[3]?.value).toBe('5');
     expect(facts[4]?.value).toBe('rosters.captainRequired');
@@ -128,7 +133,7 @@ describe('buildRosterFacts', () => {
 
 describe('buildValidationPanel', () => {
   it('reports a blocked verdict and empty composition before the read lands', () => {
-    const panel = buildValidationPanel(t, null);
+    const panel = buildValidationPanel(t, LOCALE, null);
 
     expect(panel.verdictLabel).toBe('rosters.validationBlocked');
     expect(panel.violations).toEqual([]);
@@ -136,7 +141,7 @@ describe('buildValidationPanel', () => {
   });
 
   it('translates every reported violation with its severity tone', () => {
-    const panel = buildValidationPanel(t, {
+    const panel = buildValidationPanel(t, LOCALE, {
       rosterId: 'r-1',
       policyVersion: 'v2',
       status: 'draft',
@@ -167,7 +172,7 @@ describe('buildValidationPanel', () => {
   });
 
   it('reports a publishable roster as ready', () => {
-    const panel = buildValidationPanel(t, {
+    const panel = buildValidationPanel(t, LOCALE, {
       rosterId: 'r-1',
       policyVersion: 'v2',
       status: 'draft',
@@ -199,6 +204,7 @@ describe('buildEntryRows', () => {
   it('drops withdrawn entries and spells out every missing value', () => {
     const rows = buildEntryRows(
       t,
+      LOCALE,
       [
         entry(),
         entry({
@@ -226,6 +232,7 @@ describe('buildEntryRows', () => {
   it('keeps the override provenance on an entry added past a constraint', () => {
     const rows = buildEntryRows(
       t,
+      LOCALE,
       [entry({ constraintOverridden: true, overrideReason: 'Handler depth.' })],
       true,
     );
@@ -234,7 +241,7 @@ describe('buildEntryRows', () => {
   });
 
   it('states an override with no recorded reason rather than hiding it', () => {
-    const rows = buildEntryRows(t, [entry({ constraintOverridden: true })], false);
+    const rows = buildEntryRows(t, LOCALE, [entry({ constraintOverridden: true })], false);
 
     expect(rows[0]?.overrideNote).toBe('rosters.overrideNote');
     expect(rows[0]?.isRemovable).toBe(false);
@@ -247,9 +254,9 @@ describe('buildEntryRows', () => {
 
 describe('buildHistoryRows', () => {
   it('labels each snapshot with its reason, revision, and size', () => {
-    const rows = buildHistoryRows(t, instant, [SNAPSHOT]);
+    const rows = buildHistoryRows(t, LOCALE, instant, [SNAPSHOT]);
 
-    expect(rows[0]?.label).toContain('rosters.historyLocked');
+    expect(rows[0]?.label).toBe(I18N_KEYS.rosters.historySnapshotLabel);
     expect(rows[0]?.timeLabel).toBe('cairo:2026-07-12T09:00:00.000Z');
     expect(rows[0]?.entryCountLabel).toBe('rosters.historyEntryCount');
   });
@@ -287,6 +294,7 @@ describe('availableRosterActions', () => {
 describe('buildRosterSections', () => {
   it('assembles every section from the four reads', () => {
     const sections = buildRosterSections(t, {
+      locale: LOCALE,
       formatInstant: instant,
       roster: roster(),
       entries: [entry()],

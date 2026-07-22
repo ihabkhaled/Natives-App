@@ -113,3 +113,25 @@ export const ROSTER_ACTION_TONES = {
   lock: 'secondary',
   archive: 'danger',
 } as const;
+
+/**
+ * The composition figures the validation panel reports, in reading order.
+ * `field` names the `RosterComposition` member so the panel stays a mapping
+ * rather than ten near-identical literals.
+ */
+export const ROSTER_COMPOSITION_ROWS = [
+  { key: 'selected', field: 'selected', labelKey: I18N_KEYS.rosters.compositionSelected },
+  { key: 'women', field: 'women', labelKey: I18N_KEYS.rosters.compositionWomen },
+  { key: 'men', field: 'men', labelKey: I18N_KEYS.rosters.compositionMen },
+  { key: 'mixed', field: 'mixed', labelKey: I18N_KEYS.rosters.compositionMixed },
+  { key: 'unknown', field: 'unknownGender', labelKey: I18N_KEYS.rosters.compositionUnknown },
+  { key: 'offense', field: 'offense', labelKey: I18N_KEYS.rosters.compositionOffense },
+  { key: 'defense', field: 'defense', labelKey: I18N_KEYS.rosters.compositionDefense },
+  { key: 'flexible', field: 'flexible', labelKey: I18N_KEYS.rosters.compositionFlexible },
+  { key: 'captains', field: 'captains', labelKey: I18N_KEYS.rosters.compositionCaptains },
+  {
+    key: 'missingJersey',
+    field: 'missingJersey',
+    labelKey: I18N_KEYS.rosters.compositionMissingJersey,
+  },
+] as const;

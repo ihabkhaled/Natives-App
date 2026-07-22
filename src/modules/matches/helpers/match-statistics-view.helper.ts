@@ -1,3 +1,4 @@
+import { formatNumber, formatPercent } from '@/packages/number';
 import { I18N_KEYS } from '@/shared/i18n';
 import type { ChartTableRow, FactListItem } from '@/shared/ui';
 
@@ -8,12 +9,12 @@ import type { ChartBarView } from '../types/matches-view.types';
 type Translate = (key: string, params?: Record<string, string | number>) => string;
 
 /** A rate over zero points played is unknown, not 0%. */
-function rate(numerator: number, denominator: number): string | null {
-  return denominator === 0 ? null : `${String(Math.round((numerator / denominator) * 100))}%`;
+function rate(numerator: number, denominator: number, locale: string): string | null {
+  return denominator === 0 ? null : formatPercent((numerator / denominator) * 100, locale);
 }
 
-function rateValue(t: Translate, numerator: number, denominator: number): string {
-  return rate(numerator, denominator) ?? t(I18N_KEYS.matchStats.notEnoughData);
+function rateValue(t: Translate, locale: string, numerator: number, denominator: number): string {
+  return rate(numerator, denominator, locale) ?? t(I18N_KEYS.matchStats.notEnoughData);
 }
 
 /** Counted measures the projection always reports. */
@@ -34,12 +35,16 @@ const NULLABLE_TEAM_MEASURES = [
   { key: 'opponentErrors', labelKey: I18N_KEYS.matchStats.opponentErrors },
 ] as const;
 
-export function buildTeamFacts(t: Translate, team: TeamMatchStatistics): readonly FactListItem[] {
+export function buildTeamFacts(
+  t: Translate,
+  locale: string,
+  team: TeamMatchStatistics,
+): readonly FactListItem[] {
   return [
     ...COUNTED_TEAM_MEASURES.map((measure) => ({
       key: measure.key,
       label: t(measure.labelKey),
-      value: String(team[measure.key]),
+      value: formatNumber(team[measure.key], locale),
     })),
     ...NULLABLE_TEAM_MEASURES.map((measure) => ({
       key: measure.key,
@@ -49,12 +54,12 @@ export function buildTeamFacts(t: Translate, team: TeamMatchStatistics): readonl
     {
       key: 'holdRate',
       label: t(I18N_KEYS.matchStats.holdRate),
-      value: rateValue(t, team.holds, team.pointsCompleted),
+      value: rateValue(t, locale, team.holds, team.pointsCompleted),
     },
     {
       key: 'breakRate',
       label: t(I18N_KEYS.matchStats.breakRate),
-      value: rateValue(t, team.breaks, team.pointsCompleted),
+      value: rateValue(t, locale, team.breaks, team.pointsCompleted),
     },
   ];
 }

@@ -18,7 +18,7 @@ import type { MatchStatisticsScreenView } from '../types/matches-view.types';
  * per-player reports, and the honestly-empty video analysis surface.
  */
 export function useMatchStatisticsScreen(): MatchStatisticsScreenView {
-  const { t } = useAppTranslation();
+  const { t, locale } = useAppTranslation();
   const context = useMatchesContext();
   const navigation = useAppNavigation();
   const matchId = useRouteParam(MATCH_ID_PARAM) ?? '';
@@ -29,6 +29,7 @@ export function useMatchStatisticsScreen(): MatchStatisticsScreenView {
   const statistics = statisticsQuery.data ?? EMPTY_MATCH_STATISTICS;
 
   return buildMatchStatisticsView(t, {
+    locale,
     statistics,
     resolveName: buildNameResolver(rosterQuery.data?.items ?? []),
     status: resolveMatchesScreenStatus(

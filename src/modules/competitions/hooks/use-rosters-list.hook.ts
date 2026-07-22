@@ -21,7 +21,7 @@ import { useRostersQuery } from './use-rosters-query.hook';
 
 /** Prepared, translated view model for the competition and match roster list. */
 export function useRostersList(): RostersListView {
-  const { t } = useAppTranslation();
+  const { t, locale } = useAppTranslation();
   const context = useCompetitionsContext();
   const navigation = useAppNavigation();
   const [kindFilter, setKindFilter] = useState<string>(ALL_FILTER);
@@ -56,7 +56,7 @@ export function useRostersList(): RostersListView {
       ROSTER_KIND_LABEL_KEYS,
       I18N_KEYS.rosters.filterAll,
     ),
-    items: matches.map((item) => buildRosterCard(t, item)),
+    items: matches.map((item) => buildRosterCard(t, locale, item)),
     hasMatches: matches.length > 0,
     noMatchesTitle: t(I18N_KEYS.rosters.noMatchesTitle),
     noMatchesMessage: t(I18N_KEYS.rosters.noMatchesMessage),

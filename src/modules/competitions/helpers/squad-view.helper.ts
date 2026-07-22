@@ -1,4 +1,5 @@
 import type { TranslateParams } from '@/packages/i18n';
+import { formatNumber, formatPercent } from '@/packages/number';
 import { I18N_KEYS } from '@/shared/i18n';
 
 import {
@@ -14,6 +15,7 @@ type Translate = (key: string, params?: TranslateParams) => string;
 
 export function buildSquadCard(
   t: Translate,
+  locale: string,
   formatInstant: (iso: string) => string,
   squad: Squad,
 ): SquadCardView {
@@ -22,18 +24,23 @@ export function buildSquadCard(
     name: squad.name,
     statusLabel: t(SQUAD_STATUS_LABEL_KEYS[squad.status]),
     statusTone: SQUAD_STATUS_TONES[squad.status],
-    revisionLabel: `${t(I18N_KEYS.squads.revisionLabel)} ${String(squad.revision)}`,
+    revisionLabel: t(I18N_KEYS.squads.revisionValue, {
+      revision: formatNumber(squad.revision, locale),
+    }),
     deadlineLabel:
       squad.selectionDeadline === null
         ? t(I18N_KEYS.squads.deadlineNone)
         : formatInstant(squad.selectionDeadline),
-    thresholdLabel: `${t(I18N_KEYS.squads.thresholdLabel)}: ${String(squad.attendanceThresholdPct)}%`,
+    thresholdLabel: t(I18N_KEYS.squads.thresholdValue, {
+      percent: formatPercent(squad.attendanceThresholdPct, locale),
+    }),
     openLabel: t(I18N_KEYS.squads.openLabel),
   };
 }
 
 export function buildSquadFacts(
   t: Translate,
+  locale: string,
   formatInstant: (iso: string) => string,
   squad: Squad,
 ): readonly FactRowView[] {
@@ -46,13 +53,13 @@ export function buildSquadFacts(
     {
       key: 'revision',
       label: t(I18N_KEYS.squads.revisionLabel),
-      value: String(squad.revision),
+      value: formatNumber(squad.revision, locale),
     },
     { key: 'policy', label: t(I18N_KEYS.squads.policyLabel), value: squad.policyVersion },
     {
       key: 'threshold',
       label: t(I18N_KEYS.squads.thresholdLabel),
-      value: `${String(squad.attendanceThresholdPct)}%`,
+      value: formatPercent(squad.attendanceThresholdPct, locale),
     },
     {
       key: 'deadline',
@@ -103,6 +110,7 @@ export interface SquadHeadline {
 
 export function buildSquadHeadline(
   t: Translate,
+  locale: string,
   formatInstant: (iso: string) => string,
   squad: Squad | null,
 ): SquadHeadline {
@@ -120,6 +128,6 @@ export function buildSquadHeadline(
     statusLabel: t(SQUAD_STATUS_LABEL_KEYS[squad.status]),
     statusTone: SQUAD_STATUS_TONES[squad.status],
     notes: squad.notes,
-    facts: buildSquadFacts(t, formatInstant, squad),
+    facts: buildSquadFacts(t, locale, formatInstant, squad),
   };
 }

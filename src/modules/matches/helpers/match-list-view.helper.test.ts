@@ -11,6 +11,8 @@ import {
   matchesStatusFilter,
 } from './match-list-view.helper';
 
+const LOCALE = 'en';
+
 const t = (key: string, params?: Record<string, string | number>): string =>
   params === undefined ? key : `${key}:${JSON.stringify(params)}`;
 
@@ -51,9 +53,9 @@ describe('isMatchInPlay', () => {
 
 describe('buildMatchCard', () => {
   it('renders the score, the state, and both entry points', () => {
-    const card = buildMatchCard(t, buildMatch());
+    const card = buildMatchCard(t, LOCALE, buildMatch());
 
-    expect(card.scoreLabel).toBe(`${I18N_KEYS.matches.cardScoreLabel}:{"us":8,"them":6}`);
+    expect(card.scoreLabel).toBe(`${I18N_KEYS.matches.cardScoreLabel}:{"us":"8","them":"6"}`);
     expect(card.statusLabel).toBe(I18N_KEYS.matches.statusLive);
     expect(card.statusTone).toBe('success');
     expect(card.isLive).toBe(true);
@@ -62,7 +64,7 @@ describe('buildMatchCard', () => {
   });
 
   it('renders a finalized result', () => {
-    const card = buildMatchCard(t, buildMatch({ status: 'finalized', result: 'win' }));
+    const card = buildMatchCard(t, LOCALE, buildMatch({ status: 'finalized', result: 'win' }));
 
     expect(card.resultLabel).toBe(I18N_KEYS.matches.resultWin);
     expect(card.isLive).toBe(false);

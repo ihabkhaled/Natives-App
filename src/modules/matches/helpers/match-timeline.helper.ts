@@ -1,3 +1,4 @@
+import { formatScorePair } from '@/packages/number';
 import { I18N_KEYS } from '@/shared/i18n';
 
 import { MATCH_EVENT_LABEL_KEYS } from '../constants/matches-labels.constants';
@@ -21,12 +22,13 @@ function eventDetail(t: Translate, event: MatchEvent): string | null {
  */
 export function buildTimelineRows(
   t: Translate,
+  locale: string,
   events: readonly MatchEvent[],
 ): readonly TimelineRowView[] {
   return events.slice(0, MATCH_TIMELINE_LIMIT).map((event) => ({
     key: event.eventId,
     label: t(MATCH_EVENT_LABEL_KEYS[event.eventType]),
-    value: `${String(event.ourScoreAfter)} – ${String(event.opponentScoreAfter)}`,
+    value: formatScorePair(event.ourScoreAfter, event.opponentScoreAfter, locale),
     detail: eventDetail(t, event),
     tone: event.voided ? 'warning' : null,
   }));

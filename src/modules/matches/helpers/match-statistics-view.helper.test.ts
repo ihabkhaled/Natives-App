@@ -11,6 +11,8 @@ import {
   buildTeamFacts,
 } from './match-statistics-view.helper';
 
+const LOCALE = 'en';
+
 const t = (key: string): string => key;
 const TEAM = buildMatchStatistics().team;
 
@@ -20,7 +22,7 @@ function factValue(facts: readonly { key: string; value: string }[], key: string
 
 describe('buildTeamFacts', () => {
   it('prints every counted measure', () => {
-    const facts = buildTeamFacts(t, TEAM);
+    const facts = buildTeamFacts(t, LOCALE, TEAM);
 
     expect(factValue(facts, 'goalsFor')).toBe('15');
     expect(factValue(facts, 'holds')).toBe('9');
@@ -28,20 +30,20 @@ describe('buildTeamFacts', () => {
   });
 
   it('prints an unmeasured team measure as "not enough data"', () => {
-    expect(factValue(buildTeamFacts(t, TEAM), 'opponentErrors')).toBe(
+    expect(factValue(buildTeamFacts(t, LOCALE, TEAM), 'opponentErrors')).toBe(
       I18N_KEYS.matchStats.notEnoughData,
     );
   });
 
   it('computes hold and break rates over the completed points', () => {
-    const facts = buildTeamFacts(t, TEAM);
+    const facts = buildTeamFacts(t, LOCALE, TEAM);
 
     expect(factValue(facts, 'holdRate')).toBe('43%');
     expect(factValue(facts, 'breakRate')).toBe('29%');
   });
 
   it('reports a rate over zero completed points as unknown, not 0%', () => {
-    const facts = buildTeamFacts(t, { ...TEAM, pointsCompleted: 0 });
+    const facts = buildTeamFacts(t, LOCALE, { ...TEAM, pointsCompleted: 0 });
 
     expect(factValue(facts, 'holdRate')).toBe(I18N_KEYS.matchStats.notEnoughData);
   });

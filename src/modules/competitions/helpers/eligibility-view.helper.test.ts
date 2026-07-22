@@ -12,20 +12,22 @@ import {
   needsOverride,
 } from './eligibility-view.helper';
 
+const LOCALE = 'en';
+
 const t = (key: string): string => key;
 const OPEN = { canSelect: true, canOverride: true, isLocked: false };
 
 describe('formatAttendance', () => {
   it('says "not enough data" instead of printing a zero for a null percentage', () => {
-    expect(formatAttendance(t, null)).toBe('squads.notEnoughData');
+    expect(formatAttendance(t, null, LOCALE)).toBe('squads.notEnoughData');
   });
 
   it('renders a real zero percentage as 0%, which is a measurement, not a gap', () => {
-    expect(formatAttendance(t, 0)).toBe('0%');
+    expect(formatAttendance(t, 0, LOCALE)).toBe('0%');
   });
 
   it('rounds a fractional percentage', () => {
-    expect(formatAttendance(t, 74.4)).toBe('74%');
+    expect(formatAttendance(t, 74.4, LOCALE)).toBe('74%');
   });
 });
 
@@ -39,8 +41,8 @@ describe('formatAvailability and formatJersey', () => {
   });
 
   it('reports an unassigned jersey instead of number zero', () => {
-    expect(formatJersey(t, null)).toBe('squads.jerseyNone');
-    expect(formatJersey(t, 12)).toBe('12');
+    expect(formatJersey(t, null, LOCALE)).toBe('squads.jerseyNone');
+    expect(formatJersey(t, 12, LOCALE)).toBe('12');
   });
 });
 
@@ -81,7 +83,7 @@ describe('needsOverride', () => {
 
 describe('buildCandidateRow', () => {
   it('offers selection for a passing candidate', () => {
-    const row = buildCandidateRow(t, buildCandidate(), OPEN);
+    const row = buildCandidateRow(t, LOCALE, buildCandidate(), OPEN);
 
     expect(row.actionLabel).toBe('squads.selectLabel');
     expect(row.isActionDisabled).toBe(false);
@@ -90,7 +92,7 @@ describe('buildCandidateRow', () => {
   });
 
   it('still offers selection for a failed candidate, with the override hint', () => {
-    const row = buildCandidateRow(t, buildCandidate({ overall: 'failed' }), OPEN);
+    const row = buildCandidateRow(t, LOCALE, buildCandidate({ overall: 'failed' }), OPEN);
 
     expect(row.isActionDisabled).toBe(false);
     expect(row.needsOverride).toBe(true);
@@ -98,7 +100,7 @@ describe('buildCandidateRow', () => {
   });
 
   it('explains rather than hides when the coach lacks the override grant', () => {
-    const row = buildCandidateRow(t, buildCandidate({ overall: 'failed' }), {
+    const row = buildCandidateRow(t, LOCALE, buildCandidate({ overall: 'failed' }), {
       ...OPEN,
       canOverride: false,
     });
@@ -108,19 +110,19 @@ describe('buildCandidateRow', () => {
   });
 
   it('disables every action while the squad is locked', () => {
-    const row = buildCandidateRow(t, buildCandidate(), { ...OPEN, isLocked: true });
+    const row = buildCandidateRow(t, LOCALE, buildCandidate(), { ...OPEN, isLocked: true });
 
     expect(row.isActionDisabled).toBe(true);
   });
 
   it('disables selection without the manage grant', () => {
-    const row = buildCandidateRow(t, buildCandidate(), { ...OPEN, canSelect: false });
+    const row = buildCandidateRow(t, LOCALE, buildCandidate(), { ...OPEN, canSelect: false });
 
     expect(row.isActionDisabled).toBe(true);
   });
 
   it('switches the action to remove once a player is in the squad', () => {
-    const row = buildCandidateRow(t, buildCandidate({ selected: true }), OPEN);
+    const row = buildCandidateRow(t, LOCALE, buildCandidate({ selected: true }), OPEN);
 
     expect(row.actionLabel).toBe('squads.removeLabel');
     expect(row.isSelected).toBe(true);
@@ -129,6 +131,7 @@ describe('buildCandidateRow', () => {
   it('never prints a zero for a candidate with no recorded data', () => {
     const row = buildCandidateRow(
       t,
+      LOCALE,
       buildCandidate({ attendancePct: null, jerseyNumber: null, availability: null }),
       OPEN,
     );
@@ -141,7 +144,7 @@ describe('buildCandidateRow', () => {
 
 describe('buildRatioFacts', () => {
   it('reports every division bucket, including the unknown one', () => {
-    const facts = buildRatioFacts(t, {
+    const facts = buildRatioFacts(t, LOCALE, {
       men: 5,
       women: 4,
       mixed: 1,

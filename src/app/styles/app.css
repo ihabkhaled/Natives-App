@@ -2357,6 +2357,26 @@ ion-spinner {
   margin-inline: auto;
 }
 
+/*
+ * SVG geometry does not follow `dir`: a trend line and a bar chart keep
+ * growing left-to-right while the HTML axis ticks beside them mirror, so the
+ * earliest period ends up labelled on the right and drawn on the left. Mirror
+ * the drawing to match. The radar is polar and stays as it is — flipping it
+ * would only rotate a symmetric shape.
+ */
+[dir='rtl'] .app-chart__svg--trend,
+[dir='rtl'] .app-chart__svg--bars {
+  transform: scaleX(-1);
+}
+
+/* Counter-flip the glyphs so mirrored bars keep readable labels. */
+[dir='rtl'] .app-chart__bar-label {
+  transform: scaleX(-1);
+  transform-box: fill-box;
+  transform-origin: center;
+  text-anchor: end;
+}
+
 .app-chart__area {
   fill: var(--app-lime-soft);
   stroke: none;

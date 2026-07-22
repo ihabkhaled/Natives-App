@@ -1,4 +1,5 @@
 import type { TranslateParams } from '@/packages/i18n';
+import { formatNumber } from '@/packages/number';
 import { I18N_KEYS } from '@/shared/i18n';
 
 import { ALL_CATEGORIES } from '../constants/points-filter.constants';
@@ -79,11 +80,14 @@ function buildMovementDetail(t: Translate, row: LeaderboardRow): string {
   return t(I18N_KEYS.points.movementDelta, { count: Math.abs(row.rankDelta) });
 }
 
-function buildExplanationRows(row: LeaderboardRow): readonly RankExplanationRowView[] {
+function buildExplanationRows(
+  row: LeaderboardRow,
+  locale: string,
+): readonly RankExplanationRowView[] {
   return row.contributions.map((contribution) => ({
     key: contribution.category,
     category: contribution.category,
-    pointsText: String(contribution.points),
+    pointsText: formatNumber(contribution.points, locale),
   }));
 }
 
@@ -93,6 +97,7 @@ function buildExplanationRows(row: LeaderboardRow): readonly RankExplanationRowV
  */
 function buildRankExplanation(
   t: Translate,
+  locale: string,
   row: LeaderboardRow,
   ruleVersion: number | null,
 ): RankExplanationView {
@@ -101,9 +106,9 @@ function buildRankExplanation(
     intro: t(I18N_KEYS.points.explainIntro),
     categoryColumn: t(I18N_KEYS.points.explainCategory),
     pointsColumn: t(I18N_KEYS.points.explainPoints),
-    rows: buildExplanationRows(row),
+    rows: buildExplanationRows(row, locale),
     totalLabel: t(I18N_KEYS.points.explainTotal),
-    totalText: String(row.total),
+    totalText: formatNumber(row.total, locale),
     ruleVersionLabel:
       ruleVersion === null
         ? t(I18N_KEYS.points.explainRuleVersionUnknown)
@@ -125,14 +130,15 @@ export interface LeaderboardRowInput {
  */
 export function buildLeaderboardRows(
   t: Translate,
+  locale: string,
   input: LeaderboardRowInput,
 ): readonly LeaderboardRowView[] {
   const tied = findTiedRanks(input.rows);
   return input.rows.map((row) => ({
     membershipId: row.membershipId,
-    rankText: String(row.rank),
+    rankText: formatNumber(row.rank, locale),
     memberLabel: row.membershipId,
-    totalText: String(row.total),
+    totalText: formatNumber(row.total, locale),
     isZero: row.total === 0,
     isTied: tied.has(row.rank),
     tiedLabel: tied.has(row.rank) ? t(I18N_KEYS.points.tiedWith) : null,
@@ -144,6 +150,6 @@ export function buildLeaderboardRows(
       row.badgeCount === 0 ? null : t(I18N_KEYS.points.badgeCountLabel, { count: row.badgeCount }),
     isExpanded: row.membershipId === input.expandedId,
     explainLabel: t(I18N_KEYS.points.explainToggle),
-    explanation: buildRankExplanation(t, row, input.ruleVersion),
+    explanation: buildRankExplanation(t, locale, row, input.ruleVersion),
   }));
 }

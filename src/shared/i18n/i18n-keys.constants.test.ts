@@ -33,10 +33,24 @@ function lookupCatalogValue(catalog: unknown, dottedPath: string): unknown {
 
 const LEAVES = collectLeaves(I18N_KEYS);
 
-function findMissingKeys(catalog: unknown): readonly string[] {
-  return LEAVES.filter(({ path }) => typeof lookupCatalogValue(catalog, path) !== 'string').map(
-    ({ path }) => path,
+/**
+ * CLDR plural categories. A pluralized key is stored as a family of suffixed
+ * siblings (`points.movementDelta_one`), so the declared base key is a folder
+ * of copy rather than a single string — i18next picks the member at runtime.
+ */
+const PLURAL_CATEGORIES = ['zero', 'one', 'two', 'few', 'many', 'other'];
+
+function resolvesToCopy(catalog: unknown, dottedPath: string): boolean {
+  if (typeof lookupCatalogValue(catalog, dottedPath) === 'string') {
+    return true;
+  }
+  return PLURAL_CATEGORIES.some(
+    (category) => typeof lookupCatalogValue(catalog, `${dottedPath}_${category}`) === 'string',
   );
+}
+
+function findMissingKeys(catalog: unknown): readonly string[] {
+  return LEAVES.filter(({ path }) => !resolvesToCopy(catalog, path)).map(({ path }) => path);
 }
 
 describe('I18N_KEYS', () => {

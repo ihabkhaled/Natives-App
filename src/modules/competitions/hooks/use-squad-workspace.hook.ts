@@ -65,7 +65,7 @@ export function useSquadWorkspace(): SquadDetailView {
       emptyTitleKey: I18N_KEYS.squads.notFoundTitle,
       emptyMessageKey: I18N_KEYS.squads.notFoundMessage,
     }),
-    ...buildSquadHeadline(t, (iso: string) => formatCairoDateTime(iso, locale), record),
+    ...buildSquadHeadline(t, locale, (iso: string) => formatCairoDateTime(iso, locale), record),
     title: t(I18N_KEYS.squads.detailTitle),
     backLabel: t(I18N_KEYS.squads.back),
     status: resolveCompetitionsScreenStatus(context, squad, context.canReadSquads, record !== null),
@@ -75,7 +75,12 @@ export function useSquadWorkspace(): SquadDetailView {
     actions,
     eligibility: eligibilityPanel,
     availability: availabilityPanel,
-    roster: buildRosterPanel(t, eligibility.data?.candidates ?? [], selections.data?.items ?? []),
+    roster: buildRosterPanel(
+      t,
+      locale,
+      eligibility.data?.candidates ?? [],
+      selections.data?.items ?? [],
+    ),
     onBack: () => {
       navigation.replace(squadsPath());
     },

@@ -1,4 +1,5 @@
 import type { TranslateParams } from '@/packages/i18n';
+import { formatNumber } from '@/packages/number';
 import { I18N_KEYS } from '@/shared/i18n';
 
 import { AVAILABILITY_LABEL_KEYS } from '../constants/competitions-labels.constants';
@@ -26,7 +27,7 @@ import type { Roster, RosterEntry, RosterSnapshot, RosterValidation } from '../t
 
 type Translate = (key: string, params?: TranslateParams) => string;
 
-export function buildRosterCard(t: Translate, roster: Roster): RosterCardView {
+export function buildRosterCard(t: Translate, locale: string, roster: Roster): RosterCardView {
   return {
     id: roster.rosterId,
     name: roster.name,
@@ -35,7 +36,9 @@ export function buildRosterCard(t: Translate, roster: Roster): RosterCardView {
     statusTone: rosterStatusTone(roster.status),
     divisionLabel: t(ROSTER_DIVISION_LABEL_KEYS[roster.division]),
     sizeLabel: t(I18N_KEYS.rosters.sizeRange, { min: roster.minSize, max: roster.maxSize }),
-    revisionLabel: `${t(I18N_KEYS.rosters.revisionLabel)} ${String(roster.revision)}`,
+    revisionLabel: t(I18N_KEYS.rosters.revisionValue, {
+      revision: formatNumber(roster.revision, locale),
+    }),
     openLabel: t(I18N_KEYS.rosters.openLabel),
   };
 }
@@ -68,9 +71,17 @@ export function buildRosterHeadline(t: Translate, roster: Roster | null): Roster
   };
 }
 
+/** A null minimum women count says so explicitly; it is never printed as 0. */
+function minWomenValue(t: Translate, roster: Roster, locale: string): string {
+  return roster.minWomen === null
+    ? t(I18N_KEYS.rosters.minWomenNone)
+    : formatNumber(roster.minWomen, locale);
+}
+
 /** The roster's policy, resolved once. A null minimum says so, never 0. */
 export function buildRosterFacts(
   t: Translate,
+  locale: string,
   formatInstant: (iso: string) => string,
   roster: Roster | null,
 ): readonly FactRowView[] {
@@ -96,7 +107,7 @@ export function buildRosterFacts(
     {
       key: 'minWomen',
       label: t(I18N_KEYS.rosters.minWomenLabel),
-      value: roster.minWomen === null ? t(I18N_KEYS.rosters.minWomenNone) : String(roster.minWomen),
+      value: minWomenValue(t, roster, locale),
     },
     {
       key: 'captain',
@@ -120,6 +131,7 @@ export function buildRosterFacts(
 /** The roster table, with every unrecorded value spelled out. */
 export function buildEntryRows(
   t: Translate,
+  locale: string,
   entries: readonly RosterEntry[],
   canManage: boolean,
 ): readonly RosterEntryRowView[] {
@@ -129,7 +141,9 @@ export function buildEntryRows(
       entryId: entry.entryId,
       membershipId: entry.membershipId,
       jerseyLabel:
-        entry.jerseyNumber === null ? t(I18N_KEYS.rosters.jerseyNone) : String(entry.jerseyNumber),
+        entry.jerseyNumber === null
+          ? t(I18N_KEYS.rosters.jerseyNone)
+          : formatNumber(entry.jerseyNumber, locale),
       roleLabel: t(ENTRY_ROLE_LABEL_KEYS[entry.entryRole]),
       lineLabel: t(LINE_LABEL_KEYS[entry.lineAssignment]),
       positionLabel: t(POSITION_LABEL_KEYS[entry.fieldPosition]),
@@ -163,14 +177,16 @@ export function buildEntryColumns(t: Translate): readonly string[] {
 
 export function buildHistoryRows(
   t: Translate,
+  locale: string,
   formatInstant: (iso: string) => string,
   snapshots: readonly RosterSnapshot[],
 ): readonly RosterHistoryRowView[] {
   return snapshots.map((snapshot) => ({
     key: snapshot.snapshotId,
-    label: `${t(SNAPSHOT_REASON_LABEL_KEYS[snapshot.reason])} · ${t(
-      I18N_KEYS.rosters.revisionLabel,
-    )} ${String(snapshot.revision)}`,
+    label: t(I18N_KEYS.rosters.historySnapshotLabel, {
+      reason: t(SNAPSHOT_REASON_LABEL_KEYS[snapshot.reason]),
+      revision: formatNumber(snapshot.revision, locale),
+    }),
     timeLabel: formatInstant(snapshot.takenAt),
     entryCountLabel: t(I18N_KEYS.rosters.historyEntryCount, { count: snapshot.entryCount }),
   }));
@@ -212,6 +228,7 @@ export interface RosterSectionsInput {
   readonly validation: RosterValidation | null;
   readonly snapshots: readonly RosterSnapshot[];
   readonly canRemoveEntries: boolean;
+  readonly locale: string;
 }
 
 export interface RosterSections {
@@ -231,17 +248,17 @@ export interface RosterSections {
 
 export function buildRosterSections(t: Translate, input: RosterSectionsInput): RosterSections {
   return {
-    facts: buildRosterFacts(t, input.formatInstant, input.roster),
+    facts: buildRosterFacts(t, input.locale, input.formatInstant, input.roster),
     lifecycleHeading: t(I18N_KEYS.rosters.lifecycleHeading),
     lifecycleIntro: t(I18N_KEYS.rosters.lifecycleIntro),
-    validation: buildValidationPanel(t, input.validation),
+    validation: buildValidationPanel(t, input.locale, input.validation),
     entriesHeading: t(I18N_KEYS.rosters.entriesHeading),
     entriesIntro: t(I18N_KEYS.rosters.entriesIntro),
     entriesEmptyLabel: t(I18N_KEYS.rosters.entriesEmpty),
     entriesColumns: buildEntryColumns(t),
-    entries: buildEntryRows(t, input.entries, input.canRemoveEntries),
+    entries: buildEntryRows(t, input.locale, input.entries, input.canRemoveEntries),
     historyHeading: t(I18N_KEYS.rosters.historyHeading),
     historyEmptyLabel: t(I18N_KEYS.rosters.historyEmpty),
-    history: buildHistoryRows(t, input.formatInstant, input.snapshots),
+    history: buildHistoryRows(t, input.locale, input.formatInstant, input.snapshots),
   };
 }

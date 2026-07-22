@@ -65,6 +65,7 @@ every layer of a React app legitimately depends on them.
 | `@capacitor/splash-screen`            | `src/packages/capacitor-splash-screen`                |
 | `@capacitor/status-bar`               | `src/packages/capacitor-status-bar`                   |
 | `msw`                                 | `src/tests/msw`                                       |
+| `Intl` (global, not a dependency)     | `src/packages/number`                                 |
 
 Type-only imports of an unowned vendor are tolerated inside `src/packages/**` and `src/platform/**`
 only, because they erase at build time and let an infrastructure file speak a vendor's contract

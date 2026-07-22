@@ -37,6 +37,7 @@ export function buildSelectionRoleMap(
  */
 export function buildRosterRows(
   t: Translate,
+  locale: string,
   candidates: readonly EligibilityCandidate[],
   selections: readonly SquadSelection[],
 ): readonly RosterRowView[] {
@@ -46,12 +47,12 @@ export function buildRosterRows(
     .map((candidate) => ({
       membershipId: candidate.membershipId,
       fullName: candidate.fullName,
-      jerseyLabel: formatJersey(t, candidate.jerseyNumber),
+      jerseyLabel: formatJersey(t, candidate.jerseyNumber, locale),
       roleLabel: t(
         SELECTION_ROLE_LABEL_KEYS[roles.get(candidate.membershipId)?.selectionRole ?? 'player'],
       ),
       availabilityLabel: formatAvailability(t, candidate.availability),
-      attendanceLabel: formatAttendance(t, candidate.attendancePct),
+      attendanceLabel: formatAttendance(t, candidate.attendancePct, locale),
     }));
 }
 
@@ -72,6 +73,7 @@ export function buildRosterColumns(t: Translate): readonly string[] {
  */
 export function buildRosterPanel(
   t: Translate,
+  locale: string,
   candidates: readonly EligibilityCandidate[],
   selections: readonly SquadSelection[],
 ): RosterPanelView {
@@ -82,7 +84,7 @@ export function buildRosterPanel(
     exportNote: t(I18N_KEYS.squads.rosterExportNote),
     emptyLabel: t(I18N_KEYS.squads.rosterEmpty),
     columns: buildRosterColumns(t),
-    rows: buildRosterRows(t, candidates, selections),
+    rows: buildRosterRows(t, locale, candidates, selections),
   };
 }
 

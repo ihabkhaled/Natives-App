@@ -9,6 +9,8 @@ import {
   buildLedgerEntries,
 } from './ledger-view.helper';
 
+const LOCALE = 'en';
+
 const t = (key: string): string => key;
 
 function entry(overrides: Partial<LedgerEntry> = {}): LedgerEntry {
@@ -86,7 +88,7 @@ describe('buildBadgeCandidates', () => {
 
 describe('buildCategoryChart', () => {
   it('reports an empty chart when nothing carries a category', () => {
-    const chart = buildCategoryChart(t, [entry({ activityCategory: null })]);
+    const chart = buildCategoryChart(t, LOCALE, [entry({ activityCategory: null })]);
 
     expect(chart.bars).toEqual([]);
     expect(chart.tableRows).toEqual([]);
@@ -94,21 +96,21 @@ describe('buildCategoryChart', () => {
   });
 
   it('sums each category and orders the bars widest first', () => {
-    const chart = buildCategoryChart(t, [
+    const chart = buildCategoryChart(t, LOCALE, [
       entry(),
       entry({ id: 'e2', activityCategory: 'throwing', amount: 90 }),
       entry({ id: 'e3', activityCategory: 'throwing', amount: -20 }),
     ]);
 
     expect(chart.bars.map((bar) => bar.key)).toEqual(['gym', 'throwing']);
-    expect(chart.tableRows[1]?.valueText).toBe('70');
+    expect(chart.tableRows[1]?.valueText).toBe('+70');
     expect(chart.bars[0]?.width).toBeGreaterThan(chart.bars[1]?.width ?? 0);
   });
 
   it('always ships the same numbers in the tabular alternative', () => {
-    const chart = buildCategoryChart(t, [entry()]);
+    const chart = buildCategoryChart(t, LOCALE, [entry()]);
 
     expect(chart.columnLabels).toHaveLength(2);
-    expect(chart.tableRows).toEqual([{ key: 'gym', label: 'gym', valueText: '120' }]);
+    expect(chart.tableRows).toEqual([{ key: 'gym', label: 'gym', valueText: '+120' }]);
   });
 });

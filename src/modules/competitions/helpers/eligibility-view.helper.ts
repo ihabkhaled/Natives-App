@@ -1,4 +1,5 @@
 import type { TranslateParams } from '@/packages/i18n';
+import { formatNumber, formatPercent } from '@/packages/number';
 import { I18N_KEYS } from '@/shared/i18n';
 
 import {
@@ -28,10 +29,14 @@ export interface CandidateRowInput {
  * A null percentage is "not enough data", never 0%. This is the single place
  * the rule is applied so no screen can regress it.
  */
-export function formatAttendance(t: Translate, attendancePct: number | null): string {
+export function formatAttendance(
+  t: Translate,
+  attendancePct: number | null,
+  locale: string,
+): string {
   return attendancePct === null
     ? t(I18N_KEYS.squads.notEnoughData)
-    : `${String(Math.round(attendancePct))}%`;
+    : formatPercent(attendancePct, locale);
 }
 
 export function formatAvailability(
@@ -43,8 +48,10 @@ export function formatAvailability(
     : t(AVAILABILITY_LABEL_KEYS[availability]);
 }
 
-export function formatJersey(t: Translate, jerseyNumber: number | null): string {
-  return jerseyNumber === null ? t(I18N_KEYS.squads.jerseyNone) : String(jerseyNumber);
+export function formatJersey(t: Translate, jerseyNumber: number | null, locale: string): string {
+  return jerseyNumber === null
+    ? t(I18N_KEYS.squads.jerseyNone)
+    : formatNumber(jerseyNumber, locale);
 }
 
 export function buildSignalChips(
@@ -89,15 +96,16 @@ function isActionDisabled(candidate: EligibilityCandidate, input: CandidateRowIn
 
 export function buildCandidateRow(
   t: Translate,
+  locale: string,
   candidate: EligibilityCandidate,
   input: CandidateRowInput,
 ): CandidateRowView {
   return {
     membershipId: candidate.membershipId,
     fullName: candidate.fullName,
-    attendanceLabel: formatAttendance(t, candidate.attendancePct),
+    attendanceLabel: formatAttendance(t, candidate.attendancePct, locale),
     availabilityLabel: formatAvailability(t, candidate.availability),
-    jerseyLabel: formatJersey(t, candidate.jerseyNumber),
+    jerseyLabel: formatJersey(t, candidate.jerseyNumber, locale),
     overallLabel: t(SIGNAL_STATUS_LABEL_KEYS[candidate.overall]),
     overallTone: SIGNAL_STATUS_TONES[candidate.overall],
     signals: buildSignalChips(t, candidate),
@@ -112,12 +120,28 @@ export function buildCandidateRow(
   };
 }
 
-export function buildRatioFacts(t: Translate, ratio: GenderRatio): readonly FactRowView[] {
+export function buildRatioFacts(
+  t: Translate,
+  locale: string,
+  ratio: GenderRatio,
+): readonly FactRowView[] {
   return [
-    { key: 'men', label: t(I18N_KEYS.squads.ratioMen), value: String(ratio.men) },
-    { key: 'women', label: t(I18N_KEYS.squads.ratioWomen), value: String(ratio.women) },
-    { key: 'mixed', label: t(I18N_KEYS.squads.ratioMixed), value: String(ratio.mixed) },
-    { key: 'unknown', label: t(I18N_KEYS.squads.ratioUnknown), value: String(ratio.unknown) },
+    { key: 'men', label: t(I18N_KEYS.squads.ratioMen), value: formatNumber(ratio.men, locale) },
+    {
+      key: 'women',
+      label: t(I18N_KEYS.squads.ratioWomen),
+      value: formatNumber(ratio.women, locale),
+    },
+    {
+      key: 'mixed',
+      label: t(I18N_KEYS.squads.ratioMixed),
+      value: formatNumber(ratio.mixed, locale),
+    },
+    {
+      key: 'unknown',
+      label: t(I18N_KEYS.squads.ratioUnknown),
+      value: formatNumber(ratio.unknown, locale),
+    },
   ];
 }
 

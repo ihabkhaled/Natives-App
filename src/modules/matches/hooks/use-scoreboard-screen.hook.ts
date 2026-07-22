@@ -28,7 +28,7 @@ const NOOP = (): void => undefined;
  * hooks; this one wires them together and hands the result to a pure builder.
  */
 export function useScoreboardScreen(): ScoreboardScreenView {
-  const { t } = useAppTranslation();
+  const { t, locale } = useAppTranslation();
   const context = useMatchesContext();
   const navigation = useAppNavigation();
   const matchId = useRouteParam(MATCH_ID_PARAM) ?? '';
@@ -57,6 +57,7 @@ export function useScoreboardScreen(): ScoreboardScreenView {
     onError: NOOP,
   });
   const timeline = useScoreboardUndo({
+    locale,
     events,
     undoableEvent: selectUndoableEvent(events),
     canScore: context.canScoreMatch,

@@ -69,6 +69,7 @@ export function useRosterWorkspace(): RosterDetailView {
     ),
     ...headline,
     ...buildRosterSections(t, {
+      locale,
       formatInstant,
       roster: reads.roster,
       entries: reads.entries,

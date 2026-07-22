@@ -23,7 +23,7 @@ import { useSquadEligibilityQuery } from './use-squad-eligibility-query.hook';
  * doing so opens the override dialog that demands a written reason.
  */
 export function useSquadSelectionPanel(input: SquadPanelInput): EligibilityPanelView {
-  const { t } = useAppTranslation();
+  const { t, locale } = useAppTranslation();
   const toast = useAppToast();
   const [pending, setPending] = useState<EligibilityCandidate | null>(null);
   const [reason, setReason] = useState('');
@@ -71,14 +71,14 @@ export function useSquadSelectionPanel(input: SquadPanelInput): EligibilityPanel
     emptyLabel: t(I18N_KEYS.squads.eligibilityEmpty),
     lockedNotice: input.isLocked ? t(I18N_KEYS.squads.lockedNotice) : null,
     rows: candidates.map((candidate) =>
-      buildCandidateRow(t, candidate, {
+      buildCandidateRow(t, locale, candidate, {
         canSelect: input.canSelect,
         canOverride: input.canOverride,
         isLocked: input.isLocked,
       }),
     ),
     ratioHeading: t(I18N_KEYS.squads.ratioHeading),
-    ratioFacts: buildRatioFacts(t, ratio),
+    ratioFacts: buildRatioFacts(t, locale, ratio),
     ratioVerdict: ratio.balanced
       ? t(I18N_KEYS.squads.ratioBalanced)
       : t(I18N_KEYS.squads.ratioUnbalanced),

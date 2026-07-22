@@ -62,6 +62,13 @@ Reference material. Normative rules live in [`rules/`](../rules/), decisions in
 | ---------------------------------- | --------------------------------------------------------- |
 | [mock-mode](features/mock-mode.md) | Deterministic MSW backend, identities, failure scenarios. |
 
+## Localization
+
+| Page                                                   | What it covers                                                      |
+| ------------------------------------------------------ | ------------------------------------------------------------------- |
+| [terminology-glossary](i18n/terminology-glossary.md)   | Canonical EN ↔ AR wording for every Ultimate Frisbee term.          |
+| [localization-workflow](i18n/localization-workflow.md) | Adding keys, plurals, number/date owners, the pseudo-locale, gates. |
+
 ## ESLint
 
 | Page                              | What it covers                            |

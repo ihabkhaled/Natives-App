@@ -1,3 +1,4 @@
+import { formatNumber } from '@/packages/number';
 import type { SelectFieldOption } from '@/shared/ui';
 import { I18N_KEYS } from '@/shared/i18n';
 
@@ -37,13 +38,13 @@ export function isMatchInPlay(status: string): boolean {
   );
 }
 
-export function buildMatchCard(t: Translate, match: Match): MatchCardView {
+export function buildMatchCard(t: Translate, locale: string, match: Match): MatchCardView {
   return {
     id: match.matchId,
     title: t(MATCH_STATUS_LABEL_KEYS[match.status]),
     scoreLabel: t(I18N_KEYS.matches.cardScoreLabel, {
-      us: match.ourScore,
-      them: match.opponentScore,
+      us: formatNumber(match.ourScore, locale),
+      them: formatNumber(match.opponentScore, locale),
     }),
     statusLabel: t(MATCH_STATUS_LABEL_KEYS[match.status]),
     statusTone: MATCH_STATUS_TONES[match.status],

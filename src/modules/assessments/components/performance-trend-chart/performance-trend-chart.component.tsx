@@ -26,7 +26,7 @@ export function PerformanceTrendChart(props: PerformanceTrendChartProps): React.
           preserveAspectRatio="none"
           role="img"
           aria-label={chart.description}
-          className="app-chart__svg"
+          className="app-chart__svg app-chart__svg--trend"
         >
           <path className="app-chart__area" d={chart.areaPath} />
           <path className="app-chart__line" d={chart.linePath} />
