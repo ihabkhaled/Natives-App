@@ -11,6 +11,7 @@
 | `format`              | Prettier is clean.                                                                                                                          |
 | `lint`                | Zero warnings, **and** `--fix` changes nothing (no unformatted autofixable code).                                                           |
 | `typecheck`           | TypeScript 7 (primary compiler).                                                                                                            |
+| `contract`            | The committed OpenAPI contract and its generated types match the canonical source.                                                          |
 | `typecheck-toolchain` | TypeScript 5.9 parser compatibility; also reports when the dual compiler can retire.                                                        |
 | `architecture-rules`  | All 50 architecture rules behave (fixtures + RuleTester).                                                                                   |
 | `coverage`            | Unit/integration coverage with per-file thresholds.                                                                                         |
@@ -27,7 +28,10 @@
 | `all-gates-green`     | Fails if **any** of the above failed or was cancelled.                                                                                      |
 
 `all-gates-green` uses `if: always()` and inspects `needs.*.result`, so a skipped or cancelled job
-cannot be mistaken for a pass.
+cannot be mistaken for a pass. Every job above is one of its `needs`; adding a job without adding it
+there would create a gate nothing aggregates. See
+[`rules/32-ci-gates-before-commit-and-push.md`](../../rules/32-ci-gates-before-commit-and-push.md)
+for the rule that binds this to `git commit` and `git push`.
 
 ## The `.ai` drift check
 

@@ -88,7 +88,24 @@ This is the host's policy, not a repository defect — the gate runs normally on
 If your workstation blocks it too, rely on the CI `static-analysis` job rather than pinning jscpd
 back to v4. Do not report the gate as passing on a machine where it could not execute.
 
-## 11. Default framework styling silently fails the UI/UX Quality Mandate
+## 11. A stale `.ai/` plane fails CI long after the change that caused it
+
+The `knowledge` job runs `npm run knowledge:build` and then `git diff --exit-code -- .ai`. Any edit
+under `src/**` or the canonical corpus (`rules`, `skills`, `context`, `memory`, `agents`,
+`architecture`, `docs`) changes what the generated plane should contain, so committing without
+rebuilding leaves a diff that only surfaces on the runner — usually attributed to the wrong commit,
+because the person who broke it and the person who sees it red are rarely the same.
+
+It is not a formality: `.ai/` is what the next contributor, human or agent, reads to orient itself.
+A stale manifest routes them to a file that no longer owns the concern, confidently.
+
+**Fix, and the habit that avoids it:** run `npm run knowledge:build` and commit the regenerated
+`.ai/**` in the _same_ commit as the change. This is part of
+[non-negotiable rule 37](../rules/32-ci-gates-before-commit-and-push.md): every gate green before
+`git commit` and before `git push`. `--no-verify` is only for a batched commit whose gates were
+already observed green in the same session — never a way past a red one.
+
+## 12. Default framework styling silently fails the UI/UX Quality Mandate
 
 A screen can pass lint, types, and tests while still shipping plain, framework-default styling — and
 that violates [`rules/ui-ux-quality-mandate.md`](../rules/ui-ux-quality-mandate.md). Every UI must be

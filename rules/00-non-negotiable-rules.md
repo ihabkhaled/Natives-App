@@ -73,6 +73,15 @@
     skeletons for all async states, first-class dark + light mode, perfect RTL + LTR, accessible
     (WCAG AA), refined components and tasteful motion; plain/default styling is unacceptable.
     [ui-ux-quality-mandate](ui-ux-quality-mandate.md)
+37. Every CI gate MUST be green before you commit and before you push — format, lint, typecheck,
+    contract, architecture-rules, coverage and per-file floors, build, architecture/ownership/
+    exports/filenames/locales/docs/agent-docs, static analysis, e2e, accessibility, visual, security,
+    knowledge build and validation, Capacitor sync, Android, iOS, and the aggregate
+    `all-gates-green`. A red gate is fixed at its root cause, never by weakening a rule, threshold,
+    or coverage floor, adding an undocumented suppression, skipping a test, or marking a required
+    check `continue-on-error`. Rebuild `.ai` (`npm run knowledge:build`) and commit it with any
+    `src/**` or corpus change. A gate that cannot run here is reported UNVERIFIED with its exact
+    reason. [32-ci-gates-before-commit-and-push](32-ci-gates-before-commit-and-push.md)
 
 ## Forbidden
 
@@ -121,12 +130,14 @@ export function getAppHttpClient() {
 | The 50 rules of the local `architecture` ESLint plugin, all at `error` | `npm run lint`                 |
 | Structural layer, module-surface, and README scan                      | `npm run quality:architecture` |
 | The full aggregate of every gate in this corpus                        | `npm run validate`             |
+| Every gate green before commit and before push, plus `all-gates-green` | `npm run validate`             |
 
 Manual review where mechanical enforcement is impossible: whether a new invariant belongs in this
 index at all, and whether an invariant has quietly stopped matching the code it describes.
 
 ## Definition of done
 
-- [ ] The change violates none of the 36 invariants above.
+- [ ] The change violates none of the 37 invariants above.
 - [ ] Any new invariant is listed here, defined in a rule file, and enforced by a named mechanism.
 - [ ] No gate was weakened, skipped, or scoped away to land the change.
+- [ ] Every gate was run and seen green before the commit and before the push.

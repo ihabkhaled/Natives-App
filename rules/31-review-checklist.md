@@ -84,4 +84,5 @@ leaves, and to make ignoring that residue a visible choice rather than an oversi
 ## Related
 
 [00-non-negotiable-rules](00-non-negotiable-rules.md) · [30-release-gates](30-release-gates.md) ·
-[29-exceptions](29-exceptions.md) · [24-documentation](24-documentation.md)
+[29-exceptions](29-exceptions.md) · [24-documentation](24-documentation.md) ·
+[32-ci-gates-before-commit-and-push](32-ci-gates-before-commit-and-push.md)

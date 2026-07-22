@@ -41,6 +41,13 @@ npm run knowledge:context -- --task="<exact task>"
   for all async states, first-class dark + light mode, perfect RTL + LTR, accessible (WCAG AA),
   refined components and tasteful motion. Plain/default styling is not acceptable. See
   [`rules/ui-ux-quality-mandate.md`](rules/ui-ux-quality-mandate.md).
+- **CI gates before commit and push**: every gate green before `git commit` AND before `git push` —
+  format, lint, typecheck, contract, coverage/per-file, build, architecture/ownership/exports/
+  filenames/locales/docs, static analysis, e2e, a11y, visual, security, knowledge build+validate,
+  Capacitor sync, Android, iOS, and the aggregate `all-gates-green`. Fix the root cause; never
+  weaken a rule, threshold, or coverage floor, skip a test, or mark a check `continue-on-error`.
+  Rebuild `.ai` (`npm run knowledge:build`) and commit it with any `src/**` or corpus change. See
+  [`rules/32-ci-gates-before-commit-and-push.md`](rules/32-ci-gates-before-commit-and-push.md).
 - Execute with focus: communicate concisely, avoid unrelated detours and speculative work, make
   reasonable in-scope decisions promptly, and continue through verification. This never permits
   skipping an architecture, security, accessibility, testing, documentation, or release gate.

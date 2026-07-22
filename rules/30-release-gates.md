@@ -106,4 +106,5 @@ step is a human promise.
 
 [22-testing-and-coverage](22-testing-and-coverage.md) ·
 [26-native-release-readiness](26-native-release-readiness.md) · [18-security](18-security.md) ·
-[31-review-checklist](31-review-checklist.md)
+[31-review-checklist](31-review-checklist.md) ·
+[32-ci-gates-before-commit-and-push](32-ci-gates-before-commit-and-push.md)

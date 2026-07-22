@@ -4,6 +4,11 @@ Never bypass architecture, package ownership, hook isolation, strict typing, tes
 accessibility, localization, or native safety. When a guardrail blocks you, move the code to the
 correct layer instead of disabling the rule. Suppressions require a documented EXC-nnnn exception.
 Do not edit generated .ai files: update canonical knowledge, then run `npm run knowledge:build`.
+Every CI gate must be green before you commit and before you push — format, lint, typecheck,
+contract, coverage/per-file, build, architecture and ownership checks, static analysis, e2e, a11y,
+visual, security, knowledge build+validate, Capacitor sync, Android, iOS, and `all-gates-green`.
+Fix the root cause; never weaken a rule, threshold, or coverage floor to make a gate pass. Rebuild
+`.ai` with `npm run knowledge:build` and commit it with any src or corpus change.
 UI/UX Quality Mandate: every UI must be cool, clear, vibrant, catchy and UX-perfect on web and
 mobile — responsive (desktop sidebar+navbar, mobile tab bar+drawer), polished loaders and skeletons
 for all async states, first-class dark + light mode, perfect RTL + LTR, accessible (WCAG AA), refined

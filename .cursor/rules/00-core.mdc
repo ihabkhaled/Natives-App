@@ -8,3 +8,14 @@ Read AGENTS.md and rules/00-non-negotiable-rules.md before editing.
 Never bypass package ownership, hook isolation, module boundaries, strict typing, or tests.
 One-way dependency direction: app → modules → platform → shared → packages → vendors.
 When a guardrail blocks a change, the code is in the wrong layer — move it.
+
+Every CI gate must be green before you commit and before you push (rules/32) — format, lint,
+typecheck, contract, coverage, build, architecture, static analysis, e2e, a11y, visual, security,
+knowledge build+validate, native, and all-gates-green. Never weaken a rule, threshold, or coverage
+floor to make one pass; rebuild .ai with `npm run knowledge:build` after a src or corpus change.
+
+UI/UX Quality Mandate (rules/ui-ux-quality-mandate.md): every UI must be cool, clear, vibrant,
+catchy and UX-perfect on web and mobile — responsive (desktop sidebar+navbar, mobile tab bar+
+drawer), polished loaders and skeletons for all async states, first-class dark + light mode, perfect
+RTL + LTR, accessible (WCAG AA), refined components and tasteful motion. Plain/default styling is
+not acceptable.

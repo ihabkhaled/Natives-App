@@ -32,6 +32,12 @@ npm run knowledge:context -- --task="<exact task>"
   mobile — responsive (desktop sidebar+navbar, mobile tab bar+drawer), polished loaders and skeletons
   for all async states, first-class dark + light mode, perfect RTL + LTR, accessible (WCAG AA),
   refined components and tasteful motion. Plain/default styling is not acceptable.
+- CI gates before commit and push: every gate green before `git commit` AND before `git push` —
+  format, lint, typecheck, contract, coverage/per-file, build, architecture/ownership/exports/
+  filenames/locales/docs, static analysis, e2e, a11y, visual, security, knowledge build+validate,
+  Capacitor sync, Android, iOS, and the aggregate `all-gates-green`. Fix the root cause; never
+  weaken a rule, threshold, or coverage floor, skip a test, or mark a check `continue-on-error`.
+  See `rules/32-ci-gates-before-commit-and-push.md`.
 - Report only gates you actually ran. iOS compilation is UNVERIFIED off macOS.
 
 ## Subagents

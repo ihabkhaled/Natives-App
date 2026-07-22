@@ -336,6 +336,7 @@ jobs:
       - format
       - lint
       - typecheck
+      - contract
       - typecheck-toolchain
       - architecture-rules
       - coverage
