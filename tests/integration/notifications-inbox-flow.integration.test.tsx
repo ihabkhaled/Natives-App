@@ -1,6 +1,6 @@
 import { fireEvent, screen, waitFor, within } from '@testing-library/react';
 import { http, HttpResponse } from 'msw';
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 
 import { NotificationsInboxContainer } from '@/modules/notifications/containers/notifications-inbox.container';
 import { Route } from '@/packages/router';
@@ -55,18 +55,24 @@ registerIntegrationSession();
 
 describe('the inbox lists what arrived, grouped and bounded', () => {
   it('groups arrivals by day instead of one undifferentiated list', async () => {
-    await openInbox();
+    // The fixture instants are fixed, so the day each one buckets into depends
+    // on "now". Freeze the clock to the fixture's own newest instant (faking
+    // Date only, so Testing Library's real-timer polling still runs) — then the
+    // three instants deterministically land in Today / Yesterday / Earlier
+    // regardless of the wall clock the suite happens to run on.
+    vi.useFakeTimers({ toFake: ['Date'] });
+    vi.setSystemTime(new Date(MOCK_NOTIFICATIONS.now));
+    try {
+      await openInbox();
 
-    const groups = await screen.findAllByTestId(TEST_IDS.notificationsGroup, {}, WAIT);
-    const headings = groups.map((group) => group.getAttribute('aria-label'));
+      const groups = await screen.findAllByTestId(TEST_IDS.notificationsGroup, {}, WAIT);
+      const headings = groups.map((group) => group.getAttribute('aria-label'));
 
-    // The fixture instants are fixed, so which buckets exist depends on the
-    // wall clock; the invariant under test is that arrivals are bucketed and
-    // that the buckets stay in newest-first order.
-    expect(groups.length).toBeGreaterThan(1);
-    expect(headings).toEqual(
-      ['Today', 'Yesterday', 'Earlier'].filter((label) => headings.includes(label)),
-    );
+      expect(groups.length).toBeGreaterThan(1);
+      expect(headings).toEqual(['Today', 'Yesterday', 'Earlier']);
+    } finally {
+      vi.useRealTimers();
+    }
   });
 
   it('renders designed copy for each entry, never the wire event type', async () => {
