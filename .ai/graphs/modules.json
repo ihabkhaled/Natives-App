@@ -283,7 +283,8 @@
         "memberViewResponseSchema",
         "membersPath",
         "membersQueryKeys",
-        "membershipResponseSchema"
+        "membershipResponseSchema",
+        "resolveRoleErrorKey"
       ]
     },
     {

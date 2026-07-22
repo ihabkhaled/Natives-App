@@ -52,6 +52,18 @@ export function canReadTeamAssessments(permissions: readonly string[]): boolean 
   return permissions.includes(PERMISSIONS.assessmentReadTeam);
 }
 
+/**
+ * Whether the staff-scoped catalog endpoints may be fetched at all: the
+ * grants must have resolved AND include `assessment.read.team`. A member
+ * never satisfies this, so the five catalog reads are never issued for them.
+ */
+export function canFetchAssessmentCatalog(
+  isResolvingPermissions: boolean,
+  permissions: readonly string[],
+): boolean {
+  return !isResolvingPermissions && canReadTeamAssessments(permissions);
+}
+
 /** Whether the principal may see their own published assessments. */
 export function canReadOwnAssessments(permissions: readonly string[]): boolean {
   return permissions.includes(PERMISSIONS.assessmentReadSelfPublished);

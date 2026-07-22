@@ -1,21 +1,49 @@
-import { act } from '@testing-library/react';
-import { beforeAll, describe, expect, it } from 'vitest';
+import { act, waitFor } from '@testing-library/react';
+import { describe, expect, it, vi } from 'vitest';
 
-import { MEMBER_ROLE, type MemberRole } from '@/modules/members';
+import type * as MembersModule from '@/modules/members';
+import { assignMemberRoles, MEMBER_ROLE, type MemberRole } from '@/modules/members';
+import type * as SharedUiModule from '@/shared/ui';
+import { APP_ERROR_CODE } from '@/shared/errors';
+import { AppError } from '@/shared/errors/app.errors';
 
-import { initTestI18n } from '../../../../tests/setup/i18n-test.helper';
+import { setupToastHarness } from '../../../../tests/setup/toast-test.helper';
 import { renderHookWithProviders } from '../../../../tests/setup/render-with-providers.helper';
 import { useAssignRolesForm } from './use-assign-roles-form.hook';
 
+vi.mock('@/modules/members', async (importOriginal) => ({
+  ...(await importOriginal<typeof MembersModule>()),
+  assignMemberRoles: vi.fn(),
+}));
+vi.mock('@/shared/ui', async (importOriginal) => ({
+  ...(await importOriginal<typeof SharedUiModule>()),
+  useAppToast: vi.fn(),
+}));
+
 const SERVER_ROLES: readonly MemberRole[] = [MEMBER_ROLE.member];
+
+const toast = setupToastHarness();
 
 function renderForm(membershipId = 'membership-1') {
   return renderHookWithProviders(() => useAssignRolesForm('team-1', membershipId, SERVER_ROLES));
 }
 
-beforeAll(async () => {
-  await initTestI18n();
-});
+function conflictError(messageKey: string): AppError {
+  return new AppError({ code: APP_ERROR_CODE.Conflict, messageKey });
+}
+
+/** Draft a coach promotion with an audited reason and commit it. */
+function draftAndSave(result: { current: ReturnType<typeof useAssignRolesForm> }): void {
+  act(() => {
+    result.current.toggle(MEMBER_ROLE.coach);
+  });
+  act(() => {
+    result.current.setReason('Promoted after the AGM');
+  });
+  act(() => {
+    result.current.save();
+  });
+}
 
 describe('useAssignRolesForm', () => {
   it('starts from the roles the server reports', () => {
@@ -88,5 +116,65 @@ describe('useAssignRolesForm', () => {
     });
 
     expect(result.current.canSave).toBe(true);
+  });
+
+  it('rolls the panel back to the server roles when the save is refused', async () => {
+    vi.mocked(assignMemberRoles).mockRejectedValue(conflictError('errors.members.accountRequired'));
+    const { result } = renderForm();
+
+    draftAndSave(result);
+
+    await waitFor(() => {
+      expect(result.current.selected).toEqual(SERVER_ROLES);
+    });
+    expect(result.current.isSaving).toBe(false);
+  });
+
+  it('states the specific 409 accountRequired refusal, never a generic failure', async () => {
+    vi.mocked(assignMemberRoles).mockRejectedValue(conflictError('errors.members.accountRequired'));
+    const { result } = renderForm();
+
+    draftAndSave(result);
+
+    await waitFor(() => {
+      expect(toast.showToast).toHaveBeenCalledWith({
+        message:
+          "This member hasn't joined with an account yet, so roles can't be assigned. Invite them by email first.",
+        tone: 'danger',
+      });
+    });
+  });
+
+  it('states an escalation refusal in privilege terms', async () => {
+    vi.mocked(assignMemberRoles).mockRejectedValue(conflictError('errors.rbac.escalationDenied'));
+    const { result } = renderForm();
+
+    draftAndSave(result);
+
+    await waitFor(() => {
+      expect(toast.showToast).toHaveBeenCalledWith({
+        message: 'You can only assign or remove roles that stay within your own privilege level.',
+        tone: 'danger',
+      });
+    });
+  });
+
+  it('clears the draft and confirms once the server accepts the change', async () => {
+    vi.mocked(assignMemberRoles).mockResolvedValue({
+      membershipId: 'membership-1',
+      roles: [MEMBER_ROLE.member, MEMBER_ROLE.coach],
+      assignableRoles: [MEMBER_ROLE.member, MEMBER_ROLE.coach],
+    });
+    const { result } = renderForm();
+
+    draftAndSave(result);
+
+    await waitFor(() => {
+      expect(toast.showToast).toHaveBeenCalledWith({
+        message: 'Roles updated.',
+        tone: 'success',
+      });
+    });
+    expect(result.current.reason).toBe('');
   });
 });

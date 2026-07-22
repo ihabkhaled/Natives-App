@@ -5,6 +5,7 @@ import { PERMISSIONS } from '@/shared/security';
 import { ASSESSMENT_STATUS } from '../constants/assessments.constants';
 import {
   availableWorkflowSteps,
+  canFetchAssessmentCatalog,
   canReadOwnAssessments,
   canReadOwnFeedback,
   canReadTeamAssessments,
@@ -78,5 +79,12 @@ describe('read gates', () => {
     expect(canReadOwnAssessments([])).toBe(false);
     expect(canReadOwnFeedback([PERMISSIONS.feedbackReadSelf])).toBe(true);
     expect(canReadOwnFeedback([PERMISSIONS.feedbackManage])).toBe(false);
+  });
+
+  it('allows the catalog fetch only once the resolved grants include the team read', () => {
+    expect(canFetchAssessmentCatalog(false, [PERMISSIONS.assessmentReadTeam])).toBe(true);
+    expect(canFetchAssessmentCatalog(true, [PERMISSIONS.assessmentReadTeam])).toBe(false);
+    expect(canFetchAssessmentCatalog(false, [PERMISSIONS.assessmentReadSelfPublished])).toBe(false);
+    expect(canFetchAssessmentCatalog(false, [])).toBe(false);
   });
 });

@@ -1,4 +1,4 @@
-import { useCurrentUserQuery } from '@/modules/auth';
+import { useCurrentUserQuery, useEffectivePermissions } from '@/modules/auth';
 import { practicesPath } from '@/modules/practice';
 import { useAppTranslation } from '@/packages/i18n';
 import { useAppNavigation } from '@/packages/router';
@@ -19,6 +19,9 @@ export interface HomeScreenView {
   readonly loadingLabel: string;
   readonly manageSessionsLabel: string;
   readonly practiceCalendarLabel: string;
+  readonly showsNoAccessNotice: boolean;
+  readonly noAccessTitle: string;
+  readonly noAccessMessage: string;
   readonly onManageSessions: () => void;
   readonly onOpenPracticeCalendar: () => void;
 }
@@ -26,7 +29,13 @@ export interface HomeScreenView {
 export function useHomeScreen(): HomeScreenView {
   const { t } = useAppTranslation();
   const currentUser = useCurrentUserQuery();
+  const effective = useEffectivePermissions();
   const navigation = useAppNavigation();
+  // A session with no team membership or no effective grants used to land on
+  // a silently bare shell (recovery audit: the invited-user experience). The
+  // designed "no access yet" notice states that plainly instead.
+  const hasNoAccess =
+    !effective.isLoading && (!effective.hasTeamContext || effective.permissions.length === 0);
   return {
     title: t(I18N_KEYS.home.title),
     greeting: t(I18N_KEYS.home.greeting, { name: currentUser.user?.displayName ?? '' }),
@@ -36,6 +45,9 @@ export function useHomeScreen(): HomeScreenView {
     loadingLabel: t(I18N_KEYS.common.loading),
     manageSessionsLabel: t(I18N_KEYS.home.manageSessions),
     practiceCalendarLabel: t(I18N_KEYS.practice.entryLink),
+    showsNoAccessNotice: hasNoAccess,
+    noAccessTitle: t(I18N_KEYS.home.noAccessTitle),
+    noAccessMessage: t(I18N_KEYS.home.noAccessMessage),
     onManageSessions: () => {
       navigation.push(APP_PATHS.sessions);
     },

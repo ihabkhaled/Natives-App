@@ -26,26 +26,31 @@ export function PerformanceView(props: PerformanceViewProps): React.JSX.Element 
         <AsyncStateView view={props} variant="dashboard" {...PERFORMANCE_STATE_TEST_IDS} />
         {props.status === 'ready' ? (
           <>
-            <div className="app-performance__charts">
-              <div className="app-performance__chart-head">
-                <IonSelect
-                  data-testid={TEST_IDS.performanceMetricSelect}
-                  label={props.metricSelectLabel}
-                  value={props.selectedMetricId}
-                  onIonChange={(event) => {
-                    props.onSelectMetric(event.detail.value as string);
-                  }}
-                >
-                  {props.metricOptions.map((option) => (
-                    <IonSelectOption key={option.value} value={option.value}>
-                      {option.label}
-                    </IonSelectOption>
-                  ))}
-                </IonSelect>
+            {/* Charts need the staff-scoped catalog; when it is not readable
+                the whole block stays out instead of an empty select posing as
+                a chart area. */}
+            {props.trend === null && props.radar === null ? null : (
+              <div className="app-performance__charts">
+                <div className="app-performance__chart-head">
+                  <IonSelect
+                    data-testid={TEST_IDS.performanceMetricSelect}
+                    label={props.metricSelectLabel}
+                    value={props.selectedMetricId}
+                    onIonChange={(event) => {
+                      props.onSelectMetric(event.detail.value as string);
+                    }}
+                  >
+                    {props.metricOptions.map((option) => (
+                      <IonSelectOption key={option.value} value={option.value}>
+                        {option.label}
+                      </IonSelectOption>
+                    ))}
+                  </IonSelect>
+                </div>
+                {props.trend === null ? null : <PerformanceTrendChart chart={props.trend} />}
+                {props.radar === null ? null : <PerformanceRadarChart chart={props.radar} />}
               </div>
-              {props.trend === null ? null : <PerformanceTrendChart chart={props.trend} />}
-              {props.radar === null ? null : <PerformanceRadarChart chart={props.radar} />}
-            </div>
+            )}
             <CoachFeedbackPanel
               title={props.feedbackTitle}
               emptyTitle={props.feedbackEmptyTitle}

@@ -1,3 +1,4 @@
+import { ADMIN_BACKEND_PENDING } from '../constants/admin-api.constants';
 import { getOutboxMetrics } from '../services/get-outbox-metrics.service';
 import { getSettingsSnapshot } from '../services/get-settings-snapshot.service';
 import { listAuditEntries } from '../services/list-audit-entries.service';
@@ -72,19 +73,25 @@ export function buildOutboxMetricsQueryOptions(enabled: boolean) {
   };
 }
 
+/**
+ * Backend-pending (404 in production): the request is suppressed by the
+ * capability-honesty marker regardless of grants, so the panel shows its
+ * designed "not available yet" state instead of a retried 404 loop.
+ */
 export function buildDeadLettersQueryOptions(enabled: boolean) {
   return {
     queryKey: adminQueryKeys.deadLetters(),
     queryFn: () => listDeadLetters(),
-    enabled,
+    enabled: enabled && !ADMIN_BACKEND_PENDING.deadLetters,
   };
 }
 
+/** Backend-pending (404 in production): suppressed like the dead letters. */
 export function buildJobHealthQueryOptions(enabled: boolean) {
   return {
     queryKey: adminQueryKeys.jobHealth(),
     queryFn: () => listJobHealth(),
-    enabled,
+    enabled: enabled && !ADMIN_BACKEND_PENDING.jobHealth,
   };
 }
 

@@ -3,12 +3,16 @@ import type { QueryKey } from '@tanstack/react-query';
 import { useAppMutation } from './use-app-mutation.hook';
 import { useQueryClient } from '@tanstack/react-query';
 
-/** What a feature mutation reports back and which cache branch it refreshes. */
+/**
+ * What a feature mutation reports back and which cache branch it refreshes.
+ * `onError` receives the failure so the caller can surface the SPECIFIC
+ * refusal (for example a backend messageKey) instead of a generic toast.
+ */
 export interface InvalidatingMutationOptions<TResult, TVariables> {
   readonly mutationFn: (variables: TVariables) => Promise<TResult>;
   readonly invalidateKey: QueryKey;
   readonly onSuccess: () => void;
-  readonly onError: () => void;
+  readonly onError: (error: unknown) => void;
 }
 
 export interface InvalidatingMutationView<TVariables> {

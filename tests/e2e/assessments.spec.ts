@@ -50,7 +50,10 @@ test.describe('assessment entry and player performance', () => {
   });
 
   test('shows the player performance charts with their tabular alternatives', async ({ page }) => {
-    await signIn(page, { email: MOCK_PERSONA_EMAILS.member, password: MOCK_CREDENTIALS.password });
+    // The charts need the assessment catalog, which is staff-scoped
+    // (`assessment.read.team`); the coach persona holds both the self-scope
+    // grants and the catalog grant.
+    await signIn(page, { email: MOCK_PERSONA_EMAILS.coach, password: MOCK_CREDENTIALS.password });
     await gotoApp(page, APP_ROUTES.performance);
     await expectPresentedPage(page, TEST_IDS.performancePage);
 
@@ -59,6 +62,19 @@ test.describe('assessment entry and player performance', () => {
     await expect(page.getByTestId(TEST_IDS.chartDataTable)).toHaveCount(2);
     await expect(page.getByTestId(TEST_IDS.coachFeedbackCard)).toBeVisible();
     await expect(page.getByTestId(TEST_IDS.developmentGoalCard).first()).toBeVisible();
+  });
+
+  test('renders a member performance from member-permitted data, without staff catalog charts', async ({
+    page,
+  }) => {
+    await signIn(page, { email: MOCK_PERSONA_EMAILS.member, password: MOCK_CREDENTIALS.password });
+    await gotoApp(page, APP_ROUTES.performance);
+    await expectPresentedPage(page, TEST_IDS.performancePage);
+
+    await expect(page.getByTestId(TEST_IDS.coachFeedbackCard)).toBeVisible();
+    await expect(page.getByTestId(TEST_IDS.developmentGoalCard).first()).toBeVisible();
+    await expect(page.getByTestId(TEST_IDS.performanceTrendChart)).toHaveCount(0);
+    await expect(page.getByTestId(TEST_IDS.performanceRadarChart)).toHaveCount(0);
   });
 
   test('keeps a member persona out of the coach workspace', async ({ page }) => {

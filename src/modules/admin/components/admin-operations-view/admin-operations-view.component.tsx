@@ -26,6 +26,12 @@ export function AdminOperationsView(props: AdminOperationsViewProps): React.JSX.
           ariaLabel={props.outboxHeading}
           rowTestId={TEST_IDS.adminOutboxMetric}
         />
+        <AppButton
+          label={props.outboxRefreshLabel}
+          tone="secondary"
+          testId={TEST_IDS.adminOutboxRefresh}
+          onClick={props.onRetry}
+        />
       </SectionPanel>
 
       <SectionPanel

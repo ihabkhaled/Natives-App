@@ -73,6 +73,7 @@ export const ADMIN_TEST_IDS = {
   adminOpsEmpty: 'admin-ops-empty',
   adminOutboxPanel: 'admin-outbox-panel',
   adminOutboxMetric: 'admin-outbox-metric',
+  adminOutboxRefresh: 'admin-outbox-refresh',
   adminDeadLetterPanel: 'admin-dead-letter-panel',
   adminDeadLetterRow: 'admin-dead-letter-row',
   adminDeadLetterReplay: 'admin-dead-letter-replay',

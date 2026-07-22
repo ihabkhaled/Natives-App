@@ -11,9 +11,16 @@ export interface AssessmentCatalogQueryView {
   readonly error: AppError | null;
 }
 
-/** Loads the template/metric/scale/category/period catalog for a team. */
-export function useAssessmentCatalogQuery(teamId: string): AssessmentCatalogQueryView {
-  const query = useAppQuery(buildAssessmentCatalogQueryOptions(teamId));
+/**
+ * Loads the template/metric/scale/category/period catalog for a team. The
+ * catalog endpoints are staff-scoped (`assessment.read.team`), so the caller
+ * passes the resolved grant and the query stays idle without it.
+ */
+export function useAssessmentCatalogQuery(
+  teamId: string,
+  canReadCatalog: boolean,
+): AssessmentCatalogQueryView {
+  const query = useAppQuery(buildAssessmentCatalogQueryOptions(teamId, canReadCatalog));
   return {
     catalog: query.data,
     isLoading: query.isPending,

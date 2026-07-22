@@ -1,4 +1,4 @@
-import { IonText } from '@/packages/ionic';
+import { IonNote, IonText } from '@/packages/ionic';
 import { TEST_IDS } from '@/shared/config';
 import { AppButton, AvatarFallback, LoadingState, PageShell } from '@/shared/ui';
 
@@ -45,6 +45,19 @@ export function HomeView(props: HomeViewProps): React.JSX.Element {
             />
           </div>
         </header>
+        {props.showsNoAccessNotice ? (
+          <section
+            className="app-home-no-access"
+            role="note"
+            aria-label={props.noAccessTitle}
+            data-testid={HOME_VIEW_TEST_IDS.noAccess}
+          >
+            <IonText>
+              <h3 className="m-0">{props.noAccessTitle}</h3>
+            </IonText>
+            <IonNote>{props.noAccessMessage}</IonNote>
+          </section>
+        ) : null}
         {props.dashboardSlot}
         <aside className="app-home-health">{props.healthSlot}</aside>
       </main>

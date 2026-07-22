@@ -1,20 +1,26 @@
 import { QueryClientProvider } from '@tanstack/react-query';
 import { fireEvent, render, screen, waitFor, within } from '@testing-library/react';
+import { http } from 'msw';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
 import { PerformanceContainer } from '@/modules/assessments/containers/performance.container';
 import { TEST_IDS } from '@/shared/config';
 import { MOCK_PERSONA_EMAILS } from '@/tests/msw/mock-data.constants';
+import { failRequest } from '@/tests/msw/mock-request.helper';
 
 import { initTestI18n } from '../setup/i18n-test.helper';
+import { apiUrl } from '../setup/integration-api.helper';
 import {
   clearSessionAfterTest,
   resetSessionForTest,
   signInAs,
 } from '../setup/integration-session.helper';
 import { fireIonChange } from '../setup/ionic-events.helper';
+import { mockApiServer } from '../setup/msw-server.setup';
 import { createTestQueryClient } from '../setup/render-with-providers.helper';
+
+const CATALOG_RESOURCES = ['templates', 'metrics', 'scales', 'categories', 'periods'] as const;
 
 function renderPerformance(): void {
   render(
@@ -28,6 +34,20 @@ function renderPerformance(): void {
   );
 }
 
+/** Count every catalog request; each one would 403 for a member persona. */
+function trackCatalogRequests(): () => number {
+  let requests = 0;
+  mockApiServer.use(
+    ...CATALOG_RESOURCES.map((resource) =>
+      http.get(apiUrl(`/teams/:teamId/assessment-catalog/${resource}`), () => {
+        requests += 1;
+        return failRequest(403, 'FORBIDDEN', `/assessment-catalog/${resource}`);
+      }),
+    ),
+  );
+  return () => requests;
+}
+
 beforeEach(async () => {
   await initTestI18n();
   await resetSessionForTest();
@@ -37,9 +57,9 @@ afterEach(async () => {
   await clearSessionAfterTest();
 });
 
-describe('player performance flow (real client + MSW)', () => {
+describe('performance charts for a catalog-permitted persona (real client + MSW)', () => {
   it('renders both charts from the published assessments', async () => {
-    await signInAs(MOCK_PERSONA_EMAILS.member);
+    await signInAs(MOCK_PERSONA_EMAILS.coach);
     renderPerformance();
 
     await screen.findByTestId(TEST_IDS.performanceTrendChart, {}, { timeout: 5000 });
@@ -47,7 +67,7 @@ describe('player performance flow (real client + MSW)', () => {
   });
 
   it('gives every chart a tabular alternative and an accessible description', async () => {
-    await signInAs(MOCK_PERSONA_EMAILS.member);
+    await signInAs(MOCK_PERSONA_EMAILS.coach);
     renderPerformance();
 
     await screen.findByTestId(TEST_IDS.performanceTrendChart, {}, { timeout: 5000 });
@@ -60,7 +80,7 @@ describe('player performance flow (real client + MSW)', () => {
   });
 
   it('defaults the trend to the best-covered metric', async () => {
-    await signInAs(MOCK_PERSONA_EMAILS.member);
+    await signInAs(MOCK_PERSONA_EMAILS.coach);
     renderPerformance();
 
     await screen.findByTestId(TEST_IDS.performanceTrendChart, {}, { timeout: 5000 });
@@ -70,7 +90,7 @@ describe('player performance flow (real client + MSW)', () => {
   });
 
   it('reports an unevaluated period as not evaluated instead of zero', async () => {
-    await signInAs(MOCK_PERSONA_EMAILS.member);
+    await signInAs(MOCK_PERSONA_EMAILS.coach);
     renderPerformance();
 
     await screen.findByTestId(TEST_IDS.performanceTrendChart, {}, { timeout: 5000 });
@@ -82,7 +102,37 @@ describe('player performance flow (real client + MSW)', () => {
       expect(within(table).getAllByText('Not evaluated').length).toBeGreaterThan(0);
     });
   });
+});
 
+describe('a member persona renders from member-permitted data only', () => {
+  // Recovery audit P1-5 / P0 batch item 3: the member screen used to fire the
+  // five staff-only catalog reads, collect 15 hidden 403s (5 endpoints x 3
+  // retry attempts), and hide them behind an empty state. The catalog query is
+  // now gated on the grant those endpoints actually require
+  // (`assessment.read.team`), so a member issues ZERO forbidden requests.
+  it('issues zero forbidden catalog requests', async () => {
+    const catalogRequests = trackCatalogRequests();
+    await signInAs(MOCK_PERSONA_EMAILS.member);
+    renderPerformance();
+
+    await screen.findByTestId(TEST_IDS.coachFeedbackCard, {}, { timeout: 5000 });
+    expect(catalogRequests()).toBe(0);
+  });
+
+  it('renders feedback and goals without a charts block posing as data', async () => {
+    trackCatalogRequests();
+    await signInAs(MOCK_PERSONA_EMAILS.member);
+    renderPerformance();
+
+    await screen.findByTestId(TEST_IDS.coachFeedbackCard, {}, { timeout: 5000 });
+    await screen.findAllByTestId(TEST_IDS.developmentGoalCard, {}, { timeout: 5000 });
+    expect(screen.queryByTestId(TEST_IDS.performanceTrendChart)).not.toBeInTheDocument();
+    expect(screen.queryByTestId(TEST_IDS.performanceRadarChart)).not.toBeInTheDocument();
+    expect(screen.queryByTestId(TEST_IDS.performanceMetricSelect)).not.toBeInTheDocument();
+  });
+});
+
+describe('coach feedback and development goals', () => {
   it('lists the published coach feedback and acknowledges it', async () => {
     await signInAs(MOCK_PERSONA_EMAILS.member);
     renderPerformance();

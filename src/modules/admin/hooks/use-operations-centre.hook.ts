@@ -80,6 +80,7 @@ export function useOperationsCentre(): AdminOperationsView {
     outboxHeading: t(I18N_KEYS.adminOperations.outboxHeading),
     outboxIntro: t(I18N_KEYS.adminOperations.outboxIntro),
     outboxMetrics: buildOutboxRows(t, metrics.data),
+    outboxRefreshLabel: t(I18N_KEYS.adminOperations.refreshMetrics),
     deadLetterHeading: t(I18N_KEYS.adminOperations.deadLetterHeading),
     deadLetterIntro: t(I18N_KEYS.adminOperations.deadLetterIntro),
     deadLetterNotice: t(I18N_KEYS.adminOperations.deadLetterNoPayloadNotice),

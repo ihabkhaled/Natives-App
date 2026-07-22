@@ -20,6 +20,7 @@ import {
 } from '../setup/ionic-events.helper';
 import { mockApiServer } from '../setup/msw-server.setup';
 import { renderRoute } from '../setup/render-with-providers.helper';
+import { nestErrorResponse } from '@/tests/msw/nest-error.helper';
 
 const WAIT = { timeout: 5000 };
 
@@ -214,6 +215,47 @@ describe('designed states', () => {
 });
 
 describe('a rejected assignment is reported', () => {
+  it('keeps showing the real roles after a 409 accountRequired refusal', async () => {
+    // Recovery audit P0-3: after this exact failure the panel used to keep the
+    // optimistic draft and read "Current roles: Coach" as if the save worked.
+    useRoles(['member'], ['member', 'coach']);
+    mockApiServer.use(
+      http.put(apiUrl('/teams/:teamId/members/:membershipId/roles'), () =>
+        nestErrorResponse({
+          statusCode: 409,
+          code: 'CONFLICT',
+          message: 'This member has no linked account yet, so roles cannot be assigned',
+          path: '/api/v1/teams/team-1/members/mem-omar/roles',
+          messageKey: 'errors.members.accountRequired',
+        }),
+      ),
+    );
+    await openRoles();
+    await selectFirstMember();
+
+    const coach = within(screen.getByTestId(TEST_IDS.adminRolesAssignable)).getAllByTestId(
+      TEST_IDS.adminRolesToggle,
+    )[1]!;
+    fireIonCheckboxChange(coach, true);
+    await waitFor(() => {
+      expect(screen.getByTestId(TEST_IDS.adminRolesCurrent)).toHaveTextContent('Member · Coach');
+    }, WAIT);
+
+    await saveWithReason();
+
+    await waitFor(() => {
+      expect(screen.getByTestId(TEST_IDS.adminRolesCurrent)).toHaveTextContent('Member');
+      expect(screen.getByTestId(TEST_IDS.adminRolesCurrent)).not.toHaveTextContent('Coach');
+    }, WAIT);
+    await waitFor(() => {
+      expect(
+        within(screen.getByTestId(TEST_IDS.adminRolesAssignable)).getAllByTestId(
+          TEST_IDS.adminRolesToggle,
+        )[1],
+      ).not.toBeChecked();
+    }, WAIT);
+  });
+
   it('keeps the panel usable when the server refuses the change', async () => {
     useRoles(['member'], ['member', 'coach']);
     mockApiServer.use(

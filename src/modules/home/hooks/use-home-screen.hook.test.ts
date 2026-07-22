@@ -2,7 +2,13 @@ import { renderHook } from '@testing-library/react';
 import { afterEach, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import type * as AuthModule from '@/modules/auth';
-import { buildAuthUser, useCurrentUserQuery, type CurrentUserQueryView } from '@/modules/auth';
+import {
+  buildAuthUser,
+  useCurrentUserQuery,
+  useEffectivePermissions,
+  type CurrentUserQueryView,
+  type EffectivePermissionsView,
+} from '@/modules/auth';
 import { useAppNavigation } from '@/packages/router';
 
 import { initTestI18n } from '../../../../tests/setup/i18n-test.helper';
@@ -11,6 +17,7 @@ import { useHomeScreen } from './use-home-screen.hook';
 vi.mock('@/modules/auth', async (importOriginal) => ({
   ...(await importOriginal<typeof AuthModule>()),
   useCurrentUserQuery: vi.fn(),
+  useEffectivePermissions: vi.fn(),
 }));
 vi.mock('@/packages/router', () => ({ useAppNavigation: vi.fn() }));
 
@@ -19,6 +26,18 @@ const push = vi.fn();
 function mockCurrentUser(overrides: Partial<CurrentUserQueryView> = {}): void {
   vi.mocked(useCurrentUserQuery).mockReturnValue({
     user: buildAuthUser({ displayName: 'Ranger Rick' }),
+    isLoading: false,
+    isError: false,
+    ...overrides,
+  });
+}
+
+function mockEffectivePermissions(overrides: Partial<EffectivePermissionsView> = {}): void {
+  vi.mocked(useEffectivePermissions).mockReturnValue({
+    permissions: ['practice.read'],
+    accountActive: true,
+    onboardingComplete: true,
+    hasTeamContext: true,
     isLoading: false,
     isError: false,
     ...overrides,
@@ -37,6 +56,7 @@ beforeEach(() => {
     currentPath: '/home',
   });
   mockCurrentUser();
+  mockEffectivePermissions();
 });
 
 afterEach(() => {
@@ -125,11 +145,46 @@ describe('useHomeScreen', () => {
       'isLoadingUser',
       'loadingLabel',
       'manageSessionsLabel',
+      'noAccessMessage',
+      'noAccessTitle',
       'onManageSessions',
       'onOpenPracticeCalendar',
       'practiceCalendarLabel',
+      'showsNoAccessNotice',
       'title',
       'userName',
     ]);
+  });
+
+  it('hides the no-access notice for a session with team-scoped grants', () => {
+    const { result } = renderHook(() => useHomeScreen());
+
+    expect(result.current.showsNoAccessNotice).toBe(false);
+  });
+
+  it('shows the designed no-access notice when the session has no team context', () => {
+    mockEffectivePermissions({ hasTeamContext: false });
+
+    const { result } = renderHook(() => useHomeScreen());
+
+    expect(result.current.showsNoAccessNotice).toBe(true);
+    expect(result.current.noAccessTitle).toBe('No team access yet');
+    expect(result.current.noAccessMessage).toContain('Ask a team administrator');
+  });
+
+  it('shows the designed no-access notice when the scoped grants come back empty', () => {
+    mockEffectivePermissions({ permissions: [] });
+
+    const { result } = renderHook(() => useHomeScreen());
+
+    expect(result.current.showsNoAccessNotice).toBe(true);
+  });
+
+  it('never flashes the no-access notice while the grants are still resolving', () => {
+    mockEffectivePermissions({ permissions: [], hasTeamContext: false, isLoading: true });
+
+    const { result } = renderHook(() => useHomeScreen());
+
+    expect(result.current.showsNoAccessNotice).toBe(false);
   });
 });

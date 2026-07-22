@@ -13,7 +13,10 @@ import {
   filterByStatus,
   resolveAssessmentsStatus,
 } from '../helpers/assessment-list-view.helper';
-import { canReadTeamAssessments } from '../helpers/assessment-workflow.helper';
+import {
+  canFetchAssessmentCatalog,
+  canReadTeamAssessments,
+} from '../helpers/assessment-workflow.helper';
 import { buildAssessmentsAsyncCopy, buildAssessmentsGuardCopy } from '../helpers/async-copy.helper';
 import { assessmentEntryPath } from '../routes/assessments.paths';
 import type { AssessmentsView } from '../types/assessments-view.types';
@@ -30,7 +33,10 @@ export function useAssessmentsWorkspace(): AssessmentsView {
   const team = useAssessmentsTeamContext();
   const permissions = useEffectivePermissions();
   const query = useTeamAssessmentsQuery(team.teamId);
-  const catalog = useAssessmentCatalogQuery(team.teamId);
+  const catalog = useAssessmentCatalogQuery(
+    team.teamId,
+    canFetchAssessmentCatalog(permissions.isLoading, permissions.permissions),
+  );
   const network = useNetworkStatus();
   const navigation = useAppNavigation();
   const [statusFilter, setStatusFilter] = useState<string>(ALL_STATUSES_FILTER);

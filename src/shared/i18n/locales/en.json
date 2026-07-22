@@ -117,7 +117,9 @@
   "home": {
     "title": "Home",
     "greeting": "Hello, {{name}}",
-    "manageSessions": "Manage your devices"
+    "manageSessions": "Manage your devices",
+    "noAccessTitle": "No team access yet",
+    "noAccessMessage": "Your account is not linked to a team yet, or no team role has been granted to you. Ask a team administrator to add you — your navigation fills in as soon as access is granted."
   },
   "dashboard": {
     "title": "Your dashboard",
@@ -1873,7 +1875,6 @@
     "noAssignable": "You hold no role you can pass on here.",
     "saveRoles": "Save roles",
     "savedToast": "Roles updated.",
-    "failedToast": "Could not update the roles.",
     "reasonLabel": "Reason for the change",
     "reasonPlaceholder": "Recorded in the audit log",
     "reasonRequired": "Give a reason of at least 5 characters.",
@@ -1998,8 +1999,9 @@
     "auditDiffNotice": "Change bodies are summarised as a field count; values are not rendered here.",
     "auditDiffFields": "{{count}} fields changed",
     "auditNoDiff": "No field change recorded",
-    "jobHealthPendingNotice": "Job health is not served by the backend yet; this panel runs on mock data and is recorded as backend-pending.",
-    "deadLetterPendingNotice": "The dead-letter listing is not served by the backend yet; only the metrics above are live."
+    "jobHealthPendingNotice": "Job health is not served by the backend yet; this panel lights up once the endpoint ships.",
+    "deadLetterPendingNotice": "The dead-letter listing is not served by the backend yet; only the metrics above are live.",
+    "refreshMetrics": "Refresh metrics"
   },
   "teamsAdmin": {
     "title": "Teams",

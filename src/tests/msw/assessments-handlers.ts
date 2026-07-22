@@ -20,6 +20,8 @@ import {
   transitionAssessmentRecord,
   transitionGoalRecord,
 } from './assessments.fixture';
+import { PERMISSIONS } from '@/shared/security';
+
 import {
   apiUrl,
   failRequest,
@@ -28,6 +30,7 @@ import {
   readJsonBody,
   readPaging,
 } from './mock-request.helper';
+import { permissionsForRequest } from './persona-permissions.helper';
 
 interface SaveBody {
   readonly expectedRecordVersion?: number;
@@ -61,11 +64,17 @@ const catalogHandlers = [
   ['categories', MOCK_CATEGORIES],
   ['periods', MOCK_PERIODS],
 ].map(([resource, items]) =>
-  http.get(catalogUrl(resource as string), ({ request }) =>
-    isAuthorized(request)
-      ? HttpResponse.json(pagedCatalog(items as readonly unknown[]))
-      : failRequest(401, 'UNAUTHORIZED', `/assessment-catalog/${resource as string}`),
-  ),
+  http.get(catalogUrl(resource as string), ({ request }) => {
+    if (!isAuthorized(request)) {
+      return failRequest(401, 'UNAUTHORIZED', `/assessment-catalog/${resource as string}`);
+    }
+    // The real catalog controllers guard every read with the staff-only
+    // `assessment.read.team` grant; a member receives 403, never data.
+    if (!permissionsForRequest(request).includes(PERMISSIONS.assessmentReadTeam)) {
+      return failRequest(403, 'FORBIDDEN', `/assessment-catalog/${resource as string}`);
+    }
+    return HttpResponse.json(pagedCatalog(items as readonly unknown[]));
+  }),
 );
 
 const assessmentHandlers = [

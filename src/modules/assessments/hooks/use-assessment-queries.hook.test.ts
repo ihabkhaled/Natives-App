@@ -65,7 +65,7 @@ describe('assessment query hooks', () => {
       queryResult({ error: new AppError({ code: APP_ERROR_CODE.Forbidden }) }) as never,
     );
 
-    const { result } = renderHook(() => useAssessmentCatalogQuery('t'));
+    const { result } = renderHook(() => useAssessmentCatalogQuery('t', true));
 
     expect(result.current.error?.code).toBe(APP_ERROR_CODE.Forbidden);
   });
@@ -73,9 +73,19 @@ describe('assessment query hooks', () => {
   it('reports no catalog error on a clean read', () => {
     vi.mocked(useAppQuery).mockReturnValue(queryResult({ data: { templates: [] } }) as never);
 
-    const { result } = renderHook(() => useAssessmentCatalogQuery('t'));
+    const { result } = renderHook(() => useAssessmentCatalogQuery('t', true));
 
     expect(result.current.error).toBeNull();
+  });
+
+  it('keeps the catalog query idle without the staff-only read grant', () => {
+    vi.mocked(useAppQuery).mockReturnValue(queryResult({ isPending: true }) as never);
+
+    renderHook(() => useAssessmentCatalogQuery('t', false));
+
+    expect(vi.mocked(useAppQuery)).toHaveBeenCalledWith(
+      expect.objectContaining({ enabled: false }),
+    );
   });
 
   it('degrades a revision failure to an empty family', () => {

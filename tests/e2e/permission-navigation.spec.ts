@@ -8,6 +8,27 @@ import { APP_ROUTES, expectPresentedPage, gotoApp, login, signIn } from './fixtu
 const HOME_NAV_ITEM = `${TEST_IDS.primaryNavItem}-home`;
 const ADMIN_NAV_ITEM = `${TEST_IDS.primaryNavItem}-admin`;
 
+/**
+ * Every destination a member persona's scoped grants light up, in nav order.
+ * This is the positive pin the recovery audit asked for: the collapsed-nav
+ * regression (invited users seeing 3 items) can no longer pass silently.
+ */
+const MEMBER_NAV_KEYS = [
+  'home',
+  'practice-calendar',
+  'members',
+  'performance',
+  'training',
+  'leaderboard',
+  'points-history',
+  'competitions',
+  'squads',
+  'rosters',
+  'matches',
+  'notifications',
+  'settings',
+] as const;
+
 function personaLogin(email: string): { email: string; password: string } {
   return { email, password: MOCK_CREDENTIALS.password };
 }
@@ -30,6 +51,21 @@ test.describe('permission-aware navigation', () => {
 
     await expect(page.getByTestId(HOME_NAV_ITEM)).toBeVisible();
     await expect(page.getByTestId(ADMIN_NAV_ITEM)).toHaveCount(0);
+  });
+
+  test('a member persona gets exactly its 13 permitted destinations once scoped grants load', async ({
+    page,
+  }) => {
+    await login(page, personaLogin(MOCK_PERSONA_EMAILS.member));
+    await expectPresentedPage(page, TEST_IDS.homePage);
+    await expect(page.getByTestId(HOME_NAV_ITEM)).toBeVisible();
+
+    for (const key of MEMBER_NAV_KEYS) {
+      await expect(page.getByTestId(`${TEST_IDS.primaryNavItem}-${key}`)).toHaveCount(1);
+    }
+    await expect(page.locator(`[data-testid^="${TEST_IDS.primaryNavItem}-"]`)).toHaveCount(
+      MEMBER_NAV_KEYS.length,
+    );
   });
 
   test('a direct admin URL reveals no admin content to a member persona', async ({ page }) => {

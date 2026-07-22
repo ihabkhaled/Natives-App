@@ -113,7 +113,6 @@ export const ADMIN_I18N_KEYS = {
     noAssignable: 'adminRoles.noAssignable',
     saveRoles: 'adminRoles.saveRoles',
     savedToast: 'adminRoles.savedToast',
-    failedToast: 'adminRoles.failedToast',
     reasonLabel: 'adminRoles.reasonLabel',
     reasonPlaceholder: 'adminRoles.reasonPlaceholder',
     reasonRequired: 'adminRoles.reasonRequired',
@@ -240,5 +239,6 @@ export const ADMIN_I18N_KEYS = {
     auditNoDiff: 'adminOperations.auditNoDiff',
     jobHealthPendingNotice: 'adminOperations.jobHealthPendingNotice',
     deadLetterPendingNotice: 'adminOperations.deadLetterPendingNotice',
+    refreshMetrics: 'adminOperations.refreshMetrics',
   },
 } as const;

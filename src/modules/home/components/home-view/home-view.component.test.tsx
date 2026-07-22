@@ -18,6 +18,9 @@ function buildProps(overrides: Partial<HomeViewProps> = {}): HomeViewProps {
     loadingLabel: 'Loading…',
     manageSessionsLabel: 'Manage your devices',
     practiceCalendarLabel: 'Open the practice calendar',
+    showsNoAccessNotice: false,
+    noAccessTitle: 'No team access yet',
+    noAccessMessage: 'Ask a team administrator to add you.',
     onManageSessions: vi.fn(),
     onOpenPracticeCalendar: vi.fn(),
     dashboardSlot: <div data-testid={TEST_IDS.dashboardView}>Dashboard</div>,
@@ -81,6 +84,20 @@ describe('HomeView', () => {
     mountHome();
 
     expect(screen.queryByTestId(TEST_IDS.homeLogoutButton)).not.toBeInTheDocument();
+  });
+
+  it('states the designed no-access notice when the session has no team access', () => {
+    mountHome(buildProps({ showsNoAccessNotice: true }));
+
+    const notice = screen.getByTestId(HOME_VIEW_TEST_IDS.noAccess);
+    expect(notice).toHaveTextContent('No team access yet');
+    expect(notice).toHaveTextContent('Ask a team administrator to add you.');
+  });
+
+  it('keeps the canvas free of the notice for a session with access', () => {
+    mountHome();
+
+    expect(screen.queryByTestId(HOME_VIEW_TEST_IDS.noAccess)).not.toBeInTheDocument();
   });
 
   it('lays the canvas out as one main region holding both slots', () => {

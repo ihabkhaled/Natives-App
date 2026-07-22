@@ -16,7 +16,10 @@ import {
   resolveTemplateMetricIds,
 } from '../helpers/assessment-entry-view.helper';
 import { toSaveableValues } from '../helpers/assessment-value.helper';
-import { canReadTeamAssessments } from '../helpers/assessment-workflow.helper';
+import {
+  canFetchAssessmentCatalog,
+  canReadTeamAssessments,
+} from '../helpers/assessment-workflow.helper';
 import { buildAssessmentsAsyncCopy, buildAssessmentsGuardCopy } from '../helpers/async-copy.helper';
 import { ASSESSMENT_ID_PARAM, assessmentsPath } from '../routes/assessments.paths';
 import type { AssessmentEntryView } from '../types/assessments-view.types';
@@ -40,7 +43,10 @@ export function useAssessmentEntry(): AssessmentEntryView {
   const network = useNetworkStatus();
   const navigation = useAppNavigation();
   const query = useAssessmentQuery(team.teamId, assessmentId);
-  const catalog = useAssessmentCatalogQuery(team.teamId);
+  const catalog = useAssessmentCatalogQuery(
+    team.teamId,
+    canFetchAssessmentCatalog(permissions.isLoading, permissions.permissions),
+  );
   const revisions = useAssessmentRevisionsQuery(team.teamId, assessmentId);
   const draft = useAssessmentDraft(query.detail);
   const actions = useAssessmentWorkflowActions(team.teamId, assessmentId);

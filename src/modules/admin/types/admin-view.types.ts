@@ -208,6 +208,7 @@ export interface AdminOperationsView extends ScreenCopy {
   readonly outboxHeading: string;
   readonly outboxIntro: string;
   readonly outboxMetrics: readonly AdminFactRowView[];
+  readonly outboxRefreshLabel: string;
   readonly deadLetterHeading: string;
   readonly deadLetterIntro: string;
   readonly deadLetterNotice: string;

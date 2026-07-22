@@ -82,6 +82,7 @@ export const TEST_IDS = {
   sessionsEmpty: 'sessions-empty',
   homePage: 'home-page',
   homeGreeting: 'home-greeting',
+  homeNoAccessNotice: 'home-no-access-notice',
   homeLogoutButton: 'home-logout-button',
   homeSessionsLink: 'home-sessions-link',
   healthCard: 'health-card',

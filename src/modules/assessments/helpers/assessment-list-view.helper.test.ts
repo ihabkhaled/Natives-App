@@ -10,6 +10,7 @@ import {
   buildSummaryView,
   filterByStatus,
   resolveAssessmentsStatus,
+  resolvePerformanceScreenStatus,
   statusLabel,
   statusTone,
 } from './assessment-list-view.helper';
@@ -110,6 +111,70 @@ describe('resolveAssessmentsStatus', () => {
 
   it('falls back to empty when nothing else applies', () => {
     expect(resolveAssessmentsStatus(base)).toBe('empty');
+  });
+});
+
+describe('resolvePerformanceScreenStatus', () => {
+  const base = {
+    isForbidden: false,
+    hasAssessments: false,
+    hasItems: false,
+    canReadCatalog: false,
+    hasCatalog: false,
+    isCatalogLoading: false,
+    isLoading: false,
+    hasError: false,
+    isOffline: false,
+  };
+
+  it('is ready for a member from the member-permitted collections alone', () => {
+    expect(resolvePerformanceScreenStatus({ ...base, hasAssessments: true, hasItems: true })).toBe(
+      'ready',
+    );
+  });
+
+  it('never waits for a catalog the principal cannot read', () => {
+    expect(
+      resolvePerformanceScreenStatus({ ...base, hasAssessments: true, isCatalogLoading: true }),
+    ).toBe('empty');
+  });
+
+  it('waits for the catalog when the principal can read it', () => {
+    expect(
+      resolvePerformanceScreenStatus({
+        ...base,
+        hasAssessments: true,
+        canReadCatalog: true,
+        isCatalogLoading: true,
+      }),
+    ).toBe('loading');
+  });
+
+  it('requires the catalog as data when it is readable', () => {
+    expect(
+      resolvePerformanceScreenStatus({
+        ...base,
+        hasAssessments: true,
+        hasItems: true,
+        canReadCatalog: true,
+        hasCatalog: true,
+      }),
+    ).toBe('ready');
+    expect(
+      resolvePerformanceScreenStatus({
+        ...base,
+        hasAssessments: true,
+        hasItems: true,
+        canReadCatalog: true,
+        hasError: true,
+      }),
+    ).toBe('error');
+  });
+
+  it('keeps forbidden ahead of everything', () => {
+    expect(resolvePerformanceScreenStatus({ ...base, isForbidden: true, isLoading: true })).toBe(
+      'forbidden',
+    );
   });
 });
 

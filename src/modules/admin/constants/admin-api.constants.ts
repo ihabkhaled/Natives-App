@@ -69,3 +69,16 @@ export function outboxDeadLettersPath(): string {
 export function jobHealthPath(): string {
   return '/admin/jobs/health';
 }
+
+/**
+ * Capability-honesty markers for endpoints the backend does not serve yet
+ * (both currently answer 404 in production). While a marker is `true` the
+ * operations centre never issues the request and shows the designed
+ * "not available yet" panel instead of a retried 404 posing as "Loading…".
+ * When the backend ships an endpoint, flipping its marker to `false` lights
+ * the panel up again — no other change needed.
+ */
+export const ADMIN_BACKEND_PENDING = {
+  deadLetters: true,
+  jobHealth: true,
+} as const;

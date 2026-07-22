@@ -58,11 +58,29 @@ describe('PerformanceView', () => {
     expect(screen.getByTestId(TEST_IDS.performanceEmpty)).toBeInTheDocument();
   });
 
-  it('omits a chart it has no data for', () => {
+  it('omits the whole charts block when no chart can be drawn', () => {
+    // A member cannot read the staff-scoped catalog: no chart AND no empty
+    // metric select posing as a chart area — but the permitted panels stay.
     render(<PerformanceView {...buildPerformanceView({ trend: null, radar: null })} />);
 
     expect(screen.queryByTestId(TEST_IDS.performanceTrendChart)).not.toBeInTheDocument();
     expect(screen.queryByTestId(TEST_IDS.performanceRadarChart)).not.toBeInTheDocument();
+    expect(screen.queryByTestId(TEST_IDS.performanceMetricSelect)).not.toBeInTheDocument();
     expect(screen.getByTestId(TEST_IDS.coachFeedbackPanel)).toBeInTheDocument();
+  });
+
+  it('keeps the block with only the trend when the radar has no data', () => {
+    render(<PerformanceView {...buildPerformanceView({ radar: null })} />);
+
+    expect(screen.getByTestId(TEST_IDS.performanceTrendChart)).toBeInTheDocument();
+    expect(screen.getByTestId(TEST_IDS.performanceMetricSelect)).toBeInTheDocument();
+    expect(screen.queryByTestId(TEST_IDS.performanceRadarChart)).not.toBeInTheDocument();
+  });
+
+  it('keeps the block with only the radar when the trend has no data', () => {
+    render(<PerformanceView {...buildPerformanceView({ trend: null })} />);
+
+    expect(screen.getByTestId(TEST_IDS.performanceRadarChart)).toBeInTheDocument();
+    expect(screen.queryByTestId(TEST_IDS.performanceTrendChart)).not.toBeInTheDocument();
   });
 });

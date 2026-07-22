@@ -12,6 +12,7 @@ export {
   type MembershipStatus,
   type PlayerGender,
 } from './constants/members.constants';
+export { resolveRoleErrorKey } from './helpers/role-error.helper';
 export { buildMemberRolesQueryOptions } from './queries/member-roles.query';
 export { buildMembersDirectoryQueryOptions } from './queries/members-directory.query';
 export { membersQueryKeys } from './queries/members.keys';

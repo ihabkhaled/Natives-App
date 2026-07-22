@@ -149,6 +149,8 @@ export const I18N_KEYS = {
     title: 'home.title',
     greeting: 'home.greeting',
     manageSessions: 'home.manageSessions',
+    noAccessTitle: 'home.noAccessTitle',
+    noAccessMessage: 'home.noAccessMessage',
   },
   dashboard: DASHBOARD_I18N_KEYS,
   attendance: ATTENDANCE_I18N_KEYS,

@@ -1,5 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
+import { HTTP_ERROR_KIND, HttpError } from '@/packages/http';
+
 import { createAppQueryClient } from './query-client.factory';
 
 function getRetryPredicate(): (failureCount: number, error: Error) => boolean {
@@ -12,6 +14,14 @@ function getRetryPredicate(): (failureCount: number, error: Error) => boolean {
 
 function buildError(status: number): Error {
   return Object.assign(new Error(`HTTP ${String(status)}`), { status });
+}
+
+/** The AppError shape feature services throw: an Error whose cause is the HttpError. */
+function wrappedHttpError(
+  kind: (typeof HTTP_ERROR_KIND)[keyof typeof HTTP_ERROR_KIND],
+  status?: number,
+): Error {
+  return new Error('request failed', { cause: new HttpError({ kind, status }) });
 }
 
 describe('createAppQueryClient', () => {
@@ -36,40 +46,53 @@ describe('the query retry predicate', () => {
     const retry = getRetryPredicate();
 
     expect(retry(0, buildError(400))).toBe(false);
+    expect(retry(0, buildError(401))).toBe(false);
+    expect(retry(0, buildError(403))).toBe(false);
     expect(retry(0, buildError(404))).toBe(false);
+    expect(retry(0, buildError(409))).toBe(false);
     expect(retry(0, buildError(422))).toBe(false);
     expect(retry(0, buildError(499))).toBe(false);
   });
 
-  it('retries server errors while attempts remain', () => {
+  it('never retries the deterministic failures feature services throw', () => {
+    const retry = getRetryPredicate();
+
+    expect(retry(0, wrappedHttpError(HTTP_ERROR_KIND.Unauthorized, 401))).toBe(false);
+    expect(retry(0, wrappedHttpError(HTTP_ERROR_KIND.Forbidden, 403))).toBe(false);
+    expect(retry(0, wrappedHttpError(HTTP_ERROR_KIND.NotFound, 404))).toBe(false);
+    expect(retry(0, wrappedHttpError(HTTP_ERROR_KIND.Validation, 422))).toBe(false);
+  });
+
+  it('retries the transient failures feature services throw', () => {
+    const retry = getRetryPredicate();
+
+    expect(retry(0, wrappedHttpError(HTTP_ERROR_KIND.Network))).toBe(true);
+    expect(retry(0, wrappedHttpError(HTTP_ERROR_KIND.Timeout))).toBe(true);
+    expect(retry(1, wrappedHttpError(HTTP_ERROR_KIND.Server, 502))).toBe(true);
+    expect(retry(0, wrappedHttpError(HTTP_ERROR_KIND.RateLimited, 429))).toBe(true);
+  });
+
+  it('retries server errors and retry-worthy statuses while attempts remain', () => {
     const retry = getRetryPredicate();
 
     expect(retry(0, buildError(500))).toBe(true);
     expect(retry(1, buildError(503))).toBe(true);
+    expect(retry(0, buildError(408))).toBe(true);
+    expect(retry(0, buildError(429))).toBe(true);
   });
 
-  it('retries errors that carry no status', () => {
+  it('never retries an error that carries no transient signal', () => {
     const retry = getRetryPredicate();
 
-    expect(retry(0, new Error('network down'))).toBe(true);
-  });
-
-  it('retries when the status is below the client-error range', () => {
-    const retry = getRetryPredicate();
-
-    expect(retry(0, buildError(399))).toBe(true);
+    expect(retry(0, new Error('no status'))).toBe(false);
+    expect(retry(0, buildError(399))).toBe(false);
+    expect(retry(0, Object.assign(new Error('odd'), { status: '404' }))).toBe(false);
   });
 
   it('stops once the attempt budget is spent', () => {
     const retry = getRetryPredicate();
 
     expect(retry(2, buildError(500))).toBe(false);
-    expect(retry(5, new Error('network down'))).toBe(false);
-  });
-
-  it('ignores a non-numeric status', () => {
-    const retry = getRetryPredicate();
-
-    expect(retry(0, Object.assign(new Error('odd'), { status: '404' }))).toBe(true);
+    expect(retry(5, wrappedHttpError(HTTP_ERROR_KIND.Network))).toBe(false);
   });
 });

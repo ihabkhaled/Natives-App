@@ -4,8 +4,12 @@ import { useEffectivePermissions } from '@/modules/auth';
 import { useAppTranslation } from '@/packages/i18n';
 import { useNetworkStatus } from '@/platform';
 
-import { resolveAssessmentsStatus } from '../helpers/assessment-list-view.helper';
-import { canReadOwnAssessments, canReadOwnFeedback } from '../helpers/assessment-workflow.helper';
+import { resolvePerformanceScreenStatus } from '../helpers/assessment-list-view.helper';
+import {
+  canFetchAssessmentCatalog,
+  canReadOwnAssessments,
+  canReadOwnFeedback,
+} from '../helpers/assessment-workflow.helper';
 import { buildAssessmentsAsyncCopy, buildAssessmentsGuardCopy } from '../helpers/async-copy.helper';
 import { buildFeedbackCard, buildGoalCard } from '../helpers/development-view.helper';
 import { buildPerformanceCharts, buildPerformanceCopy } from '../helpers/performance-view.helper';
@@ -26,7 +30,12 @@ export function usePerformanceScreen(): PerformanceView {
   const permissions = useEffectivePermissions();
   const network = useNetworkStatus();
   const query = useMyPerformanceQuery(team.teamId);
-  const catalog = useAssessmentCatalogQuery(team.teamId);
+  // The catalog endpoints need the staff-only `assessment.read.team` grant.
+  // A member's screen renders from member-permitted data only: without the
+  // grant the query never fires, so no forbidden request is ever issued and
+  // the charts (which need catalog names and scales) degrade honestly.
+  const canReadCatalog = canFetchAssessmentCatalog(permissions.isLoading, permissions.permissions);
+  const catalog = useAssessmentCatalogQuery(team.teamId, canReadCatalog);
   const actions = useDevelopmentActions(team.teamId, query.goals);
   const [selectedMetricId, setSelectedMetricId] = useState('');
 
@@ -38,11 +47,14 @@ export function usePerformanceScreen(): PerformanceView {
     ...buildAssessmentsGuardCopy(t),
     ...buildPerformanceCopy(t),
     ...buildPerformanceCharts(t, catalog.catalog, assessments, selectedMetricId),
-    status: resolveAssessmentsStatus({
+    status: resolvePerformanceScreenStatus({
       isForbidden: !permissions.isLoading && !canReadOwnAssessments(permissions.permissions),
-      hasData: query.assessments !== undefined && catalog.catalog !== undefined,
+      hasAssessments: query.assessments !== undefined,
       hasItems: assessments.length > 0,
-      isLoading: query.isLoading || catalog.isLoading || permissions.isLoading || team.isLoading,
+      canReadCatalog,
+      hasCatalog: catalog.catalog !== undefined,
+      isCatalogLoading: catalog.isLoading,
+      isLoading: query.isLoading || permissions.isLoading || team.isLoading,
       hasError: query.error !== null,
       isOffline: !network.isOnline,
     }),

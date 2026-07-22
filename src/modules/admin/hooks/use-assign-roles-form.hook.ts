@@ -3,6 +3,7 @@ import { useState } from 'react';
 import {
   assignMemberRoles,
   membersQueryKeys,
+  resolveRoleErrorKey,
   type MemberRole,
   type MemberRoles,
 } from '@/modules/members';
@@ -46,8 +47,13 @@ export function useAssignRolesForm(
       setReason('');
       void toast.showToast({ message: t(I18N_KEYS.adminRoles.savedToast), tone: 'success' });
     },
-    onError: () => {
-      void toast.showToast({ message: t(I18N_KEYS.adminRoles.failedToast), tone: 'danger' });
+    onError: (error) => {
+      // A refused change must not read as a success: drop the optimistic
+      // draft so the panel shows the roles the server actually holds, and
+      // state the SPECIFIC refusal (409 accountRequired, escalation denied,
+      // role not found) instead of a generic "could not update" message.
+      setDraft(null);
+      void toast.showToast({ message: t(resolveRoleErrorKey(error)), tone: 'danger' });
     },
   });
 

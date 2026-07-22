@@ -31,11 +31,16 @@ export function buildAssessmentRevisionsQueryOptions(teamId: string, assessmentI
   };
 }
 
-/** Query options for the assessment catalog (rarely changes; cached longer). */
-export function buildAssessmentCatalogQueryOptions(teamId: string) {
+/**
+ * Query options for the assessment catalog (rarely changes; cached longer).
+ * The five catalog endpoints require the staff-only `assessment.read.team`
+ * grant, so the query only fires once the caller proves that grant — a member
+ * opening My Performance must issue ZERO forbidden catalog requests.
+ */
+export function buildAssessmentCatalogQueryOptions(teamId: string, canReadCatalog: boolean) {
   return {
     queryKey: assessmentsQueryKeys.catalog(teamId),
     queryFn: () => getAssessmentCatalog(teamId),
-    enabled: teamId !== '',
+    enabled: teamId !== '' && canReadCatalog,
   };
 }

@@ -1,4 +1,4 @@
-import { fireEvent, screen, waitFor, within } from '@testing-library/react';
+import { screen, waitFor, within } from '@testing-library/react';
 import { http, HttpResponse } from 'msw';
 import { describe, expect, it } from 'vitest';
 
@@ -35,17 +35,39 @@ describe('outbox health', () => {
   });
 });
 
-describe('dead letters never carry a payload', () => {
-  it('lists the failed events by id, type, and failure code only', async () => {
+describe('the backend-pending panels stay honest (recovery audit P1-4)', () => {
+  // `admin/outbox/dead-letters` and `admin/jobs/health` do not exist on the
+  // backend (404 in production). The capability-honesty markers suppress the
+  // requests entirely, so the panels show their designed "not available yet"
+  // notice instead of a retried 404 loop behind "Loading…".
+  it('never requests the dead-letter listing and shows no invented rows', async () => {
+    let requests = 0;
+    mockApiServer.use(
+      http.get(apiUrl('/admin/outbox/dead-letters'), () => {
+        requests += 1;
+        return HttpResponse.json({ items: [] });
+      }),
+    );
     await openOperations();
 
-    const rows = within(screen.getByTestId(TEST_IDS.adminDeadLetterPanel)).getAllByTestId(
-      TEST_IDS.adminDeadLetterRow,
-    );
+    const panel = screen.getByTestId(TEST_IDS.adminDeadLetterPanel);
+    expect(within(panel).queryAllByTestId(TEST_IDS.adminDeadLetterRow)).toHaveLength(0);
+    expect(requests).toBe(0);
+  });
 
-    expect(rows).toHaveLength(2);
-    expect(rows[0]).toHaveTextContent('notification.email.send');
-    expect(rows[0]).toHaveTextContent('SMTP_TIMEOUT');
+  it('never requests job health and shows no invented rows', async () => {
+    let requests = 0;
+    mockApiServer.use(
+      http.get(apiUrl('/admin/jobs/health'), () => {
+        requests += 1;
+        return HttpResponse.json({ items: [] });
+      }),
+    );
+    await openOperations();
+
+    const panel = screen.getByTestId(TEST_IDS.adminJobHealthPanel);
+    expect(within(panel).queryAllByTestId(TEST_IDS.adminJobRow)).toHaveLength(0);
+    expect(requests).toBe(0);
   });
 
   it('states that payload bodies stay on the server', async () => {
@@ -62,46 +84,6 @@ describe('dead letters never carry a payload', () => {
     expect(screen.getByTestId(TEST_IDS.adminDeadLetterPanel)).toHaveTextContent(
       'not served by the backend yet',
     );
-  });
-
-  it('replays one event by id and drops it from the list', async () => {
-    let replayed: string | null = null;
-    mockApiServer.use(
-      http.post(apiUrl('/admin/outbox/:eventId/replay'), ({ params }) => {
-        replayed = String(params['eventId']);
-        return HttpResponse.json({ eventId: replayed, requeued: true });
-      }),
-    );
-    await openOperations();
-
-    fireEvent.click(
-      within(
-        within(screen.getByTestId(TEST_IDS.adminDeadLetterPanel)).getAllByTestId(
-          TEST_IDS.adminDeadLetterRow,
-        )[0]!,
-      ).getByTestId(TEST_IDS.adminDeadLetterReplay),
-    );
-
-    await waitFor(() => {
-      expect(replayed).toBe('evt-dead-0001');
-    }, WAIT);
-  });
-});
-
-describe('job health', () => {
-  it('shows each scheduled job with its status', async () => {
-    await openOperations();
-
-    const panel = screen.getByTestId(TEST_IDS.adminJobHealthPanel);
-    expect(within(panel).getAllByTestId(TEST_IDS.adminJobRow)).toHaveLength(3);
-    expect(panel).toHaveTextContent('Healthy');
-    expect(panel).toHaveTextContent('Degraded');
-  });
-
-  it('says a job has never run instead of showing a blank instant', async () => {
-    await openOperations();
-
-    expect(screen.getByTestId(TEST_IDS.adminJobHealthPanel)).toHaveTextContent('Never run');
   });
 
   it('marks job health as backend-pending', async () => {
@@ -174,33 +156,6 @@ describe('designed states', () => {
     renderRoute(APP_PATHS.adminOperations, APP_PATHS.adminOperations, <AdminOperationsContainer />);
 
     expect(await screen.findByTestId(TEST_IDS.adminOpsError, {}, WAIT)).toBeInTheDocument();
-  });
-});
-
-describe('a failed replay is reported, not silently dropped', () => {
-  it('keeps the dead letter listed when the replay is refused', async () => {
-    mockApiServer.use(
-      http.post(apiUrl('/admin/outbox/:eventId/replay'), () =>
-        HttpResponse.json({ bad: true }, { status: 500 }),
-      ),
-    );
-    await openOperations();
-
-    fireEvent.click(
-      within(
-        within(screen.getByTestId(TEST_IDS.adminDeadLetterPanel)).getAllByTestId(
-          TEST_IDS.adminDeadLetterRow,
-        )[0]!,
-      ).getByTestId(TEST_IDS.adminDeadLetterReplay),
-    );
-
-    await waitFor(() => {
-      expect(
-        within(screen.getByTestId(TEST_IDS.adminDeadLetterPanel)).getAllByTestId(
-          TEST_IDS.adminDeadLetterRow,
-        ),
-      ).toHaveLength(2);
-    }, WAIT);
   });
 });
 

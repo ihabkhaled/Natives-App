@@ -101,6 +101,32 @@ export function resolveAssessmentsStatus(params: {
   return params.hasError ? 'error' : 'empty';
 }
 
+/**
+ * Screen state for My Performance. The catalog is staff-scoped: when the
+ * principal cannot read it at all, the screen neither waits for it nor
+ * requires it as data — the member-permitted collections alone decide.
+ */
+export function resolvePerformanceScreenStatus(params: {
+  readonly isForbidden: boolean;
+  readonly hasAssessments: boolean;
+  readonly hasItems: boolean;
+  readonly canReadCatalog: boolean;
+  readonly hasCatalog: boolean;
+  readonly isCatalogLoading: boolean;
+  readonly isLoading: boolean;
+  readonly hasError: boolean;
+  readonly isOffline: boolean;
+}): AssessmentsStatus {
+  return resolveAssessmentsStatus({
+    isForbidden: params.isForbidden,
+    hasData: params.hasAssessments && (!params.canReadCatalog || params.hasCatalog),
+    hasItems: params.hasItems,
+    isLoading: params.isLoading || (params.canReadCatalog && params.isCatalogLoading),
+    hasError: params.hasError,
+    isOffline: params.isOffline,
+  });
+}
+
 /** Chip tone for one status, exposed for the entry header. */
 export function statusTone(status: AssessmentStatus): string {
   return ASSESSMENT_STATUS_TONES[status];
