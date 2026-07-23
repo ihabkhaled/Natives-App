@@ -8,6 +8,8 @@ import type {
   SettingKey,
   VenueStatus,
 } from '../constants/admin.constants';
+import type { SettingValueState } from '../constants/setting-values.constants';
+import type { SettingVersionValue, TypedSettingValue } from './setting-values.types';
 
 /** One platform super administrator: an audited privilege, not a directory row. */
 export interface SuperAdmin {
@@ -29,8 +31,12 @@ export interface SuperAdminRoster {
 export interface EffectiveSetting {
   readonly settingKey: SettingKey;
   readonly effectiveFrom: string | null;
-  /** Opaque server-owned JSON, rendered as text and never interpreted. */
-  readonly value: unknown;
+  /** Typed per key; null when not configured or the in-effect row is legacy. */
+  readonly value: TypedSettingValue | null;
+  /** Null only when the key is not configured. */
+  readonly valueState: SettingValueState | null;
+  /** Cross-setting issue codes, e.g. `weights_missing_status:<code>`. */
+  readonly issues: readonly string[];
 }
 
 export interface SettingsSnapshot {
@@ -42,8 +48,9 @@ export interface SettingVersion {
   readonly id: string;
   readonly settingKey: SettingKey;
   readonly effectiveFrom: string;
-  readonly value: unknown;
+  readonly value: SettingVersionValue;
   readonly note: string | null;
+  readonly createdBy: string | null;
   readonly createdAt: string;
 }
 
@@ -160,9 +167,15 @@ export interface AuditPage {
 
 export interface CreateSettingVersionCommand {
   readonly settingKey: SettingKey;
+  /** Strict UTC instant (`...Z`); the form converts from Cairo wall time. */
   readonly effectiveFrom: string;
-  readonly value: unknown;
+  readonly value: TypedSettingValue;
   readonly note: string;
+  /**
+   * Optimistic guard: id of the newest version the client saw for this key,
+   * or null for "no versions yet". A mismatch is refused with 409.
+   */
+  readonly expectedHeadVersionId: string | null;
 }
 
 /** A dry run addresses one rule version for one member. */

@@ -9,6 +9,7 @@ export { BrandLogo, type BrandLogoProps, type BrandLogoSize } from './brand-logo
 export { ChartDataTable, type ChartDataTableProps, type ChartTableRow } from './chart-data-table';
 export { AppButton, type AppButtonProps, type AppButtonTone } from './button';
 export { AppDateField, type AppDateFieldProps } from './date-field';
+export { AppDateTimeField, type AppDateTimeFieldProps } from './datetime-field';
 export { DetailScreen, type DetailScreenProps } from './detail-screen';
 export { EmptyState, type EmptyStateProps } from './empty-state';
 export { ErrorState, type ErrorStateProps } from './error-state';
@@ -23,6 +24,14 @@ export { AppPasswordInput, type AppPasswordInputProps } from './password-input';
 export { PermissionState, type PermissionStateProps } from './permission-state';
 export { ReasonField, type ReasonFieldProps } from './reason-field';
 export { RecordList, type RecordListProps, type RecordListRow } from './record-list';
+export {
+  moveArrayItem,
+  removeArrayItem,
+  ReorderableRows,
+  replaceArrayItem,
+  type ReorderableRowsProps,
+  type ReorderableRowView,
+} from './reorderable-rows';
 export { SectionPanel, type SectionPanelProps } from './section-panel';
 export { SelectField, type SelectFieldOption, type SelectFieldProps } from './select-field';
 export { StatusChip, type StatusChipProps } from './status-chip';

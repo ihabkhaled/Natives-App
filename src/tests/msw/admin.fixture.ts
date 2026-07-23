@@ -7,6 +7,8 @@ import type {
 } from '@/modules/admin';
 import type { SchemaOutput } from '@/packages/schema';
 
+import { LEGACY_REPORT_BRANDING, VALID_SETTING_DOCUMENTS } from './setting-values.fixture';
+
 type SnapshotDto = SchemaOutput<typeof settingsSnapshotResponseSchema>;
 type VersionListDto = SchemaOutput<typeof settingVersionListResponseSchema>;
 type VersionDto = VersionListDto['items'][number];
@@ -17,10 +19,11 @@ type CatalogKindDto = CatalogListDto['items'][number]['catalog'];
 type SettingKeyDto = SnapshotDto['settings'][number]['settingKey'];
 
 /**
- * Deterministic admin fixtures: settings, seasons, venues, catalogs, the two
- * versioned rule families, and the operations surfaces. Shapes mirror the
- * published contract; the dead-letter listing and job health are the
- * backend-pending surfaces recorded in docs/api-verification.md.
+ * Deterministic admin fixtures. Settings are an effective-dated, typed store
+ * mirroring contract 1.3.0: canonical documents per key, `valueState` on
+ * every row, a PERMANENT legacy `report_branding` row (so the legacy path
+ * can never rot unnoticed), and snapshot `issues` computed from the same
+ * cross-setting rule the backend applies.
  */
 export const MOCK_ADMIN = {
   teamId: '00000000-0000-4000-8000-000000000001',
@@ -31,63 +34,107 @@ export const MOCK_ADMIN = {
   asOf: '2026-07-20T09:00:00.000Z',
 } as const;
 
-const SETTING_VALUES: Record<SettingKeyDto, unknown> = {
-  attendance_statuses: ['present', 'late', 'excused', 'absent'],
-  session_types: ['practice', 'scrimmage', 'gym'],
-  attendance_weights: { present: 1, late: 0.5 },
-  assessment_scale: { min: 1, max: 5 },
-  badge_tiers: ['bronze', 'silver', 'gold'],
-  roster_limits: { max: 27 },
-  notification_rules: { practiceReminderHours: 24 },
-  report_branding: { logo: 'default' },
-};
+const SETTING_KEY_VALUES: readonly SettingKeyDto[] = [
+  'attendance_statuses',
+  'session_types',
+  'attendance_weights',
+  'assessment_scale',
+  'badge_tiers',
+  'roster_limits',
+  'notification_rules',
+  'report_branding',
+];
 
-export function settingsSnapshotResponse(): SnapshotDto {
-  return {
-    teamId: MOCK_ADMIN.teamId,
-    asOf: MOCK_ADMIN.asOf,
-    settings: (Object.entries(SETTING_VALUES) as [SettingKeyDto, unknown][]).map(
-      ([settingKey, value], index) => ({
-        settingKey,
-        effectiveFrom: index === 0 ? null : '2026-01-01T00:00:00.000Z',
-        value,
-      }),
-    ),
-  };
-}
-
-type VersionRecord = VersionDto;
-
-function seedVersions(): VersionRecord[] {
-  return [
-    {
-      id: 'sv-0001',
+function seedVersions(): VersionDto[] {
+  const seeded = SETTING_KEY_VALUES.map((settingKey, index): VersionDto => {
+    const legacy = settingKey === 'report_branding';
+    return {
+      id: `sv-000${index + 1}`,
       teamId: MOCK_ADMIN.teamId,
-      settingKey: 'attendance_statuses',
-      effectiveFrom: '2026-01-01T00:00:00.000Z',
-      value: SETTING_VALUES.attendance_statuses,
-      note: 'Initial import',
-      createdBy: null,
+      settingKey,
+      effectiveFrom:
+        settingKey === 'attendance_weights'
+          ? '2026-02-01T00:00:00.000Z'
+          : '2026-01-01T00:00:00.000Z',
+      value: legacy ? LEGACY_REPORT_BRANDING : VALID_SETTING_DOCUMENTS[settingKey],
+      valueState: legacy ? 'legacy' : 'valid',
+      note: index === 0 ? 'Initial import' : null,
+      createdBy: index === 0 ? 'user-admin-1' : null,
       createdAt: '2025-12-20T00:00:00.000Z',
-    },
-    {
-      id: 'sv-0002',
-      teamId: MOCK_ADMIN.teamId,
-      settingKey: 'attendance_weights',
-      effectiveFrom: '2026-02-01T00:00:00.000Z',
-      value: SETTING_VALUES.attendance_weights,
-      note: null,
-      createdBy: null,
-      createdAt: '2026-01-20T00:00:00.000Z',
-    },
-  ];
+    };
+  });
+  return seeded;
 }
 
 let versions = seedVersions();
 
+export function resetMockAdminSettings(): void {
+  versions = seedVersions();
+}
+
+function effectiveRowFor(settingKey: SettingKeyDto, asOf: string): VersionDto | undefined {
+  return versions
+    .filter((row) => row.settingKey === settingKey && row.effectiveFrom <= asOf)
+    .sort((a, b) => b.effectiveFrom.localeCompare(a.effectiveFrom))[0];
+}
+
+interface StatusEntryDoc {
+  readonly code: string;
+  readonly active: boolean;
+  readonly countsTowardMetrics: boolean;
+}
+
+/** The backend's D3 surfacing: counting statuses without a weight. */
+function weightIssues(asOf: string): string[] {
+  const statusesRow = effectiveRowFor('attendance_statuses', asOf);
+  const weightsRow = effectiveRowFor('attendance_weights', asOf);
+  if (statusesRow?.valueState !== 'valid' || weightsRow?.valueState !== 'valid') {
+    return [];
+  }
+  const statuses = (statusesRow.value as { statuses: readonly StatusEntryDoc[] }).statuses;
+  const weights = (weightsRow.value as { weights: Readonly<Record<string, number>> }).weights;
+  return statuses
+    .filter(
+      (entry) => entry.active && entry.countsTowardMetrics && weights[entry.code] === undefined,
+    )
+    .map((entry) => `weights_missing_status:${entry.code}`);
+}
+
+export function settingsSnapshotResponse(asOf?: string): SnapshotDto {
+  const resolvedAsOf = asOf ?? new Date().toISOString();
+  return {
+    teamId: MOCK_ADMIN.teamId,
+    asOf: resolvedAsOf,
+    settings: SETTING_KEY_VALUES.map((settingKey) => {
+      const row = effectiveRowFor(settingKey, resolvedAsOf);
+      const legacy = row?.valueState === 'legacy';
+      return {
+        settingKey,
+        effectiveFrom: row?.effectiveFrom ?? null,
+        value: row === undefined || legacy ? null : row.value,
+        valueState: row === undefined ? null : row.valueState,
+        issues: settingKey === 'attendance_weights' ? weightIssues(resolvedAsOf) : [],
+      };
+    }),
+  };
+}
+
 export function settingVersionsResponse(settingKey: string): VersionListDto {
-  const items = versions.filter((item) => item.settingKey === settingKey);
+  const items = versions
+    .filter((item) => item.settingKey === settingKey)
+    .sort((a, b) => b.effectiveFrom.localeCompare(a.effectiveFrom));
   return { items: items.map((item) => ({ ...item })), total: items.length, limit: 20, offset: 0 };
+}
+
+/** The optimistic-guard head the create handler compares against. */
+export function headVersionIdFor(settingKey: string): string | null {
+  return settingVersionsResponse(settingKey).items[0]?.id ?? null;
+}
+
+export function hasVersionAtInstant(settingKey: string, effectiveFrom: string): boolean {
+  return versions.some(
+    (row) => row.settingKey === settingKey && row.effectiveFrom === effectiveFrom,
+  );
 }
 
 export function createSettingVersionRecord(
@@ -96,18 +143,34 @@ export function createSettingVersionRecord(
   value: unknown,
   note: string | null,
 ): VersionDto {
-  const record: VersionRecord = {
+  const record: VersionDto = {
     id: `sv-${String(versions.length + 1).padStart(4, '0')}`,
     teamId: MOCK_ADMIN.teamId,
     settingKey,
     effectiveFrom,
     value,
+    valueState: 'valid',
     note,
-    createdBy: null,
-    createdAt: MOCK_ADMIN.asOf,
+    createdBy: 'user-admin-1',
+    createdAt: new Date().toISOString(),
   };
   versions = [record, ...versions];
   return { ...record };
+}
+
+export type CancelOutcome = 'cancelled' | 'not-found' | 'in-effect';
+
+/** Future-only cancel: an in-effect row is history and stays immutable. */
+export function cancelVersionRecord(versionId: string): CancelOutcome {
+  const row = versions.find((candidate) => candidate.id === versionId);
+  if (row === undefined) {
+    return 'not-found';
+  }
+  if (row.effectiveFrom <= new Date().toISOString()) {
+    return 'in-effect';
+  }
+  versions = versions.filter((candidate) => candidate.id !== versionId);
+  return 'cancelled';
 }
 
 export function seasonsResponse(): SeasonListDto {
@@ -169,29 +232,18 @@ export function venuesResponse(): VenueListDto {
 }
 
 export function catalogEntriesResponse(catalog: CatalogKindDto): CatalogListDto {
-  const items: CatalogListDto['items'][number][] = [
-    {
-      id: `cat-${catalog}-1`,
-      teamId: MOCK_ADMIN.teamId,
-      catalog,
-      key: 'open',
-      label: 'Open',
-      sortOrder: 1,
-      referenceCount: 4,
-      status: 'active',
-      version: 1,
-    },
-    {
-      id: `cat-${catalog}-2`,
-      teamId: MOCK_ADMIN.teamId,
-      catalog,
-      key: 'mixed',
-      label: 'Mixed',
-      sortOrder: 2,
-      referenceCount: 0,
-      status: 'active',
-      version: 1,
-    },
-  ];
+  const keys = catalog === 'position' ? ['handler', 'cutter'] : ['open', 'mixed'];
+  const labels = catalog === 'position' ? ['Handler', 'Cutter'] : ['Open', 'Mixed'];
+  const items: CatalogListDto['items'][number][] = keys.map((key, index) => ({
+    id: `cat-${catalog}-${index + 1}`,
+    teamId: MOCK_ADMIN.teamId,
+    catalog,
+    key,
+    label: labels[index] ?? key,
+    sortOrder: index + 1,
+    referenceCount: index === 0 ? 4 : 0,
+    status: 'active',
+    version: 1,
+  }));
   return { items, total: items.length, limit: 100, offset: 0 };
 }

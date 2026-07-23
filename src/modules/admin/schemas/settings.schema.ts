@@ -7,18 +7,21 @@ import {
   SETTING_KEYS,
   VENUE_STATUSES,
 } from '../constants/admin.constants';
+import { SETTING_VALUE_STATES } from '../constants/setting-values.constants';
 
 /**
  * Wire contracts for team settings, seasons, venues, and catalogs. A setting
- * value is opaque JSON by design — the client renders it as text and never
- * interprets a shape it does not own.
+ * value is typed per key since contract 1.3.0: the mapper parses a `valid`
+ * document through the per-key union, keeps a `legacy` document raw behind
+ * an explicit wrapper, and the snapshot never serves a legacy value as
+ * effective (helpers/setting-value-state.helper.ts).
  */
-const settingValueField = schemaBuilder.unknown();
-
 const effectiveSettingSchema = schemaBuilder.object({
   settingKey: schemaBuilder.enum(SETTING_KEYS),
   effectiveFrom: isoInstantField.nullable(),
-  value: settingValueField,
+  value: schemaBuilder.unknown(),
+  valueState: schemaBuilder.enum(SETTING_VALUE_STATES).nullable(),
+  issues: schemaBuilder.array(schemaBuilder.string()),
 });
 
 export const settingsSnapshotResponseSchema = schemaBuilder.object({
@@ -32,7 +35,8 @@ export const settingVersionResponseSchema = schemaBuilder.object({
   teamId: schemaBuilder.string().min(1),
   settingKey: schemaBuilder.enum(SETTING_KEYS),
   effectiveFrom: isoInstantField,
-  value: settingValueField,
+  value: schemaBuilder.unknown(),
+  valueState: schemaBuilder.enum(SETTING_VALUE_STATES),
   note: schemaBuilder.string().nullable(),
   createdBy: schemaBuilder.string().nullable(),
   createdAt: isoInstantField,

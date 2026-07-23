@@ -325,6 +325,14 @@ test.describe('admin console accessibility', () => {
     await signIn(page);
     await gotoApp(page, APP_ROUTES.adminSettings);
     await expect(page.getByTestId(TEST_IDS.adminEffectivePanel)).toBeVisible();
+    // The typed statuses editor (reorderable rows) and the readable history
+    // render by default; scan them at rest, then with the Cairo picker open.
+    await expect(page.getByTestId(TEST_IDS.adminSettingEditor).first()).toBeVisible();
+    await waitForAppAnimations(page);
+    expect((await analyze(page)).violations).toEqual([]);
+
+    await page.getByTestId(`${TEST_IDS.adminVersionEffectiveFrom}-trigger`).click();
+    await expect(page.getByTestId(TEST_IDS.adminVersionEffectiveInput)).toBeVisible();
     await waitForAppAnimations(page);
     expect((await analyze(page)).violations).toEqual([]);
   });

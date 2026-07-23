@@ -2,7 +2,8 @@
 
 The administration surface (prompt 814): a permission-filtered hub plus five screens — team
 settings, role assignment, versioned rule governance, the operations centre, and the platform
-super-admin panel. Everything here is backed by the published contract (1.2.0); see
+super-admin panel. Everything here is backed by the published contract (synced at 1.4.0, which
+carries the 1.3.0 typed-settings union); see
 [`docs/api-verification.md`](../../../docs/api-verification.md).
 
 ## Public surface (`index.ts`)
@@ -17,27 +18,27 @@ super-admin panel. Everything here is backed by the published contract (1.2.0); 
 
 ## Screens
 
-| Route               | What it owns                                                                                 |
-| ------------------- | -------------------------------------------------------------------------------------------- |
-| `/admin`            | Hub. One card per surface the principal may actually open.                                   |
-| `/admin/settings`   | Effective snapshot, version history, effective-dated change form, seasons, venues, catalogs. |
-| `/admin/roles`      | RBAC assignment bounded by the server's `assignableRoles`.                                   |
-| `/admin/rules`      | Points and calculation rule versions: DRAFT → APPROVED → PUBLISHED → RETIRED.                |
-| `/admin/operations` | Outbox health, dead letters, heartbeat-derived job health, audit log.                        |
-| `/admin/platform`   | Platform super-admin roster: audited promote and last-admin-guarded revoke.                  |
+| Route               | What it owns                                                                                                            |
+| ------------------- | ----------------------------------------------------------------------------------------------------------------------- |
+| `/admin`            | Hub. One card per surface the principal may actually open.                                                              |
+| `/admin/settings`   | Readable effective snapshot, diffed version history with cancel, typed per-key editors (P2), seasons, venues, catalogs. |
+| `/admin/roles`      | RBAC assignment bounded by the server's `assignableRoles`.                                                              |
+| `/admin/rules`      | Points and calculation rule versions: DRAFT → APPROVED → PUBLISHED → RETIRED.                                           |
+| `/admin/operations` | Outbox health, dead letters, heartbeat-derived job health, audit log.                                                   |
+| `/admin/platform`   | Platform super-admin roster: audited promote and last-admin-guarded revoke.                                             |
 
 ## Anatomy
 
 ```text
-constants/    setting keys, rule lifecycle, catalogs, API paths, label and tone maps
-schemas/      Zod contracts for settings, rules, and operations
-mappers/      DTO -> domain; the audit diff is reduced to a field count here
+constants/    setting keys + per-key value vocabulary/bounds, rule lifecycle, catalogs, API paths
+schemas/      Zod contracts: per-key setting values (mirror of the backend policy), rules, operations
+mappers/      DTO -> domain; valid values parse per key, legacy documents stay behind a wrapper
 gateways/     one request function per endpoint, grouped by resource
-services/     one use case per file
-queries/      stable keys + query option builders
-hooks/        context, per-screen view models, and the two draft forms
-helpers/      row builders, lifecycle rules, hub cards, setting-value parsing
-components/   UI-only screens on the shared kit (WorkspaceScreen, ListScreen, RecordList)
+services/     one use case per file (incl. the future-only setting-version cancel)
+queries/      stable keys + query option builders (incl. the as-of settings snapshot)
+hooks/        context, per-screen view models, the typed setting form and its sub-hooks
+helpers/      row builders, summaries, stable-key diffs, history assembly, draft factories
+components/   UI-only screens on the shared kit + the 8 typed setting editors and history
 containers/   the six routed screens
 routes/       typed paths + route definitions
 ```
@@ -51,6 +52,14 @@ routes/       typed paths + route definitions
   as a disabled control; it is absent, because the server would reject it.
 - **An audited change needs a reason.** Both write forms (setting version, role assignment) block
   locally on a missing reason rather than sending a command the server would refuse.
+- **A setting value is typed, or it is not sent.** Each key's editor emits a document the per-key
+  schema (the backend policy's mirror) accepts; the raw-JSON disclosure exists only for platform
+  administrators and validates through the same schema. `effectiveFrom` is edited as Africa/Cairo
+  wall time and always leaves as a strict-UTC `Z` instant; creates carry `expectedHeadVersionId`,
+  and a stale 409 refreshes the history for re-confirmation instead of overwriting.
+- **Legacy is shown, never served.** A pre-validation stored document renders read-only with a
+  guided "replace with a valid configuration" flow; the snapshot resolves it to null, and snapshot
+  `issues[]` (e.g. a counting status without a weight) render as warnings, not silence.
 - **Activation needs a preview.** `publish` stays disabled until a simulation has been seen
   (`SIMULATION_REQUIRED_TRANSITIONS`), and the screen says why. Every transition sends
   `expectedRecordVersion`, so a stale view loses the optimistic-concurrency check.

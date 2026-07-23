@@ -1,6 +1,18 @@
 import type { AsyncViewStatus, RecordListRow, SelectFieldOption } from '@/shared/ui';
 import type { ScreenCopy } from '@/shared/view';
 
+import type { SettingHistoryView, SettingVersionFormView } from './settings-view.types';
+
+export type {
+  EffectiveFromFieldView,
+  RawJsonFormView,
+  SettingDiffRowView,
+  SettingHistoryEntryView,
+  SettingHistoryLegacyView,
+  SettingHistoryView,
+  SettingVersionFormView,
+} from './settings-view.types';
+
 /** The scope, grants, and connectivity every admin screen resolves. */
 export interface AdminContextView {
   readonly teamId: string;
@@ -35,25 +47,6 @@ export interface AdminHubView extends ScreenCopy {
 /** Admin rows are the shared record-list row; there is no admin-only shape. */
 export type AdminFactRowView = RecordListRow;
 
-export interface SettingVersionFormView {
-  readonly heading: string;
-  readonly intro: string;
-  readonly effectiveFromLabel: string;
-  readonly effectiveFromValue: string;
-  readonly valueLabel: string;
-  readonly valueValue: string;
-  readonly noteLabel: string;
-  readonly noteValue: string;
-  readonly validationMessage: string | null;
-  readonly submitLabel: string;
-  readonly isSaving: boolean;
-  readonly canSubmit: boolean;
-  readonly onEffectiveFromChange: (value: string) => void;
-  readonly onValueChange: (value: string) => void;
-  readonly onNoteChange: (value: string) => void;
-  readonly onSubmit: () => void;
-}
-
 export interface AdminSettingsView extends ScreenCopy {
   readonly title: string;
   readonly subtitle: string;
@@ -68,7 +61,7 @@ export interface AdminSettingsView extends ScreenCopy {
   readonly settingKeyOptions: readonly SelectFieldOption[];
   readonly versionsHeading: string;
   readonly versionsIntro: string;
-  readonly versionRows: readonly AdminFactRowView[];
+  readonly history: SettingHistoryView;
   readonly versionForm: SettingVersionFormView | null;
   readonly seasonsHeading: string;
   readonly seasonsIntro: string;

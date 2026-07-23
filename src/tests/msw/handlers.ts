@@ -4,6 +4,7 @@ import type { AuthUser } from '@/modules/auth';
 import { getEnvironment } from '@/packages/environment';
 
 import { adminHandlers } from './admin-handlers';
+import { resetMockAdminSettings } from './admin.fixture';
 import { resetMockAdminState } from './admin-rules.fixture';
 import { resetMockOperationsState } from './admin-operations.fixture';
 import { assessmentsHandlers } from './assessments-handlers';
@@ -62,6 +63,7 @@ export function resetMockAuthState(): void {
   resetMockTryoutsState();
   resetMockNotificationsState();
   resetMockAdminState();
+  resetMockAdminSettings();
   resetMockOperationsState();
   resetMockPlatformAdminsState();
   resetMockMatchesState();

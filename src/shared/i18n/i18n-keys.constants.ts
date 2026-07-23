@@ -1,4 +1,5 @@
 import { ADMIN_I18N_KEYS } from './admin-keys.constants';
+import { ADMIN_SETTINGS_TYPED_I18N_KEYS } from './admin-settings-keys.constants';
 import { ASSESSMENTS_I18N_KEYS } from './assessments-keys.constants';
 import { ATTENDANCE_I18N_KEYS } from './attendance-keys.constants';
 import { COMPETITIONS_I18N_KEYS } from './competitions-keys.constants';
@@ -176,6 +177,7 @@ export const I18N_KEYS = {
   matchStats: MATCH_STATS_I18N_KEYS,
   ...NOTIFICATIONS_I18N_KEYS,
   ...ADMIN_I18N_KEYS,
+  ...ADMIN_SETTINGS_TYPED_I18N_KEYS,
   teamsAdmin: TEAMS_ADMIN_I18N_KEYS,
   seasonsAdmin: SEASONS_ADMIN_I18N_KEYS,
   permissionsMatrix: PERMISSIONS_MATRIX_I18N_KEYS,

@@ -76,6 +76,29 @@ export function isInstantInPast(isoDateTime: string, referenceIso: string): bool
   return dayjs(isoDateTime).isBefore(dayjs(referenceIso));
 }
 
+/** Cairo wall-time strings use the minute-precise ISO local shape. */
+const CAIRO_WALL_TIME_FORMAT = 'YYYY-MM-DDTHH:mm';
+
+/**
+ * Convert a Cairo wall time (`YYYY-MM-DDTHH:mm`) to the strict-UTC instant
+ * the API stores. DST-aware: the same wall hour maps to UTC+3 in Egyptian
+ * summer and UTC+2 in winter, so an implicit-timezone bug cannot recur at
+ * this edge.
+ */
+export function cairoWallTimeToUtcIso(wallTime: string): string {
+  return dayjs.tz(wallTime, PRESENTATION_TIME_ZONE).utc().toISOString();
+}
+
+/** Render a stored UTC instant as the Cairo wall time a form edits. */
+export function utcIsoToCairoWallTime(isoDateTime: string): string {
+  return dayjs.utc(isoDateTime).tz(PRESENTATION_TIME_ZONE).format(CAIRO_WALL_TIME_FORMAT);
+}
+
+/** The current Cairo wall time (the impure clock read for datetime forms). */
+export function nowCairoWallTime(): string {
+  return dayjs().tz(PRESENTATION_TIME_ZONE).format(CAIRO_WALL_TIME_FORMAT);
+}
+
 /** The current instant as a UTC ISO 8601 string (the one impure clock read). */
 export function nowIso(): string {
   return new Date().toISOString();

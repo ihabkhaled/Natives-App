@@ -1,5 +1,6 @@
 export {
   cairoDayKey,
+  cairoWallTimeToUtcIso,
   formatCairoDate,
   formatCairoDateTime,
   formatCairoTime,
@@ -9,6 +10,8 @@ export {
   formatRelativeToNow,
   isInstantInPast,
   isValidIsoDateTime,
+  nowCairoWallTime,
   nowIso,
   PRESENTATION_TIME_ZONE,
+  utcIsoToCairoWallTime,
 } from './date.facade';

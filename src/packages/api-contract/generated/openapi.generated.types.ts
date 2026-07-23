@@ -1274,6 +1274,26 @@ export interface paths {
         readonly patch?: never;
         readonly trace?: never;
     };
+    readonly "/teams/{teamId}/attendance/me/history": {
+        readonly parameters: {
+            readonly query?: never;
+            readonly header?: never;
+            readonly path?: never;
+            readonly cookie?: never;
+        };
+        /**
+         * My own attendance history across sessions (paginated)
+         * @description Past (started, not cancelled) sessions of the team joined with the caller’s own attendance record, newest first. Rows without a record carry status null; sheetState null means no sheet exists yet. The membership is always resolved from the token.
+         */
+        readonly get: operations["AttendanceParticipation.getMyHistory"];
+        readonly put?: never;
+        readonly post?: never;
+        readonly delete?: never;
+        readonly options?: never;
+        readonly head?: never;
+        readonly patch?: never;
+        readonly trace?: never;
+    };
     readonly "/teams/{teamId}/attendance/me/participation": {
         readonly parameters: {
             readonly query?: never;
@@ -1281,7 +1301,10 @@ export interface paths {
             readonly path?: never;
             readonly cookie?: never;
         };
-        /** My attendance participation inputs (scoring inputs) */
+        /**
+         * My attendance participation inputs (scoring inputs)
+         * @description Projects raw participation inputs from finalized attendance against the cited default rule version. When no default scoring rule is configured (a fresh database), responds 409 with messageKey errors.practices.attendanceRuleMissing — clients render "attendance scoring is not configured yet" and never retry.
+         */
         readonly get: operations["AttendanceParticipation.getMyParticipation"];
         readonly put?: never;
         readonly post?: never;
@@ -1298,7 +1321,10 @@ export interface paths {
             readonly path?: never;
             readonly cookie?: never;
         };
-        /** A member's attendance participation inputs */
+        /**
+         * A member's attendance participation inputs
+         * @description Same projection as the self read, for staff. Responds 409 with messageKey errors.practices.attendanceRuleMissing when no default scoring rule is configured.
+         */
         readonly get: operations["AttendanceParticipation.getMemberParticipation"];
         readonly put?: never;
         readonly post?: never;
@@ -4194,7 +4220,10 @@ export interface paths {
         };
         readonly get?: never;
         readonly put?: never;
-        /** Check myself in for a session (status derived) */
+        /**
+         * Check myself in for a session (status derived; idempotent — a repeated check-in returns the existing record unchanged)
+         * @description The status is derived from the server clock, never trusted from the client. A new check-in must fall inside the explicit window: it opens 60 minutes before startsAt and closes at the session end, and only published/rescheduled sessions accept check-ins — otherwise 409 with messageKey errors.practices.checkInWindowClosed. Venue/geo/check-in-code policy is explicitly none: the window is the whole rule. A finalized sheet responds 409 errors.practices.attendanceLocked.
+         */
         readonly post: operations["Attendance.checkIn"];
         readonly delete?: never;
         readonly options?: never;
@@ -4937,6 +4966,23 @@ export interface paths {
         /** Add an effective-dated setting version */
         readonly post: operations["Settings.createSettingVersion"];
         readonly delete?: never;
+        readonly options?: never;
+        readonly head?: never;
+        readonly patch?: never;
+        readonly trace?: never;
+    };
+    readonly "/teams/{teamId}/settings/versions/{versionId}": {
+        readonly parameters: {
+            readonly query?: never;
+            readonly header?: never;
+            readonly path?: never;
+            readonly cookie?: never;
+        };
+        readonly get?: never;
+        readonly put?: never;
+        readonly post?: never;
+        /** Cancel a future-effective setting version */
+        readonly delete: operations["Settings.cancelSettingVersion"];
         readonly options?: never;
         readonly head?: never;
         readonly patch?: never;
@@ -5872,6 +5918,14 @@ export interface components {
         readonly AssessmentOptimisticVersionDto: {
             readonly expectedRecordVersion: number;
         };
+        readonly AssessmentScaleValueDto: {
+            /** @description Ascending, non-overlapping bands inside [min, max]; gaps are legal. */
+            readonly bands?: readonly components["schemas"]["ScaleBandDto"][];
+            readonly max: number;
+            readonly min: number;
+            /** @description (max − min) must be divisible by step. */
+            readonly step: number;
+        };
         readonly AssessmentValueDto: {
             readonly confidence?: number | null;
             /** Format: uuid */
@@ -5960,6 +6014,7 @@ export interface components {
             readonly membershipId: string;
             /** Format: date-time */
             readonly recordedAt: string | null;
+            readonly selfCheckIn: components["schemas"]["SelfCheckInEligibilityDto"] | null;
             readonly sessionId: string;
             /** @enum {string|null} */
             readonly source: "self" | "coach" | "admin" | "import" | "system" | null;
@@ -5985,6 +6040,31 @@ export interface components {
             /** @enum {string} */
             readonly toStatus: "present_on_time" | "present_late" | "excused" | "injured" | "absent" | "remote_approved" | "other_approved";
         };
+        readonly AttendanceSelfHistoryEntryResponseDto: {
+            /** Format: date-time */
+            readonly endsAt: string;
+            /** @enum {string|null} */
+            readonly excuseCategory: "injury" | "illness" | "work" | "travel" | "personal" | "other" | null;
+            readonly latenessMinutes: number | null;
+            /** Format: date-time */
+            readonly recordedAt: string | null;
+            readonly sessionId: string;
+            readonly sessionType: string;
+            /** @enum {string|null} */
+            readonly sheetState: "open" | "finalized" | "corrected" | null;
+            /** @enum {string|null} */
+            readonly source: "self" | "coach" | "admin" | "import" | "system" | null;
+            /** Format: date-time */
+            readonly startsAt: string;
+            /** @enum {string|null} */
+            readonly status: "present_on_time" | "present_late" | "excused" | "injured" | "absent" | "remote_approved" | "other_approved" | null;
+        };
+        readonly AttendanceSelfHistoryResponseDto: {
+            readonly items: readonly components["schemas"]["AttendanceSelfHistoryEntryResponseDto"][];
+            readonly limit: number;
+            readonly offset: number;
+            readonly total: number;
+        };
         readonly AttendanceSheetResponseDto: {
             /** Format: date-time */
             readonly finalizedAt: string | null;
@@ -5997,6 +6077,24 @@ export interface components {
             readonly total: number;
             readonly version: number | null;
         };
+        readonly AttendanceStatusEntryDto: {
+            /** @description Archived-not-deleted flag. */
+            readonly active: boolean;
+            /** @description Member self check-in permitted. */
+            readonly allowSelfCheckIn: boolean;
+            /** @enum {string} */
+            readonly code: "present_on_time" | "present_late" | "excused" | "injured" | "absent" | "remote_approved" | "other_approved";
+            /** @enum {string} */
+            readonly color: "primary" | "success" | "warning" | "danger" | "neutral" | "accent1" | "accent2" | "accent3" | "accent4";
+            /** @description Participates in attendance math. */
+            readonly countsTowardMetrics: boolean;
+            readonly labelAr: string;
+            readonly labelEn: string;
+        };
+        readonly AttendanceStatusesValueDto: {
+            /** @description Ordered display list; must include active present_on_time and absent poles. */
+            readonly statuses: readonly components["schemas"]["AttendanceStatusEntryDto"][];
+        };
         readonly AttendanceStatusResponseDto: {
             /** Format: date-time */
             readonly finalizedAt: string | null;
@@ -6005,6 +6103,12 @@ export interface components {
             /** @enum {string} */
             readonly state: "open" | "finalized" | "corrected";
             readonly version: number;
+        };
+        readonly AttendanceWeightsValueDto: {
+            /** @description Status code → weight in [0, 1], at most 3 decimal places. */
+            readonly weights: {
+                readonly [key: string]: number;
+            };
         };
         readonly AuditEntryDto: {
             readonly action: string;
@@ -6088,6 +6192,18 @@ export interface components {
             readonly mediaId: string;
             readonly storageKey: string;
             readonly uploadUrl: string;
+        };
+        readonly BadgeTierDto: {
+            /** @enum {string} */
+            readonly color: "primary" | "success" | "warning" | "danger" | "neutral" | "accent1" | "accent2" | "accent3" | "accent4";
+            readonly key: string;
+            readonly labelAr: string;
+            readonly labelEn: string;
+            /** @description Strictly ascending in array order (array order = rank). */
+            readonly threshold: number;
+        };
+        readonly BadgeTiersValueDto: {
+            readonly tiers: readonly components["schemas"]["BadgeTierDto"][];
         };
         readonly BlockResponseDto: {
             /** @enum {string} */
@@ -6477,6 +6593,86 @@ export interface components {
             readonly body: string;
             readonly title: string;
         };
+        readonly CreateAssessmentScaleSettingVersionDto: {
+            /**
+             * Format: date-time
+             * @description Strict UTC ISO-8601 instant (must end in Z); never in the past (D5).
+             */
+            readonly effectiveFrom: string;
+            /**
+             * Format: uuid
+             * @description Optimistic guard (D8): id of the newest version the client saw for this key, null for "no versions"; omit to skip the check.
+             */
+            readonly expectedHeadVersionId?: Record<string, never> | null;
+            /** @description Mandatory change reason (D6). */
+            readonly note: string;
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            readonly settingKey: "assessment_scale";
+            readonly value: components["schemas"]["AssessmentScaleValueDto"];
+        };
+        readonly CreateAttendanceStatusesSettingVersionDto: {
+            /**
+             * Format: date-time
+             * @description Strict UTC ISO-8601 instant (must end in Z); never in the past (D5).
+             */
+            readonly effectiveFrom: string;
+            /**
+             * Format: uuid
+             * @description Optimistic guard (D8): id of the newest version the client saw for this key, null for "no versions"; omit to skip the check.
+             */
+            readonly expectedHeadVersionId?: Record<string, never> | null;
+            /** @description Mandatory change reason (D6). */
+            readonly note: string;
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            readonly settingKey: "attendance_statuses";
+            readonly value: components["schemas"]["AttendanceStatusesValueDto"];
+        };
+        readonly CreateAttendanceWeightsSettingVersionDto: {
+            /**
+             * Format: date-time
+             * @description Strict UTC ISO-8601 instant (must end in Z); never in the past (D5).
+             */
+            readonly effectiveFrom: string;
+            /**
+             * Format: uuid
+             * @description Optimistic guard (D8): id of the newest version the client saw for this key, null for "no versions"; omit to skip the check.
+             */
+            readonly expectedHeadVersionId?: Record<string, never> | null;
+            /** @description Mandatory change reason (D6). */
+            readonly note: string;
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            readonly settingKey: "attendance_weights";
+            readonly value: components["schemas"]["AttendanceWeightsValueDto"];
+        };
+        readonly CreateBadgeTiersSettingVersionDto: {
+            /**
+             * Format: date-time
+             * @description Strict UTC ISO-8601 instant (must end in Z); never in the past (D5).
+             */
+            readonly effectiveFrom: string;
+            /**
+             * Format: uuid
+             * @description Optimistic guard (D8): id of the newest version the client saw for this key, null for "no versions"; omit to skip the check.
+             */
+            readonly expectedHeadVersionId?: Record<string, never> | null;
+            /** @description Mandatory change reason (D6). */
+            readonly note: string;
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            readonly settingKey: "badge_tiers";
+            readonly value: components["schemas"]["BadgeTiersValueDto"];
+        };
         readonly CreateBlockDto: {
             /** @enum {string} */
             readonly blockType?: "warmup" | "drill" | "water_break" | "scrimmage" | "conditioning" | "cooldown" | "discussion" | "other";
@@ -6716,6 +6912,26 @@ export interface components {
             readonly scaleId: string;
             readonly tags?: readonly string[];
         };
+        readonly CreateNotificationRulesSettingVersionDto: {
+            /**
+             * Format: date-time
+             * @description Strict UTC ISO-8601 instant (must end in Z); never in the past (D5).
+             */
+            readonly effectiveFrom: string;
+            /**
+             * Format: uuid
+             * @description Optimistic guard (D8): id of the newest version the client saw for this key, null for "no versions"; omit to skip the check.
+             */
+            readonly expectedHeadVersionId?: Record<string, never> | null;
+            /** @description Mandatory change reason (D6). */
+            readonly note: string;
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            readonly settingKey: "notification_rules";
+            readonly value: components["schemas"]["NotificationRulesValueDto"];
+        };
         readonly CreateOpponentDto: {
             readonly contactInfo?: Record<string, never> | null;
             readonly contactName?: Record<string, never> | null;
@@ -6801,6 +7017,26 @@ export interface components {
             /** @enum {string} */
             readonly unit: "seconds" | "milliseconds" | "meters" | "centimeters" | "kilograms" | "meters_per_second" | "count" | "level" | "percent";
         };
+        readonly CreateReportBrandingSettingVersionDto: {
+            /**
+             * Format: date-time
+             * @description Strict UTC ISO-8601 instant (must end in Z); never in the past (D5).
+             */
+            readonly effectiveFrom: string;
+            /**
+             * Format: uuid
+             * @description Optimistic guard (D8): id of the newest version the client saw for this key, null for "no versions"; omit to skip the check.
+             */
+            readonly expectedHeadVersionId?: Record<string, never> | null;
+            /** @description Mandatory change reason (D6). */
+            readonly note: string;
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            readonly settingKey: "report_branding";
+            readonly value: components["schemas"]["ReportBrandingValueDto"];
+        };
         readonly CreateReservationDto: {
             /** @enum {string} */
             readonly division?: "open" | "women" | "mixed";
@@ -6810,6 +7046,26 @@ export interface components {
             readonly printedName: string;
             /** Format: uuid */
             readonly seasonId: string;
+        };
+        readonly CreateRosterLimitsSettingVersionDto: {
+            /**
+             * Format: date-time
+             * @description Strict UTC ISO-8601 instant (must end in Z); never in the past (D5).
+             */
+            readonly effectiveFrom: string;
+            /**
+             * Format: uuid
+             * @description Optimistic guard (D8): id of the newest version the client saw for this key, null for "no versions"; omit to skip the check.
+             */
+            readonly expectedHeadVersionId?: Record<string, never> | null;
+            /** @description Mandatory change reason (D6). */
+            readonly note: string;
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            readonly settingKey: "roster_limits";
+            readonly value: components["schemas"]["RosterLimitsValueDto"];
         };
         readonly CreateRoundDto: {
             readonly name: string;
@@ -6872,13 +7128,25 @@ export interface components {
             /** @enum {string} */
             readonly status?: "draft" | "active" | "closed" | "archived";
         };
-        readonly CreateSettingVersionDto: {
-            /** Format: date-time */
+        readonly CreateSessionTypesSettingVersionDto: {
+            /**
+             * Format: date-time
+             * @description Strict UTC ISO-8601 instant (must end in Z); never in the past (D5).
+             */
             readonly effectiveFrom: string;
-            readonly note?: string;
-            /** @enum {string} */
-            readonly settingKey: "attendance_statuses" | "session_types" | "attendance_weights" | "assessment_scale" | "badge_tiers" | "roster_limits" | "notification_rules" | "report_branding";
-            readonly value: Record<string, never>;
+            /**
+             * Format: uuid
+             * @description Optimistic guard (D8): id of the newest version the client saw for this key, null for "no versions"; omit to skip the check.
+             */
+            readonly expectedHeadVersionId?: Record<string, never> | null;
+            /** @description Mandatory change reason (D6). */
+            readonly note: string;
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            readonly settingKey: "session_types";
+            readonly value: components["schemas"]["SessionTypesValueDto"];
         };
         readonly CreateSquadDto: {
             readonly attendanceThresholdPct?: Record<string, never> | null;
@@ -7194,9 +7462,17 @@ export interface components {
         readonly EffectiveSettingResponseDto: {
             /** Format: date-time */
             readonly effectiveFrom: string | null;
+            /** @description Cross-setting issue codes (D3), e.g. weights_missing_status:<code>. */
+            readonly issues: readonly string[];
             /** @enum {string} */
             readonly settingKey: "attendance_statuses" | "session_types" | "attendance_weights" | "assessment_scale" | "badge_tiers" | "roster_limits" | "notification_rules" | "report_branding";
-            readonly value: Record<string, never> | null;
+            /** @description Typed effective value; null when the key is not configured OR the in-effect row is legacy (D4 — never served unvalidated). */
+            readonly value: (components["schemas"]["AttendanceStatusesValueDto"] | components["schemas"]["SessionTypesValueDto"] | components["schemas"]["AttendanceWeightsValueDto"] | components["schemas"]["AssessmentScaleValueDto"] | components["schemas"]["BadgeTiersValueDto"] | components["schemas"]["RosterLimitsValueDto"] | components["schemas"]["NotificationRulesValueDto"] | components["schemas"]["ReportBrandingValueDto"]) | null;
+            /**
+             * @description Null only when the key is not configured.
+             * @enum {string|null}
+             */
+            readonly valueState: "valid" | "legacy" | null;
         };
         readonly EligibilityReportResponseDto: {
             readonly attendanceThresholdPct: number;
@@ -8692,6 +8968,21 @@ export interface components {
             readonly channel: "in_app" | "email" | "push";
             readonly enabled: boolean;
         };
+        readonly NotificationRuleDto: {
+            /** @description An enabled rule needs at least one channel. */
+            readonly channels: readonly ("push" | "email")[];
+            readonly enabled: boolean;
+            /** @enum {string} */
+            readonly event: "practice_reminder" | "practice_change" | "attendance_finalized" | "badge_awarded";
+            /** @description Required for practice_reminder, forbidden for every other event. */
+            readonly leadHours?: number;
+            /** @enum {string} */
+            readonly recipients: "members" | "staff" | "all";
+        };
+        readonly NotificationRulesValueDto: {
+            readonly quietHours?: components["schemas"]["QuietHoursDto"];
+            readonly rules: readonly components["schemas"]["NotificationRuleDto"][];
+        };
         readonly NotificationViewDto: {
             readonly bodyKey: string;
             /** @enum {string} */
@@ -9091,6 +9382,10 @@ export interface components {
             /** @enum {string} */
             readonly transition: "approve" | "publish" | "retire" | "revert";
         };
+        readonly PositionLimitDto: {
+            readonly max: number;
+            readonly positionKey: string;
+        };
         readonly PracticeListSessionsResponseDto: {
             readonly items: readonly components["schemas"]["PracticeSessionResponseDto"][];
             readonly limit: number;
@@ -9100,10 +9395,13 @@ export interface components {
         readonly PracticeRosterEntryResponseDto: {
             /** Format: date-time */
             readonly checkInAt: string | null;
+            readonly displayName: string | null;
             /** @enum {string|null} */
             readonly excuseCategory: "injury" | "illness" | "work" | "travel" | "personal" | "other" | null;
             readonly latenessMinutes: number | null;
             readonly membershipId: string;
+            /** @enum {string|null} */
+            readonly rsvpStatus: "going" | "not_going" | "maybe" | "no_response" | null;
             /** @enum {string|null} */
             readonly source: "self" | "coach" | "admin" | "import" | "system" | null;
             /** @enum {string|null} */
@@ -9222,6 +9520,18 @@ export interface components {
         };
         readonly PublishTemplateDto: {
             readonly expectedRecordVersion: number;
+        };
+        readonly QuietHoursDto: {
+            /**
+             * @description Africa/Cairo wall time; an overnight window (start > end) is valid.
+             * @example 07:00
+             */
+            readonly end: string;
+            /**
+             * @description Africa/Cairo wall time.
+             * @example 22:00
+             */
+            readonly start: string;
         };
         readonly QuietHoursResponseDto: {
             /** @example 07:00 */
@@ -9492,6 +9802,15 @@ export interface components {
             readonly eventId: string;
             readonly requeued: boolean;
         };
+        readonly ReportBrandingValueDto: {
+            /** @example #1B7F4D */
+            readonly accentColor?: string;
+            /** Format: email */
+            readonly contactEmail?: string;
+            readonly displayName: string;
+            readonly footerText?: string;
+            readonly logoMediaKey?: string;
+        };
         readonly ReportDownloadResponseDto: {
             readonly checksum: string;
             /** Format: date-time */
@@ -9718,6 +10037,10 @@ export interface components {
             /** Format: date-time */
             readonly updatedAt: string;
         };
+        readonly RosterBoundDto: {
+            readonly max: number;
+            readonly min?: number;
+        };
         readonly RosterCompositionDto: {
             readonly captains: number;
             readonly defense: number;
@@ -9739,6 +10062,12 @@ export interface components {
             readonly count: number | null;
             /** @enum {string} */
             readonly severity: "error" | "warning";
+        };
+        readonly RosterLimitsValueDto: {
+            /** @description max must be ≥ 7 (a full line) and ≤ roster.max. */
+            readonly matchSquad?: components["schemas"]["RosterBoundDto"];
+            readonly perPosition?: readonly components["schemas"]["PositionLimitDto"][];
+            readonly roster: components["schemas"]["RosterBoundDto"];
         };
         readonly RosterResponseDto: {
             /** Format: date-time */
@@ -9948,6 +10277,13 @@ export interface components {
             readonly categoryKey: "training" | "technical" | "tactical" | "physical" | "psychological" | "behavioral" | "attendance";
             readonly minSample: number;
             readonly weight: number;
+        };
+        readonly ScaleBandDto: {
+            readonly from: number;
+            readonly key: string;
+            readonly labelAr: string;
+            readonly labelEn: string;
+            readonly to: number;
         };
         readonly ScaleResponseDto: {
             readonly categoricalOptions: readonly string[];
@@ -10194,6 +10530,14 @@ export interface components {
         readonly SelfCheckInDto: {
             readonly note?: string;
         };
+        readonly SelfCheckInEligibilityDto: {
+            /** Format: date-time */
+            readonly closesAt: string;
+            /** Format: date-time */
+            readonly opensAt: string;
+            /** @enum {string} */
+            readonly state: "not_open" | "open" | "closed" | "locked" | "recorded";
+        };
         readonly SessionDetailResponseDto: {
             readonly attempts: readonly components["schemas"]["AttemptResponseDto"][];
             readonly session: components["schemas"]["MeasurementSessionResponseDto"];
@@ -10210,6 +10554,18 @@ export interface components {
         readonly SessionStatusDto: {
             readonly expectedVersion: number;
             readonly reason?: string;
+        };
+        readonly SessionTypeEntryDto: {
+            readonly active: boolean;
+            readonly code: string;
+            /** @enum {string} */
+            readonly color: "primary" | "success" | "warning" | "danger" | "neutral" | "accent1" | "accent2" | "accent3" | "accent4";
+            readonly defaultDurationMinutes?: number;
+            readonly labelAr: string;
+            readonly labelEn: string;
+        };
+        readonly SessionTypesValueDto: {
+            readonly types: readonly components["schemas"]["SessionTypeEntryDto"][];
         };
         readonly SetRsvpDto: {
             readonly expectedVersion?: number;
@@ -10238,7 +10594,12 @@ export interface components {
             /** @enum {string} */
             readonly settingKey: "attendance_statuses" | "session_types" | "attendance_weights" | "assessment_scale" | "badge_tiers" | "roster_limits" | "notification_rules" | "report_branding";
             readonly teamId: string;
-            readonly value: Record<string, never>;
+            /** @description The stored document. Typed per key when valueState is "valid"; the raw legacy document (visible for the replace flow) when "legacy". */
+            readonly value: components["schemas"]["AttendanceStatusesValueDto"] | components["schemas"]["SessionTypesValueDto"] | components["schemas"]["AttendanceWeightsValueDto"] | components["schemas"]["AssessmentScaleValueDto"] | components["schemas"]["BadgeTiersValueDto"] | components["schemas"]["RosterLimitsValueDto"] | components["schemas"]["NotificationRulesValueDto"] | components["schemas"]["ReportBrandingValueDto"] | {
+                readonly [key: string]: unknown;
+            };
+            /** @enum {string} */
+            readonly valueState: "valid" | "legacy";
         };
         readonly SharedFeedbackResponseDto: {
             /** Format: date-time */
@@ -14213,6 +14574,46 @@ export interface operations {
             };
         };
     };
+    readonly "AttendanceParticipation.getMyHistory": {
+        readonly parameters: {
+            readonly query?: {
+                readonly limit?: number;
+                readonly offset?: number;
+                readonly seasonId?: string;
+            };
+            readonly header?: never;
+            readonly path: {
+                readonly teamId: string;
+            };
+            readonly cookie?: never;
+        };
+        readonly requestBody?: never;
+        readonly responses: {
+            /** @description History */
+            readonly 200: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content: {
+                    readonly "application/json": components["schemas"]["AttendanceSelfHistoryResponseDto"];
+                };
+            };
+            /** @description Unauthorized */
+            readonly 401: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Forbidden (not an active member) */
+            readonly 403: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
     readonly "AttendanceParticipation.getMyParticipation": {
         readonly parameters: {
             readonly query?: {
@@ -14237,6 +14638,13 @@ export interface operations {
             };
             /** @description Unauthorized */
             readonly 401: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description No default attendance scoring rule is configured (errors.practices.attendanceRuleMissing) */
+            readonly 409: {
                 headers: {
                     readonly [name: string]: unknown;
                 };
@@ -14276,6 +14684,13 @@ export interface operations {
             };
             /** @description Forbidden */
             readonly 403: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description No default attendance scoring rule is configured (errors.practices.attendanceRuleMissing) */
+            readonly 409: {
                 headers: {
                     readonly [name: string]: unknown;
                 };
@@ -21763,6 +22178,13 @@ export interface operations {
                 };
                 content?: never;
             };
+            /** @description Outside the check-in window or session not check-in-able (errors.practices.checkInWindowClosed), or the sheet is finalized (errors.practices.attendanceLocked) */
+            readonly 409: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content?: never;
+            };
         };
     };
     readonly "Attendance.finalizeSheet": {
@@ -23667,7 +24089,7 @@ export interface operations {
         };
         readonly requestBody: {
             readonly content: {
-                readonly "application/json": components["schemas"]["CreateSettingVersionDto"];
+                readonly "application/json": components["schemas"]["CreateAttendanceStatusesSettingVersionDto"] | components["schemas"]["CreateSessionTypesSettingVersionDto"] | components["schemas"]["CreateAttendanceWeightsSettingVersionDto"] | components["schemas"]["CreateAssessmentScaleSettingVersionDto"] | components["schemas"]["CreateBadgeTiersSettingVersionDto"] | components["schemas"]["CreateRosterLimitsSettingVersionDto"] | components["schemas"]["CreateNotificationRulesSettingVersionDto"] | components["schemas"]["CreateReportBrandingSettingVersionDto"];
             };
         };
         readonly responses: {
@@ -23689,6 +24111,62 @@ export interface operations {
             };
             /** @description Forbidden */
             readonly 403: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Duplicate effective instant or stale head guard */
+            readonly 409: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    readonly "Settings.cancelSettingVersion": {
+        readonly parameters: {
+            readonly query?: never;
+            readonly header?: never;
+            readonly path: {
+                readonly teamId: string;
+                readonly versionId: string;
+            };
+            readonly cookie?: never;
+        };
+        readonly requestBody?: never;
+        readonly responses: {
+            /** @description Future setting version cancelled */
+            readonly 204: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Unauthorized */
+            readonly 401: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Forbidden */
+            readonly 403: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Version not found */
+            readonly 404: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Version already in effect */
+            readonly 409: {
                 headers: {
                     readonly [name: string]: unknown;
                 };

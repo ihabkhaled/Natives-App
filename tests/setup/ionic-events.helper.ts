@@ -18,6 +18,15 @@ export function fireIonCheckboxChange(element: Element, checked: boolean): void 
   fireEvent(element, new CustomEvent('ionChange', { detail: { checked } }));
 }
 
+/**
+ * Fire an ion-checkbox change from its label text node. The event bubbles to
+ * the hosting ion-checkbox, so tests can address a toggle by its visible
+ * label without reaching into the DOM.
+ */
+export function fireIonCheckboxChangeFromLabel(element: Element, checked: boolean): void {
+  fireEvent(element, new CustomEvent('ionChange', { detail: { checked }, bubbles: true }));
+}
+
 /** Fire an ion-input clear, which Ionic reports as a null detail value. */
 export function fireIonInputCleared(element: Element): void {
   fireEvent(element, new CustomEvent('ionInput', { detail: { value: null } }));

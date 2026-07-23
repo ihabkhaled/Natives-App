@@ -16,6 +16,11 @@ export function settingVersionsPath(teamId: string): string {
   return teamPath(teamId, '/settings/versions');
 }
 
+/** One scheduled version, addressed for the future-only cancel (DELETE). */
+export function settingVersionPath(teamId: string, versionId: string): string {
+  return `${settingVersionsPath(teamId)}/${encodeURIComponent(versionId)}`;
+}
+
 export function seasonsPath(teamId: string): string {
   return teamPath(teamId, '/seasons');
 }

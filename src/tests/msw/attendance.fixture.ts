@@ -202,7 +202,9 @@ export function applyBulkAttendance(
   if (hasConflict) {
     return null;
   }
-  const items = marks.map((mark) => applyMark(mark.membershipId, mark));
+  // Contract 1.4.0 added `selfCheckIn` eligibility to every bulk record row;
+  // coach-marked rows carry no self-check-in context, honestly null.
+  const items = marks.map((mark) => ({ ...applyMark(mark.membershipId, mark), selfCheckIn: null }));
   return { items, recorded: items.length };
 }
 

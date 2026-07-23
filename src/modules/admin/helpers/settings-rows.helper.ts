@@ -6,65 +6,46 @@ import {
   SEASON_STATUS_TONES,
   SETTING_KEY_LABEL_KEYS,
 } from '../constants/admin-labels.constants';
-import type {
-  CatalogEntry,
-  EffectiveSetting,
-  Season,
-  SettingVersion,
-  Venue,
-} from '../types/admin.types';
+import type { CatalogEntry, EffectiveSetting, Season, Venue } from '../types/admin.types';
 import type { AdminFactRowView } from '../types/admin-view.types';
+import { describeEffectiveSetting } from './setting-summary.helper';
 
 type Translate = (key: string, params?: Record<string, string | number>) => string;
 type FormatInstant = (iso: string) => string;
 
-/**
- * Opaque server-owned JSON, rendered as text and never interpreted.
- *
- * An unset setting arrives as `null` and `JSON.stringify` turned that into the
- * literal string "null", which reached the screen as a value. A missing value
- * is not the text "null": it is translated copy, so the whole `Effective now`
- * panel reads as configuration rather than as a serialization artefact.
- */
-function describeValue(t: Translate, value: unknown): string {
-  if (value === null || value === undefined) {
-    return t(I18N_KEYS.adminSettings.notSet);
-  }
-  return typeof value === 'string' ? value : JSON.stringify(value);
+function describeEffectiveDetail(
+  t: Translate,
+  formatInstant: FormatInstant,
+  setting: EffectiveSetting,
+  issues: readonly string[],
+): string {
+  const effective =
+    setting.effectiveFrom === null
+      ? t(I18N_KEYS.adminSettings.notSet)
+      : `${t(I18N_KEYS.adminSettings.effectiveFromLabel)}: ${formatInstant(setting.effectiveFrom)}`;
+  return [effective, ...issues].join(' · ');
 }
 
+/**
+ * The Effective-now rows read as configuration, not serialization: one human
+ * summary per key, a warning tone for legacy values and cross-setting
+ * issues, and the issues themselves spelled out in the detail line.
+ */
 function buildEffectiveRows(
   t: Translate,
   formatInstant: FormatInstant,
   settings: readonly EffectiveSetting[],
 ): readonly AdminFactRowView[] {
-  return settings.map((setting) => ({
-    key: setting.settingKey,
-    label: t(SETTING_KEY_LABEL_KEYS[setting.settingKey]),
-    value: describeValue(t, setting.value),
-    detail:
-      setting.effectiveFrom === null
-        ? t(I18N_KEYS.adminSettings.notSet)
-        : `${t(I18N_KEYS.adminSettings.effectiveFromLabel)}: ${formatInstant(setting.effectiveFrom)}`,
-    tone: null,
-  }));
-}
-
-function buildVersionRows(
-  t: Translate,
-  formatInstant: FormatInstant,
-  versions: readonly SettingVersion[],
-): readonly AdminFactRowView[] {
-  return versions.map((version) => ({
-    key: version.id,
-    label: formatInstant(version.effectiveFrom),
-    value: describeValue(t, version.value),
-    detail:
-      version.note === null
-        ? t(I18N_KEYS.adminSettings.versionNoNote)
-        : `${t(I18N_KEYS.adminSettings.versionNoteLabel)}: ${version.note}`,
-    tone: null,
-  }));
+  return settings.map((setting) => {
+    const presentation = describeEffectiveSetting(t, setting);
+    return {
+      key: setting.settingKey,
+      label: t(SETTING_KEY_LABEL_KEYS[setting.settingKey]),
+      value: presentation.summary,
+      detail: describeEffectiveDetail(t, formatInstant, setting, presentation.issues),
+      tone: presentation.tone,
+    };
+  });
 }
 
 function buildSeasonRows(t: Translate, seasons: readonly Season[]): readonly AdminFactRowView[] {
@@ -117,7 +98,6 @@ export function buildCatalogOptions(
 
 export interface SettingsRowSources {
   readonly settings: readonly EffectiveSetting[] | undefined;
-  readonly versions: readonly SettingVersion[] | undefined;
   readonly seasons: readonly Season[] | undefined;
   readonly venues: readonly Venue[] | undefined;
   readonly catalog: readonly CatalogEntry[] | undefined;
@@ -125,7 +105,6 @@ export interface SettingsRowSources {
 
 export interface SettingsRowGroups {
   readonly effectiveRows: readonly AdminFactRowView[];
-  readonly versionRows: readonly AdminFactRowView[];
   readonly seasonRows: readonly AdminFactRowView[];
   readonly venueRows: readonly AdminFactRowView[];
   readonly catalogRows: readonly AdminFactRowView[];
@@ -139,7 +118,6 @@ export function buildSettingsRowGroups(
 ): SettingsRowGroups {
   return {
     effectiveRows: buildEffectiveRows(t, formatInstant, sources.settings ?? []),
-    versionRows: buildVersionRows(t, formatInstant, sources.versions ?? []),
     seasonRows: buildSeasonRows(t, sources.seasons ?? []),
     venueRows: buildVenueRows(t, sources.venues ?? []),
     catalogRows: buildCatalogRows(t, sources.catalog ?? []),

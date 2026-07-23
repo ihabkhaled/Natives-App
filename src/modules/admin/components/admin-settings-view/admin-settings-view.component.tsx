@@ -2,6 +2,7 @@ import { IonNote } from '@/packages/ionic';
 import { TEST_IDS } from '@/shared/config';
 import { RecordList, SectionPanel, SelectField, WorkspaceScreen } from '@/shared/ui';
 
+import { SettingHistory } from '../setting-history';
 import { SettingVersionForm } from '../setting-version-form';
 import { SETTINGS_STATE_TEST_IDS } from './admin-settings-view.constants';
 import type { AdminSettingsViewProps } from './admin-settings-view.types';
@@ -43,14 +44,10 @@ export function AdminSettingsView(props: AdminSettingsViewProps): React.JSX.Elem
           onChange={props.onSettingKeyChange}
           testId={TEST_IDS.adminSettingKeySelect}
         />
-        <RecordList
-          rows={props.versionRows}
-          ariaLabel={props.versionsHeading}
-          rowTestId={TEST_IDS.adminVersionRow}
-        />
+        <SettingHistory history={props.history} ariaLabel={props.versionsHeading} />
       </SectionPanel>
 
-      {props.versionForm === null ? null : <SettingVersionForm {...props.versionForm} />}
+      {props.versionForm === null ? null : <SettingVersionForm form={props.versionForm} />}
 
       <SectionPanel
         heading={props.seasonsHeading}

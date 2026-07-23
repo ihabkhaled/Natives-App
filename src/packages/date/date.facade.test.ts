@@ -2,6 +2,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import {
   cairoDayKey,
+  cairoWallTimeToUtcIso,
   formatCairoDate,
   formatCairoDateTime,
   formatCairoTime,
@@ -11,8 +12,10 @@ import {
   formatRelativeToNow,
   isInstantInPast,
   isValidIsoDateTime,
+  nowCairoWallTime,
   nowIso,
   PRESENTATION_TIME_ZONE,
+  utcIsoToCairoWallTime,
 } from './date.facade';
 
 // Offset-free timestamps: the formatters render in the runtime timezone, so
@@ -160,5 +163,55 @@ describe('nowIso', () => {
     vi.setSystemTime(new Date('2026-07-18T12:00:00.000Z'));
 
     expect(nowIso()).toBe('2026-07-18T12:00:00.000Z');
+  });
+});
+
+// Egypt reinstated DST in 2023: UTC+3 between the last Friday of April and
+// the last Thursday of October, UTC+2 otherwise. The conversions must follow
+// the IANA rules, not a hard-coded offset.
+describe('cairoWallTimeToUtcIso', () => {
+  it('maps a winter wall time through UTC+2', () => {
+    expect(cairoWallTimeToUtcIso('2026-01-15T12:00')).toBe('2026-01-15T10:00:00.000Z');
+  });
+
+  it('maps a summer wall time through UTC+3', () => {
+    expect(cairoWallTimeToUtcIso('2026-07-15T12:00')).toBe('2026-07-15T09:00:00.000Z');
+  });
+
+  it('maps a wall time just after the April spring-forward through UTC+3', () => {
+    expect(cairoWallTimeToUtcIso('2026-04-24T01:30')).toBe('2026-04-23T22:30:00.000Z');
+  });
+
+  it('maps a wall time just before the spring-forward through UTC+2', () => {
+    expect(cairoWallTimeToUtcIso('2026-04-23T23:30')).toBe('2026-04-23T21:30:00.000Z');
+  });
+
+  it('maps a wall time after the October fall-back through UTC+2', () => {
+    expect(cairoWallTimeToUtcIso('2026-11-01T12:00')).toBe('2026-11-01T10:00:00.000Z');
+  });
+});
+
+describe('utcIsoToCairoWallTime', () => {
+  it('renders a winter instant at its UTC+2 wall time', () => {
+    expect(utcIsoToCairoWallTime('2026-01-15T10:00:00.000Z')).toBe('2026-01-15T12:00');
+  });
+
+  it('renders a summer instant at its UTC+3 wall time', () => {
+    expect(utcIsoToCairoWallTime('2026-07-15T09:00:00.000Z')).toBe('2026-07-15T12:00');
+  });
+
+  it('round-trips a wall time across the conversion pair', () => {
+    expect(utcIsoToCairoWallTime(cairoWallTimeToUtcIso('2026-08-01T18:45'))).toBe(
+      '2026-08-01T18:45',
+    );
+  });
+});
+
+describe('nowCairoWallTime', () => {
+  it('renders the current instant as a Cairo wall time', () => {
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date('2026-07-18T12:00:00.000Z'));
+
+    expect(nowCairoWallTime()).toBe('2026-07-18T15:00');
   });
 });

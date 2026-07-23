@@ -1,37 +1,45 @@
 import { describe, expect, it } from 'vitest';
 
+import type { EffectiveSetting } from '../types/admin.types';
 import { buildSettingsRowGroups } from './settings-rows.helper';
 
 const t = (key: string): string => key;
 const formatInstant = (iso: string): string => `formatted:${iso}`;
 
+const ROSTER_SETTING: EffectiveSetting = {
+  settingKey: 'roster_limits',
+  effectiveFrom: '2026-01-01T00:00:00.000Z',
+  value: { roster: { max: 27 }, matchSquad: { min: 7, max: 15 } },
+  valueState: 'valid',
+  issues: [],
+};
+
+const UNSET_SETTING: EffectiveSetting = {
+  settingKey: 'badge_tiers',
+  effectiveFrom: null,
+  value: null,
+  valueState: null,
+  issues: [],
+};
+
+const LEGACY_SETTING: EffectiveSetting = {
+  settingKey: 'report_branding',
+  effectiveFrom: '2026-01-01T00:00:00.000Z',
+  value: null,
+  valueState: 'legacy',
+  issues: [],
+};
+
+const FLAGGED_SETTING: EffectiveSetting = {
+  settingKey: 'attendance_weights',
+  effectiveFrom: '2026-02-01T00:00:00.000Z',
+  value: { weights: { present_on_time: 1, absent: 0 } },
+  valueState: 'valid',
+  issues: ['weights_missing_status:injured'],
+};
+
 const SOURCES = {
-  settings: [
-    {
-      settingKey: 'roster_limits' as const,
-      effectiveFrom: '2026-01-01T00:00:00.000Z',
-      value: { max: 27 },
-    },
-    { settingKey: 'badge_tiers' as const, effectiveFrom: null, value: 'bronze' },
-  ],
-  versions: [
-    {
-      id: 'sv-1',
-      settingKey: 'roster_limits' as const,
-      effectiveFrom: '2026-02-01T00:00:00.000Z',
-      value: { max: 30 },
-      note: 'Squad expansion',
-      createdAt: '2026-01-20T00:00:00.000Z',
-    },
-    {
-      id: 'sv-2',
-      settingKey: 'roster_limits' as const,
-      effectiveFrom: '2026-03-01T00:00:00.000Z',
-      value: { max: 31 },
-      note: null,
-      createdAt: '2026-02-20T00:00:00.000Z',
-    },
-  ],
+  settings: [ROSTER_SETTING, UNSET_SETTING, LEGACY_SETTING, FLAGGED_SETTING],
   seasons: [
     {
       id: 'season-1',
@@ -73,15 +81,15 @@ const SOURCES = {
 describe('buildSettingsRowGroups', () => {
   const groups = buildSettingsRowGroups(t, formatInstant, SOURCES);
 
-  it('renders an opaque setting value as text without interpreting it', () => {
-    expect(groups.effectiveRows[0]?.value).toBe('{"max":27}');
+  it('renders a typed value as a human summary, never serialized JSON', () => {
+    expect(groups.effectiveRows[0]?.value).toBe(
+      'settingSummary.rosterMax · settingSummary.rosterSquad',
+    );
+    expect(groups.effectiveRows.map((row) => row.value).join(' ')).not.toContain('{');
   });
 
-  it('renders a string setting value verbatim', () => {
-    expect(groups.effectiveRows[1]?.value).toBe('bronze');
-  });
-
-  it('says "not set" for a setting with no effective instant', () => {
+  it('says "not set" for a setting with no effective value', () => {
+    expect(groups.effectiveRows[1]?.value).toBe('adminSettings.notSet');
     expect(groups.effectiveRows[1]?.detail).toBe('adminSettings.notSet');
   });
 
@@ -91,13 +99,14 @@ describe('buildSettingsRowGroups', () => {
     );
   });
 
-  it('labels a version by its effective instant and shows its note', () => {
-    expect(groups.versionRows[0]?.label).toBe('formatted:2026-02-01T00:00:00.000Z');
-    expect(groups.versionRows[0]?.detail).toBe('adminSettings.versionNoteLabel: Squad expansion');
+  it('flags a legacy value with warning tone and honest copy', () => {
+    expect(groups.effectiveRows[2]?.value).toBe('settingSummary.legacyValue');
+    expect(groups.effectiveRows[2]?.tone).toBe('warning');
   });
 
-  it('says a version has no note rather than rendering an empty line', () => {
-    expect(groups.versionRows[1]?.detail).toBe('adminSettings.versionNoNote');
+  it('spells out snapshot issues in the detail line with a warning tone', () => {
+    expect(groups.effectiveRows[3]?.tone).toBe('warning');
+    expect(groups.effectiveRows[3]?.detail).toContain('settingConstraints.weightsMissingStatus');
   });
 
   it('shows a season window and its status tone', () => {
@@ -114,40 +123,15 @@ describe('buildSettingsRowGroups', () => {
     expect(groups.catalogRows[0]?.detail).toBe('adminSettings.referenceCountLabel');
   });
 
-  it('says "not set" for an unset value instead of printing the text "null"', () => {
-    const rows = buildSettingsRowGroups(t, formatInstant, {
-      ...SOURCES,
-      settings: [
-        { settingKey: 'badge_tiers' as const, effectiveFrom: null, value: null },
-        { settingKey: 'roster_limits' as const, effectiveFrom: null, value: undefined },
-      ],
-    }).effectiveRows;
-
-    expect(rows[0]?.value).toBe('adminSettings.notSet');
-    expect(rows[1]?.value).toBe('adminSettings.notSet');
-    expect(rows.map((row) => row.value)).not.toContain('null');
-  });
-
-  it('keeps a falsy-but-real value visible rather than calling it unset', () => {
-    const rows = buildSettingsRowGroups(t, formatInstant, {
-      ...SOURCES,
-      settings: [{ settingKey: 'roster_limits' as const, effectiveFrom: null, value: 0 }],
-    }).effectiveRows;
-
-    expect(rows[0]?.value).toBe('0');
-  });
-
   it('produces empty groups when nothing has resolved yet', () => {
     const empty = buildSettingsRowGroups(t, formatInstant, {
       settings: undefined,
-      versions: undefined,
       seasons: undefined,
       venues: undefined,
       catalog: undefined,
     });
 
     expect(empty.effectiveRows).toEqual([]);
-    expect(empty.versionRows).toEqual([]);
     expect(empty.seasonRows).toEqual([]);
     expect(empty.venueRows).toEqual([]);
     expect(empty.catalogRows).toEqual([]);

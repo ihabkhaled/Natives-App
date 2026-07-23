@@ -1,6 +1,11 @@
 import { describe, expect, it } from 'vitest';
 
 import {
+  AUDIT_NONSENSE_PAYLOAD,
+  VALID_BADGE_TIERS,
+  VALID_ROSTER_LIMITS,
+} from '@/tests/msw/setting-values.fixture';
+import {
   mapCatalogEntries,
   mapSeasons,
   mapSettingsSnapshot,
@@ -8,51 +13,134 @@ import {
   mapVenues,
 } from './settings.mapper';
 
+function versionRow(overrides: Record<string, unknown>) {
+  return {
+    id: 'sv-1',
+    teamId: 'team-1',
+    settingKey: 'roster_limits' as const,
+    effectiveFrom: '2026-02-01T00:00:00.000Z',
+    value: VALID_ROSTER_LIMITS,
+    valueState: 'valid' as const,
+    note: null,
+    createdBy: null,
+    createdAt: '2026-01-20T00:00:00.000Z',
+    ...overrides,
+  };
+}
+
 describe('mapSettingsSnapshot', () => {
-  it('keeps every effective value opaque and preserves a null effective instant', () => {
+  it('parses a valid row through the per-key union and keeps its issues', () => {
     const mapped = mapSettingsSnapshot({
       teamId: 'team-1',
       asOf: '2026-07-20T09:00:00.000Z',
       settings: [
-        { settingKey: 'roster_limits', effectiveFrom: null, value: { max: 27 } },
         {
-          settingKey: 'badge_tiers',
+          settingKey: 'roster_limits',
           effectiveFrom: '2026-01-01T00:00:00.000Z',
-          value: ['bronze'],
+          value: VALID_ROSTER_LIMITS,
+          valueState: 'valid',
+          issues: ['weights_missing_status:injured'],
         },
       ],
     });
 
     expect(mapped.asOf).toBe('2026-07-20T09:00:00.000Z');
-    expect(mapped.settings[0]?.effectiveFrom).toBeNull();
-    expect(mapped.settings[0]?.value).toEqual({ max: 27 });
-    expect(mapped.settings[1]?.value).toEqual(['bronze']);
+    expect(mapped.settings[0]?.value).toEqual(VALID_ROSTER_LIMITS);
+    expect(mapped.settings[0]?.issues).toEqual(['weights_missing_status:injured']);
+  });
+
+  it('resolves a legacy or unset row to null, never a raw document', () => {
+    const mapped = mapSettingsSnapshot({
+      teamId: 'team-1',
+      asOf: '2026-07-20T09:00:00.000Z',
+      settings: [
+        {
+          settingKey: 'report_branding',
+          effectiveFrom: '2026-01-01T00:00:00.000Z',
+          value: null,
+          valueState: 'legacy',
+          issues: [],
+        },
+        {
+          settingKey: 'badge_tiers',
+          effectiveFrom: null,
+          value: null,
+          valueState: null,
+          issues: [],
+        },
+      ],
+    });
+
+    expect(mapped.settings[0]?.value).toBeNull();
+    expect(mapped.settings[0]?.valueState).toBe('legacy');
+    expect(mapped.settings[1]?.value).toBeNull();
+    expect(mapped.settings[1]?.valueState).toBeNull();
+  });
+
+  it('fails loudly when a valid-marked document does not parse', () => {
+    expect(() =>
+      mapSettingsSnapshot({
+        teamId: 'team-1',
+        asOf: '2026-07-20T09:00:00.000Z',
+        settings: [
+          {
+            settingKey: 'attendance_statuses',
+            effectiveFrom: '2026-01-01T00:00:00.000Z',
+            value: AUDIT_NONSENSE_PAYLOAD,
+            valueState: 'valid',
+            issues: [],
+          },
+        ],
+      }),
+    ).toThrow('contract violation');
   });
 });
 
 describe('mapSettingVersionPage', () => {
-  it('carries the total alongside the versions and preserves a null note', () => {
+  it('wraps a valid version as a typed value and preserves the actor', () => {
     const mapped = mapSettingVersionPage({
-      items: [
-        {
-          id: 'sv-1',
-          teamId: 'team-1',
-          settingKey: 'roster_limits',
-          effectiveFrom: '2026-02-01T00:00:00.000Z',
-          value: { max: 30 },
-          note: null,
-          createdBy: null,
-          createdAt: '2026-01-20T00:00:00.000Z',
-        },
-      ],
+      items: [versionRow({ createdBy: 'user-admin-1' })],
       total: 3,
       limit: 20,
       offset: 0,
     });
 
     expect(mapped.total).toBe(3);
-    expect(mapped.items[0]?.note).toBeNull();
-    expect(mapped.items[0]?.id).toBe('sv-1');
+    expect(mapped.items[0]?.createdBy).toBe('user-admin-1');
+    expect(mapped.items[0]?.value).toEqual({ state: 'valid', value: VALID_ROSTER_LIMITS });
+  });
+
+  it('wraps a legacy version with its raw document intact', () => {
+    const mapped = mapSettingVersionPage({
+      items: [versionRow({ valueState: 'legacy', value: { logo: 'default' } })],
+      total: 1,
+      limit: 20,
+      offset: 0,
+    });
+
+    expect(mapped.items[0]?.value).toEqual({ state: 'legacy', raw: { logo: 'default' } });
+  });
+
+  it('fails loudly when a valid-marked version does not parse', () => {
+    expect(() =>
+      mapSettingVersionPage({
+        items: [versionRow({ settingKey: 'badge_tiers', value: { tiers: [] } })],
+        total: 1,
+        limit: 20,
+        offset: 0,
+      }),
+    ).toThrow('contract violation');
+  });
+
+  it('keeps VALID_BADGE_TIERS parseable end to end', () => {
+    const mapped = mapSettingVersionPage({
+      items: [versionRow({ settingKey: 'badge_tiers', value: VALID_BADGE_TIERS })],
+      total: 1,
+      limit: 20,
+      offset: 0,
+    });
+
+    expect(mapped.items[0]?.value.state).toBe('valid');
   });
 });
 

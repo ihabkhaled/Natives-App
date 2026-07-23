@@ -46,6 +46,14 @@ export function authPut(path: string, token: string, body: unknown): Promise<Res
   return sendJson('PUT', path, token, body);
 }
 
+/** Authenticated DELETE against a mock-mode path. */
+export function authDelete(path: string, token: string): Promise<Response> {
+  return fetch(apiUrl(path), {
+    method: 'DELETE',
+    headers: { Authorization: `Bearer ${token}` },
+  });
+}
+
 /** Team-scoped path builder shared by every team-scoped contract test. */
 export function teamScopedPath(teamId: string, suffix: string): string {
   return `/teams/${teamId}${suffix}`;

@@ -3,6 +3,8 @@ export const adminQueryKeys = {
   all: ['admin'] as const,
   team: (teamId: string) => [...adminQueryKeys.all, 'team', teamId] as const,
   settingsSnapshot: (teamId: string) => [...adminQueryKeys.team(teamId), 'settings'] as const,
+  settingsSnapshotAt: (teamId: string, asOf: string) =>
+    [...adminQueryKeys.settingsSnapshot(teamId), 'as-of', asOf] as const,
   settingVersions: (teamId: string, settingKey: string) =>
     [...adminQueryKeys.settingsSnapshot(teamId), 'versions', settingKey] as const,
   seasons: (teamId: string) => [...adminQueryKeys.team(teamId), 'seasons'] as const,

@@ -1,3 +1,5 @@
 import type { SettingVersionFormView } from '../../types/admin-view.types';
 
-export type SettingVersionFormProps = SettingVersionFormView;
+export interface SettingVersionFormProps {
+  readonly form: SettingVersionFormView;
+}

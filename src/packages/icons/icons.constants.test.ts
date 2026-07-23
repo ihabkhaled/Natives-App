@@ -5,11 +5,15 @@ import { APP_ICONS } from './icons.constants';
 describe('APP_ICONS', () => {
   it('exposes the approved icon set', () => {
     expect(Object.keys(APP_ICONS).sort()).toEqual([
+      'add',
       'alert',
+      'arrowDown',
+      'arrowUp',
       'calendar',
       'checkmark',
       'chevronDown',
       'clipboard',
+      'close',
       'dot',
       'empty',
       'eye',

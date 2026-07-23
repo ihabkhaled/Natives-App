@@ -4747,3 +4747,282 @@ ion-spinner {
 .app-matrix-table__mark--on {
   color: var(--app-lime-text);
 }
+
+/* ----------------------------------------------------------------------------
+   Typed setting editors (P2) — reorderable collections, form editors, the
+   readable history with diffs, and the branding preview. Everything sits on
+   the shared tokens so light and dark themes stay honest.
+---------------------------------------------------------------------------- */
+.app-reorderable {
+  display: flex;
+  flex-direction: column;
+  gap: var(--un-space-2);
+}
+
+.app-reorderable__list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--un-space-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.app-reorderable__row {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--un-space-2);
+  padding: var(--un-space-3);
+  border: 1px solid var(--app-hairline);
+  border-radius: var(--un-radius-md);
+  background: var(--app-card-bg);
+}
+
+.app-reorderable__content {
+  flex: 1 1 auto;
+  min-inline-size: 0;
+}
+
+.app-reorderable__controls {
+  display: flex;
+  flex-direction: column;
+  gap: var(--un-space-2);
+  flex: none;
+}
+
+/* Accessible touch targets: 44px squares with real affordances. */
+.app-reorderable__control {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  inline-size: 44px;
+  block-size: 44px;
+  border: 1px solid var(--app-hairline);
+  border-radius: var(--un-radius-md);
+  background: var(--app-card-bg);
+  color: var(--app-ink);
+  font-size: 1.1rem;
+}
+
+.app-reorderable__control:hover:not(:disabled) {
+  border-color: var(--app-lime-line);
+  background: var(--app-hover);
+}
+
+.app-reorderable__control:focus-visible {
+  border-color: var(--app-arc-strong);
+  box-shadow: 0 0 0 3px var(--app-lime-soft);
+}
+
+.app-reorderable__control:disabled {
+  opacity: 0.35;
+}
+
+/* One entry's fields: labelled inputs flow as a responsive grid. */
+.app-editor-entry {
+  display: flex;
+  flex-direction: column;
+  gap: var(--un-space-2);
+}
+
+.app-editor-entry__row {
+  display: flex;
+  align-items: center;
+  gap: var(--un-space-2);
+  flex-wrap: wrap;
+}
+
+.app-editor-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--un-space-2);
+  padding: var(--un-space-3);
+  border: 1px solid var(--app-hairline);
+  border-radius: var(--un-radius-md);
+  background: var(--app-card-bg);
+}
+
+.app-editor-blocked {
+  padding: var(--un-space-2) var(--un-space-3);
+  border-inline-start: 3px solid var(--ion-color-warning);
+  border-radius: var(--un-radius-md);
+  background: color-mix(in srgb, var(--ion-color-warning) 12%, transparent);
+  color: var(--app-ink);
+  font-size: var(--un-font-size-sm);
+}
+
+.app-code-chip {
+  align-self: flex-start;
+  padding: 2px var(--un-space-2);
+  border-radius: var(--un-radius-full, 999px);
+  background: var(--app-pressed);
+  color: var(--app-muted-strong);
+  font-family: var(--un-font-mono, monospace);
+  font-size: var(--un-font-size-xs);
+}
+
+/* Colour-token dot + free accent swatch next to their selects. */
+.app-color-token,
+.app-color-swatch {
+  flex: none;
+  inline-size: 14px;
+  block-size: 14px;
+  border-radius: 50%;
+  border: 1px solid var(--app-hairline);
+}
+
+.app-color-token--primary {
+  background: var(--ion-color-primary);
+}
+.app-color-token--success {
+  background: var(--ion-color-success);
+}
+.app-color-token--warning {
+  background: var(--ion-color-warning);
+}
+.app-color-token--danger {
+  background: var(--ion-color-danger);
+}
+.app-color-token--neutral {
+  background: var(--ion-color-medium);
+}
+.app-color-token--accent1 {
+  background: var(--ion-color-tertiary);
+}
+.app-color-token--accent2 {
+  background: color-mix(in srgb, var(--ion-color-tertiary) 60%, var(--ion-color-primary));
+}
+.app-color-token--accent3 {
+  background: color-mix(in srgb, var(--ion-color-secondary) 70%, var(--ion-color-tertiary));
+}
+.app-color-token--accent4 {
+  background: color-mix(in srgb, var(--ion-color-medium) 55%, var(--ion-color-primary));
+}
+
+/* The blocking issue list: one alert, every reason, no silent disable. */
+.app-form-issues {
+  padding: var(--un-space-2) var(--un-space-3);
+  border-inline-start: 3px solid var(--ion-color-danger);
+  border-radius: var(--un-radius-md);
+  background: color-mix(in srgb, var(--ion-color-danger) 10%, transparent);
+}
+
+.app-form-issues__list {
+  margin: var(--un-space-1) 0 0;
+  padding-inline-start: var(--un-space-4);
+  color: var(--app-ink);
+  font-size: var(--un-font-size-sm);
+}
+
+.app-raw-json {
+  display: flex;
+  flex-direction: column;
+  gap: var(--un-space-2);
+  padding-block-start: var(--un-space-2);
+  border-block-start: 1px dashed var(--app-hairline);
+}
+
+/* History: a stacked timeline that reads the same on phone and desktop. */
+.app-setting-history__list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--un-space-3);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.app-history-entry {
+  display: flex;
+  flex-direction: column;
+  gap: var(--un-space-1);
+  padding: var(--un-space-3);
+  border: 1px solid var(--app-hairline);
+  border-radius: var(--un-radius-md);
+  background: var(--app-card-bg);
+}
+
+.app-history-entry__head {
+  display: flex;
+  align-items: center;
+  gap: var(--un-space-2);
+  flex-wrap: wrap;
+}
+
+.app-history-entry__when {
+  font-weight: var(--un-font-weight-semibold);
+}
+
+.app-history-entry__summary {
+  font-size: var(--un-font-size-sm);
+}
+
+.app-history-diff {
+  display: flex;
+  flex-direction: column;
+  gap: var(--un-space-1);
+  margin: var(--un-space-1) 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.app-history-diff > li {
+  display: flex;
+  align-items: center;
+  gap: var(--un-space-2);
+  flex-wrap: wrap;
+  font-size: var(--un-font-size-sm);
+}
+
+.app-history-diff__label {
+  font-family: var(--un-font-mono, monospace);
+  font-size: var(--un-font-size-xs);
+  color: var(--app-muted-strong);
+}
+
+.app-history-diff__before {
+  color: var(--app-muted-strong);
+}
+
+.app-history-legacy {
+  display: flex;
+  flex-direction: column;
+  gap: var(--un-space-2);
+  padding: var(--un-space-2) var(--un-space-3);
+  border-inline-start: 3px solid var(--ion-color-warning);
+  border-radius: var(--un-radius-md);
+  background: color-mix(in srgb, var(--ion-color-warning) 10%, transparent);
+  font-size: var(--un-font-size-sm);
+}
+
+/* The one legal raw-JSON display: read-only, scrolls inside its own box. */
+.app-history-legacy__raw {
+  margin: 0;
+  padding: var(--un-space-2);
+  border-radius: var(--un-radius-md);
+  background: var(--app-pressed);
+  font-size: var(--un-font-size-xs);
+  overflow-x: auto;
+}
+
+.app-branding-preview {
+  display: flex;
+  flex-direction: column;
+  gap: var(--un-space-1);
+  padding: var(--un-space-3);
+}
+
+.app-branding-preview__bar {
+  block-size: 6px;
+  border-radius: var(--un-radius-full, 999px);
+}
+
+.app-branding-preview__name {
+  font-weight: var(--un-font-weight-semibold);
+}
+
+/* Ionic paints "today" in the raw primary tone, which fails AA on the card
+   surface; the accessible lime text token keeps the accent readable. */
+.app-date-field__panel ion-datetime::part(calendar-day today) {
+  color: var(--app-lime-text);
+}

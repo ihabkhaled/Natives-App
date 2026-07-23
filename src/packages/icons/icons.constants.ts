@@ -1,9 +1,13 @@
 import {
+  addOutline,
   alertCircleOutline,
+  arrowDownOutline,
+  arrowUpOutline,
   calendarOutline,
   checkmarkCircleOutline,
   chevronDownOutline,
   clipboardOutline,
+  closeOutline,
   cloudOfflineOutline,
   ellipseOutline,
   eyeOffOutline,
@@ -34,8 +38,12 @@ import {
 
 /** The approved icon set. Feature code never imports ionicons directly. */
 export const APP_ICONS = {
+  add: addOutline,
   alert: alertCircleOutline,
+  arrowDown: arrowDownOutline,
+  arrowUp: arrowUpOutline,
   calendar: calendarOutline,
+  close: closeOutline,
   checkmark: checkmarkCircleOutline,
   chevronDown: chevronDownOutline,
   clipboard: clipboardOutline,

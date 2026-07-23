@@ -25,6 +25,15 @@ export function buildSettingsSnapshotQueryOptions(teamId: string) {
   };
 }
 
+/** The snapshot as of a chosen instant (drives the weights editor's rows). */
+export function buildSettingsSnapshotAtQueryOptions(teamId: string, asOf: string) {
+  return {
+    queryKey: adminQueryKeys.settingsSnapshotAt(teamId, asOf),
+    queryFn: () => getSettingsSnapshot(teamId, asOf),
+    enabled: scoped(teamId) && asOf !== '',
+  };
+}
+
 export function buildSettingVersionsQueryOptions(teamId: string, settingKey: string) {
   return {
     queryKey: adminQueryKeys.settingVersions(teamId, settingKey),

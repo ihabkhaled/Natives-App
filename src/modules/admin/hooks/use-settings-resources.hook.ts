@@ -22,10 +22,12 @@ export interface SettingsResourcesView {
   readonly seasons: RemoteQueryView<readonly Season[]>;
   readonly venues: RemoteQueryView<readonly Venue[]>;
   readonly catalog: RemoteQueryView<readonly CatalogEntry[]>;
+  /** The position catalog, always loaded: roster caps select from it. */
+  readonly positions: RemoteQueryView<readonly CatalogEntry[]>;
 }
 
 /**
- * The five bounded reads the settings screen composes. Each is normalized to
+ * The bounded reads the settings screen composes. Each is normalized to
  * the shared remote-query shape so no raw backend error escapes into a view.
  */
 export function useSettingsResources(
@@ -44,6 +46,9 @@ export function useSettingsResources(
     venues: toRemoteQueryView(useAppQuery<readonly Venue[]>(buildVenuesQueryOptions(teamId))),
     catalog: toRemoteQueryView(
       useAppQuery<readonly CatalogEntry[]>(buildCatalogQueryOptions(teamId, catalog)),
+    ),
+    positions: toRemoteQueryView(
+      useAppQuery<readonly CatalogEntry[]>(buildCatalogQueryOptions(teamId, 'position')),
     ),
   };
 }

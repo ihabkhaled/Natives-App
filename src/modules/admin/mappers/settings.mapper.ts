@@ -1,5 +1,6 @@
 import type { SchemaOutput } from '@/packages/schema';
 
+import { resolveEffectiveValue, wrapVersionValue } from '../helpers/setting-value-state.helper';
 import type {
   catalogEntryListResponseSchema,
   seasonListResponseSchema,
@@ -27,7 +28,9 @@ export function mapSettingsSnapshot(dto: SnapshotDto): SettingsSnapshot {
     settings: dto.settings.map((setting) => ({
       settingKey: setting.settingKey,
       effectiveFrom: setting.effectiveFrom,
-      value: setting.value,
+      value: resolveEffectiveValue(setting),
+      valueState: setting.valueState,
+      issues: setting.issues,
     })),
   };
 }
@@ -39,8 +42,9 @@ export function mapSettingVersionPage(dto: VersionListDto): SettingVersionPage {
       id: item.id,
       settingKey: item.settingKey,
       effectiveFrom: item.effectiveFrom,
-      value: item.value,
+      value: wrapVersionValue(item),
       note: item.note,
+      createdBy: item.createdBy,
       createdAt: item.createdAt,
     })),
   };
