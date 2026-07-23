@@ -12,6 +12,7 @@ export const adminQueryKeys = {
   rules: (teamId: string, family: string) =>
     [...adminQueryKeys.team(teamId), 'rules', family] as const,
   operations: () => [...adminQueryKeys.all, 'operations'] as const,
+  platformAdmins: () => [...adminQueryKeys.all, 'platform-admins'] as const,
   outboxMetrics: () => [...adminQueryKeys.operations(), 'outbox-metrics'] as const,
   deadLetters: () => [...adminQueryKeys.operations(), 'dead-letters'] as const,
   jobHealth: () => [...adminQueryKeys.operations(), 'job-health'] as const,

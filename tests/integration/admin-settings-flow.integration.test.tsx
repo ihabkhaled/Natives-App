@@ -44,8 +44,9 @@ describe('the admin hub only advertises what the guard would allow', () => {
     renderRoute(APP_PATHS.admin, APP_PATHS.admin, <AdminContainer />);
 
     const cards = await screen.findAllByTestId(TEST_IDS.adminHubCard, {}, WAIT);
-    expect(cards).toHaveLength(4);
+    expect(cards).toHaveLength(5);
     expect(cards[0]).toHaveTextContent('Team settings');
+    expect(cards[4]).toHaveTextContent('Platform administrators');
   });
 
   it('shows a member no admin surface at all', async () => {

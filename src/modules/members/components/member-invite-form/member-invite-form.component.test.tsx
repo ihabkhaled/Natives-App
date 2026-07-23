@@ -15,6 +15,10 @@ function buildSent(overrides: Partial<InviteSentView> = {}): InviteSentView {
     acceptUrl: 'https://app.example.com/accept-invitation?token=abc',
     copyLabel: 'Copy link',
     onCopy: vi.fn(),
+    roleLabel: 'Role on acceptance',
+    roleValue: 'Coach',
+    teamLabel: 'Team',
+    teamValue: 'Cairo Natives',
     expiresLabel: 'Expires',
     expiresValue: '28 July 2026 3:38 PM',
     doneLabel: 'Done',
@@ -37,13 +41,15 @@ function buildInvite(overrides: Partial<InviteFormView>): InviteFormView {
     email: '',
     onEmailChange: vi.fn(),
     emailError: null,
-    roleLabel: 'Access level',
-    roleHint: 'Team roles are assigned later.',
-    role: 'user',
+    roleLabel: 'Team role',
+    roleHint: 'Reads their own data and team boards.',
+    role: 'member',
     roleOptions: [
-      { value: 'user', label: 'Member' },
-      { value: 'admin', label: 'Administrator' },
+      { value: 'member', label: 'Member' },
+      { value: 'coach', label: 'Coach' },
     ],
+    roleOptionsNotice: null,
+    roleSelectDisabled: false,
     onRoleChange: vi.fn(),
     profileHeading: 'Roster profile',
     profileIntro: 'How this person appears in the directory.',
@@ -119,6 +125,33 @@ describe('MemberInviteForm', () => {
     const error = screen.getByTestId(TEST_IDS.memberInviteError);
     expect(error).toHaveAttribute('role', 'alert');
     expect(error).toHaveTextContent('already has an account');
+  });
+
+  it('disables the role select and explains while the catalog is unavailable', () => {
+    render(
+      <MemberInviteForm
+        invite={buildInvite({
+          isOpen: true,
+          roleOptionsNotice: 'Loading the roles you can grant…',
+          roleSelectDisabled: true,
+          roleOptions: [],
+        })}
+      />,
+    );
+
+    expect(screen.getByTestId(TEST_IDS.memberInviteRoleNotice)).toHaveTextContent(
+      'Loading the roles you can grant…',
+    );
+    // Ionic reflects disabled as a property on the custom element; the native
+    // :disabled pseudo-state never applies, so jest-dom's toBeDisabled cannot.
+    expect(screen.getByTestId(TEST_IDS.memberInviteRole)).toHaveProperty('disabled', true);
+  });
+
+  it('states the team and the granted role back on the receipt', () => {
+    render(<MemberInviteForm invite={buildInvite({ isOpen: true, sent: buildSent() })} />);
+
+    expect(screen.getByTestId(TEST_IDS.memberInviteSentTeam)).toHaveTextContent('Cairo Natives');
+    expect(screen.getByTestId(TEST_IDS.memberInviteSentRole)).toHaveTextContent('Coach');
   });
 
   it('replaces the form with the sent panel once the invitation exists', () => {

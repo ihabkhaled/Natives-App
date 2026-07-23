@@ -3,6 +3,7 @@ import { hasAllPermissions, PERMISSIONS } from '@/shared/security';
 
 export interface MembersTeamContextView {
   readonly teamId: string;
+  readonly teamName: string;
   readonly isLoading: boolean;
   readonly isError: boolean;
   readonly permissions: readonly string[];
@@ -24,6 +25,7 @@ export function useMembersTeamContext(): MembersTeamContextView {
   const permissions = effective.permissions;
   return {
     teamId: scope.teamId,
+    teamName: scope.teamName,
     isLoading: scope.isLoading,
     isError: scope.isError,
     permissions,

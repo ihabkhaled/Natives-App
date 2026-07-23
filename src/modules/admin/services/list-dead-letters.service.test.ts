@@ -9,11 +9,7 @@ afterEach(() => {
   vi.clearAllMocks();
 });
 
-/**
- * Backend-pending use case: the operations centre never calls this while the
- * capability-honesty marker is on, but the use case stays ready (and pinned)
- * for the P1 re-light.
- */
+/** Live since contract 1.2.0: the listing the operations centre renders. */
 describe('listDeadLetters', () => {
   it('maps the wire items to payload-free dead letters', async () => {
     vi.mocked(requestDeadLetters).mockResolvedValue({

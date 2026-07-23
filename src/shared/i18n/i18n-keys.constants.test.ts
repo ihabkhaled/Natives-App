@@ -87,6 +87,7 @@ describe('I18N_KEYS', () => {
       'adminRoles',
       'adminRules',
       'adminOperations',
+      'adminPlatform',
       'teamsAdmin',
       'seasonsAdmin',
       'permissionsMatrix',

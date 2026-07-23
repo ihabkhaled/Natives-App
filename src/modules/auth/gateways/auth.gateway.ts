@@ -88,10 +88,11 @@ export function requestInvitationDetails(
 export function requestInvitationAccept(
   token: string,
   password: string,
+  displayName: string,
 ): Promise<SchemaOutput<typeof refreshResponseSchema>> {
   return getAppHttpClient().post(
     AUTH_API_PATHS.invitationAccept,
-    { token, password },
+    { token, password, ...(displayName === '' ? {} : { displayName }) },
     refreshResponseSchema,
     {
       skipAuth: true,

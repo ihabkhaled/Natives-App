@@ -50,6 +50,9 @@ const INVITATION_DTO = {
   email: 'invitee@example.com',
   role: 'user',
   inviterName: null,
+  teamRole: 'coach',
+  teamId: 'team-natives',
+  teamName: 'Cairo Natives',
   expiresAt: '2026-08-01T12:00:00.000Z',
 };
 const SESSION_DTO = {
@@ -247,7 +250,7 @@ describe('requestInvitationDetails', () => {
 
 describe('requestInvitationAccept', () => {
   it('posts the token and chosen password and returns the flat session response', async () => {
-    const response = await requestInvitationAccept(INVITE_TOKEN, 'Ranger#Strong1234');
+    const response = await requestInvitationAccept(INVITE_TOKEN, 'Ranger#Strong1234', 'Omar');
 
     expect(response).toEqual({
       ...TOKENS_DTO,
@@ -258,8 +261,18 @@ describe('requestInvitationAccept', () => {
     expect(request.data).toEqual({
       token: INVITE_TOKEN,
       password: 'Ranger#Strong1234',
+      displayName: 'Omar',
     });
     expect(request.headers['Authorization']).toBeUndefined();
+  });
+
+  it('omits an empty display name so the backend keeps its own default', async () => {
+    await requestInvitationAccept(INVITE_TOKEN, 'Ranger#Strong1234', '');
+
+    expect(seenFor(AUTH_API_PATHS.invitationAccept).data).toEqual({
+      token: INVITE_TOKEN,
+      password: 'Ranger#Strong1234',
+    });
   });
 });
 

@@ -16,8 +16,10 @@ vi.mock('../gateways/members.gateway', () => ({
 const INVITATION = {
   id: 'inv-1',
   email: 'omar@example.com',
-  role: 'user' as const,
+  role: 'user',
   status: 'pending' as const,
+  teamId: 'team-1',
+  teamRole: 'coach',
   expiresAt: '2026-07-28T00:00:00.000Z',
   createdAt: '2026-07-21T00:00:00.000Z',
   token: 'one-time-token',
@@ -25,7 +27,7 @@ const INVITATION = {
 
 const INPUT = {
   email: 'omar@example.com',
-  role: 'user' as const,
+  teamRole: 'coach',
   profile: { fullName: 'Omar', nickname: null, jerseyNumber: null },
 };
 
@@ -44,9 +46,9 @@ describe('invitePersonByEmail', () => {
   it('creates the account invitation AND the roster record', async () => {
     await invitePersonByEmail('team-1', INPUT);
 
-    expect(requestCreateInvitation).toHaveBeenCalledWith({
+    expect(requestCreateInvitation).toHaveBeenCalledWith('team-1', {
       email: 'omar@example.com',
-      role: 'user',
+      teamRole: 'coach',
     });
     expect(requestInviteMember).toHaveBeenCalledWith('team-1', INPUT.profile);
   });
@@ -64,7 +66,7 @@ describe('invitePersonByEmail', () => {
     await expect(invitePersonByEmail('team-1', INPUT)).resolves.toEqual({
       id: 'inv-1',
       email: 'omar@example.com',
-      role: 'user',
+      teamRole: 'coach',
       status: 'pending',
       expiresAt: '2026-07-28T00:00:00.000Z',
       acceptUrl: 'https://app.example.com/accept-invitation?token=one-time-token',

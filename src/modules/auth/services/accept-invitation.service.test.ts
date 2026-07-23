@@ -65,7 +65,7 @@ describe('acceptInvitation', () => {
       currentUserRoute(200, USER_PAYLOAD),
     ]);
 
-    const session = await acceptInvitation(TOKEN, 'Ranger#Strong1234');
+    const session = await acceptInvitation(TOKEN, 'Ranger#Strong1234', 'Omar');
 
     expect(session.user.email).toBe('invitee@example.com');
     await expect(getSecureValue(STORAGE_KEYS.authAccessToken)).resolves.toBe('invited-access');
@@ -78,7 +78,7 @@ describe('acceptInvitation', () => {
       currentUserRoute(401, { statusCode: 401 }),
     ]);
 
-    await catchAppError(acceptInvitation(TOKEN, 'Ranger#Strong1234'));
+    await catchAppError(acceptInvitation(TOKEN, 'Ranger#Strong1234', 'Omar'));
 
     await expect(getSecureValue(STORAGE_KEYS.authAccessToken)).resolves.toBeNull();
     await expect(getSecureValue(STORAGE_KEYS.authRefreshToken)).resolves.toBeNull();
@@ -88,14 +88,14 @@ describe('acceptInvitation', () => {
   it('maps an already-used invitation (409) to the link-invalid code', async () => {
     installTestAppHttpClient([acceptRoute(409, { statusCode: 409, code: 'INVITATION_USED' })]);
 
-    const failure = await catchAppError(acceptInvitation(TOKEN, 'Ranger#Strong1234'));
+    const failure = await catchAppError(acceptInvitation(TOKEN, 'Ranger#Strong1234', 'Omar'));
 
     expect(failure.code).toBe(APP_ERROR_CODE.LinkInvalidOrExpired);
     expect(trackEvent).not.toHaveBeenCalled();
   });
 
   it('wraps a non-transport failure as unexpected', async () => {
-    const failure = await catchAppError(acceptInvitation(TOKEN, 'Ranger#Strong1234'));
+    const failure = await catchAppError(acceptInvitation(TOKEN, 'Ranger#Strong1234', 'Omar'));
 
     expect(failure.code).toBe(APP_ERROR_CODE.Unexpected);
   });

@@ -3,9 +3,13 @@ const MEMBERS_API_PATHS = {
   teams: '/teams',
 } as const;
 
+function teamPath(teamId: string, suffix: string): string {
+  return `${MEMBERS_API_PATHS.teams}/${encodeURIComponent(teamId)}${suffix}`;
+}
+
 /** Team-scoped member collection path. */
 export function membersPath(teamId: string): string {
-  return `${MEMBERS_API_PATHS.teams}/${encodeURIComponent(teamId)}/members`;
+  return teamPath(teamId, '/members');
 }
 
 /** Invite path for a team. */
@@ -63,10 +67,20 @@ export function memberRolesPath(teamId: string, membershipId: string): string {
 }
 
 /**
- * Identity-scoped invitation collection. Deliberately NOT team-scoped: the
- * backend issues an account invitation by email, and the team membership is a
+ * Team-scoped invitation collection (contract 1.2.0): the invitation carries
+ * the team and the team role acceptance will grant, so a Team Admin's
+ * `member.invite` resolves in their own team scope. The roster profile is a
  * separate record created through `memberInvitePath`.
  */
-export function invitationsPath(): string {
-  return '/invitations';
+export function teamInvitationsPath(teamId: string): string {
+  return teamPath(teamId, '/invitations');
+}
+
+/**
+ * The roles the acting principal may grant in this team, with display
+ * metadata. RBAC-owned route; the `:teamId` path segment scopes the actor's
+ * ceiling server-side.
+ */
+export function assignableRolesPath(teamId: string): string {
+  return `/rbac${teamPath(teamId, '/assignable-roles')}`;
 }

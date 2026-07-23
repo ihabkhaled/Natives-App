@@ -4,6 +4,7 @@
  * architecture/no-inline-test-ids).
  */
 import { ADMIN_TEST_IDS } from './admin-test-ids.constants';
+import { ONBOARDING_TEST_IDS } from './onboarding-test-ids.constants';
 import { SELF_SERVICE_TEST_IDS } from './self-service-test-ids.constants';
 import { COMPETITIONS_TEST_IDS } from './competitions-test-ids.constants';
 import { FEATURE_TEST_IDS } from './feature-test-ids.constants';
@@ -21,6 +22,7 @@ export const TEST_IDS = {
   ...MATCHES_TEST_IDS,
   ...NOTIFICATIONS_TEST_IDS,
   ...ADMIN_TEST_IDS,
+  ...ONBOARDING_TEST_IDS,
   ...TEAMS_TEST_IDS,
   ...TEAMS_ADMIN_TEST_IDS,
   appShell: 'app-shell',
@@ -176,19 +178,6 @@ export const TEST_IDS = {
   membersInviteButton: 'members-invite-button',
   membersList: 'members-list',
   memberCard: 'member-card',
-  memberInviteForm: 'member-invite-form',
-  memberInviteFullName: 'member-invite-full-name',
-  memberInviteNickname: 'member-invite-nickname',
-  memberInviteJersey: 'member-invite-jersey',
-  memberInviteEmail: 'member-invite-email',
-  memberInviteRole: 'member-invite-role',
-  memberInviteError: 'member-invite-error',
-  memberInviteSent: 'member-invite-sent',
-  memberInviteLink: 'member-invite-link',
-  memberInviteCopyLink: 'member-invite-copy-link',
-  memberInviteDone: 'member-invite-done',
-  memberInviteSubmit: 'member-invite-submit',
-  memberInviteCancel: 'member-invite-cancel',
   memberProfilePage: 'member-profile-page',
   memberProfileView: 'member-profile-view',
   memberProfileLoading: 'member-profile-loading',

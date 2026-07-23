@@ -19,7 +19,13 @@ import {
   venuesResponse,
 } from './admin.fixture';
 import { apiUrl, failRequest, isAuthorized, pathParam, readJsonBody } from './mock-request.helper';
-import { permissionsForRequest } from './persona-permissions.helper';
+import { nestErrorResponse } from './nest-error.helper';
+import { permissionsForRequest, personaFromToken } from './persona-permissions.helper';
+import {
+  promoteSuperAdminRecord,
+  revokeSuperAdminRecord,
+  superAdminsResponse,
+} from './platform-admins.fixture';
 
 interface VersionBody {
   readonly settingKey?: string;
@@ -171,9 +177,64 @@ const rulesHandlers = [
 ];
 
 /**
- * Operations handlers. `/admin/outbox/metrics` and `.../replay` are published;
- * the dead-letter listing and job health are backend-pending and recorded as
- * such in docs/api-verification.md.
+ * Platform super-admin handlers. Only a principal holding `platform.admin`
+ * passes; the LAST-admin revoke answers the backend's dedicated 409 key so
+ * the client's privilege copy is exercised against the real refusal shape.
+ */
+const platformAdminsHandlers = [
+  http.get(apiUrl('/rbac/platform/super-admins'), ({ request }) => {
+    if (personaFromToken(request) === null) {
+      return failRequest(401, 'UNAUTHORIZED', '/rbac/platform/super-admins');
+    }
+    if (!permissionsForRequest(request).includes(PERMISSIONS.platformAdmin)) {
+      return failRequest(403, 'FORBIDDEN', '/rbac/platform/super-admins');
+    }
+    return HttpResponse.json(superAdminsResponse());
+  }),
+  http.post(apiUrl('/rbac/platform/super-admins'), async ({ request }) => {
+    const actor = personaFromToken(request);
+    if (actor === null) {
+      return failRequest(401, 'UNAUTHORIZED', '/rbac/platform/super-admins');
+    }
+    if (!actor.permissions.includes(PERMISSIONS.platformAdmin)) {
+      return failRequest(403, 'FORBIDDEN', '/rbac/platform/super-admins');
+    }
+    const body = await readJsonBody<{ userId?: string; reason?: string }>(request);
+    if (body.userId === undefined || (body.reason ?? '').length < 8) {
+      return failRequest(400, 'VALIDATION_ERROR', '/rbac/platform/super-admins');
+    }
+    const record = promoteSuperAdminRecord(body.userId, actor.id);
+    return record === 'unknown-user'
+      ? failRequest(409, 'CONFLICT', '/rbac/platform/super-admins')
+      : HttpResponse.json(record, { status: 201 });
+  }),
+  http.delete(apiUrl('/rbac/platform/super-admins/:userId'), ({ request, params }) => {
+    if (personaFromToken(request) === null) {
+      return failRequest(401, 'UNAUTHORIZED', '/rbac/platform/super-admins');
+    }
+    if (!permissionsForRequest(request).includes(PERMISSIONS.platformAdmin)) {
+      return failRequest(403, 'FORBIDDEN', '/rbac/platform/super-admins');
+    }
+    const outcome = revokeSuperAdminRecord(pathParam(params, 'userId'));
+    if (outcome === 'not-found') {
+      return failRequest(404, 'NOT_FOUND', '/rbac/platform/super-admins');
+    }
+    if (outcome === 'last-admin') {
+      return nestErrorResponse({
+        statusCode: 409,
+        code: 'LAST_SUPER_ADMIN',
+        message: 'errors.rbac.lastSuperAdmin',
+        messageKey: 'errors.rbac.lastSuperAdmin',
+        path: '/api/v1/rbac/platform/super-admins',
+      });
+    }
+    return new HttpResponse(null, { status: 204 });
+  }),
+];
+
+/**
+ * Operations handlers. All four surfaces are published as of contract 1.2.0;
+ * job health and the dead-letter listing mirror the heartbeat-backed backend.
  */
 const operationsHandlers = [
   http.get(apiUrl('/admin/outbox/metrics'), ({ request }) =>
@@ -213,4 +274,9 @@ const operationsHandlers = [
   }),
 ];
 
-export const adminHandlers = [...settingsHandlers, ...rulesHandlers, ...operationsHandlers];
+export const adminHandlers = [
+  ...settingsHandlers,
+  ...rulesHandlers,
+  ...operationsHandlers,
+  ...platformAdminsHandlers,
+];

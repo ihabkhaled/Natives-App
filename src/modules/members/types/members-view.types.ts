@@ -79,6 +79,11 @@ export interface InviteSentView {
   readonly acceptUrl: string;
   readonly copyLabel: string;
   readonly onCopy: () => void;
+  /** The team and role acceptance will actually grant, stated back. */
+  readonly roleLabel: string;
+  readonly roleValue: string;
+  readonly teamLabel: string;
+  readonly teamValue: string;
   readonly expiresLabel: string;
   readonly expiresValue: string;
   readonly doneLabel: string;
@@ -95,9 +100,14 @@ export interface InviteFormView extends MemberEditFormView {
   readonly onEmailChange: (value: string) => void;
   readonly emailError: string | null;
   readonly roleLabel: string;
+  /** The selected role's server-provided privilege description, or fallback copy. */
   readonly roleHint: string;
   readonly role: string;
+  /** Server-driven options from the assignable-roles catalog — never hard-coded. */
   readonly roleOptions: readonly SelectFieldOption[];
+  /** Inline note while the catalog loads or failed; null when options are live. */
+  readonly roleOptionsNotice: string | null;
+  readonly roleSelectDisabled: boolean;
   readonly onRoleChange: (value: string) => void;
   readonly profileHeading: string;
   readonly profileIntro: string;

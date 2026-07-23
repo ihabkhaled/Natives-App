@@ -26,7 +26,7 @@ export function useMembersDirectory(): MembersDirectoryView {
   const query = useAppQuery(
     buildMembersDirectoryQueryOptions(team.teamId, { pageSize: MEMBERS_PAGE_SIZE }),
   );
-  const invite = useInviteMember(team.teamId, team.canInvite);
+  const invite = useInviteMember(team.teamId, team.canInvite, team.teamName);
   return buildMembersDirectoryView({
     t,
     page: query.data,

@@ -3710,6 +3710,7 @@ ion-spinner {
 .app-admin-hub__list,
 .app-admin-rules__list,
 .app-admin-ops__list,
+.app-admin-platform__list,
 .app-prefs__rows {
   display: flex;
   flex-direction: column;
@@ -3882,7 +3883,8 @@ ion-spinner {
 
 .app-admin-hub__card-main,
 .app-admin-rules__row-main,
-.app-admin-ops__row-main {
+.app-admin-ops__row-main,
+.app-admin-platform__row-main {
   display: flex;
   min-inline-size: 0;
   flex-direction: column;
@@ -3891,7 +3893,8 @@ ion-spinner {
 
 .app-admin-hub__card-title,
 .app-admin-rules__row-title,
-.app-admin-ops__row-title {
+.app-admin-ops__row-title,
+.app-admin-platform__row-title {
   color: var(--app-ink);
   font-size: var(--un-font-size-base);
   font-weight: var(--un-font-weight-bold);
@@ -3920,7 +3923,8 @@ ion-spinner {
   gap: var(--un-space-3);
 }
 
-.app-admin-ops__row {
+.app-admin-ops__row,
+.app-admin-platform__row {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -3929,7 +3933,8 @@ ion-spinner {
   border-block-end: 1px solid var(--app-hairline);
 }
 
-.app-admin-ops__row:last-child {
+.app-admin-ops__row:last-child,
+.app-admin-platform__row:last-child {
   border-block-end: none;
 }
 

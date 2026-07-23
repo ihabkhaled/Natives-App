@@ -15,12 +15,13 @@ function routeAt(path: string) {
 }
 
 describe('getAdminRouteDefinitions', () => {
-  it('exposes the hub and its four administrative screens', () => {
+  it('exposes the hub and its five administrative screens', () => {
     expect(routes.map((definition) => definition.path)).toEqual([
       APP_PATHS.adminSettings,
       APP_PATHS.adminRoles,
       APP_PATHS.adminRules,
       APP_PATHS.adminOperations,
+      APP_PATHS.adminPlatform,
       APP_PATHS.admin,
     ]);
   });
@@ -47,11 +48,16 @@ describe('getAdminRouteDefinitions', () => {
 
   it('keeps every admin destination in the Manage group with a stable order', () => {
     const orders = routes.map((route) => route.meta?.nav?.order);
-    expect(orders).toEqual([21, 22, 23, 24, 20]);
+    expect(orders).toEqual([21, 22, 23, 24, 25, 20]);
     for (const route of routes) {
       expect(route.meta?.nav?.group).toBe(NAV_GROUP.Manage);
       expect(route.meta?.nav?.labelKey).toMatch(/^(nav|admin)/u);
     }
+  });
+
+  it('guards the platform panel behind the GLOBAL platform.admin grant only', () => {
+    expect(routeAt(APP_PATHS.adminPlatform).meta?.permissions).toEqual([PERMISSIONS.platformAdmin]);
+    expect(routeAt(APP_PATHS.adminPlatform).meta?.requiresTeamContext).toBe(false);
   });
 
   it('scopes the team-bound screens and leaves the global ones unscoped', () => {

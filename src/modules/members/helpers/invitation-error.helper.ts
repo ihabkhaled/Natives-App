@@ -11,12 +11,21 @@ const INVITATION_MESSAGE_KEY_TO_I18N: Readonly<Record<string, I18nKey>> = {
   'errors.identity.emailAlreadyRegistered': I18N_KEYS.members.inviteDuplicateError,
   'errors.identity.invitationExpired': I18N_KEYS.members.inviteExpiredError,
   'errors.identity.invitationInvalid': I18N_KEYS.members.inviteInvalidError,
+  // A role above the inviter's privilege ceiling, or a protected platform
+  // role, is a fact about the request — retrying will not change it (P1-8).
+  'errors.rbac.escalationDenied': I18N_KEYS.members.inviteCeilingExceeded,
+  'errors.rbac.protectedRole': I18N_KEYS.members.inviteCeilingExceeded,
+  'errors.rbac.roleNotFound': I18N_KEYS.members.inviteRoleUnknown,
 };
 
-/** Error classes that are about the address, not about the server being sad. */
+/**
+ * Error classes that are about the request, not about the server being sad.
+ * A 403 states missing permission plainly — never a "try again" line (P1-8).
+ */
 const INVITATION_CODE_TO_I18N: Readonly<Record<string, I18nKey>> = {
   [APP_ERROR_CODE.Conflict]: I18N_KEYS.members.inviteDuplicateError,
   [APP_ERROR_CODE.Validation]: I18N_KEYS.members.inviteInvalidError,
+  [APP_ERROR_CODE.Forbidden]: I18N_KEYS.members.invitePermissionDenied,
 };
 
 /**

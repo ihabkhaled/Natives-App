@@ -61,6 +61,8 @@ describe('auth recovery flows (real client + MSW)', () => {
     expect(invitation.email).toBe(MOCK_INVITATION.email);
     expect(invitation.role).toBe(MOCK_INVITATION.role);
     expect(invitation.inviterName).toBeNull();
+    expect(invitation.teamRole).toBe(MOCK_INVITATION.teamRole);
+    expect(invitation.teamName).toBe(MOCK_INVITATION.teamName);
 
     const expired = await catchAppError(getInvitation(MOCK_INVITATION.expiredToken));
     expect(expired.code).toBe(APP_ERROR_CODE.LinkInvalidOrExpired);
@@ -70,7 +72,11 @@ describe('auth recovery flows (real client + MSW)', () => {
   });
 
   it('accepts an invitation, starting a session and storing tokens securely', async () => {
-    const session = await acceptInvitation(MOCK_INVITATION.validToken, MOCK_STRONG_PASSWORD);
+    const session = await acceptInvitation(
+      MOCK_INVITATION.validToken,
+      MOCK_STRONG_PASSWORD,
+      'Invited Ranger',
+    );
 
     expect(session.user.email).toBe(MOCK_INVITATION.email);
     await expect(getAuthTokenRepository().getAccessToken()).resolves.toBe(

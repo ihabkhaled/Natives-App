@@ -1,4 +1,4 @@
-import { waitFor } from '@testing-library/react';
+import { act, waitFor } from '@testing-library/react';
 import { afterEach, beforeAll, describe, expect, it, vi } from 'vitest';
 
 import { changeAppLocale } from '@/packages/i18n';
@@ -26,6 +26,8 @@ const DETAILS = {
   email: 'invitee@example.com',
   role: 'user' as const,
   inviterName: 'Coach Nadia',
+  teamRole: 'coach',
+  teamName: 'Cairo Natives',
   expiresAtIso: '2026-08-01T12:00:00.000Z',
 };
 
@@ -44,6 +46,17 @@ function mockMutation(
 
 function renderScreen(initialPath: string) {
   return renderHookWithProviders(() => useAcceptInvitationScreen(), { initialPath });
+}
+
+/** Resolve one invitation variant and return the intro the screen builds. */
+async function introFor(overrides: Partial<typeof DETAILS>): Promise<string | undefined> {
+  mockMutation();
+  vi.mocked(getInvitation).mockResolvedValue({ ...DETAILS, ...overrides });
+  const { result } = renderScreen('/accept-invitation?token=abc');
+  await waitFor(() => {
+    expect(result.current.invitationEmail).toBe('invitee@example.com');
+  });
+  return result.current.introMessage;
 }
 
 beforeAll(async () => {
@@ -67,44 +80,33 @@ describe('useAcceptInvitationScreen', () => {
     });
     expect(result.current.isInvitationInvalid).toBe(false);
     expect(result.current.introMessage).toBe(
-      'Coach Nadia invited you to join Ultimate Natives as a member. Set a password to activate your account.',
+      'Coach Nadia invited you to join Cairo Natives as Coach. Set a password to activate your account.',
     );
     expect(result.current.labels.fields.submit).toBe('Create account');
   });
 
-  it('uses a truthful branded fallback when the inviter has no display name', async () => {
-    mockMutation();
-    vi.mocked(getInvitation).mockResolvedValue({
-      ...DETAILS,
-      role: 'admin',
-      inviterName: null,
-    });
-
-    const { result } = renderScreen('/accept-invitation?token=abc');
-
-    await waitFor(() => {
-      expect(result.current.invitationEmail).toBe('invitee@example.com');
-    });
-    expect(result.current.introMessage).toBe(
-      'The Ultimate Natives team invited you to join as an administrator. Set a password to activate your account.',
+  it('names the team and role without an inviter display name', async () => {
+    await expect(introFor({ inviterName: null })).resolves.toBe(
+      "You've been invited to join Cairo Natives as Coach. Set a password to activate your account.",
     );
   });
 
-  it('localizes the role and branded fallback in Arabic', async () => {
+  it('falls back to the branded team-less line for a platform-scoped invite', async () => {
+    await expect(introFor({ inviterName: null, teamRole: 'member', teamName: null })).resolves.toBe(
+      'The Ultimate Natives team invited you to join as Member. Set a password to activate your account.',
+    );
+  });
+
+  it('humanizes an unseen role slug instead of crashing the intro', async () => {
+    await expect(introFor({ inviterName: null, teamRole: 'physio_lead' })).resolves.toContain(
+      'as Physio Lead',
+    );
+  });
+
+  it('localizes the team-and-role intro in Arabic', async () => {
     await changeAppLocale(APP_LOCALE.Arabic);
-    mockMutation();
-    vi.mocked(getInvitation).mockResolvedValue({
-      ...DETAILS,
-      inviterName: null,
-    });
-
-    const { result } = renderScreen('/accept-invitation?token=abc');
-
-    await waitFor(() => {
-      expect(result.current.invitationEmail).toBe('invitee@example.com');
-    });
-    expect(result.current.introMessage).toBe(
-      'دعاك فريق Ultimate Natives للانضمام بصفتك عضو. عيّن كلمة مرور لتفعيل حسابك.',
+    await expect(introFor({ inviterName: null })).resolves.toBe(
+      'تمت دعوتك للانضمام إلى Cairo Natives بدور مدرّب. عيّن كلمة مرور لتفعيل حسابك.',
     );
   });
 
@@ -154,6 +156,30 @@ describe('useAcceptInvitationScreen', () => {
     });
     await submitSetPasswordForm(result.current.form, STRONG);
 
-    expect(view.accept).toHaveBeenCalledExactlyOnceWith({ token: 'abc', password: STRONG });
+    expect(view.accept).toHaveBeenCalledExactlyOnceWith({
+      token: 'abc',
+      password: STRONG,
+      displayName: '',
+    });
+  });
+
+  it('sends the trimmed display name the invitee typed with the acceptance', async () => {
+    const view = mockMutation();
+    vi.mocked(getInvitation).mockResolvedValue(DETAILS);
+
+    const { result } = renderScreen('/accept-invitation?token=abc');
+    await waitFor(() => {
+      expect(result.current.invitationEmail).toBe('invitee@example.com');
+    });
+    act(() => {
+      result.current.displayNameField.onChange('  Omar the Handler ');
+    });
+    await submitSetPasswordForm(result.current.form, STRONG);
+
+    expect(view.accept).toHaveBeenCalledExactlyOnceWith({
+      token: 'abc',
+      password: STRONG,
+      displayName: 'Omar the Handler',
+    });
   });
 });

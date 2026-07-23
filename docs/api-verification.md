@@ -175,18 +175,20 @@ real contract:
 | `/admin/outbox/{eventId}/replay` | POST   | Re-queue one dead-lettered event by id. |
 | `/teams/{teamId}/audit`          | GET    | The audit log panel.                    |
 
-Two surfaces the screen needs are **not** in the published contract, so they run on NestJS-shaped
-MSW handlers (`src/tests/msw/admin-handlers.ts`) validated by the same Zod schemas
-(`src/modules/admin/schemas/operations.schema.ts`) that will parse the remote responses:
+Contract 1.2.0 shipped the two formerly pending surfaces for real, shaped exactly like the Zod
+schemas the app already validated (`src/modules/admin/schemas/operations.schema.ts`); the
+capability-honesty markers in `admin-api.constants.ts` are now OFF and both panels query live:
 
-| Endpoint                     | Method | Purpose                                                         |
-| ---------------------------- | ------ | --------------------------------------------------------------- |
-| `/admin/outbox/dead-letters` | GET    | The listing behind the dead-letter counter (id, type, failure). |
-| `/admin/jobs/health`         | GET    | Scheduled-job status and last successful run.                   |
+| Endpoint                     | Method | Purpose                                                                 |
+| ---------------------------- | ------ | ----------------------------------------------------------------------- |
+| `/admin/outbox/dead-letters` | GET    | The listing behind the dead-letter counter (id, type, `failureCode`).   |
+| `/admin/jobs/health`         | GET    | Heartbeat-derived job status (`healthy`/`degraded`/`failed`, last run). |
 
-Neither is presented as live: both panels carry a visible "not served by the backend yet" notice on
-screen (`adminOperations.deadLetterPendingNotice`, `adminOperations.jobHealthPendingNotice`), and the
-e2e and integration tests assert that notice is rendered.
+Contract 1.2.0 also added the platform super-admin roster the admin module now manages
+(`GET/POST /rbac/platform/super-admins`, `DELETE /rbac/platform/super-admins/{userId}` with the
+last-admin 409 `errors.rbac.lastSuperAdmin`), the team-scoped invitation route
+(`POST /teams/{teamId}/invitations` with a ceiling-validated `teamRole`), and the assignable-roles
+catalog (`GET /rbac/teams/{teamId}/assignable-roles`) that feeds the invite form's role select.
 
 Privacy is encoded in the shape rather than only in the UI. A dead letter carries an event id, an
 event type, an attempt count, and a failure code — the DTO has **no payload field at all**, so a
@@ -422,10 +424,12 @@ set, so a team administrator saw an almost empty application.
 
 ### Still backend-pending
 
-| Endpoint                                           | Status                                                                                        |
-| -------------------------------------------------- | --------------------------------------------------------------------------------------------- |
-| `/teams/{id}/tryouts`, `/public/tryout-events`     | 404. The tryouts screens render a designed "not deployed yet" notice; nothing is faked.       |
-| `/admin/outbox/dead-letters`, `/admin/jobs/health` | 404. The operations centre renders per-panel pending notices; the outbox metrics panel works. |
+| Endpoint                                       | Status                                                                                  |
+| ---------------------------------------------- | --------------------------------------------------------------------------------------- |
+| `/teams/{id}/tryouts`, `/public/tryout-events` | 404. The tryouts screens render a designed "not deployed yet" notice; nothing is faked. |
+
+(`/admin/outbox/dead-letters` and `/admin/jobs/health` left this table with contract 1.2.0 — both
+are live and the operations centre queries them for real.)
 
 ### Backend data defect (no client workaround, and none wanted)
 

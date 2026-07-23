@@ -33,6 +33,7 @@ import {
   tokensForPersona,
 } from './persona-permissions.helper';
 import { PERSONA_USERS } from './personas.fixture';
+import { resetMockPlatformAdminsState } from './platform-admins.fixture';
 import { pointsHandlers } from './points-handlers';
 import { practiceHandlers } from './practice-handlers';
 import { resetMockPracticeState } from './practice.fixture';
@@ -62,6 +63,7 @@ export function resetMockAuthState(): void {
   resetMockNotificationsState();
   resetMockAdminState();
   resetMockOperationsState();
+  resetMockPlatformAdminsState();
   resetMockMatchesState();
 }
 

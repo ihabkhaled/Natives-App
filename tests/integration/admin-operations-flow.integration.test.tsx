@@ -1,4 +1,4 @@
-import { screen, waitFor, within } from '@testing-library/react';
+import { fireEvent, screen, waitFor, within } from '@testing-library/react';
 import { http, HttpResponse } from 'msw';
 import { describe, expect, it } from 'vitest';
 
@@ -35,39 +35,48 @@ describe('outbox health', () => {
   });
 });
 
-describe('the backend-pending panels stay honest (recovery audit P1-4)', () => {
-  // `admin/outbox/dead-letters` and `admin/jobs/health` do not exist on the
-  // backend (404 in production). The capability-honesty markers suppress the
-  // requests entirely, so the panels show their designed "not available yet"
-  // notice instead of a retried 404 loop behind "Loading…".
-  it('never requests the dead-letter listing and shows no invented rows', async () => {
-    let requests = 0;
+describe('the re-lit dead-letter and job-health panels (contract 1.2.0)', () => {
+  // `admin/outbox/dead-letters` and `admin/jobs/health` are REAL now: the
+  // capability-honesty markers are off, both reads fire, and the panels show
+  // rows or an honest zero-state — never an indefinite "Loading…".
+  it('lists the dead-lettered events with their sanitized failure codes', async () => {
+    await openOperations();
+
+    const panel = screen.getByTestId(TEST_IDS.adminDeadLetterPanel);
+    await waitFor(() => {
+      expect(within(panel).getAllByTestId(TEST_IDS.adminDeadLetterRow)).toHaveLength(2);
+    }, WAIT);
+    expect(panel).toHaveTextContent('notification.email.send');
+    expect(panel).toHaveTextContent('SMTP_TIMEOUT');
+  });
+
+  it('renders the heartbeat-derived job statuses, including a never-ran job', async () => {
+    await openOperations();
+
+    const panel = screen.getByTestId(TEST_IDS.adminJobHealthPanel);
+    await waitFor(() => {
+      expect(within(panel).getAllByTestId(TEST_IDS.adminJobRow)).toHaveLength(3);
+    }, WAIT);
+    expect(panel).toHaveTextContent('outbox.dispatcher');
+    expect(panel).toHaveTextContent('Healthy');
+    expect(panel).toHaveTextContent('Degraded');
+    expect(panel).toHaveTextContent('Failed');
+    expect(panel).toHaveTextContent('Never run');
+  });
+
+  it('states an honest zero-state when no dead letters exist', async () => {
     mockApiServer.use(
-      http.get(apiUrl('/admin/outbox/dead-letters'), () => {
-        requests += 1;
-        return HttpResponse.json({ items: [] });
-      }),
+      http.get(apiUrl('/admin/outbox/dead-letters'), () =>
+        HttpResponse.json({ items: [], total: 0, limit: 25, offset: 0 }),
+      ),
     );
     await openOperations();
 
     const panel = screen.getByTestId(TEST_IDS.adminDeadLetterPanel);
+    await waitFor(() => {
+      expect(within(panel).getByTestId(TEST_IDS.adminDeadLetterEmpty)).toBeInTheDocument();
+    }, WAIT);
     expect(within(panel).queryAllByTestId(TEST_IDS.adminDeadLetterRow)).toHaveLength(0);
-    expect(requests).toBe(0);
-  });
-
-  it('never requests job health and shows no invented rows', async () => {
-    let requests = 0;
-    mockApiServer.use(
-      http.get(apiUrl('/admin/jobs/health'), () => {
-        requests += 1;
-        return HttpResponse.json({ items: [] });
-      }),
-    );
-    await openOperations();
-
-    const panel = screen.getByTestId(TEST_IDS.adminJobHealthPanel);
-    expect(within(panel).queryAllByTestId(TEST_IDS.adminJobRow)).toHaveLength(0);
-    expect(requests).toBe(0);
   });
 
   it('states that payload bodies stay on the server', async () => {
@@ -78,20 +87,19 @@ describe('the backend-pending panels stay honest (recovery audit P1-4)', () => {
     );
   });
 
-  it('marks the dead-letter listing as backend-pending rather than presenting it as live', async () => {
+  it('requeues a dead letter and drops it from the listing', async () => {
     await openOperations();
 
-    expect(screen.getByTestId(TEST_IDS.adminDeadLetterPanel)).toHaveTextContent(
-      'not served by the backend yet',
-    );
-  });
+    const panel = screen.getByTestId(TEST_IDS.adminDeadLetterPanel);
+    await waitFor(() => {
+      expect(within(panel).getAllByTestId(TEST_IDS.adminDeadLetterRow)).toHaveLength(2);
+    }, WAIT);
 
-  it('marks job health as backend-pending', async () => {
-    await openOperations();
+    fireEvent.click(within(panel).getAllByTestId(TEST_IDS.adminDeadLetterReplay)[0]!);
 
-    expect(screen.getByTestId(TEST_IDS.adminJobHealthPanel)).toHaveTextContent(
-      'not served by the backend yet',
-    );
+    await waitFor(() => {
+      expect(within(panel).getAllByTestId(TEST_IDS.adminDeadLetterRow)).toHaveLength(1);
+    }, WAIT);
   });
 });
 

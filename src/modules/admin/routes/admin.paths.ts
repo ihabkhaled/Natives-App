@@ -19,3 +19,7 @@ export function adminRulesPath(): string {
 export function adminOperationsPath(): string {
   return APP_PATHS.adminOperations;
 }
+
+export function adminPlatformPath(): string {
+  return APP_PATHS.adminPlatform;
+}

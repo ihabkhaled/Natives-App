@@ -37,6 +37,7 @@ function mockOperationsCentre(): { run: ReturnType<typeof vi.fn> } {
     canManageRules: true,
     canReadAudit: true,
     canManageOutbox: true,
+    canManagePlatform: true,
     isLoading: false,
   });
   vi.mocked(useAppQuery).mockReturnValue({
@@ -59,28 +60,27 @@ function capturedMutationOptions(): MutationOptions {
 }
 
 describe('useOperationsCentre', () => {
-  it('never issues the backend-pending dead-letter and job-health reads', () => {
+  it('issues the dead-letter and job-health reads for real (contract 1.2.0)', () => {
     mockOperationsCentre();
 
     renderHook(() => useOperationsCentre());
 
     // Query order in the hook: metrics, dead letters, job health, audit. The
-    // capability-honesty markers must hold the two backend-pending reads at
-    // enabled:false even though the principal HAS the outbox grant.
+    // capability-honesty markers are OFF, so every read is live for a
+    // principal holding the outbox grant.
     const calls = vi.mocked(useAppQuery).mock.calls;
     expect(calls[0]?.[0]).toMatchObject({ enabled: true });
-    expect(calls[1]?.[0]).toMatchObject({ enabled: false });
-    expect(calls[2]?.[0]).toMatchObject({ enabled: false });
+    expect(calls[1]?.[0]).toMatchObject({ enabled: true });
+    expect(calls[2]?.[0]).toMatchObject({ enabled: true });
     expect(calls[3]?.[0]).toMatchObject({ enabled: true });
   });
 
-  it('keeps the pending panels honest: notices present, no rows invented', () => {
+  it('states an honest zero-state for an empty dead-letter list', () => {
     mockOperationsCentre();
 
     const { result } = renderHook(() => useOperationsCentre());
 
-    expect(result.current.deadLetterPendingNotice).toContain('not served by the backend yet');
-    expect(result.current.jobPendingNotice).toContain('not served by the backend yet');
+    expect(result.current.deadLetterEmptyLabel).toContain('No dead-lettered events');
     expect(result.current.deadLetterRows).toEqual([]);
     expect(result.current.jobRows).toEqual([]);
   });

@@ -53,7 +53,12 @@ export const MEMBER_AUDIENCE = {
 
 export type MemberAudience = (typeof MEMBER_AUDIENCE)[keyof typeof MEMBER_AUDIENCE];
 
-/** Assignable team roles, ordered least-to-most privileged. */
+/**
+ * The team-role slugs this client ships translated copy for. The catalog
+ * itself is server-owned and OPEN: a newly seeded backend role arrives as an
+ * unseen slug, parses, and renders through the label fallback chain in
+ * `helpers/role-label.helper.ts` without a client release.
+ */
 export const MEMBER_ROLE = {
   member: 'member',
   scorekeeper: 'scorekeeper',
@@ -62,16 +67,12 @@ export const MEMBER_ROLE = {
   teamAdmin: 'team_admin',
 } as const;
 
-export type MemberRole = (typeof MEMBER_ROLE)[keyof typeof MEMBER_ROLE];
+/** A team-role slug. Deliberately `string`: the vocabulary is server-driven. */
+export type MemberRole = string;
 
-/** Ordered role options rendered in the assignment panel. */
-export const MEMBER_ROLE_OPTIONS: readonly MemberRole[] = [
-  MEMBER_ROLE.member,
-  MEMBER_ROLE.scorekeeper,
-  MEMBER_ROLE.analyst,
-  MEMBER_ROLE.coach,
-  MEMBER_ROLE.teamAdmin,
-];
+/** Slug shape the backend enforces; the client validates shape, not values. */
+export const MEMBER_ROLE_SLUG_PATTERN = /^[a-z][a-z0-9_]*$/u;
+export const MEMBER_ROLE_SLUG_MAX_LENGTH = 64;
 
 /** Lifecycle actions offered in the admin panel (reactivate reuses activate). */
 export const LIFECYCLE_ACTION = {
@@ -131,7 +132,12 @@ export const AGE_CLASSIFICATION_LABEL_KEYS: Record<AgeClassification, I18nKey> =
   [AGE_CLASSIFICATION.grandMasters]: I18N_KEYS.members.ageGrandMasters,
 };
 
-export const MEMBER_ROLE_LABEL_KEYS: Record<MemberRole, I18nKey> = {
+/**
+ * Known-slug i18n map only — deliberately `Partial`: an unknown server slug
+ * has no entry here and falls through to the server display name or the
+ * humanized slug instead of crashing a lookup.
+ */
+export const MEMBER_ROLE_LABEL_KEYS: Partial<Record<string, I18nKey>> = {
   [MEMBER_ROLE.member]: I18N_KEYS.members.roleMember,
   [MEMBER_ROLE.scorekeeper]: I18N_KEYS.members.roleScorekeeper,
   [MEMBER_ROLE.analyst]: I18N_KEYS.members.roleAnalyst,
@@ -165,27 +171,11 @@ export const MEMBERS_PAGE_SIZE = 20;
 export const MEMBERS_LIST_HEIGHT_PX = 560;
 
 /**
- * The access level an invitation grants at the identity layer. The backend's
- * `CreateInvitationDto` accepts exactly these two values; the finer team roles
- * in `MEMBER_ROLE` are assigned afterwards on the member's profile.
+ * Invitation lifecycle statuses on the wire. The identity-level access role
+ * (`user`/`admin`) is no longer user-selectable: the invite form chooses a
+ * TEAM role from the server catalog, and Super Admin promotion is a separate,
+ * platform-guarded flow.
  */
-export const INVITATION_ROLE = {
-  user: 'user',
-  admin: 'admin',
-} as const;
-
-export type InvitationRole = (typeof INVITATION_ROLE)[keyof typeof INVITATION_ROLE];
-
-export const INVITATION_ROLES: readonly InvitationRole[] = [
-  INVITATION_ROLE.user,
-  INVITATION_ROLE.admin,
-];
-
 export const INVITATION_STATUSES = ['pending', 'accepted', 'revoked', 'expired'] as const;
 
 export type InvitationStatus = (typeof INVITATION_STATUSES)[number];
-
-export const INVITATION_ROLE_LABEL_KEYS: Record<InvitationRole, I18nKey> = {
-  [INVITATION_ROLE.user]: I18N_KEYS.members.inviteRoleUser,
-  [INVITATION_ROLE.admin]: I18N_KEYS.members.inviteRoleAdmin,
-};

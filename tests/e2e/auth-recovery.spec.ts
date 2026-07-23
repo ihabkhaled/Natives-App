@@ -56,8 +56,10 @@ test.describe('invitation acceptance', () => {
     await expect(page.getByTestId(TEST_IDS.acceptInvitationEmail)).toContainText(
       MOCK_INVITATION.email,
     );
-    await expect(page.getByText(/Ultimate Natives team invited you/u)).toContainText('member');
+    // The intro names the invited TEAM and the role acceptance will grant.
+    await expect(page.getByText(/invited to join Cairo Natives/u)).toContainText('Coach');
 
+    await fillIonInput(page, TEST_IDS.setPasswordDisplayNameInput, 'Invited Ranger');
     await fillIonInput(page, TEST_IDS.setPasswordInput, MOCK_STRONG_PASSWORD);
     await fillIonInput(page, TEST_IDS.setPasswordConfirmInput, MOCK_STRONG_PASSWORD);
     await page.getByTestId(TEST_IDS.setPasswordSubmitButton).click();
@@ -85,7 +87,8 @@ test.describe('invitation acceptance', () => {
 
     await expect(page.locator('html')).toHaveAttribute('lang', 'ar');
     await expect(page.locator('html')).toHaveAttribute('dir', 'rtl');
-    await expect(page.getByTestId(TEST_IDS.acceptInvitationPage)).toContainText('Ultimate Natives');
+    await expect(page.getByTestId(TEST_IDS.acceptInvitationPage)).toContainText('Cairo Natives');
+    await expect(page.getByTestId(TEST_IDS.acceptInvitationPage)).toContainText('مدرّب');
     await expect(page.getByTestId(TEST_IDS.acceptInvitationEmail)).toContainText(
       MOCK_INVITATION.email,
     );

@@ -32,11 +32,10 @@ function buildProps(overrides: Partial<AdminOperationsViewProps> = {}): AdminOpe
     deadLetterHeading: 'Dead letters',
     deadLetterIntro: 'Failed events by id.',
     deadLetterNotice: 'Payload bodies stay on the server.',
-    deadLetterPendingNotice: 'The dead-letter listing is not served by the backend yet.',
+    deadLetterEmptyLabel: 'No dead-lettered events — every delivery has been processed.',
     deadLetterRows: [],
     jobHeading: 'Job health',
     jobIntro: 'Scheduled jobs.',
-    jobPendingNotice: 'Job health is not served by the backend yet.',
     jobRows: [],
     auditHeading: 'Audit log',
     auditIntro: 'Who did what.',
@@ -47,20 +46,19 @@ function buildProps(overrides: Partial<AdminOperationsViewProps> = {}): AdminOpe
 }
 
 describe('AdminOperationsView', () => {
-  it('renders the honest backend-pending panels without inventing rows', () => {
+  it('states an honest zero-state for the dead letters instead of a blank list', () => {
     render(<AdminOperationsView {...buildProps()} />);
 
     const deadLetters = screen.getByTestId(TEST_IDS.adminDeadLetterPanel);
-    expect(deadLetters).toHaveTextContent('not served by the backend yet');
+    expect(within(deadLetters).getByTestId(TEST_IDS.adminDeadLetterEmpty)).toHaveTextContent(
+      'No dead-lettered events',
+    );
     expect(within(deadLetters).queryAllByTestId(TEST_IDS.adminDeadLetterRow)).toHaveLength(0);
-    const jobs = screen.getByTestId(TEST_IDS.adminJobHealthPanel);
-    expect(jobs).toHaveTextContent('not served by the backend yet');
-    expect(within(jobs).queryAllByTestId(TEST_IDS.adminJobRow)).toHaveLength(0);
   });
 
   it('lists dead letters by id, type, and failure code with a replay action', async () => {
-    // The P1 re-light path: once the backend ships the listing and the
-    // capability marker flips, rows render again exactly like this.
+    // Live since contract 1.2.0: the listing renders real rows with the
+    // sanitized failureCode — never a payload or raw error text.
     const onReplay = vi.fn();
     render(
       <AdminOperationsView
@@ -84,6 +82,7 @@ describe('AdminOperationsView', () => {
     const row = screen.getByTestId(TEST_IDS.adminDeadLetterRow);
     expect(row).toHaveTextContent('notification.email.send');
     expect(row).toHaveTextContent('SMTP_TIMEOUT');
+    expect(screen.queryByTestId(TEST_IDS.adminDeadLetterEmpty)).not.toBeInTheDocument();
     await userEvent.click(within(row).getByTestId(TEST_IDS.adminDeadLetterReplay));
     expect(onReplay).toHaveBeenCalledOnce();
   });

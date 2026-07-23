@@ -48,6 +48,9 @@ routes/members.paths.ts|.routes.ts      APP_PATHS builders + permission/team gua
 - `GET .../:membershipId/history` returns the append-only status timeline (lifecycle managers only).
 - `POST|GET .../:membershipId/aliases`, `DELETE .../aliases/:aliasId` manage aliases (alias managers).
 - `GET|PUT .../:membershipId/roles` reads/writes roles plus the actor's `assignableRoles` ceiling.
+- `POST /teams/:teamId/invitations` (contract 1.2.0) creates the team-scoped account invitation with
+  a ceiling-validated `teamRole` slug; `GET /rbac/teams/:teamId/assignable-roles` feeds the invite
+  form's role select with server display metadata — the client hard-codes no role list.
 - Avatar: `POST .../avatar` (signed ticket), `PUT .../avatar/:mediaId` (attach), `GET .../avatar`
   (signed download URL or null). Broken/expired images fall back to initials.
 
@@ -58,6 +61,11 @@ routes/members.paths.ts|.routes.ts      APP_PATHS builders + permission/team gua
 - Search/status/position filters apply client-side to the loaded bounded page.
 - `null` means unknown/not provided and is never coerced to zero; hidden restricted fields are omitted.
 - Role assignment is privilege-ceiling aware: toggles above the actor's ceiling are disabled.
+- The role vocabulary is OPEN and server-driven: slugs are shape-validated only, and labels resolve
+  known-slug i18n → server `displayName` → humanized slug (`role-label.helper.ts`), so a newly
+  seeded backend role renders without a client release.
+- The invite submit cannot double-fire (in-flight guard), and refusals render specific copy:
+  duplicate, above-ceiling (`errors.rbac.escalationDenied`), missing permission — never "try again".
 - Self edit uses an optimistic cache patch with rollback and conflict reconciliation.
 - Errors render translated `AppErrorCode` copy, never raw backend messages.
 

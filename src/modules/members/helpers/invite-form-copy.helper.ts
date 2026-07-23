@@ -1,11 +1,12 @@
 import { I18N_KEYS } from '@/shared/i18n';
 
-import { buildInvitationRoleOptions } from './invite-form.helper';
-import type { SelectFieldOption } from '@/shared/ui';
-
 type Translate = (key: string) => string;
 
-/** Every fixed label the invite form renders, resolved in one pass. */
+/**
+ * Every fixed label the invite form renders, resolved in one pass. The role
+ * OPTIONS are deliberately absent: they are server-driven and built by the
+ * hook from the assignable-roles query, never from a client catalog.
+ */
 export interface InviteFormCopy {
   readonly openLabel: string;
   readonly title: string;
@@ -13,8 +14,6 @@ export interface InviteFormCopy {
   readonly emailLabel: string;
   readonly emailPlaceholder: string;
   readonly roleLabel: string;
-  readonly roleHint: string;
-  readonly roleOptions: readonly SelectFieldOption[];
   readonly profileHeading: string;
   readonly profileIntro: string;
   readonly fullNameLabel: string;
@@ -38,8 +37,6 @@ export function buildInviteFormCopy(t: Translate): InviteFormCopy {
     emailLabel: t(I18N_KEYS.members.inviteEmailLabel),
     emailPlaceholder: t(I18N_KEYS.members.inviteEmailPlaceholder),
     roleLabel: t(I18N_KEYS.members.inviteRoleLabel),
-    roleHint: t(I18N_KEYS.members.inviteRoleHint),
-    roleOptions: buildInvitationRoleOptions(t),
     profileHeading: t(I18N_KEYS.members.inviteProfileHeading),
     profileIntro: t(I18N_KEYS.members.inviteProfileIntro),
     fullNameLabel: t(I18N_KEYS.members.inviteFullNameLabel),

@@ -67,6 +67,14 @@ export const invitationDetailsDtoSchema = schemaBuilder.object({
   role: schemaBuilder.enum([INVITATION_ROLE.Admin, INVITATION_ROLE.User]),
   inviterName: schemaBuilder.string().min(1).nullable(),
   expiresAt: schemaBuilder.iso.datetime({ offset: true }),
+  /** Open team-role slug acceptance grants; the catalog is server-owned. */
+  teamRole: schemaBuilder
+    .string()
+    .regex(/^[a-z][a-z0-9_]*$/u)
+    .max(64),
+  /** Null for a platform-scoped invitation that names no team. */
+  teamId: schemaBuilder.string().min(1).nullable(),
+  teamName: schemaBuilder.string().min(1).nullable(),
 });
 
 export const sessionDtoSchema = schemaBuilder.object({

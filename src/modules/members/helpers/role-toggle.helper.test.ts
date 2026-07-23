@@ -22,10 +22,23 @@ describe('role-toggle.helper', () => {
     expect(rolesDiffer([MEMBER_ROLE.member], [MEMBER_ROLE.member])).toBe(false);
   });
 
-  it('builds ordered ceiling-aware toggles', () => {
+  it('builds toggles from the server union, not a client catalog', () => {
     const toggles = buildRoleToggles(t, [MEMBER_ROLE.coach], assignable);
-    expect(toggles).toHaveLength(5);
+    expect(toggles.map((toggle) => toggle.role)).toEqual(assignable);
     expect(toggles.find((toggle) => toggle.role === MEMBER_ROLE.coach)?.checked).toBe(true);
-    expect(toggles.find((toggle) => toggle.role === MEMBER_ROLE.teamAdmin)?.disabled).toBe(true);
+    expect(toggles.every((toggle) => !toggle.disabled)).toBe(true);
+  });
+
+  it('renders a held role above the ceiling as checked and disabled', () => {
+    const toggles = buildRoleToggles(t, [MEMBER_ROLE.teamAdmin], assignable);
+    expect(toggles.map((toggle) => toggle.role)).toEqual([...assignable, MEMBER_ROLE.teamAdmin]);
+    const heldToggle = toggles.find((toggle) => toggle.role === MEMBER_ROLE.teamAdmin);
+    expect(heldToggle?.checked).toBe(true);
+    expect(heldToggle?.disabled).toBe(true);
+  });
+
+  it('labels an unseen server slug through the humanized fallback', () => {
+    const toggles = buildRoleToggles(t, [], ['physio_lead']);
+    expect(toggles[0]?.label).toBe('Physio Lead');
   });
 });

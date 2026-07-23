@@ -2,6 +2,7 @@ import { getAppHttpClient } from '@/packages/http';
 import type { SchemaOutput } from '@/packages/schema';
 
 import {
+  assignableRolesPath,
   memberAliasPath,
   memberAliasesPath,
   memberAvatarAttachPath,
@@ -13,11 +14,12 @@ import {
   memberRolesPath,
   memberTransitionPath,
   membersPath,
-  invitationsPath,
+  teamInvitationsPath,
 } from '../constants/members-api.constants';
 import {
   aliasListResponseSchema,
   aliasResponseSchema,
+  assignableRolesResponseSchema,
   avatarAccessResponseSchema,
   avatarTicketResponseSchema,
   memberDirectoryListResponseSchema,
@@ -43,6 +45,7 @@ type RolesDto = SchemaOutput<typeof memberRolesResponseSchema>;
 type AvatarTicketDto = SchemaOutput<typeof avatarTicketResponseSchema>;
 type AvatarAccessDto = SchemaOutput<typeof avatarAccessResponseSchema>;
 type InvitationDeliveryDto = SchemaOutput<typeof invitationDeliveryResponseSchema>;
+type AssignableRolesDto = SchemaOutput<typeof assignableRolesResponseSchema>;
 
 function buildProfileBody(input: InviteMemberInput | UpdateProfileInput): Record<string, unknown> {
   return {
@@ -81,18 +84,25 @@ export function requestInviteMember(
 }
 
 /**
- * Create an account invitation by email. The response carries the one-time
- * accept token so an administrator can deliver the link by hand when the
- * console email adapter is the one in use.
+ * Create a team-scoped invitation by email, naming the team role acceptance
+ * will grant. The response carries the one-time accept token so an
+ * administrator can deliver the link by hand when the console email adapter
+ * is the one in use.
  */
 export function requestCreateInvitation(
+  teamId: string,
   input: CreateInvitationInput,
 ): Promise<InvitationDeliveryDto> {
   return getAppHttpClient().post(
-    invitationsPath(),
-    { email: input.email, role: input.role },
+    teamInvitationsPath(teamId),
+    { email: input.email, teamRole: input.teamRole },
     invitationDeliveryResponseSchema,
   );
+}
+
+/** The roles the acting principal may grant in this team, server-labelled. */
+export function requestAssignableRoles(teamId: string): Promise<AssignableRolesDto> {
+  return getAppHttpClient().get(assignableRolesPath(teamId), assignableRolesResponseSchema);
 }
 
 /** Update a profile with optimistic concurrency; returns the reshaped view. */

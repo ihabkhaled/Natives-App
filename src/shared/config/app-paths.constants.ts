@@ -48,6 +48,7 @@ export const APP_PATHS = {
   adminRoles: '/admin/roles',
   adminRules: '/admin/rules',
   adminOperations: '/admin/operations',
+  adminPlatform: '/admin/platform',
   adminTeams: '/admin/teams',
   adminSeasons: '/admin/seasons',
   adminPermissions: '/admin/permissions',

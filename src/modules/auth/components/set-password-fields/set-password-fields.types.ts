@@ -13,9 +13,19 @@ export interface SetPasswordFieldsLabels {
   readonly submitting: string;
 }
 
+/** Optional identity field rendered above the password pair (invitation flow). */
+export interface DisplayNameFieldView {
+  readonly label: string;
+  readonly placeholder: string;
+  readonly value: string;
+  readonly onChange: (value: string) => void;
+}
+
 export interface SetPasswordFieldsProps {
   readonly labels: SetPasswordFieldsLabels;
   readonly form: SetPasswordFormView;
   readonly isSubmitting: boolean;
   readonly submitErrorMessage: string | undefined;
+  /** Present only on invitation acceptance; the reset flow omits it. */
+  readonly displayNameField?: DisplayNameFieldView | undefined;
 }

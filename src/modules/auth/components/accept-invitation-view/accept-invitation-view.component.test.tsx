@@ -18,6 +18,12 @@ describe('AcceptInvitationView', () => {
         invitationEmail="invitee@example.com"
         fieldsLabels={buildSetPasswordFieldsLabelsFixture({ submit: 'Create account' })}
         form={buildSetPasswordFormView()}
+        displayNameField={{
+          label: 'Your display name',
+          placeholder: 'How your team will see you (optional)',
+          value: '',
+          onChange: () => undefined,
+        }}
         isSubmitting={false}
         submitErrorMessage={undefined}
       />,
@@ -32,5 +38,6 @@ describe('AcceptInvitationView', () => {
     expect(screen.getByTestId(TEST_IDS.setPasswordSubmitButton)).toHaveTextContent(
       'Create account',
     );
+    expect(screen.getByTestId(TEST_IDS.setPasswordDisplayNameInput)).toBeInTheDocument();
   });
 });

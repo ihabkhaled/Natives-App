@@ -1,8 +1,4 @@
-import {
-  MEMBER_ROLE_LABEL_KEYS,
-  type MemberDirectoryItem,
-  type MemberRole,
-} from '@/modules/members';
+import { resolveRoleLabel, type MemberDirectoryItem, type MemberRole } from '@/modules/members';
 import { I18N_KEYS } from '@/shared/i18n';
 import type { SelectFieldOption } from '@/shared/ui';
 
@@ -19,7 +15,8 @@ export function buildMemberOptions(
 /**
  * One toggle per role the acting principal may actually assign. Roles above
  * their ceiling are absent, not disabled: the server would refuse them and
- * the screen should not imply otherwise.
+ * the screen should not imply otherwise. Labels resolve through the shared
+ * fallback chain, so a server-seeded slug renders without a client release.
  */
 export function buildRoleToggles(
   t: Translate,
@@ -29,7 +26,7 @@ export function buildRoleToggles(
 ): readonly RoleToggleView[] {
   return assignable.map((role) => ({
     key: role,
-    label: t(MEMBER_ROLE_LABEL_KEYS[role]),
+    label: resolveRoleLabel(t, role),
     selected: selected.includes(role),
     onToggle: () => {
       toggle(role);
@@ -41,5 +38,5 @@ export function buildRoleToggles(
 export function describeCurrentRoles(t: Translate, roles: readonly MemberRole[]): string {
   return roles.length === 0
     ? t(I18N_KEYS.adminRoles.currentNone)
-    : roles.map((role) => t(MEMBER_ROLE_LABEL_KEYS[role])).join(' · ');
+    : roles.map((role) => resolveRoleLabel(t, role)).join(' · ');
 }

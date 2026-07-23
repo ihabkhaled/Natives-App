@@ -101,3 +101,4 @@ export const ADMIN_SETTINGS_COPY = I18N_KEYS.adminSettings;
 export const ADMIN_ROLES_COPY = I18N_KEYS.adminRoles;
 export const ADMIN_RULES_COPY = I18N_KEYS.adminRules;
 export const ADMIN_OPERATIONS_COPY = I18N_KEYS.adminOperations;
+export const ADMIN_PLATFORM_COPY = I18N_KEYS.adminPlatform;

@@ -10,7 +10,7 @@ test.describe('admin console', () => {
     await gotoApp(page, APP_ROUTES.admin);
     await expectPresentedPage(page, TEST_IDS.adminPage);
 
-    await expect(page.getByTestId(TEST_IDS.adminHubCard)).toHaveCount(4);
+    await expect(page.getByTestId(TEST_IDS.adminHubCard)).toHaveCount(5);
   });
 
   test('shows effective configuration, its history, and the reference data', async ({ page }) => {

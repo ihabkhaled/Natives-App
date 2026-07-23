@@ -2,7 +2,7 @@ import { useState } from 'react';
 
 import { formatDateTime } from '@/packages/date';
 
-import { INVITATION_ROLE } from '../constants/members.constants';
+import { MEMBER_ROLE } from '../constants/members.constants';
 
 export interface InviteFormState {
   readonly isOpen: boolean;
@@ -33,13 +33,13 @@ export function useInviteFormState(locale: string): InviteFormState {
   const [isOpen, setIsOpen] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [email, setEmail] = useState('');
-  const [role, setRole] = useState<string>(INVITATION_ROLE.user);
+  const [role, setRole] = useState<string>(MEMBER_ROLE.member);
   const [fullName, setFullName] = useState('');
   const [nickname, setNickname] = useState('');
   const [jersey, setJersey] = useState('');
   const clear = (): void => {
     setEmail('');
-    setRole(INVITATION_ROLE.user);
+    setRole(MEMBER_ROLE.member);
     setFullName('');
     setNickname('');
     setJersey('');

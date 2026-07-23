@@ -74,7 +74,28 @@ describe('members directory flow (real client + MSW)', () => {
     expect(screen.getByTestId(TEST_IDS.memberInviteLink)).toHaveTextContent(
       'accept-invitation?token=mock-invitation-token-0123456789',
     );
+    // Invite → receipt: the team and the granted role are stated back.
+    expect(screen.getByTestId(TEST_IDS.memberInviteSentTeam)).toHaveTextContent('Cairo Natives');
+    expect(screen.getByTestId(TEST_IDS.memberInviteSentRole)).toHaveTextContent('Member');
     expect(await screen.findByText(/of 9 members/i)).toBeInTheDocument();
+  });
+
+  it('feeds the role select from the server catalog and enables it once loaded', async () => {
+    await signInAs(MOCK_PERSONA_EMAILS.admin);
+    renderDirectory();
+
+    await screen.findByTestId(TEST_IDS.membersInviteButton, {}, { timeout: 5000 });
+    fireEvent.click(screen.getByTestId(TEST_IDS.membersInviteButton));
+
+    // While the assignable-roles query is in flight the select is disabled
+    // with an inline note; once the catalog lands the select opens up.
+    await waitFor(
+      () => {
+        expect(screen.queryByTestId(TEST_IDS.memberInviteRoleNotice)).not.toBeInTheDocument();
+      },
+      { timeout: 5000 },
+    );
+    expect(screen.getByTestId(TEST_IDS.memberInviteRole)).toHaveProperty('disabled', false);
   });
 
   it('hides the invite affordance for a member persona', async () => {

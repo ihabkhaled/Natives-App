@@ -1,5 +1,5 @@
 import { IonNote } from '@/packages/ionic';
-import { AppButton, AppPasswordInput } from '@/shared/ui';
+import { AppButton, AppInput, AppPasswordInput } from '@/shared/ui';
 
 import { SET_PASSWORD_FIELDS_TEST_IDS } from './set-password-fields.constants';
 import type { SetPasswordFieldsProps } from './set-password-fields.types';
@@ -7,7 +7,8 @@ import type { SetPasswordFieldsProps } from './set-password-fields.types';
 /**
  * Shared strong-password form body (create + confirm). Purely presentational:
  * the owning hook holds validation, reveal, and Caps Lock state. Reused by
- * password reset and invitation acceptance.
+ * password reset and invitation acceptance; the latter adds a display-name
+ * field so the invitee lands with a name of their own choosing.
  */
 export function SetPasswordFields(props: SetPasswordFieldsProps): React.JSX.Element {
   const { form, labels } = props;
@@ -22,6 +23,16 @@ export function SetPasswordFields(props: SetPasswordFieldsProps): React.JSX.Elem
             ))}
           </ul>
         </div>
+      )}
+      {props.displayNameField === undefined ? null : (
+        <AppInput
+          testId={SET_PASSWORD_FIELDS_TEST_IDS.displayName}
+          label={props.displayNameField.label}
+          name="display-name"
+          value={props.displayNameField.value}
+          placeholder={props.displayNameField.placeholder}
+          onValueChange={props.displayNameField.onChange}
+        />
       )}
       <AppPasswordInput
         label={labels.passwordLabel}

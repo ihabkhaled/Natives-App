@@ -1,15 +1,15 @@
 # Admin module
 
-The administration surface (prompt 814): a permission-filtered hub plus four screens — team
-settings, role assignment, versioned rule governance, and the operations centre. Everything here is
-backed by the published contract except two operations panels, which are recorded as backend-pending
-in [`docs/api-verification.md`](../../../docs/api-verification.md).
+The administration surface (prompt 814): a permission-filtered hub plus five screens — team
+settings, role assignment, versioned rule governance, the operations centre, and the platform
+super-admin panel. Everything here is backed by the published contract (1.2.0); see
+[`docs/api-verification.md`](../../../docs/api-verification.md).
 
 ## Public surface (`index.ts`)
 
 | Export                                                              | Purpose                                          |
 | ------------------------------------------------------------------- | ------------------------------------------------ |
-| `getAdminRouteDefinitions`                                          | The hub and its four screens, with route meta.   |
+| `getAdminRouteDefinitions`                                          | The hub and its five screens, with route meta.   |
 | `adminPath` / `adminSettingsPath` / `adminRolesPath` / …            | Typed path builders for each screen.             |
 | `adminQueryKeys`                                                    | The admin cache branch.                          |
 | `settings*` / `rule*` / `operations*` schemas                       | Wire contracts, also used by the contract tests. |
@@ -23,7 +23,8 @@ in [`docs/api-verification.md`](../../../docs/api-verification.md).
 | `/admin/settings`   | Effective snapshot, version history, effective-dated change form, seasons, venues, catalogs. |
 | `/admin/roles`      | RBAC assignment bounded by the server's `assignableRoles`.                                   |
 | `/admin/rules`      | Points and calculation rule versions: DRAFT → APPROVED → PUBLISHED → RETIRED.                |
-| `/admin/operations` | Outbox health, dead letters, job health, audit log.                                          |
+| `/admin/operations` | Outbox health, dead letters, heartbeat-derived job health, audit log.                        |
+| `/admin/platform`   | Platform super-admin roster: audited promote and last-admin-guarded revoke.                  |
 
 ## Anatomy
 
@@ -37,7 +38,7 @@ queries/      stable keys + query option builders
 hooks/        context, per-screen view models, and the two draft forms
 helpers/      row builders, lifecycle rules, hub cards, setting-value parsing
 components/   UI-only screens on the shared kit (WorkspaceScreen, ListScreen, RecordList)
-containers/   the five routed screens
+containers/   the six routed screens
 routes/       typed paths + route definitions
 ```
 
@@ -58,8 +59,10 @@ routes/       typed paths + route definitions
   mapper, so no changed value exists in a view model to be rendered.
 - **`null` is never coerced to zero.** An unscored point entry renders "Not scored"; a simulation
   with no published baseline renders "No baseline", not a zero delta.
-- **Backend-pending panels say so.** The dead-letter listing and job health run on MSW handlers and
-  carry a visible pending notice; they are never presented as live.
+- **Super Admin is granted here or nowhere.** The platform panel is gated on the GLOBAL
+  `platform.admin` grant, every write demands a confirm plus an audited reason, and the backend
+  refuses to remove the last super administrator (409 `errors.rbac.lastSuperAdmin`) — surfaced as
+  dedicated privilege copy.
 - Every route sits behind the `admin-console` feature flag and carries the grant its screen needs as
   route metadata — never a role-name check. Navigation is convenience only; the backend re-authorizes
   every operation regardless of what the shell shows.

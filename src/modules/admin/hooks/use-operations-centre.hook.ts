@@ -23,8 +23,9 @@ import { useAdminContext } from './use-admin-context.hook';
 
 /**
  * The operations centre. Every panel reports state only: queue depth, failed
- * work by id, job health, and who did what. No event payload and no audit
- * diff value is fetched, let alone rendered.
+ * work by id, heartbeat-derived job health, and who did what. No event
+ * payload and no audit diff value is fetched, let alone rendered — a dead
+ * letter crosses the wire as a stable `failureCode`, never raw error text.
  */
 export function useOperationsCentre(): AdminOperationsView {
   const { t, locale } = useAppTranslation();
@@ -84,14 +85,13 @@ export function useOperationsCentre(): AdminOperationsView {
     deadLetterHeading: t(I18N_KEYS.adminOperations.deadLetterHeading),
     deadLetterIntro: t(I18N_KEYS.adminOperations.deadLetterIntro),
     deadLetterNotice: t(I18N_KEYS.adminOperations.deadLetterNoPayloadNotice),
-    deadLetterPendingNotice: t(I18N_KEYS.adminOperations.deadLetterPendingNotice),
+    deadLetterEmptyLabel: t(I18N_KEYS.adminOperations.deadLetterEmpty),
     deadLetterRows: buildDeadLetterRows(t, formatInstant, deadLetters.data ?? [], {
       canReplay: context.canManageOutbox && !replay.isRunning,
       onReplay: replay.run,
     }),
     jobHeading: t(I18N_KEYS.adminOperations.jobHealthHeading),
     jobIntro: t(I18N_KEYS.adminOperations.jobHealthIntro),
-    jobPendingNotice: t(I18N_KEYS.adminOperations.jobHealthPendingNotice),
     jobRows: buildJobRows(t, formatInstant, jobs.data ?? []),
     auditHeading: t(I18N_KEYS.adminOperations.auditHeading),
     auditIntro: t(I18N_KEYS.adminOperations.auditIntro),

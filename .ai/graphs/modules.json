@@ -31,6 +31,8 @@
         "settingVersionListResponseSchema",
         "settingsSnapshotResponseSchema",
         "simulationResponseSchema",
+        "superAdminEntryResponseSchema",
+        "superAdminListResponseSchema",
         "venueListResponseSchema"
       ]
     },
@@ -271,8 +273,6 @@
         "MEMBERSHIP_STATUS",
         "MEMBER_AUDIENCE",
         "MEMBER_ROLE",
-        "MEMBER_ROLE_LABEL_KEYS",
-        "MEMBER_ROLE_OPTIONS",
         "MemberAudience",
         "MemberRole",
         "MembershipStatus",
@@ -289,7 +289,8 @@
         "membersPath",
         "membersQueryKeys",
         "membershipResponseSchema",
-        "resolveRoleErrorKey"
+        "resolveRoleErrorKey",
+        "resolveRoleLabel"
       ]
     },
     {

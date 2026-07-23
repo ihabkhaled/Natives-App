@@ -3,6 +3,7 @@ import { I18N_KEYS } from '@/shared/i18n';
 
 import type { InvitationDelivery } from '../types/members.types';
 import type { InviteSentView } from '../types/members-view.types';
+import { resolveRoleLabel } from './role-label.helper';
 
 type Translate = (key: string, params?: TranslateParams) => string;
 
@@ -14,13 +15,15 @@ export interface InviteSentActions {
 }
 
 /**
- * The "invitation sent" receipt. It names the address the mail went to and
- * carries the one-time accept link, because in a console-email deployment the
- * link is the only delivery that actually happened.
+ * The "invitation sent" receipt. It names the address the mail went to, the
+ * team and the role acceptance will grant — invite → receipt, stated back —
+ * and carries the one-time accept link, because in a console-email deployment
+ * the link is the only delivery that actually happened.
  */
 export function buildInviteSentView(
   t: Translate,
   delivery: InvitationDelivery,
+  teamName: string,
   actions: InviteSentActions,
 ): InviteSentView {
   return {
@@ -31,6 +34,10 @@ export function buildInviteSentView(
     acceptUrl: delivery.acceptUrl,
     copyLabel: t(I18N_KEYS.members.inviteCopyLink),
     onCopy: actions.onCopy,
+    roleLabel: t(I18N_KEYS.members.inviteSentRoleLabel),
+    roleValue: resolveRoleLabel(t, delivery.teamRole),
+    teamLabel: t(I18N_KEYS.members.inviteSentTeamLabel),
+    teamValue: teamName,
     expiresLabel: t(I18N_KEYS.members.inviteExpiresLabel),
     expiresValue: actions.formatExpiry(delivery.expiresAt),
     doneLabel: t(I18N_KEYS.members.inviteDone),

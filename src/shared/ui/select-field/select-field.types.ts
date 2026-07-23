@@ -11,4 +11,6 @@ export interface SelectFieldProps {
   readonly onChange: (value: string) => void;
   readonly placeholder?: string | undefined;
   readonly testId?: string | undefined;
+  /** Disable while options are loading or unavailable; never a silent no-op. */
+  readonly disabled?: boolean | undefined;
 }

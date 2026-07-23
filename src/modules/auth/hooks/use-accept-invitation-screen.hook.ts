@@ -1,10 +1,15 @@
+import { useState } from 'react';
+
 import { useAppTranslation } from '@/packages/i18n';
 import { useSearchParam } from '@/packages/router';
 import { I18N_KEYS } from '@/shared/i18n';
 import { mapErrorCodeToI18nKey } from '@/shared/mappers';
 
 import { buildSetPasswordFieldsLabels } from '../components/set-password-fields/set-password-fields.helper';
-import type { SetPasswordFieldsLabels } from '../components/set-password-fields/set-password-fields.types';
+import type {
+  DisplayNameFieldView,
+  SetPasswordFieldsLabels,
+} from '../components/set-password-fields/set-password-fields.types';
 import { buildInvitationIntro } from '../helpers/invitation-copy.helper';
 import { useAcceptInvitationMutation } from '../mutations/use-accept-invitation-mutation.hook';
 import { useBackToLogin } from './use-back-to-login.hook';
@@ -24,6 +29,7 @@ interface AcceptInvitationScreenLabels {
 export interface AcceptInvitationScreenView {
   readonly labels: AcceptInvitationScreenLabels;
   readonly form: SetPasswordFormView;
+  readonly displayNameField: DisplayNameFieldView;
   readonly isLoadingInvitation: boolean;
   readonly isInvitationInvalid: boolean;
   readonly invitationEmail: string | undefined;
@@ -49,23 +55,35 @@ function buildLabels(t: (key: string) => string): AcceptInvitationScreenLabels {
   };
 }
 
-/** View model for invitation acceptance; the token comes from the URL. */
+/**
+ * View model for invitation acceptance; the token comes from the URL. The
+ * intro names the team and role acceptance will grant, and the optional
+ * display name travels with the accept call so the invitee lands signed in
+ * under their own name.
+ */
 export function useAcceptInvitationScreen(): AcceptInvitationScreenView {
   const { t } = useAppTranslation();
   const onBackToLogin = useBackToLogin();
   const token = useSearchParam('token') ?? '';
   const invitationQuery = useInvitationQuery(token);
   const mutation = useAcceptInvitationMutation();
+  const [displayName, setDisplayName] = useState('');
   const form = useSetPasswordForm({
     translate: t,
     onValidSubmit: (values) => {
-      mutation.accept({ token, password: values.password });
+      mutation.accept({ token, password: values.password, displayName: displayName.trim() });
     },
   });
   const invitation = invitationQuery.invitation;
   return {
     labels: buildLabels(t),
     form,
+    displayNameField: {
+      label: t(I18N_KEYS.auth.acceptInvitationDisplayNameLabel),
+      placeholder: t(I18N_KEYS.auth.acceptInvitationDisplayNamePlaceholder),
+      value: displayName,
+      onChange: setDisplayName,
+    },
     isLoadingInvitation: token !== '' && invitationQuery.isLoading,
     isInvitationInvalid: token === '' || invitationQuery.error !== null,
     invitationEmail: invitation?.email,

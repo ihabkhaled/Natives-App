@@ -72,6 +72,9 @@ export const MOCK_INVITATION = {
   email: 'invitee@example.com',
   role: 'user',
   inviterName: null,
+  teamRole: 'coach',
+  teamId: 'team-natives',
+  teamName: 'Cairo Natives',
   expiresAt: '2026-08-01T12:00:00.000Z',
 } as const;
 

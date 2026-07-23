@@ -37,7 +37,7 @@ describe('operations.gateway', () => {
     expect(body).toEqual({});
   });
 
-  it('reads the bounded dead-letter listing from its backend-pending path', async () => {
+  it('reads the bounded dead-letter listing from its published path', async () => {
     await requestDeadLetters();
 
     const [path, , options] = get.mock.calls[0] as [string, unknown, { params: object }];
@@ -45,7 +45,7 @@ describe('operations.gateway', () => {
     expect(options.params).toEqual({ limit: 25, offset: 0 });
   });
 
-  it('reads job health from its backend-pending path', async () => {
+  it('reads job health from its published path', async () => {
     await requestJobHealth();
 
     expect(get.mock.calls[0]?.[0]).toBe('/admin/jobs/health');

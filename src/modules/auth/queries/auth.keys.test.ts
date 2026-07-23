@@ -22,6 +22,18 @@ describe('authQueryKeys', () => {
     expect(authQueryKeys.invitation('abc')).not.toEqual(authQueryKeys.invitation('def'));
   });
 
+  it('scopes effective permissions per team under one invalidatable root', () => {
+    expect(authQueryKeys.effectivePermissionsRoot()).toEqual(['auth', 'effective-permissions']);
+    expect(authQueryKeys.effectivePermissions('team-1')).toEqual([
+      'auth',
+      'effective-permissions',
+      'team-1',
+    ]);
+    expect(authQueryKeys.effectivePermissions('team-1').slice(0, 2)).toEqual([
+      ...authQueryKeys.effectivePermissionsRoot(),
+    ]);
+  });
+
   it('composes the sessions key from the namespace root', () => {
     expect(authQueryKeys.sessions()).toEqual(['auth', 'sessions']);
     expect(authQueryKeys.sessions().slice(0, 1)).toEqual([...authQueryKeys.all]);

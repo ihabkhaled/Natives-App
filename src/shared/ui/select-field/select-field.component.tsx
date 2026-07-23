@@ -13,6 +13,7 @@ export function SelectField(props: SelectFieldProps): React.JSX.Element {
       data-testid={props.testId}
       label={props.label}
       {...(props.placeholder === undefined ? {} : { placeholder: props.placeholder })}
+      {...(props.disabled === undefined ? {} : { disabled: props.disabled })}
       value={props.value}
       onIonChange={(event) => {
         props.onChange(event.detail.value as string);

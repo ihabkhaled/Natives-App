@@ -48,6 +48,7 @@ export function AcceptInvitationContainer(): React.JSX.Element {
         invitationEmail={screen.invitationEmail}
         fieldsLabels={screen.labels.fields}
         form={screen.form}
+        displayNameField={screen.displayNameField}
         isSubmitting={screen.isSubmitting}
         submitErrorMessage={screen.submitErrorMessage}
       />

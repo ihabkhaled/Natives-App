@@ -18,5 +18,11 @@ describe('membersQueryKeys', () => {
     expect(membersQueryKeys.aliases('t', 'm').at(-1)).toBe('aliases');
     expect(membersQueryKeys.roles('t', 'm').at(-1)).toBe('roles');
     expect(membersQueryKeys.avatar('t', 'm').at(-1)).toBe('avatar');
+    expect(membersQueryKeys.assignableRoles('t')).toEqual([
+      'members',
+      'team',
+      't',
+      'assignable-roles',
+    ]);
   });
 });

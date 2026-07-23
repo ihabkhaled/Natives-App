@@ -47,6 +47,10 @@ describe('adminQueryKeys', () => {
     expect(adminQueryKeys.jobHealth()).toEqual(['admin', 'operations', 'job-health']);
   });
 
+  it('keeps the platform-admins branch global, outside any team scope', () => {
+    expect(adminQueryKeys.platformAdmins()).toEqual(['admin', 'platform-admins']);
+  });
+
   it('scopes the audit branch to its team', () => {
     expect(adminQueryKeys.audit('t1')).toEqual(['admin', 'team', 't1', 'audit']);
   });

@@ -20,6 +20,7 @@ export function AcceptInvitationView(props: AcceptInvitationViewProps): React.JS
       <SetPasswordFields
         labels={props.fieldsLabels}
         form={props.form}
+        displayNameField={props.displayNameField}
         isSubmitting={props.isSubmitting}
         submitErrorMessage={props.submitErrorMessage}
       />

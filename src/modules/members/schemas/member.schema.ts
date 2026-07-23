@@ -1,6 +1,10 @@
 import { schemaBuilder } from '@/packages/schema';
 
-import { INVITATION_ROLES, INVITATION_STATUSES } from '../constants/members.constants';
+import {
+  INVITATION_STATUSES,
+  MEMBER_ROLE_SLUG_MAX_LENGTH,
+  MEMBER_ROLE_SLUG_PATTERN,
+} from '../constants/members.constants';
 
 /** Exact runtime mirrors of the generated NestJS members DTOs. */
 const isoInstant = schemaBuilder.iso.datetime({ offset: true });
@@ -29,13 +33,15 @@ const aliasSourceSchema = schemaBuilder.enum(['manual', 'import']);
 
 const memberAudienceSchema = schemaBuilder.enum(['public', 'teammate', 'self', 'coach', 'admin']);
 
-const memberRoleSchema = schemaBuilder.enum([
-  'member',
-  'scorekeeper',
-  'analyst',
-  'coach',
-  'team_admin',
-]);
+/**
+ * OPEN team-role slug: shape-validated only. The role catalog is server-owned
+ * and may grow at any time; a newly seeded slug must parse here without a
+ * client release ("role catalog changes do not break frontend parsing").
+ */
+const memberRoleSchema = schemaBuilder
+  .string()
+  .regex(MEMBER_ROLE_SLUG_PATTERN)
+  .max(MEMBER_ROLE_SLUG_MAX_LENGTH);
 
 export const memberDirectoryItemSchema = schemaBuilder.object({
   membershipId: schemaBuilder.string().min(1),
@@ -157,9 +163,30 @@ export const memberRolesResponseSchema = schemaBuilder.object({
 export const invitationDeliveryResponseSchema = schemaBuilder.object({
   id: schemaBuilder.string().min(1),
   email: schemaBuilder.string().min(1),
-  role: schemaBuilder.enum(INVITATION_ROLES),
+  /** Identity access level; kept as an open string for wire compatibility. */
+  role: schemaBuilder.string().min(1),
   status: schemaBuilder.enum(INVITATION_STATUSES),
+  /** Team the invitee joins at acceptance; null for platform-scoped invites. */
+  teamId: schemaBuilder.string().min(1).nullable(),
+  /** Team-role slug acceptance grants — the receipt shows this back. */
+  teamRole: memberRoleSchema,
   expiresAt: isoInstant,
   createdAt: isoInstant,
   token: schemaBuilder.string().min(1),
+});
+
+/**
+ * The roles the acting principal may grant in a team, with server display
+ * metadata. Everything is an open string: labels and privilege descriptions
+ * are server-driven so the client never hard-codes the catalog.
+ */
+export const assignableRolesResponseSchema = schemaBuilder.object({
+  teamId: schemaBuilder.string().min(1),
+  roles: schemaBuilder.array(
+    schemaBuilder.object({
+      slug: memberRoleSchema,
+      displayName: schemaBuilder.string(),
+      description: schemaBuilder.string(),
+    }),
+  ),
 });

@@ -14,6 +14,7 @@ describe('APP_PATHS', () => {
       'admin',
       'adminOperations',
       'adminPermissions',
+      'adminPlatform',
       'adminRoles',
       'adminRules',
       'adminSeasons',

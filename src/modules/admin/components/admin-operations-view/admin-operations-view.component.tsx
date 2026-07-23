@@ -40,9 +40,11 @@ export function AdminOperationsView(props: AdminOperationsViewProps): React.JSX.
         notice={props.deadLetterNotice}
         testId={TEST_IDS.adminDeadLetterPanel}
       >
-        <p className="app-pending-notice m-0" role="note">
-          {props.deadLetterPendingNotice}
-        </p>
+        {props.deadLetterRows.length === 0 ? (
+          <IonNote data-testid={TEST_IDS.adminDeadLetterEmpty} role="note">
+            {props.deadLetterEmptyLabel}
+          </IonNote>
+        ) : null}
         <ul className="app-admin-ops__list">
           {props.deadLetterRows.map((row) => (
             <li
@@ -71,7 +73,6 @@ export function AdminOperationsView(props: AdminOperationsViewProps): React.JSX.
       <SectionPanel
         heading={props.jobHeading}
         intro={props.jobIntro}
-        notice={props.jobPendingNotice}
         testId={TEST_IDS.adminJobHealthPanel}
       >
         <RecordList

@@ -48,6 +48,28 @@ describe('leaderboard and points ledger flow (real client + MSW)', () => {
     expect(screen.getByRole('columnheader', { name: 'Rank' })).toBeInTheDocument();
   });
 
+  it('loads leaderboard data for an ORDINARY member — leaderboard.read, not team-read (contract 1.2.0)', async () => {
+    // Recovery-audit drift: the backend once guarded GET /teams/:id/points
+    // with a grant members lack, so the member persona got a 403. Contract
+    // 1.2.0 pins it to leaderboard.read; the MSW handler mirrors exactly that
+    // permission, so this test fails if either side drifts again.
+    await signInAs(MOCK_PERSONA_EMAILS.member);
+    renderAt('/leaderboard', <LeaderboardContainer />);
+
+    await screen.findByTestId(TEST_IDS.leaderboardTable, {}, WAIT);
+    expect(screen.queryByTestId(TEST_IDS.leaderboardForbidden)).not.toBeInTheDocument();
+    expect(screen.queryByTestId(TEST_IDS.leaderboardError)).not.toBeInTheDocument();
+    expect(screen.getAllByTestId(TEST_IDS.leaderboardRow).length).toBeGreaterThan(0);
+  });
+
+  it('shows the designed permission state to a persona without leaderboard.read', async () => {
+    await signInAs(MOCK_PERSONA_EMAILS.analyst);
+    renderAt('/leaderboard', <LeaderboardContainer />);
+
+    await screen.findByTestId(TEST_IDS.leaderboardForbidden, {}, WAIT);
+    expect(screen.queryByTestId(TEST_IDS.leaderboardTable)).not.toBeInTheDocument();
+  });
+
   it('keeps a zero-contribution member on the board instead of hiding them', async () => {
     await signInAs(MOCK_PERSONA_EMAILS.member);
     renderAt('/leaderboard', <LeaderboardContainer />);

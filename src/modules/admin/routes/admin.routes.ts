@@ -4,6 +4,7 @@ import { PERMISSIONS } from '@/shared/security';
 import { NAV_GROUP, ROUTE_ACCESS, type AppRouteDefinition } from '@/shared/types';
 
 import { AdminOperationsContainer } from '../containers/admin-operations.container';
+import { AdminPlatformContainer } from '../containers/admin-platform.container';
 import { AdminRolesContainer } from '../containers/admin-roles.container';
 import { AdminRulesContainer } from '../containers/admin-rules.container';
 import { AdminSettingsContainer } from '../containers/admin-settings.container';
@@ -11,6 +12,7 @@ import { AdminContainer } from '../containers/admin.container';
 import {
   adminOperationsPath,
   adminPath,
+  adminPlatformPath,
   adminRolesPath,
   adminRulesPath,
   adminSettingsPath,
@@ -136,11 +138,44 @@ function operationsRoute(): AppRouteDefinition {
   };
 }
 
+function platformRoute(): AppRouteDefinition {
+  return {
+    path: adminPlatformPath(),
+    exact: true,
+    access: ROUTE_ACCESS.Protected,
+    component: AdminPlatformContainer,
+    meta: {
+      key: 'admin-platform',
+      titleKey: I18N_KEYS.adminPlatform.title,
+      // Only a GLOBAL (teamless) grant carries platform.admin, so this route
+      // is structurally invisible to every team-scoped administrator.
+      permissions: [PERMISSIONS.platformAdmin],
+      requiresTeamContext: false,
+      offline: false,
+      preload: false,
+      featureFlag: FEATURE_FLAGS.adminConsole,
+      nav: {
+        order: 25,
+        group: NAV_GROUP.Manage,
+        iconName: 'shield',
+        labelKey: I18N_KEYS.adminPlatform.navLabel,
+      },
+    },
+  };
+}
+
 /**
  * Admin routes. Each carries the grant its screen actually needs, so the
  * sidebar, the guard, and the hub all agree; the backend re-authorizes every
  * operation regardless of what the shell shows.
  */
 export function getAdminRouteDefinitions(): readonly AppRouteDefinition[] {
-  return [settingsRoute(), rolesRoute(), rulesRoute(), operationsRoute(), hubRoute()];
+  return [
+    settingsRoute(),
+    rolesRoute(),
+    rulesRoute(),
+    operationsRoute(),
+    platformRoute(),
+    hubRoute(),
+  ];
 }

@@ -1,8 +1,8 @@
 /**
  * Admin paths, relative to the versioned API base URL. Everything here is
- * published in `contracts/openapi.json`; the operations centre's dead-letter
- * listing and job health are the two backend-pending surfaces and are marked
- * as such in docs/api-verification.md.
+ * published in `contracts/openapi.json` (contract 1.2.0 shipped the last two
+ * pending surfaces — dead letters and job health — plus the platform
+ * super-admin roster; see docs/api-verification.md).
  */
 function teamPath(teamId: string, suffix: string): string {
   return `/teams/${encodeURIComponent(teamId)}${suffix}`;
@@ -60,25 +60,35 @@ export function outboxReplayPath(eventId: string): string {
   return `/admin/outbox/${encodeURIComponent(eventId)}/replay`;
 }
 
-/** Backend-pending: the dead-letter listing behind the metrics counters. */
+/** The dead-letter listing behind the metrics counters (contract 1.2.0). */
 export function outboxDeadLettersPath(): string {
   return '/admin/outbox/dead-letters';
 }
 
-/** Backend-pending: scheduled-job health. */
+/** Scheduled-job health, derived from real recorded runs (contract 1.2.0). */
 export function jobHealthPath(): string {
   return '/admin/jobs/health';
 }
 
+/** Platform-scoped super administrator roster (global `platform.admin` only). */
+export function superAdminsPath(): string {
+  return '/rbac/platform/super-admins';
+}
+
+/** One super administrator's assignment, addressed by user id (revoke). */
+export function superAdminPath(userId: string): string {
+  return `${superAdminsPath()}/${encodeURIComponent(userId)}`;
+}
+
 /**
- * Capability-honesty markers for endpoints the backend does not serve yet
- * (both currently answer 404 in production). While a marker is `true` the
- * operations centre never issues the request and shows the designed
- * "not available yet" panel instead of a retried 404 posing as "Loading…".
- * When the backend ships an endpoint, flipping its marker to `false` lights
- * the panel up again — no other change needed.
+ * Capability-honesty markers for endpoints the backend does not serve yet.
+ * While a marker is `true` the operations centre never issues the request and
+ * shows the designed "not available yet" panel instead of a retried 404
+ * posing as "Loading…". Contract 1.2.0 shipped the dead-letter listing and
+ * job health for real, so both markers are OFF; the machinery stays for the
+ * next latent surface.
  */
 export const ADMIN_BACKEND_PENDING = {
-  deadLetters: true,
-  jobHealth: true,
+  deadLetters: false,
+  jobHealth: false,
 } as const;

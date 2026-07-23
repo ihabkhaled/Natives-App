@@ -34,6 +34,12 @@ function mockScreen(
       fields: buildSetPasswordFieldsLabelsFixture({ submit: 'Create account' }),
     },
     form: buildSetPasswordFormView(),
+    displayNameField: {
+      label: 'Your display name',
+      placeholder: 'How your team will see you (optional)',
+      value: '',
+      onChange: () => undefined,
+    },
     isLoadingInvitation: false,
     isInvitationInvalid: false,
     invitationEmail: 'invitee@example.com',

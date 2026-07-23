@@ -27,6 +27,7 @@ describe('APP_DEEP_LINK_POLICY', () => {
       '/admin',
       '/admin/operations',
       '/admin/permissions',
+      '/admin/platform',
       '/admin/roles',
       '/admin/rules',
       '/admin/seasons',

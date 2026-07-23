@@ -3,12 +3,12 @@ import { isoInstantField, pagedEnvelopeFields, schemaBuilder } from '@/packages/
 import { AUDIT_OUTCOMES, JOB_STATUSES } from '../constants/admin.constants';
 
 /**
- * Wire contracts for the operations centre.
- *
- * Two of these are backend-pending (dead letters, job health) and run on MSW
- * handlers shaped exactly like the NestJS surface. Privacy is encoded in the
- * shape: a dead letter carries an id, a type, and a failure count — there is
- * no payload field at all, so the client cannot render one by mistake.
+ * Wire contracts for the operations centre, all live as of contract 1.2.0
+ * (dead letters and job health shipped with the scheduled-job heartbeat
+ * work). Privacy is encoded in the shape: a dead letter carries an id, a
+ * type, a stable `failureCode` classification, and a count — there is no
+ * payload or raw error-text field at all, so the client cannot render one by
+ * mistake.
  */
 export const outboxMetricsResponseSchema = schemaBuilder.object({
   pending: schemaBuilder.number().int().nonnegative(),

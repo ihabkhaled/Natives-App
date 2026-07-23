@@ -199,6 +199,9 @@ describe('invitationDetailsDtoSchema', () => {
     email: 'invitee@example.com',
     role: 'user',
     inviterName: null,
+    teamRole: 'coach',
+    teamId: 'team-natives',
+    teamName: 'Cairo Natives',
     expiresAt: '2026-08-01T12:00:00.000Z',
   };
 
@@ -207,6 +210,26 @@ describe('invitationDetailsDtoSchema', () => {
       success: true,
       data: valid,
     });
+  });
+
+  it('accepts a platform-scoped invitation without a team', () => {
+    expect(
+      safeParseWithSchema(invitationDetailsDtoSchema, { ...valid, teamId: null, teamName: null })
+        .success,
+    ).toBe(true);
+  });
+
+  it('accepts an unseen team-role slug — the catalog is server-owned', () => {
+    expect(
+      safeParseWithSchema(invitationDetailsDtoSchema, { ...valid, teamRole: 'physio_lead' })
+        .success,
+    ).toBe(true);
+  });
+
+  it('rejects a malformed team-role slug shape', () => {
+    expect(
+      safeParseWithSchema(invitationDetailsDtoSchema, { ...valid, teamRole: 'Coach!' }).success,
+    ).toBe(false);
   });
 
   it('rejects an invalid email, role, and expiry instant', () => {

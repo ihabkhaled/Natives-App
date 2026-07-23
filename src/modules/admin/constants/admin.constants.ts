@@ -71,6 +71,9 @@ export const ADMIN_LIMITS = {
   deadLetters: 25,
   members: 50,
   minimumReasonLength: 5,
+  /** Mirrors the backend PromoteSuperAdminDto reason bounds (8..500). */
+  promoteReasonMinLength: 8,
+  promoteReasonMaxLength: 500,
 } as const;
 
 /**

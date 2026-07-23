@@ -1,7 +1,6 @@
 import type {
   AgeClassification,
   AliasSource,
-  InvitationRole,
   InvitationStatus,
   LifecycleAction,
   MemberAudience,
@@ -115,17 +114,26 @@ export interface InviteMemberInput {
   readonly jerseyNumber: number | null;
 }
 
-/** The identity-layer invitation an administrator sends by email. */
+/** The team-scoped invitation an administrator sends by email. */
 export interface CreateInvitationInput {
   readonly email: string;
-  readonly role: InvitationRole;
+  /** Team-role slug from the server catalog; acceptance grants it. */
+  readonly teamRole: MemberRole;
+}
+
+/** One role the acting principal may grant, with server display metadata. */
+export interface AssignableRole {
+  readonly slug: MemberRole;
+  readonly displayName: string;
+  readonly description: string;
 }
 
 /** What one issued invitation gives the administrator to act on. */
 export interface InvitationDelivery {
   readonly id: string;
   readonly email: string;
-  readonly role: InvitationRole;
+  /** The granted team-role slug the receipt names back. */
+  readonly teamRole: MemberRole;
   readonly status: InvitationStatus;
   readonly expiresAt: string;
   /**

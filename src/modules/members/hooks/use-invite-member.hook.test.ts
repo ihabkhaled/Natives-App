@@ -4,6 +4,7 @@ import { afterEach, beforeAll, beforeEach, describe, expect, it, vi } from 'vite
 import { APP_ERROR_CODE, AppError } from '@/shared/errors';
 
 import { invitePersonByEmail } from '../services/invite-member-by-email.service';
+import { listAssignableRoles } from '../services/list-assignable-roles.service';
 import { useInviteMember } from './use-invite-member.hook';
 import { initTestI18n } from '../../../../tests/setup/i18n-test.helper';
 import { renderHookWithProviders } from '../../../../tests/setup/render-with-providers.helper';
@@ -16,18 +17,26 @@ const { showToast, copyTextToClipboard } = vi.hoisted(() => ({
 vi.mock('@/shared/ui', () => ({ useAppToast: () => ({ showToast }) }));
 vi.mock('@/platform', () => ({ copyTextToClipboard }));
 vi.mock('../services/invite-member-by-email.service', () => ({ invitePersonByEmail: vi.fn() }));
+vi.mock('../services/list-assignable-roles.service', () => ({ listAssignableRoles: vi.fn() }));
 
 const DELIVERY = {
   id: 'inv-1',
   email: 'recruit@example.com',
-  role: 'user' as const,
+  teamRole: 'coach',
   status: 'pending' as const,
   expiresAt: '2026-07-28T13:38:53.984Z',
   acceptUrl: 'http://localhost/accept-invitation?token=abc',
 };
 
+/** The server catalog: known slugs plus one the client has no copy for. */
+const CATALOG = [
+  { slug: 'member', displayName: 'Member', description: 'Reads their own data.' },
+  { slug: 'coach', displayName: 'Coach', description: 'Manages practices and squads.' },
+  { slug: 'physio', displayName: 'Physiotherapist', description: 'Reads wellness data.' },
+];
+
 function renderInvite() {
-  return renderHookWithProviders(() => useInviteMember('team-1', true));
+  return renderHookWithProviders(() => useInviteMember('team-1', true, 'Cairo Natives'));
 }
 
 interface InviteResult {
@@ -35,6 +44,9 @@ interface InviteResult {
 }
 
 function fillValidForm(result: InviteResult): void {
+  act(() => {
+    result.current.onOpen();
+  });
   act(() => {
     result.current.onEmailChange('recruit@example.com');
   });
@@ -73,6 +85,7 @@ beforeEach(() => {
   showToast.mockResolvedValue(undefined);
   copyTextToClipboard.mockResolvedValue(true);
   vi.mocked(invitePersonByEmail).mockResolvedValue(DELIVERY);
+  vi.mocked(listAssignableRoles).mockResolvedValue(CATALOG);
 });
 
 afterEach(() => {
@@ -110,11 +123,77 @@ describe('useInviteMember', () => {
     expect(result.current.emailError).not.toBeNull();
   });
 
-  it('sends the account invitation and the roster profile together', async () => {
+  it('builds the role options from the server catalog, never from constants', async () => {
+    const { result } = renderInvite();
+    act(() => {
+      result.current.onOpen();
+    });
+
+    await waitFor(() => {
+      expect(result.current.roleOptions).toHaveLength(3);
+    });
+    expect(listAssignableRoles).toHaveBeenCalledWith('team-1');
+    // Known slug → translated copy; unknown slug → the server display name.
+    expect(result.current.roleOptions.map((option) => option.value)).toEqual([
+      'member',
+      'coach',
+      'physio',
+    ]);
+    expect(result.current.roleOptions.find((option) => option.value === 'physio')?.label).toBe(
+      'Physiotherapist',
+    );
+    expect(result.current.roleSelectDisabled).toBe(false);
+    expect(result.current.roleOptionsNotice).toBeNull();
+  });
+
+  it('surfaces the selected role server description as the privilege hint', async () => {
+    const { result } = renderInvite();
+    act(() => {
+      result.current.onOpen();
+    });
+    await waitFor(() => {
+      expect(result.current.roleOptions).toHaveLength(3);
+    });
+
+    act(() => {
+      result.current.onRoleChange('coach');
+    });
+
+    expect(result.current.roleHint).toBe('Manages practices and squads.');
+  });
+
+  it('disables the select with an inline note while the catalog loads', () => {
+    vi.mocked(listAssignableRoles).mockReturnValue(new Promise(() => undefined));
+    const { result } = renderInvite();
+    act(() => {
+      result.current.onOpen();
+    });
+
+    expect(result.current.roleSelectDisabled).toBe(true);
+    expect(result.current.roleOptionsNotice).not.toBeNull();
+  });
+
+  it('states a failed catalog load instead of a spinner-forever select', async () => {
+    vi.mocked(listAssignableRoles).mockRejectedValue(new Error('boom'));
+    const { result } = renderInvite();
+    act(() => {
+      result.current.onOpen();
+    });
+
+    await waitFor(() => {
+      expect(result.current.roleSelectDisabled).toBe(true);
+      expect(result.current.roleOptionsNotice).toContain('could not be loaded');
+    });
+  });
+
+  it('sends the chosen TEAM role with the invitation and the roster profile', async () => {
     const { result } = renderInvite();
     fillValidForm(result);
+    await waitFor(() => {
+      expect(result.current.roleOptions).toHaveLength(3);
+    });
     act(() => {
-      result.current.onRoleChange('admin');
+      result.current.onRoleChange('coach');
     });
     act(() => {
       result.current.onSubmit();
@@ -123,10 +202,39 @@ describe('useInviteMember', () => {
     await waitFor(() => {
       expect(invitePersonByEmail).toHaveBeenCalledWith('team-1', {
         email: 'recruit@example.com',
-        role: 'admin',
+        teamRole: 'coach',
         profile: { fullName: 'New Recruit', nickname: null, jerseyNumber: null },
       });
     });
+  });
+
+  it('cannot double-fire the invitation from a double tap (P1-7)', async () => {
+    let release: (value: typeof DELIVERY) => void = () => undefined;
+    vi.mocked(invitePersonByEmail).mockReturnValue(
+      new Promise((resolve) => {
+        release = resolve;
+      }),
+    );
+    const { result } = renderInvite();
+    fillValidForm(result);
+    act(() => {
+      result.current.onSubmit();
+    });
+    await waitFor(() => {
+      expect(result.current.isSubmitting).toBe(true);
+    });
+    act(() => {
+      result.current.onSubmit();
+    });
+    act(() => {
+      result.current.onSubmit();
+    });
+
+    release(DELIVERY);
+    await waitFor(() => {
+      expect(result.current.sent).not.toBeNull();
+    });
+    expect(invitePersonByEmail).toHaveBeenCalledTimes(1);
   });
 
   it('reports where the invitation went and offers the accept link as a fallback', async () => {
@@ -135,6 +243,8 @@ describe('useInviteMember', () => {
 
     expect(result.current.sent?.message).toContain('recruit@example.com');
     expect(result.current.sent?.acceptUrl).toBe(DELIVERY.acceptUrl);
+    expect(result.current.sent?.teamValue).toBe('Cairo Natives');
+    expect(result.current.sent?.roleValue).toBe('Coach');
   });
 
   it('copies the accept link and confirms it', async () => {
@@ -193,6 +303,30 @@ describe('useInviteMember', () => {
     expect(result.current.sent).toBeNull();
   });
 
+  it('states a ceiling refusal in privilege terms, never "try again" (P1-8)', async () => {
+    vi.mocked(invitePersonByEmail).mockRejectedValue(
+      new AppError({
+        code: APP_ERROR_CODE.Forbidden,
+        messageKey: 'errors.rbac.escalationDenied',
+      }),
+    );
+    const { result } = renderInvite();
+    await submitAndFail(result);
+
+    expect(result.current.errorMessage).toContain('role above your own');
+    expect(result.current.errorMessage).not.toContain('try again');
+  });
+
+  it('states a missing invite permission plainly on a bare 403 (P1-8)', async () => {
+    vi.mocked(invitePersonByEmail).mockRejectedValue(
+      new AppError({ code: APP_ERROR_CODE.Forbidden }),
+    );
+    const { result } = renderInvite();
+    await submitAndFail(result);
+
+    expect(result.current.errorMessage).toContain('permission to invite');
+  });
+
   it('falls back to the generic failure line for an unmapped error', async () => {
     vi.mocked(invitePersonByEmail).mockRejectedValue(new Error('boom'));
     const { result } = renderInvite();
@@ -204,9 +338,6 @@ describe('useInviteMember', () => {
   it('clears everything when the form is dismissed', async () => {
     const { result } = renderInvite();
     fillValidForm(result);
-    act(() => {
-      result.current.onOpen();
-    });
     act(() => {
       result.current.onClose();
     });

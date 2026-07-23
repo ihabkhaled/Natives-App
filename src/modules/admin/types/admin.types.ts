@@ -9,6 +9,23 @@ import type {
   VenueStatus,
 } from '../constants/admin.constants';
 
+/** One platform super administrator: an audited privilege, not a directory row. */
+export interface SuperAdmin {
+  readonly assignmentId: string;
+  readonly userId: string;
+  readonly email: string;
+  readonly displayName: string | null;
+  /** Grant instant in UTC (ISO 8601). */
+  readonly effectiveFromIso: string;
+  /** Null for the seeded bootstrap administrator. */
+  readonly grantedBy: string | null;
+}
+
+export interface SuperAdminRoster {
+  readonly items: readonly SuperAdmin[];
+  readonly total: number;
+}
+
 export interface EffectiveSetting {
   readonly settingKey: SettingKey;
   readonly effectiveFrom: string | null;

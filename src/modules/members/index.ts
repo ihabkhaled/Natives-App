@@ -2,8 +2,6 @@ export {
   LIFECYCLE_ACTION,
   MEMBER_AUDIENCE,
   MEMBER_ROLE,
-  MEMBER_ROLE_LABEL_KEYS,
-  MEMBER_ROLE_OPTIONS,
   MEMBERSHIP_STATUS,
   type AgeClassification,
   type LifecycleAction,
@@ -13,6 +11,7 @@ export {
   type PlayerGender,
 } from './constants/members.constants';
 export { resolveRoleErrorKey } from './helpers/role-error.helper';
+export { resolveRoleLabel } from './helpers/role-label.helper';
 export { buildMemberRolesQueryOptions } from './queries/member-roles.query';
 export { buildMembersDirectoryQueryOptions } from './queries/members-directory.query';
 export { membersQueryKeys } from './queries/members.keys';

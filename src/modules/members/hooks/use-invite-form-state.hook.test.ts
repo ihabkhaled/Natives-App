@@ -15,7 +15,7 @@ describe('useInviteFormState', () => {
       isOpen: false,
       isSubmitted: false,
       email: '',
-      role: 'user',
+      role: 'member',
       fullName: '',
       nickname: '',
       jersey: '',
@@ -62,7 +62,7 @@ describe('useInviteFormState', () => {
       isOpen: false,
       isSubmitted: false,
       email: '',
-      role: 'user',
+      role: 'member',
     });
   });
 

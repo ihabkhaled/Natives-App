@@ -35,7 +35,17 @@ export function MemberInviteFields(props: MemberInviteFieldsProps): React.JSX.El
         value={invite.role}
         options={invite.roleOptions}
         onChange={invite.onRoleChange}
+        disabled={invite.roleSelectDisabled}
       />
+      {invite.roleOptionsNotice === null ? null : (
+        <IonNote
+          data-testid={TEST_IDS.memberInviteRoleNotice}
+          role="status"
+          className="app-member-form__hint"
+        >
+          {invite.roleOptionsNotice}
+        </IonNote>
+      )}
       <IonNote className="app-member-form__hint">{invite.roleHint}</IonNote>
 
       <IonText>

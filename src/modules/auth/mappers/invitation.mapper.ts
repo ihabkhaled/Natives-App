@@ -11,6 +11,8 @@ export function mapInvitationDtoToDetails(
     email: dto.email.toLowerCase(),
     role: dto.role,
     inviterName: dto.inviterName === null ? null : dto.inviterName.trim(),
+    teamRole: dto.teamRole,
+    teamName: dto.teamName === null ? null : dto.teamName.trim(),
     expiresAtIso: dto.expiresAt,
   };
 }

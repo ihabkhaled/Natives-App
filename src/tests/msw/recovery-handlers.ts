@@ -94,6 +94,9 @@ export const recoveryHandlers = [
       email: MOCK_INVITATION.email,
       role: MOCK_INVITATION.role,
       inviterName: MOCK_INVITATION.inviterName,
+      teamRole: MOCK_INVITATION.teamRole,
+      teamId: MOCK_INVITATION.teamId,
+      teamName: MOCK_INVITATION.teamName,
       expiresAt: MOCK_INVITATION.expiresAt,
     });
   }),

@@ -9,6 +9,7 @@ import { listJobHealth } from '../services/list-job-health.service';
 import { listPointsRules } from '../services/list-points-rules.service';
 import { listSeasons } from '../services/list-seasons.service';
 import { listSettingVersions } from '../services/list-setting-versions.service';
+import { listSuperAdmins } from '../services/list-super-admins.service';
 import { listVenues } from '../services/list-venues.service';
 import { adminQueryKeys } from './admin.keys';
 
@@ -74,9 +75,9 @@ export function buildOutboxMetricsQueryOptions(enabled: boolean) {
 }
 
 /**
- * Backend-pending (404 in production): the request is suppressed by the
- * capability-honesty marker regardless of grants, so the panel shows its
- * designed "not available yet" state instead of a retried 404 loop.
+ * Live since contract 1.2.0. The capability-honesty marker stays in the
+ * predicate so a future regression can be flipped off without dismantling
+ * the designed "not available yet" machinery.
  */
 export function buildDeadLettersQueryOptions(enabled: boolean) {
   return {
@@ -86,12 +87,21 @@ export function buildDeadLettersQueryOptions(enabled: boolean) {
   };
 }
 
-/** Backend-pending (404 in production): suppressed like the dead letters. */
+/** Live since contract 1.2.0; statuses derive from real recorded runs. */
 export function buildJobHealthQueryOptions(enabled: boolean) {
   return {
     queryKey: adminQueryKeys.jobHealth(),
     queryFn: () => listJobHealth(),
     enabled: enabled && !ADMIN_BACKEND_PENDING.jobHealth,
+  };
+}
+
+/** The super-admin roster; enabled only for a global platform administrator. */
+export function buildSuperAdminsQueryOptions(enabled: boolean) {
+  return {
+    queryKey: adminQueryKeys.platformAdmins(),
+    queryFn: () => listSuperAdmins(),
+    enabled,
   };
 }
 

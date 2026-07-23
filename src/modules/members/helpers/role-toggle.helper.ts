@@ -1,11 +1,8 @@
 import type { TranslateParams } from '@/packages/i18n';
 
-import {
-  MEMBER_ROLE_LABEL_KEYS,
-  MEMBER_ROLE_OPTIONS,
-  type MemberRole,
-} from '../constants/members.constants';
+import type { MemberRole } from '../constants/members.constants';
 import type { RoleToggleView } from '../types/members-view.types';
+import { resolveRoleLabel } from './role-label.helper';
 
 type Translate = (key: string, params?: TranslateParams) => string;
 
@@ -29,15 +26,21 @@ export function rolesDiffer(a: readonly MemberRole[], b: readonly MemberRole[]):
   return a.some((role) => !b.includes(role));
 }
 
-/** Build the ordered, translated role toggles with ceiling-aware disabling. */
+/**
+ * Build the ordered, translated role toggles from the SERVER's union of
+ * assignable ∪ held roles — never from a client-side catalog. A role the
+ * member holds above the actor's ceiling still renders (checked, disabled),
+ * and an unseen future slug renders through the label fallback chain.
+ */
 export function buildRoleToggles(
   t: Translate,
   selected: readonly MemberRole[],
   assignable: readonly MemberRole[],
 ): readonly RoleToggleView[] {
-  return MEMBER_ROLE_OPTIONS.map((role) => ({
+  const held = selected.filter((role) => !assignable.includes(role));
+  return [...assignable, ...held].map((role) => ({
     role,
-    label: t(MEMBER_ROLE_LABEL_KEYS[role]),
+    label: resolveRoleLabel(t, role),
     checked: selected.includes(role),
     disabled: !assignable.includes(role),
   }));

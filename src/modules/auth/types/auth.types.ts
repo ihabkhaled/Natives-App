@@ -83,6 +83,10 @@ export interface InvitationDetails {
   readonly email: string;
   readonly role: InvitationRole;
   readonly inviterName: string | null;
+  /** Team-role slug acceptance grants; open server vocabulary. */
+  readonly teamRole: string;
+  /** The invited team's display name, or null for a platform-scoped invite. */
+  readonly teamName: string | null;
   /** Expiry instant in UTC (ISO 8601). */
   readonly expiresAtIso: string;
 }

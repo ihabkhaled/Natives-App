@@ -16,4 +16,6 @@ export const membersQueryKeys = {
     [...membersQueryKeys.member(teamId, membershipId), 'roles'] as const,
   avatar: (teamId: string, membershipId: string) =>
     [...membersQueryKeys.member(teamId, membershipId), 'avatar'] as const,
+  assignableRoles: (teamId: string) =>
+    [...membersQueryKeys.team(teamId), 'assignable-roles'] as const,
 };

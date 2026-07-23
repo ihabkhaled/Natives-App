@@ -18,6 +18,7 @@ function context(overrides: Partial<AdminContextView> = {}): AdminContextView {
     canManageRules: false,
     canReadAudit: false,
     canManageOutbox: false,
+    canManagePlatform: false,
     isLoading: false,
     ...overrides,
   };
@@ -55,6 +56,19 @@ describe('buildHubCards', () => {
     ).toEqual(['operations']);
   });
 
+  it('shows the platform card ONLY to a global platform administrator', () => {
+    expect(
+      buildHubCards(t, context({ canManagePlatform: true }), vi.fn()).map((card) => card.key),
+    ).toEqual(['platform']);
+    expect(
+      buildHubCards(
+        t,
+        context({ canReadSettings: true, canManageRoles: true, canReadAudit: true }),
+        vi.fn(),
+      ).map((card) => card.key),
+    ).not.toContain('platform');
+  });
+
   it('shows every card to a fully granted administrator, in a stable order', () => {
     const cards = buildHubCards(
       t,
@@ -63,11 +77,18 @@ describe('buildHubCards', () => {
         canManageRoles: true,
         canManageRules: true,
         canReadAudit: true,
+        canManagePlatform: true,
       }),
       vi.fn(),
     );
 
-    expect(cards.map((card) => card.key)).toEqual(['settings', 'roles', 'rules', 'operations']);
+    expect(cards.map((card) => card.key)).toEqual([
+      'settings',
+      'roles',
+      'rules',
+      'operations',
+      'platform',
+    ]);
   });
 
   it('opens the destination its guard protects', () => {

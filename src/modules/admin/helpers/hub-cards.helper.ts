@@ -47,6 +47,13 @@ const CARD_RULES: readonly CardRule[] = [
     noteKey: I18N_KEYS.adminConsole.cardOperationsNote,
     permitted: (context) => context.canReadAudit || context.canManageOutbox,
   },
+  {
+    key: 'platform',
+    path: APP_PATHS.adminPlatform,
+    titleKey: I18N_KEYS.adminConsole.cardPlatform,
+    noteKey: I18N_KEYS.adminConsole.cardPlatformNote,
+    permitted: (context) => context.canManagePlatform,
+  },
 ];
 
 export function buildHubCards(

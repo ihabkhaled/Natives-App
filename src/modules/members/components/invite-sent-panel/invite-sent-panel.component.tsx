@@ -40,6 +40,10 @@ export function InviteSentPanel(props: InviteSentPanelProps): React.JSX.Element 
       </div>
 
       <dl className="app-invite-sent__facts">
+        <dt>{view.teamLabel}</dt>
+        <dd data-testid={TEST_IDS.memberInviteSentTeam}>{view.teamValue}</dd>
+        <dt>{view.roleLabel}</dt>
+        <dd data-testid={TEST_IDS.memberInviteSentRole}>{view.roleValue}</dd>
         <dt>{view.expiresLabel}</dt>
         <dd>{view.expiresValue}</dd>
       </dl>

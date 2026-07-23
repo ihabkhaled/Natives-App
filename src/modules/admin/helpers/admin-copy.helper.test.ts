@@ -17,6 +17,7 @@ const CONTEXT: AdminContextView = {
   canManageRules: true,
   canReadAudit: true,
   canManageOutbox: true,
+  canManagePlatform: true,
   isLoading: false,
 };
 

@@ -14,6 +14,9 @@ const DTO = {
   email: 'Invitee@Example.com',
   role: 'user',
   inviterName: null,
+  teamRole: 'coach',
+  teamId: 'team-natives',
+  teamName: 'Cairo Natives',
   expiresAt: '2026-08-01T12:00:00.000Z',
 };
 
@@ -38,6 +41,8 @@ describe('getInvitation', () => {
       email: 'invitee@example.com',
       role: 'user',
       inviterName: null,
+      teamRole: 'coach',
+      teamName: 'Cairo Natives',
       expiresAtIso: '2026-08-01T12:00:00.000Z',
     });
   });

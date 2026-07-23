@@ -12,6 +12,8 @@ export interface AdminContextView {
   readonly canManageRules: boolean;
   readonly canReadAudit: boolean;
   readonly canManageOutbox: boolean;
+  /** Global `platform.admin` — only a teamless grant ever satisfies it. */
+  readonly canManagePlatform: boolean;
   readonly isLoading: boolean;
 }
 
@@ -190,6 +192,43 @@ export interface AdminRulesView extends ScreenCopy {
   readonly onSelect: (ruleId: string) => void;
 }
 
+/** One super administrator row: identity facts plus the guarded revoke. */
+export interface SuperAdminRowView {
+  readonly userId: string;
+  readonly name: string;
+  readonly email: string;
+  readonly sinceLabel: string;
+  readonly grantedByLabel: string;
+  readonly revokeLabel: string;
+  readonly canRevoke: boolean;
+  readonly onRevoke: () => void;
+}
+
+export interface AdminPlatformView extends ScreenCopy {
+  readonly title: string;
+  readonly subtitle: string;
+  readonly status: AsyncViewStatus;
+  readonly rosterHeading: string;
+  readonly rosterIntro: string;
+  readonly auditNotice: string;
+  readonly rows: readonly SuperAdminRowView[];
+  readonly promoteHeading: string;
+  readonly promoteIntro: string;
+  readonly userIdLabel: string;
+  readonly userIdPlaceholder: string;
+  readonly userIdValue: string;
+  readonly onUserIdChange: (value: string) => void;
+  readonly reasonLabel: string;
+  readonly reasonPlaceholder: string;
+  readonly reasonValue: string;
+  readonly onReasonChange: (value: string) => void;
+  readonly validationMessage: string | null;
+  readonly promoteLabel: string;
+  readonly isPromoting: boolean;
+  readonly canPromote: boolean;
+  readonly onPromote: () => void;
+}
+
 export interface DeadLetterRowView {
   readonly eventId: string;
   readonly eventType: string;
@@ -212,11 +251,10 @@ export interface AdminOperationsView extends ScreenCopy {
   readonly deadLetterHeading: string;
   readonly deadLetterIntro: string;
   readonly deadLetterNotice: string;
-  readonly deadLetterPendingNotice: string;
+  readonly deadLetterEmptyLabel: string;
   readonly deadLetterRows: readonly DeadLetterRowView[];
   readonly jobHeading: string;
   readonly jobIntro: string;
-  readonly jobPendingNotice: string;
   readonly jobRows: readonly AdminFactRowView[];
   readonly auditHeading: string;
   readonly auditIntro: string;

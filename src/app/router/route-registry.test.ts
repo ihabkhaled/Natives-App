@@ -55,6 +55,7 @@ describe('getAppRouteDefinitions', () => {
       APP_PATHS.adminRoles,
       APP_PATHS.adminRules,
       APP_PATHS.adminOperations,
+      APP_PATHS.adminPlatform,
       APP_PATHS.admin,
       APP_PATHS.adminTeams,
       APP_PATHS.adminSeasons,

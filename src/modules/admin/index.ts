@@ -25,6 +25,10 @@ export {
   outboxMetricsResponseSchema,
   replayResponseSchema,
 } from './schemas/operations.schema';
+export {
+  superAdminEntryResponseSchema,
+  superAdminListResponseSchema,
+} from './schemas/platform-admins.schema';
 export { ruleListResponseSchema, simulationResponseSchema } from './schemas/rules.schema';
 export {
   catalogEntryListResponseSchema,

@@ -9,10 +9,7 @@ afterEach(() => {
   vi.clearAllMocks();
 });
 
-/**
- * Backend-pending use case: kept ready (and pinned) for the P1 re-light while
- * the capability-honesty marker keeps the screen from calling it.
- */
+/** Live since contract 1.2.0: statuses derive from real recorded runs. */
 describe('listJobHealth', () => {
   it('maps the wire items to job health rows', async () => {
     vi.mocked(requestJobHealth).mockResolvedValue({

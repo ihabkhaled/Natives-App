@@ -27,6 +27,7 @@ export function useAdminContext(): AdminContextView {
       granted.includes(PERMISSIONS.calculationRuleManage),
     canReadAudit: granted.includes(PERMISSIONS.auditRead),
     canManageOutbox: granted.includes(PERMISSIONS.outboxManage),
+    canManagePlatform: granted.includes(PERMISSIONS.platformAdmin),
     isLoading: scope.isLoading || permissions.isLoading,
   };
 }

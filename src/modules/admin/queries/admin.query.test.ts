@@ -11,25 +11,25 @@ afterEach(() => {
   vi.clearAllMocks();
 });
 
-describe('backend-pending operations query options', () => {
-  it('suppresses the backend-pending reads regardless of grants', () => {
-    // Capability honesty (recovery audit P1-4): `admin/outbox/dead-letters`
-    // and `admin/jobs/health` 404 in production, so the requests must not
-    // fire even WITH the outbox grant. Flipping the ADMIN_BACKEND_PENDING
-    // marker is the single switch that lights these panels up again.
-    expect(buildDeadLettersQueryOptions(true).enabled).toBe(false);
-    expect(buildJobHealthQueryOptions(true).enabled).toBe(false);
+describe('operations query options', () => {
+  it('issues both reads for a granted principal now the backend serves them', () => {
+    // Contract 1.2.0 shipped `admin/outbox/dead-letters` and
+    // `admin/jobs/health` for real, so the capability-honesty markers are OFF
+    // and only the grant decides. The marker machinery stays wired for the
+    // next latent surface.
+    expect(buildDeadLettersQueryOptions(true).enabled).toBe(true);
+    expect(buildJobHealthQueryOptions(true).enabled).toBe(true);
     expect(buildDeadLettersQueryOptions(false).enabled).toBe(false);
     expect(buildJobHealthQueryOptions(false).enabled).toBe(false);
   });
 
-  it('keeps the dead-letter use case wired for the P1 re-light', () => {
+  it('wires the dead-letter use case behind the live read', () => {
     void buildDeadLettersQueryOptions(true).queryFn();
 
     expect(listDeadLetters).toHaveBeenCalledOnce();
   });
 
-  it('keeps the job-health use case wired for the P1 re-light', () => {
+  it('wires the job-health use case behind the live read', () => {
     void buildJobHealthQueryOptions(true).queryFn();
 
     expect(listJobHealth).toHaveBeenCalledOnce();

@@ -4,9 +4,13 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { APP_ERROR_CODE } from '@/shared/errors';
 import { AppError } from '@/shared/errors/app.errors';
 
-import { renderHookWithProviders } from '../../../../tests/setup/render-with-providers.helper';
+import {
+  createTestQueryClient,
+  renderHookWithProviders,
+} from '../../../../tests/setup/render-with-providers.helper';
 import { buildAuthUser } from '../factories/auth.factory';
 import type { AuthSession } from '../mappers/auth.mapper';
+import { authQueryKeys } from '../queries/auth.keys';
 import { acceptInvitation } from '../services/accept-invitation.service';
 import { useSessionStore } from '../store/session.store';
 import { SESSION_STATUS } from '../types/auth.types';
@@ -14,7 +18,7 @@ import { useAcceptInvitationMutation } from './use-accept-invitation-mutation.ho
 
 vi.mock('../services/accept-invitation.service', () => ({ acceptInvitation: vi.fn() }));
 
-const INPUT = { token: 'invite-1', password: 'Ranger#Strong1234' };
+const INPUT = { token: 'invite-1', password: 'Ranger#Strong1234', displayName: 'Omar' };
 const SESSION: AuthSession = {
   user: buildAuthUser(),
   tokens: { accessToken: 'access-1', refreshToken: 'refresh-1' },
@@ -40,7 +44,32 @@ describe('useAcceptInvitationMutation', () => {
     await waitFor(() => {
       expect(useSessionStore.getState().status).toBe(SESSION_STATUS.Authenticated);
     });
-    expect(acceptInvitation).toHaveBeenCalledExactlyOnceWith(INPUT.token, INPUT.password);
+    expect(acceptInvitation).toHaveBeenCalledExactlyOnceWith(
+      INPUT.token,
+      INPUT.password,
+      INPUT.displayName,
+    );
+  });
+
+  it('invalidates the user and permission caches so the new role nav renders', async () => {
+    vi.mocked(acceptInvitation).mockResolvedValue(SESSION);
+
+    const queryClient = createTestQueryClient();
+    const invalidateSpy = vi.spyOn(queryClient, 'invalidateQueries');
+    const { result } = renderHookWithProviders(() => useAcceptInvitationMutation(), {
+      queryClient,
+    });
+    act(() => {
+      result.current.accept(INPUT);
+    });
+
+    await waitFor(() => {
+      expect(useSessionStore.getState().status).toBe(SESSION_STATUS.Authenticated);
+    });
+    expect(invalidateSpy).toHaveBeenCalledWith({ queryKey: authQueryKeys.currentUser() });
+    expect(invalidateSpy).toHaveBeenCalledWith({
+      queryKey: authQueryKeys.effectivePermissionsRoot(),
+    });
   });
 
   it('surfaces a link-invalid failure and leaves the session anonymous', async () => {

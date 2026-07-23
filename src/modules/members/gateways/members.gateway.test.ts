@@ -4,10 +4,12 @@ import { getAppHttpClient } from '@/packages/http';
 
 import {
   requestAddAlias,
+  requestAssignableRoles,
   requestAssignRoles,
   requestAttachAvatar,
   requestAvatarAccess,
   requestAvatarTicket,
+  requestCreateInvitation,
   requestInviteMember,
   requestMember,
   requestMemberAliases,
@@ -52,6 +54,18 @@ describe('members.gateway', () => {
     const [path, body] = post.mock.calls[0] as [string, { profile: object }];
     expect(path).toBe('/teams/t/members/invite');
     expect(body.profile).toEqual({ fullName: 'Omar' });
+  });
+
+  it('creates the invitation on the TEAM-scoped route with the team role', async () => {
+    await requestCreateInvitation('team/1', { email: 'omar@example.com', teamRole: 'coach' });
+    const [path, body] = post.mock.calls[0] as [string, unknown];
+    expect(path).toBe('/teams/team%2F1/invitations');
+    expect(body).toEqual({ email: 'omar@example.com', teamRole: 'coach' });
+  });
+
+  it('reads the assignable-roles catalog from the RBAC team route', async () => {
+    await requestAssignableRoles('team/1');
+    expect(get.mock.calls[0]?.[0]).toBe('/rbac/teams/team%2F1/assignable-roles');
   });
 
   it('updates a profile with expectedVersion and present fields', async () => {
