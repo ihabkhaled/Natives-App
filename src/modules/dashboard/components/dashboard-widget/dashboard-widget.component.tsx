@@ -1,5 +1,6 @@
 import { IonCard, IonCardContent, IonCardHeader, IonCardTitle, IonNote } from '@/packages/ionic';
-import { EmptyState, ErrorState } from '@/shared/ui';
+import { TEST_IDS } from '@/shared/config';
+import { AppButton, EmptyState, ErrorState } from '@/shared/ui';
 
 import { DashboardWidgetBody } from '../dashboard-widget-body';
 import type { DashboardWidgetProps } from './dashboard-widget.types';
@@ -11,6 +12,7 @@ import type { DashboardWidgetProps } from './dashboard-widget.types';
  */
 export function DashboardWidget(props: DashboardWidgetProps): React.JSX.Element {
   const { widget } = props;
+  const link = widget.link;
   return (
     <IonCard data-testid={widget.testId} className="m-0">
       <IonCardHeader>
@@ -36,6 +38,18 @@ export function DashboardWidget(props: DashboardWidgetProps): React.JSX.Element 
         ) : null}
         {widget.partialLabel === null ? null : (
           <IonNote className="mt-2 block">{widget.partialLabel}</IonNote>
+        )}
+        {link === null ? null : (
+          <footer className="app-dashboard-widget__footer mt-3 flex justify-end">
+            <AppButton
+              label={link.label}
+              tone="ghost"
+              testId={`${TEST_IDS.dashboardWidgetLink}-${widget.kind}`}
+              onClick={() => {
+                props.onOpenLink(link.path);
+              }}
+            />
+          </footer>
         )}
       </IonCardContent>
     </IonCard>

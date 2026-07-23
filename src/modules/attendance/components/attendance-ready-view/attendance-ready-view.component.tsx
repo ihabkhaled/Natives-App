@@ -82,6 +82,7 @@ export function AttendanceReadyView(props: AttendanceReadyViewProps): React.JSX.
         isSubmitting={props.isSubmitting}
         finalizeLabel={props.finalizeLabel}
         canFinalize={props.canFinalize}
+        showFinalize={props.showFinalize}
         isFinalizing={props.isFinalizing}
         onRetryQueue={props.onRetryQueue}
         onSubmit={props.onSubmit}

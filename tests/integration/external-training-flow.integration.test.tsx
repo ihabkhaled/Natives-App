@@ -396,6 +396,50 @@ describe('external training flow (real client + MSW)', () => {
   });
 });
 
+describe('buddy confirmations inside the training workspace', () => {
+  it(
+    'confirms a pending credit and flips the row to its answered chip',
+    { timeout: 15_000 },
+    async () => {
+      await signInAs(MOCK_PERSONA_EMAILS.member);
+      renderWorkspace();
+
+      const confirm = await screen.findByTestId(TEST_IDS.trainingBuddyConfirm, {}, WAIT);
+      const section = screen.getByTestId(TEST_IDS.trainingBuddySection);
+      expect(within(section).getByText('1 pending')).toBeVisible();
+
+      fireEvent.click(confirm);
+
+      await waitFor(() => {
+        expect(
+          within(screen.getByTestId(TEST_IDS.trainingBuddySection)).queryByTestId(
+            TEST_IDS.trainingBuddyConfirm,
+          ),
+        ).not.toBeInTheDocument();
+      }, WAIT);
+      expect(
+        within(screen.getByTestId(TEST_IDS.trainingBuddySection)).getAllByText('Confirmed').length,
+      ).toBeGreaterThan(0);
+    },
+  );
+
+  it('declines a pending credit and drops the pending badge', { timeout: 15_000 }, async () => {
+    await signInAs(MOCK_PERSONA_EMAILS.member);
+    renderWorkspace();
+
+    fireEvent.click(await screen.findByTestId(TEST_IDS.trainingBuddyDecline, {}, WAIT));
+
+    await waitFor(() => {
+      expect(
+        within(screen.getByTestId(TEST_IDS.trainingBuddySection)).queryByText('1 pending'),
+      ).not.toBeInTheDocument();
+    }, WAIT);
+    expect(
+      within(screen.getByTestId(TEST_IDS.trainingBuddySection)).getAllByText('Declined').length,
+    ).toBeGreaterThan(0);
+  });
+});
+
 describe('external training detail without a submission id', () => {
   it('waits rather than requesting a claim that was never identified', async () => {
     await signInAs(MOCK_PERSONA_EMAILS.member);

@@ -14,6 +14,7 @@ export function DashboardWidgetList(props: DashboardWidgetListProps): React.JSX.
           widget={widget}
           retryLabel={props.retryLabel}
           onRetry={props.onRetry}
+          onOpenLink={props.onOpenLink}
         />
       ))}
     </div>

@@ -3,6 +3,8 @@ import type { SchemaOutput } from '@/packages/schema';
 
 import {
   activityTypesPath,
+  buddyResponsePath,
+  myActivityBuddiesPath,
   reviewDecisionPath,
   reviewDetailPath,
   reviewQueuePath,
@@ -15,6 +17,8 @@ import {
 import { SUBMISSION_LIMITS } from '../constants/training.constants';
 import {
   activityTypeListResponseSchema,
+  buddyListResponseSchema,
+  buddyResponseSchema,
   evidenceListResponseSchema,
   reviewDetailResponseSchema,
   reviewQueueResponseSchema,
@@ -24,6 +28,8 @@ import {
 import type { ReviewDecisionCommand, SubmissionDraft } from '../types/training.types';
 
 type TypeListDto = SchemaOutput<typeof activityTypeListResponseSchema>;
+type BuddyListDto = SchemaOutput<typeof buddyListResponseSchema>;
+type BuddyDto = SchemaOutput<typeof buddyResponseSchema>;
 type SubmissionListDto = SchemaOutput<typeof submissionListResponseSchema>;
 type SubmissionDetailDto = SchemaOutput<typeof submissionDetailResponseSchema>;
 type EvidenceListDto = SchemaOutput<typeof evidenceListResponseSchema>;
@@ -114,6 +120,26 @@ export function requestSubmissionEvidence(
   return getAppHttpClient().get(
     submissionEvidencePath(teamId, submissionId),
     evidenceListResponseSchema,
+  );
+}
+
+/** One bounded page of buddy credits naming the caller. */
+export function requestMyBuddies(teamId: string): Promise<BuddyListDto> {
+  return getAppHttpClient().get(myActivityBuddiesPath(teamId), buddyListResponseSchema, {
+    params: { limit: SUBMISSION_LIMITS.pageSize, offset: 0 },
+  });
+}
+
+/** Confirm or decline one buddy credit; the body is empty by contract. */
+export function requestBuddyResponse(
+  teamId: string,
+  buddyId: string,
+  intent: 'confirm' | 'decline',
+): Promise<BuddyDto> {
+  return getAppHttpClient().post(
+    buddyResponsePath(teamId, buddyId, intent),
+    {},
+    buddyResponseSchema,
   );
 }
 

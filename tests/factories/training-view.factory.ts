@@ -1,6 +1,7 @@
 import { vi } from 'vitest';
 
 import type {
+  BuddySectionView,
   ComposerCallbacks,
   ReviewDetailPanelView,
   TrainingBuddyEditorView,
@@ -146,6 +147,36 @@ export function buildComposerView(
   };
 }
 
+export function buildBuddySectionView(overrides: Partial<BuddySectionView> = {}): BuddySectionView {
+  return {
+    title: 'Buddy confirmations',
+    intro: 'Confirm only what you actually did together.',
+    countBadge: '1 pending',
+    emptyLabel: 'No pending buddy credits.',
+    unavailableMessage: null,
+    isLoading: false,
+    loadingLabel: 'Loading…',
+    confirmLabel: 'Confirm',
+    declineLabel: 'Decline',
+    items: [
+      {
+        id: 'buddy-1',
+        claimLabel: 'Claim 000004',
+        dateLabel: '10 Jul 2026',
+        statusLabel: 'Pending',
+        statusTone: 'warning',
+        respondedLabel: null,
+        isPending: true,
+        isConfirming: false,
+        isDeclining: false,
+      },
+    ],
+    onConfirm: vi.fn(),
+    onDecline: vi.fn(),
+    ...overrides,
+  };
+}
+
 export function buildTrainingWorkspaceView(
   overrides: Partial<TrainingWorkspaceView> = {},
 ): TrainingWorkspaceView {
@@ -155,6 +186,7 @@ export function buildTrainingWorkspaceView(
     subtitle: 'Log the work you do away from team practice.',
     status: 'ready',
     composer: buildComposerView(),
+    buddies: buildBuddySectionView(),
     listLabel: 'External training',
     countLabel: '1 of 1 submissions',
     statusFilterLabel: 'Status',

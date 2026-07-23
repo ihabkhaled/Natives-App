@@ -47,6 +47,10 @@ containers/dashboard.container.tsx          composition
 - `null` means "not evaluated" and renders muted, never as zero.
 - Permission-aware: a widget appears only when the effective session holds its permission. The
   backend re-authorizes every read regardless of what the shell shows.
+- Deep links: a widget may declare a footer link into its owning screen (member-attendance →
+  `/my-attendance`, member-feedback → `/performance/feedback`, coach-attention → `/practices`).
+  The link renders only when the viewer holds the TARGET route's permission; widget bodies stay
+  non-clickable.
 - Freshness-aware: the header shows the projection time and each card its own `as of`.
 - Every widget carries an accessible presentation; breakdowns are real tables with a caption and
   row headers (the tabular alternative to a chart).

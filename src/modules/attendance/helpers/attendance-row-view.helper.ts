@@ -29,6 +29,12 @@ export interface BuildAttendanceRowsParams {
   readonly sheet: AttendanceSheet | undefined;
   readonly editor: AttendanceEditorView;
   readonly queue: readonly AttendanceQueuedOperation[];
+  /**
+   * Whether the effective session holds `attendance.correct`. Without it a
+   * locked sheet renders read-only instead of offering a correction that the
+   * backend will refuse with a 403.
+   */
+  readonly hasCorrectGrant: boolean;
 }
 
 interface BuildRowContext {
@@ -75,6 +81,19 @@ function canSaveCorrection(draft: AttendanceDraft): boolean {
   return draft.status !== null && draft.correctionReason.trim().length > 0;
 }
 
+/** Lock posture of one row: locked sheets edit only through the correct grant. */
+function lockFlags(
+  sheet: AttendanceSheet | undefined,
+  hasCorrectGrant: boolean,
+): Pick<AttendanceRosterRowView, 'isLocked' | 'showCorrectionEditor' | 'isReadOnly'> {
+  const isLocked = sheet?.state !== ATTENDANCE_SHEET_STATE.open;
+  return {
+    isLocked,
+    showCorrectionEditor: isLocked && hasCorrectGrant,
+    isReadOnly: isLocked && !hasCorrectGrant,
+  };
+}
+
 function buildRow(
   context: BuildRowContext,
   entry: AttendanceRosterEntry,
@@ -87,6 +106,7 @@ function buildRow(
   const isHistorical = entry.userId === null;
   const label = playerLabel(t, isHistorical, index);
   return {
+    ...lockFlags(sheet, params.hasCorrectGrant),
     membershipId: entry.membershipId,
     playerLabel: label,
     memberIdentifierLabel: t(I18N_KEYS.attendance.memberIdentifier, {
@@ -115,7 +135,6 @@ function buildRow(
     correctionReasonLabel: t(I18N_KEYS.attendance.correctionReasonLabel),
     correctionReasonPlaceholder: t(I18N_KEYS.attendance.correctionReasonPlaceholder),
     canSaveCorrection: canSaveCorrection(draft),
-    isLocked: sheet?.state !== ATTENDANCE_SHEET_STATE.open,
     historyLabel: t(I18N_KEYS.attendance.history),
     saveCorrectionLabel: t(I18N_KEYS.attendance.saveCorrection),
   };

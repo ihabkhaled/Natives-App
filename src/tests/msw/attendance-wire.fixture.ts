@@ -1,9 +1,11 @@
 import type {
   attendanceHistoryResponseSchema,
   attendanceRecordResponseSchema,
+  attendanceSelfRecordSchema,
   attendanceSheetResponseSchema,
   attendanceStatusResponseSchema,
   bulkAttendanceResponseSchema,
+  participationResponseSchema,
 } from '@/modules/attendance';
 import type { SchemaOutput } from '@/packages/schema';
 
@@ -13,6 +15,8 @@ type RecordDto = SchemaOutput<typeof attendanceRecordResponseSchema>;
 type BulkDto = SchemaOutput<typeof bulkAttendanceResponseSchema>;
 type StatusDto = SchemaOutput<typeof attendanceStatusResponseSchema>;
 type HistoryDto = SchemaOutput<typeof attendanceHistoryResponseSchema>;
+type SelfRecordDto = SchemaOutput<typeof attendanceSelfRecordSchema>;
+type ParticipationDto = SchemaOutput<typeof participationResponseSchema>;
 
 const RECORDED_AT = '2026-07-26T15:05:00.000Z';
 
@@ -75,6 +79,49 @@ export function makeStatusDto(overrides: Partial<StatusDto> = {}): StatusDto {
     finalizedAt: '2026-07-26T17:10:00.000Z',
     recordCount: 4,
     version: 5,
+    ...overrides,
+  };
+}
+
+export function makeSelfRecordDto(overrides: Partial<SelfRecordDto> = {}): SelfRecordDto {
+  return {
+    sessionId: 'sess-1',
+    membershipId: 'membership-natives-1',
+    status: null,
+    checkInAt: null,
+    checkOutAt: null,
+    latenessMinutes: null,
+    excuseCategory: null,
+    source: null,
+    recordedAt: null,
+    version: null,
+    ...overrides,
+  };
+}
+
+export function makeParticipationDto(overrides: Partial<ParticipationDto> = {}): ParticipationDto {
+  return {
+    membershipId: 'membership-natives-1',
+    seasonId: null,
+    eligibleSessions: 12,
+    excludedSessions: 1,
+    denominator: 11,
+    attended: 10,
+    onTime: 8,
+    late: 2,
+    excused: 1,
+    injured: 0,
+    absent: 1,
+    remoteApproved: 0,
+    otherApproved: 0,
+    attendanceRate: 0.9090909090909091,
+    attendanceRatePercent: 90.9,
+    weightedPresentPoints: 9.5,
+    latePenaltyPoints: 0.5,
+    absentPenaltyPoints: 1,
+    pointsContribution: 8.5,
+    ruleVersion: 'attendance-2026-1',
+    ruleStatus: 'candidate',
     ...overrides,
   };
 }

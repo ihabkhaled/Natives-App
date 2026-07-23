@@ -2,11 +2,14 @@ import { describe, expect, it } from 'vitest';
 
 import {
   attendanceBulkPath,
+  attendanceCheckInPath,
   attendanceCorrectionPath,
   attendanceFinalizePath,
   attendanceHistoryPath,
   attendanceMemberPath,
+  attendanceParticipationSelfPath,
   attendanceRosterPath,
+  attendanceSelfPath,
 } from './attendance-api.constants';
 
 describe('attendance API path builders', () => {
@@ -37,6 +40,21 @@ describe('attendance API path builders', () => {
     );
     expect(attendanceFinalizePath('team-1', 'sess-1')).toBe(
       '/teams/team-1/practice-sessions/sess-1/attendance/finalize',
+    );
+  });
+
+  it('derives the self record and check-in paths without a membership param', () => {
+    expect(attendanceSelfPath('team-1', 'sess-1')).toBe(
+      '/teams/team-1/practice-sessions/sess-1/attendance/me',
+    );
+    expect(attendanceCheckInPath('team-1', 'sess-1')).toBe(
+      '/teams/team-1/practice-sessions/sess-1/attendance/check-in',
+    );
+  });
+
+  it('derives the encoded own-participation path', () => {
+    expect(attendanceParticipationSelfPath('team/1')).toBe(
+      '/teams/team%2F1/attendance/me/participation',
     );
   });
 });

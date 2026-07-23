@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { useEffectivePermissions } from '@/modules/auth';
 import { nowIso } from '@/packages/date';
 import { useAppTranslation } from '@/packages/i18n';
+import { useAppNavigation } from '@/packages/router';
 import { openExternalUrl, useNetworkStatus } from '@/platform';
 import { APP_ERROR_CODE } from '@/shared/errors';
 import { I18N_KEYS } from '@/shared/i18n';
@@ -12,6 +13,7 @@ import { useAppToast } from '@/shared/ui';
 import { type RsvpReason } from '../constants/practice.constants';
 import { buildPracticeSessionScreenView } from '../helpers/practice-session-screen.helper';
 import { useRsvpMutation } from '../mutations/use-rsvp-mutation.hook';
+import { sessionAttendancePath } from '../routes/practice.paths';
 import { usePracticeSessionQuery } from './use-practice-session-query.hook';
 import { usePracticeTeamContext } from './use-practice-team-context.hook';
 import type { PracticeSessionScreenView } from '../types/practice-view.types';
@@ -21,6 +23,7 @@ export function usePracticeSessionDetails(sessionId: string): PracticeSessionScr
   const { t, locale } = useAppTranslation();
   const network = useNetworkStatus();
   const permissions = useEffectivePermissions();
+  const navigation = useAppNavigation();
   const team = usePracticeTeamContext();
   const query = usePracticeSessionQuery(team.teamId, sessionId);
   const toast = useAppToast();
@@ -48,6 +51,7 @@ export function usePracticeSessionDetails(sessionId: string): PracticeSessionScr
     isOffline: !network.isOnline,
     now: nowIso(),
     canRsvpSelf: hasAllPermissions(permissions.permissions, [PERMISSIONS.practicesRsvpSelf]),
+    canRecordAttendance: hasAllPermissions(permissions.permissions, [PERMISSIONS.attendanceMark]),
     selectedReason: reason,
     isSubmitting: mutation.isSubmitting,
     isConflict: mutation.isConflict,
@@ -58,6 +62,9 @@ export function usePracticeSessionDetails(sessionId: string): PracticeSessionScr
     },
     onOpenMap: (url) => {
       void openExternalUrl(url).catch(() => undefined);
+    },
+    onOpenAttendance: () => {
+      navigation.push(sessionAttendancePath(sessionId));
     },
   });
 }

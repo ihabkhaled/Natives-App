@@ -65,12 +65,14 @@
         "developmentGoalResponseSchema",
         "feedbackAcknowledgementResponseSchema",
         "getAssessmentsRouteDefinitions",
+        "measurementHistoryResponseSchema",
         "metricListResponseSchema",
         "performancePath",
         "periodListResponseSchema",
         "playerAssessmentResponseSchema",
         "publishedAssessmentListResponseSchema",
         "scaleListResponseSchema",
+        "scoreListResponseSchema",
         "sharedFeedbackListResponseSchema",
         "templateListResponseSchema"
       ]
@@ -88,10 +90,13 @@
         "attendancePath",
         "attendanceQueryKeys",
         "attendanceRecordResponseSchema",
+        "attendanceSelfRecordSchema",
         "attendanceSheetResponseSchema",
         "attendanceStatusResponseSchema",
         "bulkAttendanceResponseSchema",
-        "getAttendanceRouteDefinitions"
+        "getAttendanceRouteDefinitions",
+        "myAttendancePath",
+        "participationResponseSchema"
       ]
     },
     {
@@ -351,13 +356,15 @@
         "RSVP_STATUS",
         "RsvpReason",
         "RsvpStatus",
+        "UpcomingPracticesQueryView",
         "getPracticeRouteDefinitions",
         "practiceQueryKeys",
         "practiceRsvpResponseSchema",
         "practiceSessionListResponseSchema",
         "practiceSessionPath",
         "practiceSessionResponseSchema",
-        "practicesPath"
+        "practicesPath",
+        "useUpcomingPracticesQuery"
       ]
     },
     {

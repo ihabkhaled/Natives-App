@@ -109,7 +109,7 @@ describe('attendance wire contract (mock mode = remote contract)', () => {
     ).toBe('present_late');
   });
 
-  it('finalizes with the sheet version and accepts audited corrections afterward', async () => {
+  it('finalizes as coach; correction stays Team Admin only and is audited', async () => {
     const token = await loginAs(MOCK_PERSONA_EMAILS.coach);
     const sheetResponse = await authGet(attendancePath(), token);
     const sheet = safeParseWithSchema(attendanceSheetResponseSchema, await sheetResponse.json());
@@ -126,16 +126,28 @@ describe('attendance wire contract (mock mode = remote contract)', () => {
     assert(finalized.success, 'finalize violated AttendanceStatusResponseDto');
     expect(finalized.data.state).toBe('finalized');
 
-    const correctionResponse = await authWrite(
+    // The Coach bundle carries attendance.finalize but NOT attendance.correct:
+    // the audited correction is a Team Admin privilege (authorization matrix).
+    const correctionBody = {
+      status: 'excused',
+      excuseCategory: 'work',
+      reason: 'Approved work conflict',
+      expectedVersion: 1,
+    };
+    const coachCorrection = await authWrite(
       attendancePath(`/${MOCK_ATTENDANCE.presentMembershipId}/correction`),
       token,
       'PUT',
-      {
-        status: 'excused',
-        excuseCategory: 'work',
-        reason: 'Approved work conflict',
-        expectedVersion: 1,
-      },
+      correctionBody,
+    );
+    expect(coachCorrection.status).toBe(403);
+
+    const adminToken = await loginAs(MOCK_PERSONA_EMAILS.teamAdmin);
+    const correctionResponse = await authWrite(
+      attendancePath(`/${MOCK_ATTENDANCE.presentMembershipId}/correction`),
+      adminToken,
+      'PUT',
+      correctionBody,
     );
     const corrected = safeParseWithSchema(
       attendanceRecordResponseSchema,

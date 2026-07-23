@@ -38,6 +38,8 @@ export {
   feedbackAcknowledgementResponseSchema,
   sharedFeedbackListResponseSchema,
 } from './schemas/development.schema';
+export { measurementHistoryResponseSchema } from './schemas/measurements.schema';
+export { scoreListResponseSchema } from './schemas/scoring.schema';
 export type {
   AssessmentCatalog,
   AssessmentDetail,

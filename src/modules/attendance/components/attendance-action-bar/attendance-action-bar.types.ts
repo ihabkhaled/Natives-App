@@ -9,6 +9,7 @@ export type AttendanceActionBarProps = Pick<
   | 'isSubmitting'
   | 'finalizeLabel'
   | 'canFinalize'
+  | 'showFinalize'
   | 'isFinalizing'
   | 'onRetryQueue'
   | 'onSubmit'

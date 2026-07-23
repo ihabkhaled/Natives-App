@@ -88,6 +88,12 @@ export interface TrainingSubmissionPage {
   readonly offset: number;
 }
 
+/** The bounded page of buddy credits naming the caller. */
+export interface TrainingBuddyPage {
+  readonly items: readonly TrainingBuddy[];
+  readonly total: number;
+}
+
 /** The reviewer projection: the member-facing record plus the review trail. */
 export interface ReviewSubmission extends Omit<TrainingSubmission, 'withdrawnAtIso'> {
   readonly submitterUserId: string;

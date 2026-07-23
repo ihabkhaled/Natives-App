@@ -11,6 +11,10 @@ export {
   type RsvpStatus,
 } from './constants/practice.constants';
 export { practiceQueryKeys } from './queries/practice.keys';
+export {
+  useUpcomingPracticesQuery,
+  type UpcomingPracticesQueryView,
+} from './hooks/use-upcoming-practices-query.hook';
 export { getPracticeRouteDefinitions } from './routes/practice.routes';
 export { practicesPath, practiceSessionPath } from './routes/practice.paths';
 export {

@@ -64,6 +64,15 @@ routes/training.routes.ts               permission-guarded, nav-registered route
 The reviewer queue deliberately lives on its own top-level path rather than under `/training/`, so
 the `:submissionId` pattern can never shadow it.
 
+## Buddy confirmations
+
+The workspace carries a badge-counted "Buddy confirmations" section (`my-activity-buddies`):
+teammates' claims that name the caller, each with an explicit confirm/decline pair. Both routes are
+self-scoped (`activity.read.self` / `activity.submit.self`); a response invalidates the buddy
+list, the caller's submissions, and the points family, because a confirmation can change a claim's
+points outcome. Answered credits render a status chip with the responded instant; the empty state
+says so honestly.
+
 ## Evidence handling
 
 Only **metadata** travels through this client: the kind, the opaque storage reference, and an

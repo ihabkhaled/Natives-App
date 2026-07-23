@@ -5,4 +5,5 @@ import type {
 
 export interface DashboardWidgetProps extends DashboardWidgetRetryCopy {
   readonly widget: DashboardWidgetView;
+  readonly onOpenLink: (path: string) => void;
 }

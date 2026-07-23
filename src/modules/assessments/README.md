@@ -90,12 +90,21 @@ routes/assessments.paths.ts|.routes.ts   APP_PATHS builders + permission/team gu
 | `/assessments`                     | `assessment.read.team`           |
 | `/assessments/:id`                 | `assessment.read.team`           |
 | `/performance`                     | `assessment.read.self.published` |
+| `/performance/measurements`        | `analytics.read.self`            |
+| `/performance/feedback`            | `feedback.read.self`             |
 | Submit                             | `assessment.create`              |
 | Start review / approve / send back | `assessment.review`              |
 | Publish                            | `assessment.publish`             |
 | Coach feedback section             | `feedback.read.self`             |
 
 These gate convenience UI only; the backend re-authorises every operation.
+
+`/performance` is one member area with three deep-linkable tabs behind a single nav entry: scores
+(published charts plus the own computed performance-score card from `my-performance-score`),
+my-measurements (the own `my-measurements` history, honest-empty until staff capture ships in P4),
+and feedback (the previously route-less feedback cards with acknowledgement). Tabs a viewer cannot
+open never render, and the analytics self reads fire only behind `analytics.read.self` — the
+member tab issues zero staff-only calls (P1-5 regression rule).
 
 ## Invariants
 

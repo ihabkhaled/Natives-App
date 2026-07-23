@@ -1,6 +1,7 @@
 import { useEffectivePermissions } from '@/modules/auth';
 import { formatDateTime } from '@/packages/date';
 import { useAppTranslation } from '@/packages/i18n';
+import { useAppNavigation } from '@/packages/router';
 import { useNetworkStatus } from '@/platform';
 import { I18N_KEYS } from '@/shared/i18n';
 import { mapErrorCodeToI18nKey } from '@/shared/mappers';
@@ -23,6 +24,7 @@ export function useDashboard(): DashboardView {
   const query = useDashboardSummaryQuery();
   const permissions = useEffectivePermissions();
   const network = useNetworkStatus();
+  const navigation = useAppNavigation();
 
   const summary = query.summary;
   const widgets =
@@ -62,5 +64,8 @@ export function useDashboard(): DashboardView {
     emptyTitle: t(I18N_KEYS.dashboard.emptyTitle),
     emptyMessage: t(I18N_KEYS.dashboard.emptyMessage),
     widgets,
+    onOpenLink: (path) => {
+      navigation.push(path);
+    },
   };
 }

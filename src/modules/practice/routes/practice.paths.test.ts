@@ -5,6 +5,7 @@ import { APP_PATHS } from '@/shared/config';
 import {
   PRACTICE_SESSION_ID_PARAM,
   practiceSessionPath,
+  sessionAttendancePath,
   practiceSessionPattern,
   practicesPath,
 } from './practice.paths';
@@ -24,6 +25,8 @@ describe('practice paths', () => {
 
   it('encodes an unsafe session id', () => {
     expect(practiceSessionPath('a/b')).toBe('/practices/a%2Fb');
+    expect(sessionAttendancePath('sess-7')).toBe('/practices/sess-7/attendance');
+    expect(sessionAttendancePath('a/b')).toBe('/practices/a%2Fb/attendance');
   });
 
   it('names the id parameter without a colon', () => {

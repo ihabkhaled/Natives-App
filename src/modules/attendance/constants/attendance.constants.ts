@@ -32,6 +32,33 @@ export const ATTENDANCE_SHEET_STATE = {
 export type AttendanceSheetState =
   (typeof ATTENDANCE_SHEET_STATE)[keyof typeof ATTENDANCE_SHEET_STATE];
 
+export const ATTENDANCE_SOURCE = {
+  self: 'self',
+  coach: 'coach',
+  admin: 'admin',
+  import: 'import',
+  system: 'system',
+} as const;
+
+export type AttendanceSource = (typeof ATTENDANCE_SOURCE)[keyof typeof ATTENDANCE_SOURCE];
+
+/**
+ * Client-side provisional check-in window (Wave F0). The server owns the real
+ * rule once Wave B1 ships `selfCheckIn`; until then the button only arms inside
+ * `[startsAt − 60m, session end]` with "subject to confirmation" copy.
+ */
+export const CHECK_IN_OPENS_BEFORE_START_MINUTES = 60;
+
+export const SELF_CHECK_IN_STATE = {
+  notOpen: 'not_open',
+  open: 'open',
+  closed: 'closed',
+  locked: 'locked',
+  recorded: 'recorded',
+} as const;
+
+export type SelfCheckInState = (typeof SELF_CHECK_IN_STATE)[keyof typeof SELF_CHECK_IN_STATE];
+
 export const ATTENDANCE_QUEUE_STATE = {
   pending: 'pending',
   retrying: 'retrying',

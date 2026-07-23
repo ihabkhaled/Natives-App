@@ -158,6 +158,7 @@ let submissions = new Map(SEEDS.map((seed) => [seed.id, submission(seed)]));
 
 export function resetMockTrainingState(): void {
   submissions = new Map(SEEDS.map((seed) => [seed.id, submission(seed)]));
+  buddyRecords = initialBuddyRecords();
 }
 
 export function activityTypesResponse(): TypeListDto {
@@ -222,8 +223,17 @@ export function evidenceResponse(submissionId: string): Record<string, unknown> 
   return { items, total: items.length, limit: 20, offset: 0 };
 }
 
-export function buddiesResponse(): Record<string, unknown> {
-  const items = [
+interface BuddyRecordFixture {
+  readonly id: string;
+  readonly submissionId: string;
+  readonly membershipId: string;
+  readonly status: 'pending' | 'confirmed' | 'declined';
+  readonly respondedAt: string | null;
+  readonly createdAt: string;
+}
+
+function initialBuddyRecords(): readonly BuddyRecordFixture[] {
+  return [
     {
       id: '40000000-0000-4000-8000-000000000002',
       submissionId: MOCK_TRAINING.approvedId,
@@ -233,7 +243,30 @@ export function buddiesResponse(): Record<string, unknown> {
       createdAt: CREATED_AT,
     },
   ];
-  return { items, total: items.length, limit: 20, offset: 0 };
+}
+
+let buddyRecords = initialBuddyRecords();
+
+export function buddiesResponse(): Record<string, unknown> {
+  return { items: buddyRecords, total: buddyRecords.length, limit: 20, offset: 0 };
+}
+
+/** Confirm/decline one credit; unknown ids answer null so handlers can 404. */
+export function respondToBuddyRecord(
+  buddyId: string,
+  intent: 'confirm' | 'decline',
+): BuddyRecordFixture | null {
+  const record = buddyRecords.find((buddy) => buddy.id === buddyId);
+  if (record === undefined) {
+    return null;
+  }
+  const updated: BuddyRecordFixture = {
+    ...record,
+    status: intent === 'confirm' ? 'confirmed' : 'declined',
+    respondedAt: '2026-07-19T18:00:00.000Z',
+  };
+  buddyRecords = buddyRecords.map((buddy) => (buddy.id === buddyId ? updated : buddy));
+  return updated;
 }
 
 export interface CreateSubmissionBody {

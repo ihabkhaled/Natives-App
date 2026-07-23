@@ -20,6 +20,7 @@ import { useCreateSubmissionMutation } from '../mutations/use-create-submission-
 import { trainingSubmissionPath } from '../routes/training.paths';
 import type { TrainingWorkspaceView } from '../types/training-view.types';
 import { useActivityTypesQuery } from './use-activity-types-query.hook';
+import { useBuddySection } from './use-buddy-section.hook';
 import { useMySubmissionsQuery } from './use-my-submissions-query.hook';
 import { useTrainingComposer } from './use-training-composer.hook';
 import { useTrainingContext } from './use-training-context.hook';
@@ -38,6 +39,7 @@ export function useTrainingWorkspace(): TrainingWorkspaceView {
 
   const catalog = useActivityTypesQuery(context.teamId);
   const submissions = useMySubmissionsQuery(context.teamId);
+  const buddies = useBuddySection(context.teamId);
 
   const create = useCreateSubmissionMutation(context.teamId, {
     onSuccess: () => {
@@ -77,6 +79,7 @@ export function useTrainingWorkspace(): TrainingWorkspaceView {
       page.items.length > 0,
     ),
     composer,
+    buddies,
     listLabel: t(I18N_KEYS.training.title),
     countLabel: t(I18N_KEYS.training.countSummary, {
       shown: matches.length,

@@ -31,6 +31,20 @@ export function submissionEvidencePath(teamId: string, submissionId: string): st
   return `${submissionPath(teamId, submissionId)}/evidence`;
 }
 
+/** Buddy credits awaiting the caller's confirmation. */
+export function myActivityBuddiesPath(teamId: string): string {
+  return teamPath(teamId, '/my-activity-buddies');
+}
+
+/** Confirm or decline one buddy credit; `intent` is the path verb. */
+export function buddyResponsePath(
+  teamId: string,
+  buddyId: string,
+  intent: 'confirm' | 'decline',
+): string {
+  return `${myActivityBuddiesPath(teamId)}/${encodeURIComponent(buddyId)}/${intent}`;
+}
+
 export function reviewQueuePath(teamId: string): string {
   return teamPath(teamId, '/activity-review');
 }

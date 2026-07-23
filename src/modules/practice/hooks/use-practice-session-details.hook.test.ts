@@ -18,11 +18,13 @@ import { usePracticeTeamContext } from './use-practice-team-context.hook';
 
 const submit = vi.fn();
 const showToast = vi.fn();
+const pushSpy = vi.hoisted(() => vi.fn());
 
 vi.mock('./use-practice-session-query.hook', () => ({ usePracticeSessionQuery: vi.fn() }));
 vi.mock('./use-practice-team-context.hook', () => ({ usePracticeTeamContext: vi.fn() }));
 vi.mock('../mutations/use-rsvp-mutation.hook', () => ({ useRsvpMutation: vi.fn() }));
 vi.mock('@/modules/auth', () => ({ useEffectivePermissions: vi.fn() }));
+vi.mock('@/packages/router', () => ({ useAppNavigation: vi.fn(() => ({ push: pushSpy })) }));
 vi.mock('@/platform', () => ({
   useNetworkStatus: vi.fn(() => ({ isOnline: true })),
   openExternalUrl: vi.fn(() => Promise.resolve()),
@@ -98,6 +100,26 @@ describe('usePracticeSessionDetails', () => {
       reasonCategory: RSVP_REASON.injury,
       version: 5,
     });
+  });
+
+  it('offers the attendance CTA only to attendance.record holders and routes it', () => {
+    const { result } = renderHook(() => usePracticeSessionDetails('sess-1'));
+    expect(result.current.attendanceCta).toBeNull();
+
+    vi.mocked(useEffectivePermissions).mockReturnValue({
+      permissions: [PERMISSIONS.practicesRead, PERMISSIONS.attendanceMark],
+      accountActive: true,
+      onboardingComplete: true,
+      hasTeamContext: true,
+      isLoading: false,
+      isError: false,
+    });
+    const { result: grantedResult } = renderHook(() => usePracticeSessionDetails('sess-1'));
+    act(() => {
+      grantedResult.current.attendanceCta?.onOpen();
+    });
+
+    expect(pushSpy).toHaveBeenCalledWith('/practices/sess-1/attendance');
   });
 
   it('opens the venue map through the external navigation owner', () => {

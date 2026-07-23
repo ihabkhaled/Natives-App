@@ -238,3 +238,45 @@ export interface AcknowledgeFeedbackInput {
   readonly feedbackId: string;
   readonly clarificationRequested: boolean;
 }
+
+/** One weighted component of the computed performance score. */
+interface ScoreComponentRow {
+  readonly categoryKey: string;
+  readonly weight: number;
+  readonly display: number | null;
+  readonly included: boolean;
+}
+
+/** The caller's own computed score; `value: null` = not computed yet. */
+export interface MyPerformanceScore {
+  readonly id: string;
+  readonly value: number | null;
+  readonly confidence: 'none' | 'low' | 'medium' | 'high';
+  readonly completeness: number;
+  readonly status: 'stale' | 'building' | 'ready' | 'failed';
+  readonly ruleKey: string;
+  readonly ruleVersion: number;
+  readonly computedAtIso: string | null;
+  readonly components: readonly ScoreComponentRow[];
+}
+
+/** One recorded attempt; a DQ'd/invalid attempt plots as a gap, never zero. */
+interface MeasurementAttemptPoint {
+  readonly id: string;
+  readonly attemptNumber: number;
+  readonly recordedAtIso: string;
+  readonly canonicalValue: number | null;
+  readonly isCountable: boolean;
+}
+
+/** One protocol's own history with the policy-selected result. */
+export interface MeasurementProtocolHistory {
+  readonly protocolId: string;
+  readonly name: string;
+  readonly unit: string;
+  readonly direction: 'better_higher' | 'better_lower';
+  readonly method: 'best' | 'average' | 'latest';
+  readonly selected: number | null;
+  readonly consideredCount: number;
+  readonly attempts: readonly MeasurementAttemptPoint[];
+}

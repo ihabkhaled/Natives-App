@@ -41,3 +41,17 @@ export function attendanceBulkPath(teamId: string, sessionId: string): string {
 export function attendanceFinalizePath(teamId: string, sessionId: string): string {
   return `${attendanceBasePath(teamId, sessionId)}/finalize`;
 }
+
+/** Own per-session record; membership resolves from the token, never a param. */
+export function attendanceSelfPath(teamId: string, sessionId: string): string {
+  return `${attendanceBasePath(teamId, sessionId)}/me`;
+}
+
+export function attendanceCheckInPath(teamId: string, sessionId: string): string {
+  return `${attendanceBasePath(teamId, sessionId)}/check-in`;
+}
+
+/** Own weighted-participation summary across the team's finalized sessions. */
+export function attendanceParticipationSelfPath(teamId: string): string {
+  return `${TEAMS_PATH}/${encodeURIComponent(teamId)}/${ATTENDANCE_SEGMENT}/me/participation`;
+}

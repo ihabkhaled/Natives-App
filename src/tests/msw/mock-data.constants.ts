@@ -14,6 +14,7 @@ export const MOCK_PERSONA_EMAILS = {
   teamAdmin: 'team-admin@example.com',
   coach: 'coach@example.com',
   member: 'member@example.com',
+  analyst: 'analyst@example.com',
   pending: 'pending@example.com',
   suspended: 'suspended@example.com',
   noTeam: 'newcomer@example.com',

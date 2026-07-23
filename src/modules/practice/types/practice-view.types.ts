@@ -181,11 +181,22 @@ export interface PracticeSessionDetailData {
   readonly rsvp: RsvpControlData;
 }
 
+/**
+ * Session-scoped attendance entry point for permitted staff. `null` when the
+ * viewer lacks `attendance.record`, so the CTA never offers a 403ing screen.
+ */
+interface PracticeAttendanceCtaView {
+  readonly heading: string;
+  readonly label: string;
+  readonly onOpen: () => void;
+}
+
 export interface PracticeSessionScreenView extends AsyncViewCopy {
   readonly title: string;
   readonly status: PracticeSessionStatus;
   readonly forbiddenTitle: string;
   readonly forbiddenMessage: string;
+  readonly attendanceCta: PracticeAttendanceCtaView | null;
   readonly detail: PracticeSessionDetailData | null;
   readonly selectedReason: RsvpReason | null;
   readonly onSelectReason: (reason: RsvpReason | null) => void;

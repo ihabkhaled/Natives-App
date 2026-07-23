@@ -8,6 +8,7 @@ import {
   MOCK_TEMPLATES,
 } from './assessments-catalog.fixture';
 import type { AssessmentValueRecord } from './assessments-data.fixture';
+import { buildMyMeasurementsResponse, buildMyScoreResponse } from './assessments-insights.fixture';
 import {
   acknowledgeFeedbackRecord,
   assessmentDetailResponse,
@@ -173,6 +174,18 @@ const selfHandlers = [
         ? failRequest(404, 'NOT_FOUND', '/my-feedback')
         : HttpResponse.json(result);
     },
+  ),
+  // The two analytics self-reads are gated exactly like the backend: on the
+  // `analytics.read.self` grant — an analyst persona receives an honest 403.
+  http.get(apiUrl('/teams/:teamId/my-performance-score'), ({ request }) =>
+    permissionsForRequest(request).includes(PERMISSIONS.analyticsReadSelf)
+      ? HttpResponse.json(buildMyScoreResponse())
+      : failRequest(403, 'FORBIDDEN', '/my-performance-score'),
+  ),
+  http.get(apiUrl('/teams/:teamId/my-measurements'), ({ request }) =>
+    permissionsForRequest(request).includes(PERMISSIONS.analyticsReadSelf)
+      ? HttpResponse.json(buildMyMeasurementsResponse())
+      : failRequest(403, 'FORBIDDEN', '/my-measurements'),
   ),
   http.get(apiUrl('/teams/:teamId/my-development-goals'), ({ request }) => {
     if (!isAuthorized(request)) {

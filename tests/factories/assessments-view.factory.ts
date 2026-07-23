@@ -6,8 +6,10 @@ import type {
   AssessmentSummaryView,
   FeedbackCardView,
   GoalCardView,
+  MeasurementsPanelView,
   MetricFieldView,
   MetricGroupView,
+  PerformanceScoreCardView,
   PerformanceView,
   RadarChartView,
   TrendChartView,
@@ -258,6 +260,46 @@ export function buildGoalCardView(overrides: Partial<GoalCardView> = {}): GoalCa
   };
 }
 
+export function buildPerformanceScoreCardView(
+  overrides: Partial<PerformanceScoreCardView> = {},
+): PerformanceScoreCardView {
+  return {
+    title: 'My performance score',
+    valueText: '78.4',
+    hasValue: true,
+    confidenceLabel: 'Confidence',
+    confidenceValue: 'High',
+    completenessLabel: 'Completeness',
+    completenessText: '80%',
+    ruleReference: 'Rule overall-2026 · v2',
+    explanationTitle: 'How this score is built',
+    componentColumns: ['Component', 'Weight', 'Value'],
+    components: [
+      { key: 'technical', label: 'Technical', weightText: '0.4', valueText: '81' },
+      { key: 'attendance', label: 'Attendance', weightText: '0.2', valueText: 'Excluded' },
+    ],
+    isLoading: false,
+    loadingLabel: 'Loading…',
+    unavailableMessage: null,
+    ...overrides,
+  };
+}
+
+export function buildMeasurementsPanelView(
+  overrides: Partial<MeasurementsPanelView> = {},
+): MeasurementsPanelView {
+  return {
+    title: 'My measurements',
+    emptyTitle: 'No measurements recorded yet',
+    emptyMessage: 'Results appear here once your coaches run a measurement session.',
+    isLoading: false,
+    loadingLabel: 'Loading…',
+    unavailableMessage: null,
+    protocols: [],
+    ...overrides,
+  };
+}
+
 export function buildPerformanceView(overrides: Partial<PerformanceView> = {}): PerformanceView {
   return {
     title: 'My performance',
@@ -266,6 +308,16 @@ export function buildPerformanceView(overrides: Partial<PerformanceView> = {}): 
     ...buildAssessmentsStateCopy(),
     emptyTitle: 'No assessments yet',
     emptyMessage: 'Nothing here.',
+    tabs: [
+      { id: 'scores', label: 'Scores', path: '/performance' },
+      { id: 'measurements', label: 'My measurements', path: '/performance/measurements' },
+      { id: 'feedback', label: 'Feedback', path: '/performance/feedback' },
+    ],
+    activeTab: 'scores',
+    tabBarLabel: 'My performance',
+    onTabChange: vi.fn(),
+    scoreCard: null,
+    measurements: buildMeasurementsPanelView(),
     metricSelectLabel: 'Metric',
     metricOptions: [{ value: 'metric-speed', label: 'Speed' }],
     selectedMetricId: 'metric-speed',

@@ -20,6 +20,7 @@ describe('DashboardWidgetList', () => {
         offlineNoticeLabel="Showing your last saved dashboard."
         retryLabel="Try again"
         onRetry={onRetry}
+        onOpenLink={vi.fn()}
       />,
     );
 
@@ -35,6 +36,7 @@ describe('DashboardWidgetList', () => {
         offlineNoticeLabel="Showing your last saved dashboard."
         retryLabel="Try again"
         onRetry={onRetry}
+        onOpenLink={vi.fn()}
       />,
     );
 
@@ -49,6 +51,7 @@ describe('DashboardWidgetList', () => {
         offlineNoticeLabel="Showing your last saved dashboard."
         retryLabel="Try again"
         onRetry={onRetry}
+        onOpenLink={vi.fn()}
       />,
     );
 

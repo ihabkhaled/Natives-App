@@ -37,6 +37,12 @@ export interface DashboardTaskView {
  */
 export type DashboardWidgetStateKind = 'empty' | 'unavailable';
 
+/** A resolved footer deep link; only present when the viewer may open it. */
+export interface DashboardWidgetLinkView {
+  readonly path: string;
+  readonly label: string;
+}
+
 interface DashboardWidgetViewShared {
   readonly kind: string;
   readonly testId: string;
@@ -48,6 +54,7 @@ interface DashboardWidgetViewShared {
   readonly stateLabel: string;
   readonly stateMessage: string | null;
   readonly partialLabel: string | null;
+  readonly link: DashboardWidgetLinkView | null;
 }
 
 export interface DashboardMetricWidgetView extends DashboardWidgetViewShared {
@@ -82,4 +89,6 @@ export interface DashboardView extends AsyncViewCopy {
   readonly emptyTitle: string;
   readonly emptyMessage: string;
   readonly widgets: readonly DashboardWidgetView[];
+  /** Navigate to a widget's owning screen (footer link target). */
+  readonly onOpenLink: (path: string) => void;
 }

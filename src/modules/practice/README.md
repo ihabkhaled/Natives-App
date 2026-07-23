@@ -59,7 +59,12 @@ routes/practice.paths.ts|.routes.ts        APP_PATHS builders + team/permission 
 - `null` means unknown/not set and is never coerced to zero.
 - Venue, agenda, aggregate counts, and waitlist position are absent from the committed session
   contract, so existing unknown/empty states render instead of invented data.
-- Routes require `practices.read`; RSVP actions require `practices.rsvp.self`.
+- Routes require `practices.read`; RSVP actions require `practices.rsvp.self`. The session detail
+  offers an Attendance CTA only to `attendance.record` holders; its label follows the session's own
+  schedule (record before the end instant, view after) and the sheet state itself is resolved on
+  the capture screen — no extra roster read from the detail view. The capture path is derived
+  locally from the canonical route table because the attendance module already consumes this
+  module's public surface (importing back would create a cycle).
 - RSVP after the cutoff is disabled; controls prevent duplicate submits.
 - Errors render translated `AppErrorCode` copy, never raw backend messages.
 

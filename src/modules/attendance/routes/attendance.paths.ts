@@ -12,3 +12,8 @@ export function attendancePath(sessionId: string): string {
     encodeURIComponent(sessionId),
   );
 }
+
+/** Route pattern and navigation target for the member self-attendance screen. */
+export function myAttendancePath(): string {
+  return APP_PATHS.myAttendance;
+}

@@ -2,6 +2,9 @@ import type { AsyncViewCopy } from '@/shared/types';
 import type { AsyncViewStatus } from '@/shared/ui';
 
 import type { EvidenceKind, ReviewDecision } from '../constants/training.constants';
+import type { BuddySectionView } from './training-buddy-view.types';
+
+export type { BuddySectionView } from './training-buddy-view.types';
 
 /** The scope, grants, and connectivity every training screen resolves. */
 export interface TrainingContextView {
@@ -186,6 +189,7 @@ export interface TrainingWorkspaceView extends TrainingScreenCopy {
   readonly subtitle: string;
   readonly status: TrainingStatus;
   readonly composer: TrainingComposerView;
+  readonly buddies: BuddySectionView;
   readonly listLabel: string;
   readonly countLabel: string;
   readonly statusFilterLabel: string;

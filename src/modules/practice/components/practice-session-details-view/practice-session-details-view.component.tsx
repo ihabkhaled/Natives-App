@@ -1,5 +1,13 @@
+import { IonText } from '@/packages/ionic';
 import { TEST_IDS } from '@/shared/config';
-import { ErrorState, LoadingState, OfflineState, PageShell, PermissionState } from '@/shared/ui';
+import {
+  AppButton,
+  ErrorState,
+  LoadingState,
+  OfflineState,
+  PageShell,
+  PermissionState,
+} from '@/shared/ui';
 
 import { PracticeSessionBody } from '../practice-session-body';
 import type { PracticeSessionDetailsViewProps } from './practice-session-details-view.types';
@@ -43,6 +51,23 @@ export function PracticeSessionDetailsView(
             message={props.forbiddenMessage}
             testId={TEST_IDS.practiceCalendarForbidden}
           />
+        ) : null}
+        {/* Only permitted staff with a resolved detail carry a CTA at all. */}
+        {props.attendanceCta !== null ? (
+          <section
+            aria-label={props.attendanceCta.heading}
+            className="app-surface-card flex flex-wrap items-center justify-between gap-3 p-4"
+          >
+            <IonText>
+              <h2 className="m-0 text-base font-semibold">{props.attendanceCta.heading}</h2>
+            </IonText>
+            <AppButton
+              label={props.attendanceCta.label}
+              tone="secondary"
+              testId={TEST_IDS.practiceSessionAttendanceCta}
+              onClick={props.attendanceCta.onOpen}
+            />
+          </section>
         ) : null}
         {props.status === 'ready' && props.detail !== null ? (
           <PracticeSessionBody

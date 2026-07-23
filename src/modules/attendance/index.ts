@@ -8,7 +8,7 @@ export {
 } from './constants/attendance.constants';
 export type { AttendanceEditorView } from './hooks/use-attendance-editor.hook';
 export { attendanceQueryKeys } from './queries/attendance.keys';
-export { attendancePath } from './routes/attendance.paths';
+export { attendancePath, myAttendancePath } from './routes/attendance.paths';
 export { getAttendanceRouteDefinitions } from './routes/attendance.routes';
 export {
   attendanceHistoryResponseSchema,
@@ -17,9 +17,15 @@ export {
   attendanceStatusResponseSchema,
   bulkAttendanceResponseSchema,
 } from './schemas/attendance.schema';
+export {
+  attendanceSelfRecordSchema,
+  participationResponseSchema,
+} from './schemas/attendance-self.schema';
 export type {
   AttendanceDraft,
+  AttendanceParticipation,
   AttendanceQueuedOperation,
   AttendanceRosterEntry,
+  AttendanceSelfRecord,
   AttendanceSheet,
 } from './types/attendance.types';

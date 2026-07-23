@@ -18,6 +18,7 @@ describe('buildAttendanceRows', () => {
       t,
       locale: 'en',
       sheet: undefined,
+      hasCorrectGrant: true,
       editor: buildAttendanceEditorStub(),
       queue: [],
     });
@@ -39,6 +40,7 @@ describe('buildAttendanceRows', () => {
           }),
         ],
       }),
+      hasCorrectGrant: true,
       editor: buildAttendanceEditorStub(),
       queue: [],
     });
@@ -57,6 +59,7 @@ describe('buildAttendanceRows', () => {
       sheet: makeAttendanceSheet({
         items: [makeRosterEntry({ membershipId: 'm-hist', userId: null, status: 'excused' })],
       }),
+      hasCorrectGrant: true,
       editor: buildAttendanceEditorStub(),
       queue: [],
     });
@@ -70,6 +73,7 @@ describe('buildAttendanceRows', () => {
       t,
       locale: 'en',
       sheet: makeAttendanceSheet({ items: [makeRosterEntry({ membershipId: 'm-1' })] }),
+      hasCorrectGrant: true,
       editor: buildAttendanceEditorStub({
         selectedIds: ['m-1'],
         drafts: {
@@ -91,16 +95,33 @@ describe('buildAttendanceRows', () => {
     expect(rows[0]?.canSaveCorrection).toBe(true);
   });
 
-  it('locks rows once the sheet is finalized', () => {
+  it('locks rows once the sheet is finalized and offers correction only with the grant', () => {
     const [row] = buildAttendanceRows({
       t,
       locale: 'en',
       sheet: makeAttendanceSheet({ state: ATTENDANCE_SHEET_STATE.finalized }),
+      hasCorrectGrant: true,
       editor: buildAttendanceEditorStub(),
       queue: [],
     });
 
     expect(row?.isLocked).toBe(true);
+    expect(row?.showCorrectionEditor).toBe(true);
+    expect(row?.isReadOnly).toBe(false);
+  });
+
+  it('renders a locked sheet read-only without attendance.correct', () => {
+    const [row] = buildAttendanceRows({
+      t,
+      locale: 'en',
+      sheet: makeAttendanceSheet({ state: ATTENDANCE_SHEET_STATE.finalized }),
+      hasCorrectGrant: false,
+      editor: buildAttendanceEditorStub(),
+      queue: [],
+    });
+
+    expect(row?.showCorrectionEditor).toBe(false);
+    expect(row?.isReadOnly).toBe(true);
   });
 
   it('filters rows by search text and status', () => {
@@ -116,6 +137,7 @@ describe('buildAttendanceRows', () => {
         t,
         locale: 'en',
         sheet: loaded,
+        hasCorrectGrant: true,
         editor: buildAttendanceEditorStub({ searchValue: 'zzzz' }),
         queue: [],
       }),
@@ -125,6 +147,7 @@ describe('buildAttendanceRows', () => {
       t,
       locale: 'en',
       sheet: loaded,
+      hasCorrectGrant: true,
       editor: buildAttendanceEditorStub({ filterValue: 'absent' }),
       queue: [],
     });

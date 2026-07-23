@@ -1,6 +1,7 @@
 import { getActivityTypes } from '../services/get-activity-types.service';
 import { getReviewDetail } from '../services/get-review-detail.service';
 import { getSubmission } from '../services/get-submission.service';
+import { listMyBuddies } from '../services/list-my-buddies.service';
 import { listMySubmissions } from '../services/list-my-submissions.service';
 import { listReviewQueue } from '../services/list-review-queue.service';
 import { listSubmissionEvidence } from '../services/list-submission-evidence.service';
@@ -20,6 +21,15 @@ export function buildMySubmissionsQueryOptions(teamId: string) {
   return {
     queryKey: trainingQueryKeys.mySubmissions(teamId),
     queryFn: () => listMySubmissions(teamId),
+    enabled: teamId !== '',
+  };
+}
+
+/** Buddy credits waiting on (or answered by) the caller. */
+export function buildMyBuddiesQueryOptions(teamId: string) {
+  return {
+    queryKey: trainingQueryKeys.myBuddies(teamId),
+    queryFn: () => listMyBuddies(teamId),
     enabled: teamId !== '',
   };
 }

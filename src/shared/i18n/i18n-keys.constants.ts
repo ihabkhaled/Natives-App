@@ -61,6 +61,11 @@ export const I18N_KEYS = {
     sessionExpired: 'errors.sessionExpired',
     deepLinkRejected: 'errors.deepLinkRejected',
     linkInvalidOrExpired: 'errors.linkInvalidOrExpired',
+    /** Backend-namespaced practice-domain message keys the UI renders as copy. */
+    practices: {
+      checkInWindowClosed: 'errors.practices.checkInWindowClosed',
+      attendanceRuleMissing: 'errors.practices.attendanceRuleMissing',
+    },
   },
   states: {
     emptyTitle: 'states.emptyTitle',

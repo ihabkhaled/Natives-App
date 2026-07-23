@@ -20,3 +20,16 @@ export function practiceSessionPath(sessionId: string): string {
     encodeURIComponent(sessionId),
   );
 }
+
+/**
+ * The session-scoped attendance capture path. Derived here from the canonical
+ * table rather than imported from `@/modules/attendance`: the attendance
+ * module already consumes this module's public surface (the upcoming-sessions
+ * read), so importing back would create a module cycle.
+ */
+export function sessionAttendancePath(sessionId: string): string {
+  return APP_PATHS.attendance.replace(
+    `:${PRACTICE_SESSION_ID_PARAM}`,
+    encodeURIComponent(sessionId),
+  );
+}

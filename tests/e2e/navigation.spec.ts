@@ -1,8 +1,9 @@
 import { expect, test } from '@playwright/test';
 
 import { TEST_IDS } from '@/shared/config';
+import { MOCK_CREDENTIALS, MOCK_PERSONA_EMAILS } from '@/tests/msw/mock-data.constants';
 
-import { APP_ROUTES, expectPresentedPage, gotoApp } from './fixtures/app.fixture';
+import { APP_ROUTES, expectPresentedPage, gotoApp, signIn } from './fixtures/app.fixture';
 
 test.describe('public navigation', () => {
   test('redirects the root path to the welcome screen', async ({ page }) => {
@@ -43,5 +44,33 @@ test.describe('public navigation', () => {
 
     await expect(page.getByTestId(TEST_IDS.loginPage)).toBeVisible();
     await expect(page).toHaveURL(/\/login$/u);
+  });
+
+  test('deep-links from the Home attendance widget to the owning screen', async ({ page }) => {
+    await signIn(page, {
+      email: MOCK_PERSONA_EMAILS.member,
+      password: MOCK_CREDENTIALS.password,
+    });
+    await expectPresentedPage(page, TEST_IDS.homePage);
+
+    await page.getByTestId(`${TEST_IDS.dashboardWidgetLink}-member-attendance`).click();
+
+    await expectPresentedPage(page, TEST_IDS.myAttendancePage);
+    await expect(page).toHaveURL(/\/my-attendance$/u);
+    await expect(page.getByTestId(TEST_IDS.myAttendanceParticipationCard)).toBeVisible();
+  });
+
+  test('deep-links from the Home feedback widget to the feedback tab', async ({ page }) => {
+    await signIn(page, {
+      email: MOCK_PERSONA_EMAILS.member,
+      password: MOCK_CREDENTIALS.password,
+    });
+    await expectPresentedPage(page, TEST_IDS.homePage);
+
+    await page.getByTestId(`${TEST_IDS.dashboardWidgetLink}-member-feedback`).click();
+
+    await expectPresentedPage(page, TEST_IDS.performancePage);
+    await expect(page).toHaveURL(/\/performance\/feedback$/u);
+    await expect(page.getByTestId(TEST_IDS.coachFeedbackPanel)).toBeVisible();
   });
 });

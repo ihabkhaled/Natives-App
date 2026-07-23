@@ -14,10 +14,11 @@ import { TrainingSubmissionList } from '../training-submission-list';
 import { TrainingView } from './training-view.component';
 
 describe('TrainingView', () => {
-  it('renders the composer and the claim list when the screen is ready', () => {
+  it('renders the composer, the buddy section, and the claim list when ready', () => {
     render(<TrainingView {...buildTrainingWorkspaceView()} />);
 
     expect(screen.getByTestId(TEST_IDS.trainingComposer)).toBeInTheDocument();
+    expect(screen.getByTestId(TEST_IDS.trainingBuddySection)).toBeInTheDocument();
     expect(screen.getAllByTestId(TEST_IDS.trainingSubmissionCard)).toHaveLength(1);
   });
 
@@ -25,6 +26,7 @@ describe('TrainingView', () => {
     render(<TrainingView {...buildTrainingWorkspaceView({ status: 'forbidden' })} />);
 
     expect(screen.queryByTestId(TEST_IDS.trainingComposer)).not.toBeInTheDocument();
+    expect(screen.queryByTestId(TEST_IDS.trainingBuddySection)).not.toBeInTheDocument();
     expect(screen.getByTestId(TEST_IDS.trainingForbidden)).toBeInTheDocument();
   });
 

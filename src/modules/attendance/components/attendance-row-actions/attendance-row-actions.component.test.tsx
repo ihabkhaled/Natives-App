@@ -29,6 +29,7 @@ describe('AttendanceRowActions', () => {
       buildAttendanceRosterRowView({
         conflictMessage: 'The record changed since you loaded it',
         isLocked: true,
+        showCorrectionEditor: true,
         canSaveCorrection: true,
       }),
     );
@@ -51,7 +52,14 @@ describe('AttendanceRowActions', () => {
   });
 
   it('keeps the correction save present but guarded while the row cannot be saved yet', () => {
-    renderActions(buildAttendanceRosterRowView({ isLocked: true, canSaveCorrection: false }), true);
+    renderActions(
+      buildAttendanceRosterRowView({
+        isLocked: true,
+        showCorrectionEditor: true,
+        canSaveCorrection: false,
+      }),
+      true,
+    );
 
     expect(screen.getByTestId(TEST_IDS.attendanceSaveCorrection)).toBeInTheDocument();
   });

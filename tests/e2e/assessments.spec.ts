@@ -60,8 +60,10 @@ test.describe('assessment entry and player performance', () => {
     await expect(page.getByTestId(TEST_IDS.performanceTrendChart)).toBeVisible();
     await expect(page.getByTestId(TEST_IDS.performanceRadarChart)).toBeVisible();
     await expect(page.getByTestId(TEST_IDS.chartDataTable)).toHaveCount(2);
-    await expect(page.getByTestId(TEST_IDS.coachFeedbackCard)).toBeVisible();
     await expect(page.getByTestId(TEST_IDS.developmentGoalCard).first()).toBeVisible();
+    // Feedback lives on its own deep-linkable tab now.
+    await expect(page.getByTestId(TEST_IDS.performanceTabBar)).toBeVisible();
+    await expect(page.getByTestId(TEST_IDS.coachFeedbackCard)).toHaveCount(0);
   });
 
   test('renders a member performance from member-permitted data, without staff catalog charts', async ({
@@ -71,10 +73,31 @@ test.describe('assessment entry and player performance', () => {
     await gotoApp(page, APP_ROUTES.performance);
     await expectPresentedPage(page, TEST_IDS.performancePage);
 
-    await expect(page.getByTestId(TEST_IDS.coachFeedbackCard)).toBeVisible();
+    await expect(page.getByTestId(TEST_IDS.performanceScoreCard)).toBeVisible();
+    await expect(page.getByTestId(TEST_IDS.performanceScoreValue)).toContainText('78.4');
     await expect(page.getByTestId(TEST_IDS.developmentGoalCard).first()).toBeVisible();
     await expect(page.getByTestId(TEST_IDS.performanceTrendChart)).toHaveCount(0);
     await expect(page.getByTestId(TEST_IDS.performanceRadarChart)).toHaveCount(0);
+  });
+
+  test('deep-links to the feedback tab and acknowledges the coach feedback', async ({ page }) => {
+    await signIn(page, { email: MOCK_PERSONA_EMAILS.member, password: MOCK_CREDENTIALS.password });
+    await gotoApp(page, APP_ROUTES.performanceFeedback);
+    await expectPresentedPage(page, TEST_IDS.performancePage);
+
+    await expect(page.getByTestId(TEST_IDS.coachFeedbackCard)).toBeVisible();
+    await page.getByTestId(TEST_IDS.coachFeedbackAcknowledge).click();
+    await expect(page.getByTestId(TEST_IDS.coachFeedbackAcknowledge)).toHaveCount(0);
+  });
+
+  test('deep-links to the measurements tab with honest own history', async ({ page }) => {
+    await signIn(page, { email: MOCK_PERSONA_EMAILS.member, password: MOCK_CREDENTIALS.password });
+    await gotoApp(page, APP_ROUTES.performanceMeasurements);
+    await expectPresentedPage(page, TEST_IDS.performancePage);
+
+    await expect(page.getByTestId(TEST_IDS.measurementHistoryPanel)).toBeVisible();
+    await expect(page.getByTestId(TEST_IDS.measurementProtocolCard)).toBeVisible();
+    await expect(page.getByText('20m sprint').first()).toBeVisible();
   });
 
   test('keeps a member persona out of the coach workspace', async ({ page }) => {

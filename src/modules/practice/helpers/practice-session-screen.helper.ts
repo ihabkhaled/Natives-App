@@ -1,3 +1,4 @@
+import { isInstantInPast } from '@/packages/date';
 import type { TranslateParams } from '@/packages/i18n';
 import { APP_ERROR_CODE } from '@/shared/errors';
 import { type AppError } from '@/shared/errors/app.errors';
@@ -23,6 +24,7 @@ export interface BuildPracticeSessionScreenParams {
   readonly isOffline: boolean;
   readonly now: string;
   readonly canRsvpSelf: boolean;
+  readonly canRecordAttendance: boolean;
   readonly selectedReason: RsvpReason | null;
   readonly isSubmitting: boolean;
   readonly isConflict: boolean;
@@ -30,6 +32,31 @@ export interface BuildPracticeSessionScreenParams {
   readonly onSelectReason: (reason: RsvpReason | null) => void;
   readonly onSubmitRsvp: (status: RsvpStatus) => void;
   readonly onOpenMap: (url: string) => void;
+  readonly onOpenAttendance: () => void;
+}
+
+/**
+ * Session-detail attendance CTA. Only the session's own schedule decides the
+ * label — the sheet state is resolved on the capture screen itself, so the
+ * detail view never fires a second roster read just for a caption.
+ */
+function buildAttendanceCta(
+  params: BuildPracticeSessionScreenParams,
+): PracticeSessionScreenView['attendanceCta'] {
+  const { detail } = params;
+  if (!params.canRecordAttendance || detail === undefined) {
+    return null;
+  }
+  const hasEnded = isInstantInPast(detail.endAtIso, params.now);
+  return {
+    heading: params.t(I18N_KEYS.attendance.title),
+    label: params.t(
+      hasEnded
+        ? I18N_KEYS.attendance.sessionAttendanceCtaFinalized
+        : I18N_KEYS.attendance.sessionAttendanceCta,
+    ),
+    onOpen: params.onOpenAttendance,
+  };
 }
 
 /** Assemble the full translated session-detail screen view. */
@@ -69,6 +96,7 @@ export function buildPracticeSessionScreenView(
     isOffline: params.isOffline,
     forbiddenTitle: t(I18N_KEYS.states.permissionTitle),
     forbiddenMessage: t(I18N_KEYS.states.permissionMessage),
+    attendanceCta: buildAttendanceCta(params),
     detail: detailData,
     selectedReason: params.selectedReason,
     onSelectReason: params.onSelectReason,

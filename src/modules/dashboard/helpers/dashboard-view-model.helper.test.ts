@@ -183,6 +183,26 @@ describe('buildDashboardWidgetViews', () => {
       buildDashboardWidgetViews([ADMIN_WIDGET], [PERMISSIONS.memberLifecycleManage], t, LOCALE),
     ).toHaveLength(1);
   });
+
+  it('resolves the footer deep link when the target route permission is held', () => {
+    expect(views[4]?.link).toEqual({
+      path: '/my-attendance',
+      label: 'dashboard.memberAttendanceLink',
+    });
+    expect(views[5]?.link).toEqual({
+      path: '/performance/feedback',
+      label: 'dashboard.memberFeedbackLink',
+    });
+    expect(views[0]?.link).toBeNull();
+  });
+
+  it('hides the footer link when the viewer cannot open its target route', () => {
+    const attendanceWidget = WIDGETS[4];
+    assert(attendanceWidget !== undefined);
+    const [view] = buildDashboardWidgetViews([attendanceWidget], [], t, LOCALE);
+
+    expect(view?.link).toBeNull();
+  });
 });
 
 describe('resolveDashboardStatus', () => {

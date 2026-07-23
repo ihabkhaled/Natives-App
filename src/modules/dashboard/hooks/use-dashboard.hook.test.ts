@@ -1,4 +1,3 @@
-import { renderHook } from '@testing-library/react';
 import { afterEach, beforeAll, describe, expect, it, vi } from 'vitest';
 
 import { useEffectivePermissions, type EffectivePermissionsView } from '@/modules/auth';
@@ -8,6 +7,7 @@ import { APP_ERROR_CODE } from '@/shared/errors';
 import { AppError } from '@/shared/errors/app.errors';
 
 import { initTestI18n } from '../../../../tests/setup/i18n-test.helper';
+import { renderHookWithProviders } from '../../../../tests/setup/render-with-providers.helper';
 import { DASHBOARD_WIDGET_KIND } from '../constants/dashboard-widgets.constants';
 import type { DashboardSummary, DashboardWidget } from '../types/dashboard.types';
 import { useDashboard } from './use-dashboard.hook';
@@ -94,7 +94,7 @@ describe('useDashboard', () => {
     mockPermissions();
     mockNetwork();
 
-    const { result } = renderHook(() => useDashboard());
+    const { result } = renderHookWithProviders(() => useDashboard());
 
     expect(result.current.status).toBe('loading');
     expect(result.current.title).toBe('Your dashboard');
@@ -105,7 +105,7 @@ describe('useDashboard', () => {
     mockPermissions();
     mockNetwork();
 
-    const { result } = renderHook(() => useDashboard());
+    const { result } = renderHookWithProviders(() => useDashboard());
 
     expect(result.current.status).toBe('ready');
     expect(result.current.title).toBe('Your dashboard');
@@ -119,7 +119,7 @@ describe('useDashboard', () => {
     mockPermissions();
     mockNetwork();
 
-    const { result } = renderHook(() => useDashboard());
+    const { result } = renderHookWithProviders(() => useDashboard());
 
     const kinds = result.current.widgets.map((widget) => widget.kind);
     expect(kinds).toEqual([DASHBOARD_WIDGET_KIND.memberAttendance]);
@@ -130,7 +130,7 @@ describe('useDashboard', () => {
     mockPermissions();
     mockNetwork();
 
-    const { result } = renderHook(() => useDashboard());
+    const { result } = renderHookWithProviders(() => useDashboard());
 
     expect(result.current.status).toBe('empty');
   });
@@ -140,7 +140,7 @@ describe('useDashboard', () => {
     mockPermissions();
     mockNetwork();
 
-    const { result } = renderHook(() => useDashboard());
+    const { result } = renderHookWithProviders(() => useDashboard());
 
     expect(result.current.status).toBe('error');
     expect(result.current.errorMessage).toBe('Something went wrong on our side. Please try again.');
@@ -152,7 +152,7 @@ describe('useDashboard', () => {
     mockPermissions();
     mockNetwork(false);
 
-    const { result } = renderHook(() => useDashboard());
+    const { result } = renderHookWithProviders(() => useDashboard());
 
     expect(result.current.status).toBe('offline');
     expect(result.current.isOffline).toBe(true);
@@ -163,7 +163,7 @@ describe('useDashboard', () => {
     mockPermissions();
     mockNetwork(false);
 
-    const { result } = renderHook(() => useDashboard());
+    const { result } = renderHookWithProviders(() => useDashboard());
 
     expect(result.current.status).toBe('ready');
     expect(result.current.isOffline).toBe(true);
@@ -174,8 +174,31 @@ describe('useDashboard', () => {
     mockPermissions({ isLoading: true, permissions: [] });
     mockNetwork();
 
-    const { result } = renderHook(() => useDashboard());
+    const { result } = renderHookWithProviders(() => useDashboard());
 
     expect(result.current.status).toBe('loading');
+  });
+
+  it('resolves the attendance widget deep link only with the self grant', () => {
+    mockQuery({ summary: summaryWith([ATTENDANCE_WIDGET]) });
+    mockPermissions({ permissions: [...MEMBER_PERMISSIONS, PERMISSIONS.attendanceReadSelf] });
+    mockNetwork();
+
+    const { result } = renderHookWithProviders(() => useDashboard());
+
+    expect(result.current.widgets[0]?.link?.path).toBe('/my-attendance');
+    expect(() => {
+      result.current.onOpenLink('/my-attendance');
+    }).not.toThrow();
+  });
+
+  it('hides the widget link from a session that cannot open its target', () => {
+    mockQuery({ summary: summaryWith([ATTENDANCE_WIDGET]) });
+    mockPermissions();
+    mockNetwork();
+
+    const { result } = renderHookWithProviders(() => useDashboard());
+
+    expect(result.current.widgets[0]?.link).toBeNull();
   });
 });

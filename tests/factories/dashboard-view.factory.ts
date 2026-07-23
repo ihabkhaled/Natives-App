@@ -58,6 +58,7 @@ export function buildMetricWidgetView(
     stateLabel: '',
     stateMessage: null,
     partialLabel: null,
+    link: null,
     metric: buildDashboardMetricView(),
     ...overrides,
   };
@@ -77,6 +78,7 @@ export function buildTasksWidgetView(
     stateLabel: '',
     stateMessage: null,
     partialLabel: null,
+    link: null,
     emptyTasksLabel: 'Nothing here yet.',
     tasks: [buildDashboardTaskView()],
     ...overrides,
@@ -97,6 +99,7 @@ export function buildBreakdownWidgetView(
     stateLabel: '',
     stateMessage: null,
     partialLabel: null,
+    link: null,
     caption: 'Attendance summary',
     rows: [buildDashboardBreakdownRowView()],
     ...overrides,
@@ -120,6 +123,7 @@ export function buildDashboardView(overrides: Partial<DashboardView> = {}): Dash
     emptyTitle: 'Nothing to show yet',
     emptyMessage: 'No cards for your role yet.',
     widgets: [buildTasksWidgetView()],
+    onOpenLink: vi.fn(),
     ...overrides,
   };
 }

@@ -22,11 +22,11 @@ import { createTestQueryClient } from '../setup/render-with-providers.helper';
 
 const CATALOG_RESOURCES = ['templates', 'metrics', 'scales', 'categories', 'periods'] as const;
 
-function renderPerformance(): void {
+function renderPerformance(initialPath = '/performance'): void {
   render(
     <QueryClientProvider client={createTestQueryClient()}>
-      <MemoryRouter initialEntries={['/performance']}>
-        <Route path="/performance">
+      <MemoryRouter initialEntries={[initialPath]}>
+        <Route exact path={['/performance', '/performance/measurements', '/performance/feedback']}>
           <PerformanceContainer />
         </Route>
       </MemoryRouter>
@@ -115,27 +115,53 @@ describe('a member persona renders from member-permitted data only', () => {
     await signInAs(MOCK_PERSONA_EMAILS.member);
     renderPerformance();
 
-    await screen.findByTestId(TEST_IDS.coachFeedbackCard, {}, { timeout: 5000 });
+    await screen.findByTestId(TEST_IDS.performanceScoreCard, {}, { timeout: 5000 });
     expect(catalogRequests()).toBe(0);
   });
 
-  it('renders feedback and goals without a charts block posing as data', async () => {
+  it('renders the score card and goals without a charts block posing as data', async () => {
     trackCatalogRequests();
     await signInAs(MOCK_PERSONA_EMAILS.member);
     renderPerformance();
 
-    await screen.findByTestId(TEST_IDS.coachFeedbackCard, {}, { timeout: 5000 });
+    await screen.findByTestId(TEST_IDS.performanceScoreCard, {}, { timeout: 5000 });
     await screen.findAllByTestId(TEST_IDS.developmentGoalCard, {}, { timeout: 5000 });
+    expect(screen.getByTestId(TEST_IDS.performanceScoreValue)).toHaveTextContent('78.4');
     expect(screen.queryByTestId(TEST_IDS.performanceTrendChart)).not.toBeInTheDocument();
     expect(screen.queryByTestId(TEST_IDS.performanceRadarChart)).not.toBeInTheDocument();
     expect(screen.queryByTestId(TEST_IDS.performanceMetricSelect)).not.toBeInTheDocument();
+  });
+
+  it('switches tabs through the segment and ignores an echo of the active tab', async () => {
+    trackCatalogRequests();
+    await signInAs(MOCK_PERSONA_EMAILS.member);
+    renderPerformance();
+
+    await screen.findByTestId(TEST_IDS.performanceScoreCard, {}, { timeout: 5000 });
+    fireIonChange(screen.getByTestId(TEST_IDS.performanceTabBar), 'measurements');
+
+    await screen.findByTestId(TEST_IDS.measurementHistoryPanel, {}, { timeout: 5000 });
+    fireIonChange(screen.getByTestId(TEST_IDS.performanceTabBar), 'measurements');
+    expect(screen.getByTestId(TEST_IDS.measurementHistoryPanel)).toBeInTheDocument();
+  });
+
+  it('deep-links straight to the honest-empty measurements tab', async () => {
+    trackCatalogRequests();
+    await signInAs(MOCK_PERSONA_EMAILS.member);
+    renderPerformance('/performance/measurements');
+
+    await screen.findByTestId(TEST_IDS.measurementHistoryPanel, {}, { timeout: 5000 });
+    expect(
+      await screen.findByTestId(TEST_IDS.measurementProtocolCard, {}, { timeout: 5000 }),
+    ).toBeVisible();
+    expect(screen.getByTestId(TEST_IDS.performanceTrendChart)).toBeVisible();
   });
 });
 
 describe('coach feedback and development goals', () => {
   it('lists the published coach feedback and acknowledges it', async () => {
     await signInAs(MOCK_PERSONA_EMAILS.member);
-    renderPerformance();
+    renderPerformance('/performance/feedback');
 
     await screen.findByTestId(TEST_IDS.coachFeedbackCard, {}, { timeout: 5000 });
     expect(screen.getByText('Your break-side flick is now a genuine weapon.')).toBeInTheDocument();
@@ -152,7 +178,7 @@ describe('coach feedback and development goals', () => {
 
   it('never exposes a private coach note to the player', async () => {
     await signInAs(MOCK_PERSONA_EMAILS.member);
-    renderPerformance();
+    renderPerformance('/performance/feedback');
 
     await screen.findByTestId(TEST_IDS.coachFeedbackCard, {}, { timeout: 5000 });
     expect(screen.getByTestId(TEST_IDS.coachFeedbackPanel).textContent).not.toContain('coachNote');

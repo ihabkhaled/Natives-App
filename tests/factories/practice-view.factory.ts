@@ -168,6 +168,7 @@ export function buildPracticeSessionScreenView(
     isOffline: false,
     forbiddenTitle: 'No access',
     forbiddenMessage: 'You cannot view this.',
+    attendanceCta: null,
     detail: buildPracticeSessionDetailData(),
     selectedReason: null,
     onSelectReason: noop,

@@ -57,7 +57,32 @@ test.describe('coach attendance experience', () => {
     await confirm.click();
 
     await expect(page.getByText('Finalized', { exact: true })).toBeVisible();
+    // The Coach bundle lacks attendance.correct: a finalized sheet renders
+    // read-only for this persona — the audited correction editor never shows.
+    await expect(page.getByTestId(TEST_IDS.attendanceCorrectionReason)).toHaveCount(0);
+    await expect(page.getByTestId(TEST_IDS.attendanceSaveCorrection)).toHaveCount(0);
+  });
+
+  test('shows the audited correction editor to a team admin on a locked sheet', async ({
+    page,
+  }) => {
+    await signIn(page, personaLogin(MOCK_PERSONA_EMAILS.teamAdmin));
+    await expectPresentedPage(page, TEST_IDS.homePage);
+    await gotoApp(page, APP_ROUTES.attendance);
+    await expectPresentedPage(page, TEST_IDS.attendancePage);
+
+    await page.getByTestId(TEST_IDS.attendanceMarkAllPresent).click();
+    await page.getByTestId(TEST_IDS.attendanceSubmit).click();
+    await expect(page.getByText('4 of 4 marked')).toBeVisible();
+    await page.getByTestId(TEST_IDS.attendanceFinalize).click();
+    const confirm = page
+      .locator('ion-alert')
+      .getByRole('button', { name: 'Finalize', exact: true });
+    await confirm.click();
+
+    await expect(page.getByText('Finalized', { exact: true })).toBeVisible();
     await expect(page.getByTestId(TEST_IDS.attendanceCorrectionReason).first()).toBeVisible();
+    await expect(page.getByTestId(TEST_IDS.attendanceSaveCorrection).first()).toBeVisible();
   });
 
   test('queues offline changes, replays them, and exposes a resolvable conflict', async ({
@@ -93,6 +118,28 @@ test.describe('coach attendance experience', () => {
     await expect(page.getByTestId(TEST_IDS.attendancePage)).toHaveCount(0);
   });
 
+  test('reaches the capture screen through the session-detail CTA', async ({ page }) => {
+    await signIn(page, personaLogin(MOCK_PERSONA_EMAILS.coach));
+    await expectPresentedPage(page, TEST_IDS.homePage);
+    await gotoApp(page, APP_ROUTES.practiceSession);
+    await expectPresentedPage(page, TEST_IDS.practiceSessionPage);
+
+    await page.getByTestId(TEST_IDS.practiceSessionAttendanceCta).click();
+
+    await expectPresentedPage(page, TEST_IDS.attendancePage);
+    await expect(page.getByTestId(TEST_IDS.attendanceRosterRow)).toHaveCount(4);
+  });
+
+  test('hides the session-detail CTA from a member without attendance.record', async ({ page }) => {
+    await signIn(page, personaLogin(MOCK_PERSONA_EMAILS.member));
+    await expectPresentedPage(page, TEST_IDS.homePage);
+    await gotoApp(page, APP_ROUTES.practiceSession);
+    await expectPresentedPage(page, TEST_IDS.practiceSessionPage);
+
+    await expect(page.getByTestId(TEST_IDS.rsvpControl)).toBeVisible();
+    await expect(page.getByTestId(TEST_IDS.practiceSessionAttendanceCta)).toHaveCount(0);
+  });
+
   test('renders the complete workflow in Arabic RTL @rtl', async ({ page }) => {
     // Direction follows the persisted locale, not the Playwright project locale,
     // so switch to Arabic before opening attendance.
@@ -108,5 +155,22 @@ test.describe('coach attendance experience', () => {
     await expect(page.locator('html')).toHaveAttribute('dir', 'rtl');
     await expect(page.getByTestId(TEST_IDS.attendanceRosterRow)).toHaveCount(4);
     await expect(page.getByTestId(TEST_IDS.attendanceSubmit)).toBeVisible();
+  });
+});
+
+test.describe('member self-attendance experience', () => {
+  test('opens My attendance from the nav and renders the participation summary', async ({
+    page,
+  }) => {
+    await signIn(page, personaLogin(MOCK_PERSONA_EMAILS.member));
+    await expectPresentedPage(page, TEST_IDS.homePage);
+
+    await page.getByTestId(`${TEST_IDS.primaryNavItem}-my-attendance`).click();
+
+    await expectPresentedPage(page, TEST_IDS.myAttendancePage);
+    await expect(page.getByTestId(TEST_IDS.myAttendanceParticipationCard)).toBeVisible();
+    await expect(page.getByTestId(TEST_IDS.myAttendanceParticipationRate)).toContainText('90.9%');
+    await expect(page.getByTestId(TEST_IDS.myAttendanceCheckInCard)).toBeVisible();
+    await expect(page.getByText(/pending approval/u)).toBeVisible();
   });
 });

@@ -8,6 +8,7 @@ import { buildTasksWidgetView } from '../../../../../tests/factories/dashboard-v
 import { DashboardWidget } from './dashboard-widget.component';
 
 const onRetry = vi.fn();
+const onOpenLink = vi.fn();
 
 describe('DashboardWidget', () => {
   it('renders the title, freshness, and prepared body when content is available', () => {
@@ -15,7 +16,14 @@ describe('DashboardWidget', () => {
       title: 'Your next sessions',
       freshnessLabel: 'As of today',
     });
-    render(<DashboardWidget widget={widget} retryLabel="Try again" onRetry={onRetry} />);
+    render(
+      <DashboardWidget
+        widget={widget}
+        retryLabel="Try again"
+        onRetry={onRetry}
+        onOpenLink={onOpenLink}
+      />,
+    );
 
     expect(screen.getByTestId(widget.testId)).toBeInTheDocument();
     expect(screen.getByText('Your next sessions')).toBeInTheDocument();
@@ -35,6 +43,7 @@ describe('DashboardWidget', () => {
         })}
         retryLabel="Try again"
         onRetry={onRetry}
+        onOpenLink={onOpenLink}
       />,
     );
 
@@ -59,6 +68,7 @@ describe('DashboardWidget', () => {
         })}
         retryLabel="Try again"
         onRetry={onRetry}
+        onOpenLink={onOpenLink}
       />,
     );
 
@@ -79,6 +89,7 @@ describe('DashboardWidget', () => {
         })}
         retryLabel="Try again"
         onRetry={onRetry}
+        onOpenLink={onOpenLink}
       />,
     );
 
@@ -92,6 +103,7 @@ describe('DashboardWidget', () => {
         widget={buildTasksWidgetView({ partialLabel: 'Some of this section is still loading.' })}
         retryLabel="Try again"
         onRetry={onRetry}
+        onOpenLink={onOpenLink}
       />,
     );
 
@@ -100,8 +112,37 @@ describe('DashboardWidget', () => {
 
   it('omits the freshness note when the as-of instant is unknown', () => {
     const widget = buildTasksWidgetView({ freshnessLabel: null, title: 'Coaching schedule' });
-    render(<DashboardWidget widget={widget} retryLabel="Try again" onRetry={onRetry} />);
+    render(
+      <DashboardWidget
+        widget={widget}
+        retryLabel="Try again"
+        onRetry={onRetry}
+        onOpenLink={onOpenLink}
+      />,
+    );
 
     expect(screen.getByText('Coaching schedule')).toBeInTheDocument();
+    expect(
+      screen.queryByTestId(`${TEST_IDS.dashboardWidgetLink}-${widget.kind}`),
+    ).not.toBeInTheDocument();
+  });
+
+  it('navigates through the footer deep link when the widget carries one', async () => {
+    const widget = buildTasksWidgetView({
+      kind: 'member-attendance',
+      link: { path: '/my-attendance', label: 'Open my attendance' },
+    });
+    render(
+      <DashboardWidget
+        widget={widget}
+        retryLabel="Try again"
+        onRetry={onRetry}
+        onOpenLink={onOpenLink}
+      />,
+    );
+
+    await userEvent.click(screen.getByTestId(`${TEST_IDS.dashboardWidgetLink}-member-attendance`));
+
+    expect(onOpenLink).toHaveBeenCalledWith('/my-attendance');
   });
 });

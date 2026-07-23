@@ -13,6 +13,7 @@ import type {
   DashboardMetricView,
   DashboardStatus,
   DashboardTaskView,
+  DashboardWidgetLinkView,
   DashboardWidgetStateKind,
   DashboardWidgetView,
 } from '../types/dashboard-view.types';
@@ -111,29 +112,58 @@ function buildStateMessage(t: Translate, kind: DashboardWidgetStateKind | null):
   return kind === 'unavailable' ? t(I18N_KEYS.dashboard.widgetUnavailableMessage) : null;
 }
 
-function buildSharedView(t: Translate, locale: string, widget: DashboardWidget, title: string) {
+/**
+ * Resolve the footer deep link. It renders only when the viewer holds the
+ * TARGET route's permission — a link that lands on "no access" is worse than
+ * no link at all.
+ */
+function buildLinkView(
+  t: Translate,
+  descriptor: DashboardWidgetDescriptor,
+  permissions: readonly string[],
+): DashboardWidgetLinkView | null {
+  const link = descriptor.link;
+  if (link === null || !hasAllPermissions(permissions, [link.linkPermission])) {
+    return null;
+  }
+  return { path: link.linkPath, label: t(link.linkLabelKey) };
+}
+
+/** Everything widget preparation reads besides the widget itself. */
+interface WidgetBuildContext {
+  readonly t: Translate;
+  readonly locale: string;
+  readonly permissions: readonly string[];
+}
+
+function buildSharedView(
+  context: WidgetBuildContext,
+  widget: DashboardWidget,
+  descriptor: DashboardWidgetDescriptor,
+) {
+  const { t, locale, permissions } = context;
   const stateKind = buildStateKind(widget.status);
   return {
     kind: widget.kind,
     testId: `${TEST_IDS.dashboardWidget}-${widget.kind}`,
-    title,
+    title: t(descriptor.titleKey),
     freshnessLabel: buildFreshnessLabel(t, locale, widget.asOfIso),
     showsContent: widget.status === 'ready' || widget.status === 'partial',
     stateKind,
     stateLabel: buildStateLabel(t, stateKind),
     stateMessage: buildStateMessage(t, stateKind),
     partialLabel: widget.status === 'partial' ? t(I18N_KEYS.dashboard.widgetPartial) : null,
+    link: buildLinkView(t, descriptor, permissions),
   };
 }
 
 function buildWidgetView(
-  t: Translate,
-  locale: string,
+  context: WidgetBuildContext,
   widget: DashboardWidget,
   descriptor: DashboardWidgetDescriptor,
 ): DashboardWidgetView {
-  const title = t(descriptor.titleKey);
-  const shared = buildSharedView(t, locale, widget, title);
+  const { t, locale } = context;
+  const shared = buildSharedView(context, widget, descriptor);
   if (widget.presentation === 'metric') {
     return { ...shared, presentation: 'metric', metric: buildMetricView(t, widget.metric) };
   }
@@ -141,7 +171,7 @@ function buildWidgetView(
     return {
       ...shared,
       presentation: 'breakdown',
-      caption: title,
+      caption: shared.title,
       rows: widget.rows.map((row) => buildBreakdownRowView(t, row)),
     };
   }
@@ -176,7 +206,7 @@ export function buildDashboardWidgetViews(
     if (descriptor === undefined || !isWidgetPermitted(descriptor, permissions)) {
       return [];
     }
-    return [buildWidgetView(t, locale, widget, descriptor)];
+    return [buildWidgetView({ t, locale, permissions }, widget, descriptor)];
   });
 }
 

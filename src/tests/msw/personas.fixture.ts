@@ -15,6 +15,12 @@ const COACH_PERMISSIONS = [
   PERMISSIONS.practicesManage,
   PERMISSIONS.practicesRsvpSelf,
   PERMISSIONS.attendanceMark,
+  // The Coach bundle extends Member with team capture: read.team, record and
+  // finalize — deliberately NOT attendance.correct (Team Admin only).
+  PERMISSIONS.attendanceReadSelf,
+  PERMISSIONS.attendanceReadTeam,
+  PERMISSIONS.attendanceFinalize,
+  PERMISSIONS.analyticsReadSelf,
   PERMISSIONS.assessmentReview,
   PERMISSIONS.assessmentReadTeam,
   PERMISSIONS.assessmentReadSelfPublished,
@@ -58,6 +64,7 @@ const TEAM_ADMIN_PERMISSIONS = [
   ...COACH_PERMISSIONS,
   PERMISSIONS.memberInvite,
   PERMISSIONS.memberLifecycleManage,
+  PERMISSIONS.attendanceCorrect,
   PERMISSIONS.teamRead,
   PERMISSIONS.settingsManage,
   PERMISSIONS.seasonManage,
@@ -70,6 +77,8 @@ const MEMBER_PERMISSIONS = [
   PERMISSIONS.memberProfileUpdateSelf,
   PERMISSIONS.practicesRead,
   PERMISSIONS.practicesRsvpSelf,
+  PERMISSIONS.attendanceReadSelf,
+  PERMISSIONS.analyticsReadSelf,
   PERMISSIONS.assessmentReadSelfPublished,
   PERMISSIONS.feedbackReadSelf,
   PERMISSIONS.leaderboardsRead,
@@ -82,6 +91,24 @@ const MEMBER_PERMISSIONS = [
   // A member reads the scoreboard but neither scores it nor reads the
   // derived statistics: both read-only and forbidden are real personas.
   PERMISSIONS.matchRead,
+];
+
+/**
+ * An analyst holds team-wide reads and NO self grants: no attendance.read.self,
+ * no analytics.read.self, no activity/feedback self scopes. The persona exists
+ * to pin that self-service surfaces stay hidden and answer 403, never a
+ * loading mask (prompt 240 authorization matrix).
+ */
+const ANALYST_PERMISSIONS = [
+  PERMISSIONS.memberList,
+  PERMISSIONS.memberProfileReadPublic,
+  PERMISSIONS.practicesRead,
+  PERMISSIONS.attendanceReadTeam,
+  PERMISSIONS.assessmentReadTeam,
+  PERMISSIONS.pointsReadTeam,
+  PERMISSIONS.matchRead,
+  PERMISSIONS.matchStatsRead,
+  PERMISSIONS.matchAnalysisReadTeam,
 ];
 
 export const ADMIN_PERSONA = buildAuthUser();
@@ -113,6 +140,12 @@ export const PERSONA_USERS: Record<string, AuthUser> = {
     email: MOCK_PERSONA_EMAILS.member,
     displayName: 'Member Omar',
     permissions: MEMBER_PERMISSIONS,
+  }),
+  [MOCK_PERSONA_EMAILS.analyst]: buildAuthUser({
+    id: 'user-analyst',
+    email: MOCK_PERSONA_EMAILS.analyst,
+    displayName: 'Analyst Rana',
+    permissions: ANALYST_PERMISSIONS,
   }),
   [MOCK_PERSONA_EMAILS.pending]: buildAuthUser({
     id: 'user-pending',

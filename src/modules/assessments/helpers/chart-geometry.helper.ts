@@ -1,5 +1,10 @@
 import { CHART_GEOMETRY } from '../constants/assessments.constants';
-import type { ChartAxisTick, ChartMarker, ChartPoint } from '../types/assessments-view.types';
+import type {
+  ChartAxisTick,
+  ChartMarker,
+  ChartPoint,
+  TrendChartView,
+} from '../types/assessments-view.types';
 
 /**
  * In-house SVG geometry. No chart vendor is introduced: the module owns a few
@@ -112,6 +117,20 @@ export function buildAxisTicks(points: readonly ChartPoint[]): readonly ChartAxi
     y: CHART_GEOMETRY.height - 4,
     label: point.label,
   }));
+}
+
+/** The four geometry facts every trend chart derives from one series. */
+export function buildTrendGeometry(
+  points: readonly ChartPoint[],
+  minimum: number,
+  maximum: number,
+): Pick<TrendChartView, 'linePath' | 'areaPath' | 'markers' | 'axisTicks'> {
+  return {
+    linePath: buildLinePath(points, minimum, maximum),
+    areaPath: buildAreaPath(points, minimum, maximum),
+    markers: buildMarkers(points, minimum, maximum),
+    axisTicks: buildAxisTicks(points),
+  };
 }
 
 /** Nice bounds for a series; a flat series still gets a readable band. */

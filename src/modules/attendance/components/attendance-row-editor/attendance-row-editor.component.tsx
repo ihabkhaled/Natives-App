@@ -16,7 +16,7 @@ export function AttendanceRowEditor(props: AttendanceRowEditorProps): React.JSX.
         labelPlacement="stacked"
         fill="outline"
         value={row.status}
-        disabled={props.isBusy}
+        disabled={props.isBusy || row.isReadOnly}
         onIonChange={(event) => {
           props.onStatusChange(row.membershipId, event.detail.value as AttendanceStatus);
         }}
@@ -45,7 +45,7 @@ export function AttendanceRowEditor(props: AttendanceRowEditorProps): React.JSX.
           labelPlacement="stacked"
           fill="outline"
           value={row.excuseCategory ?? ATTENDANCE_EXCUSE_NONE_VALUE}
-          disabled={props.isBusy}
+          disabled={props.isBusy || row.isReadOnly}
           onIonChange={(event) => {
             const value = event.detail.value as string;
             props.onExcuseChange(
@@ -64,7 +64,7 @@ export function AttendanceRowEditor(props: AttendanceRowEditorProps): React.JSX.
           ))}
         </IonSelect>
       ) : null}
-      {row.isLocked ? (
+      {row.showCorrectionEditor ? (
         <AppInput
           label={row.correctionReasonLabel}
           name={`correction-${row.membershipId}`}

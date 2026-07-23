@@ -15,10 +15,7 @@ import type {
   PublishedAssessment,
 } from '../types/assessments.types';
 import {
-  buildAreaPath,
-  buildAxisTicks,
-  buildLinePath,
-  buildMarkers,
+  buildTrendGeometry,
   radarPoint,
   radarRingRadii,
   resolveBounds,
@@ -90,10 +87,7 @@ export function buildTrendChartView(
       last: points.at(-1)?.label ?? '',
     }),
     points,
-    linePath: buildLinePath(points, bounds.minimum, bounds.maximum),
-    areaPath: buildAreaPath(points, bounds.minimum, bounds.maximum),
-    markers: buildMarkers(points, bounds.minimum, bounds.maximum),
-    axisTicks: buildAxisTicks(points),
+    ...buildTrendGeometry(points, bounds.minimum, bounds.maximum),
     hasGap: evaluated.length < points.length,
     gapNotice: t(I18N_KEYS.assessments.chartGapNotice),
     lowDataNotice: evaluated.length < 2 ? t(I18N_KEYS.assessments.chartLowData) : null,

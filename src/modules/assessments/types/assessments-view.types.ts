@@ -249,6 +249,59 @@ export interface GoalTransitionView {
   readonly label: string;
 }
 
+/** The three deep-linkable tabs of the member performance area. */
+export type PerformanceTabId = 'scores' | 'measurements' | 'feedback';
+
+export interface PerformanceTabView {
+  readonly id: PerformanceTabId;
+  readonly label: string;
+  readonly path: string;
+}
+
+interface ScoreComponentRowView {
+  readonly key: string;
+  readonly label: string;
+  readonly weightText: string;
+  readonly valueText: string;
+}
+
+/** The own computed performance score; honest about "not computed yet". */
+export interface PerformanceScoreCardView {
+  readonly title: string;
+  readonly valueText: string;
+  readonly hasValue: boolean;
+  readonly confidenceLabel: string;
+  readonly confidenceValue: string;
+  readonly completenessLabel: string;
+  readonly completenessText: string;
+  readonly ruleReference: string;
+  readonly explanationTitle: string;
+  readonly componentColumns: readonly string[];
+  readonly components: readonly ScoreComponentRowView[];
+  readonly isLoading: boolean;
+  readonly loadingLabel: string;
+  readonly unavailableMessage: string | null;
+}
+
+/** One protocol's own measurement history: chart, table twin, text summary. */
+export interface MeasurementProtocolView {
+  readonly protocolId: string;
+  readonly unitLabel: string;
+  readonly rangeLabel: string | null;
+  readonly summaryText: string;
+  readonly chart: TrendChartView;
+}
+
+export interface MeasurementsPanelView {
+  readonly title: string;
+  readonly emptyTitle: string;
+  readonly emptyMessage: string;
+  readonly isLoading: boolean;
+  readonly loadingLabel: string;
+  readonly unavailableMessage: string | null;
+  readonly protocols: readonly MeasurementProtocolView[];
+}
+
 export interface PerformanceView extends AsyncViewCopy {
   readonly title: string;
   readonly subtitle: string;
@@ -257,6 +310,13 @@ export interface PerformanceView extends AsyncViewCopy {
   readonly forbiddenMessage: string;
   readonly emptyTitle: string;
   readonly emptyMessage: string;
+  readonly tabs: readonly PerformanceTabView[];
+  readonly activeTab: PerformanceTabId;
+  readonly tabBarLabel: string;
+  /** Segment callback; echoes of the already-active tab are ignored. */
+  readonly onTabChange: (tabId: string) => void;
+  readonly scoreCard: PerformanceScoreCardView | null;
+  readonly measurements: MeasurementsPanelView;
   readonly metricSelectLabel: string;
   readonly metricOptions: readonly AssessmentFilterOption[];
   readonly selectedMetricId: string;

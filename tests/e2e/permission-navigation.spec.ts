@@ -16,6 +16,7 @@ const ADMIN_NAV_ITEM = `${TEST_IDS.primaryNavItem}-admin`;
 const MEMBER_NAV_KEYS = [
   'home',
   'practice-calendar',
+  'my-attendance',
   'members',
   'performance',
   'training',
@@ -53,7 +54,7 @@ test.describe('permission-aware navigation', () => {
     await expect(page.getByTestId(ADMIN_NAV_ITEM)).toHaveCount(0);
   });
 
-  test('a member persona gets exactly its 13 permitted destinations once scoped grants load', async ({
+  test('a member persona gets exactly its 14 permitted destinations once scoped grants load', async ({
     page,
   }) => {
     await login(page, personaLogin(MOCK_PERSONA_EMAILS.member));
@@ -66,6 +67,16 @@ test.describe('permission-aware navigation', () => {
     await expect(page.locator(`[data-testid^="${TEST_IDS.primaryNavItem}-"]`)).toHaveCount(
       MEMBER_NAV_KEYS.length,
     );
+  });
+
+  test('an analyst persona never sees the self-service destinations', async ({ page }) => {
+    await login(page, personaLogin(MOCK_PERSONA_EMAILS.analyst));
+    await expectPresentedPage(page, TEST_IDS.homePage);
+
+    await expect(page.getByTestId(HOME_NAV_ITEM)).toBeVisible();
+    await expect(page.getByTestId(`${TEST_IDS.primaryNavItem}-my-attendance`)).toHaveCount(0);
+    await expect(page.getByTestId(`${TEST_IDS.primaryNavItem}-performance`)).toHaveCount(0);
+    await expect(page.getByTestId(`${TEST_IDS.primaryNavItem}-training`)).toHaveCount(0);
   });
 
   test('a direct admin URL reveals no admin content to a member persona', async ({ page }) => {

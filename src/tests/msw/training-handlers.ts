@@ -1,5 +1,7 @@
 import { http, HttpResponse } from 'msw';
 
+import { PERMISSIONS } from '@/shared/security';
+
 import {
   apiUrl,
   failRequest,
@@ -8,6 +10,7 @@ import {
   readJsonBody,
   readPaging,
 } from './mock-request.helper';
+import { permissionsForRequest } from './persona-permissions.helper';
 import {
   decideReviewRecord,
   reviewDetailResponse,
@@ -19,6 +22,7 @@ import {
   createSubmissionRecord,
   evidenceResponse,
   mySubmissionsResponse,
+  respondToBuddyRecord,
   submissionDetailResponse,
   transitionSubmission,
   type CreateSubmissionBody,
@@ -69,12 +73,26 @@ const submissionHandlers = [
       ? HttpResponse.json(evidenceResponse(pathParam(params, 'submissionId')))
       : failRequest(401, 'UNAUTHORIZED', '/activity-submissions'),
   ),
+  // Gated on activity.read.self exactly like the backend: an analyst holds
+  // team reads only and receives an honest 403 on every self route.
   http.get(trainingUrl('/my-activity-buddies'), ({ request }) =>
-    isAuthorized(request)
+    permissionsForRequest(request).includes(PERMISSIONS.activityReadSelf)
       ? HttpResponse.json(buddiesResponse())
-      : failRequest(401, 'UNAUTHORIZED', '/my-activity-buddies'),
+      : failRequest(403, 'FORBIDDEN', '/my-activity-buddies'),
   ),
 ];
+
+const buddyResponseHandlers = (['confirm', 'decline'] as const).map((intent) =>
+  http.post(trainingUrl(`/my-activity-buddies/:buddyId/${intent}`), ({ request, params }) => {
+    if (!permissionsForRequest(request).includes(PERMISSIONS.activitySubmitSelf)) {
+      return failRequest(403, 'FORBIDDEN', '/my-activity-buddies');
+    }
+    const result = respondToBuddyRecord(pathParam(params, 'buddyId'), intent);
+    return result === null
+      ? failRequest(404, 'NOT_FOUND', '/my-activity-buddies')
+      : HttpResponse.json(result);
+  }),
+);
 
 const transitionHandlers = (['submit', 'withdraw'] as const).map((intent) =>
   http.post(
@@ -144,6 +162,7 @@ const decisionHandlers = (['approve', 'reject', 'request-changes'] as const).map
 /** NestJS-shaped activities handlers; the same Zod schemas parse both modes. */
 export const trainingHandlers = [
   ...submissionHandlers,
+  ...buddyResponseHandlers,
   ...transitionHandlers,
   ...reviewHandlers,
   ...decisionHandlers,

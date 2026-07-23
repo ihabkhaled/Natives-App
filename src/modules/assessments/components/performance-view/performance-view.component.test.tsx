@@ -5,17 +5,64 @@ import { TEST_IDS } from '@/shared/config';
 
 import { fireIonChange } from '../../../../../tests/setup/ionic-events.helper';
 
-import { buildPerformanceView } from '../../../../../tests/factories/assessments-view.factory';
+import {
+  buildPerformanceScoreCardView,
+  buildPerformanceView,
+} from '../../../../../tests/factories/assessments-view.factory';
 import { PerformanceView } from './performance-view.component';
 
 describe('PerformanceView', () => {
-  it('renders both charts, the feedback panel, and the goals panel', () => {
+  it('renders both charts and the goals panel on the scores tab', () => {
     render(<PerformanceView {...buildPerformanceView()} />);
 
     expect(screen.getByTestId(TEST_IDS.performanceTrendChart)).toBeInTheDocument();
     expect(screen.getByTestId(TEST_IDS.performanceRadarChart)).toBeInTheDocument();
-    expect(screen.getByTestId(TEST_IDS.coachFeedbackPanel)).toBeInTheDocument();
     expect(screen.getByTestId(TEST_IDS.developmentGoalsPanel)).toBeInTheDocument();
+    expect(screen.queryByTestId(TEST_IDS.coachFeedbackPanel)).not.toBeInTheDocument();
+    expect(screen.getByTestId(TEST_IDS.performanceTabBar)).toBeInTheDocument();
+  });
+
+  it('renders the own score card on the scores tab when granted', () => {
+    render(
+      <PerformanceView {...buildPerformanceView({ scoreCard: buildPerformanceScoreCardView() })} />,
+    );
+
+    expect(screen.getByTestId(TEST_IDS.performanceScoreCard)).toBeInTheDocument();
+  });
+
+  it('deep-links to the measurements tab body', () => {
+    render(<PerformanceView {...buildPerformanceView({ activeTab: 'measurements' })} />);
+
+    expect(screen.getByTestId(TEST_IDS.measurementHistoryPanel)).toBeInTheDocument();
+    expect(screen.queryByTestId(TEST_IDS.performanceTrendChart)).not.toBeInTheDocument();
+  });
+
+  it('deep-links to the feedback tab with the acknowledgement panel', () => {
+    render(<PerformanceView {...buildPerformanceView({ activeTab: 'feedback' })} />);
+
+    expect(screen.getByTestId(TEST_IDS.coachFeedbackPanel)).toBeInTheDocument();
+    expect(screen.queryByTestId(TEST_IDS.developmentGoalsPanel)).not.toBeInTheDocument();
+  });
+
+  it('forwards a segment change to the tab handler', () => {
+    const view = buildPerformanceView();
+    render(<PerformanceView {...view} />);
+
+    fireIonChange(screen.getByTestId(TEST_IDS.performanceTabBar), 'feedback');
+
+    expect(view.onTabChange).toHaveBeenCalledExactlyOnceWith('feedback');
+  });
+
+  it('hides the tab bar entirely when only the scores tab is permitted', () => {
+    render(
+      <PerformanceView
+        {...buildPerformanceView({
+          tabs: [{ id: 'scores', label: 'Scores', path: '/performance' }],
+        })}
+      />,
+    );
+
+    expect(screen.queryByTestId(TEST_IDS.performanceTabBar)).not.toBeInTheDocument();
   });
 
   it('offers a metric switch and forwards the selection', () => {
@@ -66,7 +113,7 @@ describe('PerformanceView', () => {
     expect(screen.queryByTestId(TEST_IDS.performanceTrendChart)).not.toBeInTheDocument();
     expect(screen.queryByTestId(TEST_IDS.performanceRadarChart)).not.toBeInTheDocument();
     expect(screen.queryByTestId(TEST_IDS.performanceMetricSelect)).not.toBeInTheDocument();
-    expect(screen.getByTestId(TEST_IDS.coachFeedbackPanel)).toBeInTheDocument();
+    expect(screen.getByTestId(TEST_IDS.developmentGoalsPanel)).toBeInTheDocument();
   });
 
   it('keeps the block with only the trend when the radar has no data', () => {

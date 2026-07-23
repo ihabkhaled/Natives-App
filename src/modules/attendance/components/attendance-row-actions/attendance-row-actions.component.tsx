@@ -34,7 +34,7 @@ export function AttendanceRowActions(props: AttendanceRowActionsProps): React.JS
             props.onShowHistory(row.membershipId);
           }}
         />
-        {row.isLocked ? (
+        {row.showCorrectionEditor ? (
           <AppButton
             label={row.saveCorrectionLabel}
             disabled={!row.canSaveCorrection || props.isBusy}

@@ -5,6 +5,7 @@ import type {
 import type { BackendApiSchemas } from '@/packages/api-contract';
 import type { SchemaOutput } from '@/packages/schema';
 
+import { makeParticipationDto } from './attendance-wire.fixture';
 import { MOCK_ATTENDANCE } from './mock-data.constants';
 
 /**
@@ -65,11 +66,31 @@ const INITIAL_ROSTER: readonly RosterEntry[] = [
   },
 ];
 
+/** The caller's own membership scope, mirroring `buildAuthMembership`. */
+const SELF_MEMBERSHIP_ID = 'membership-natives-1';
+const SELF_CHECK_IN_AT = '2026-07-26T14:59:00.000Z';
+
+function emptySelfRecord(): AttendanceRecord {
+  return {
+    sessionId: MOCK_ATTENDANCE.sessionId,
+    membershipId: SELF_MEMBERSHIP_ID,
+    status: null,
+    checkInAt: null,
+    checkOutAt: null,
+    latenessMinutes: null,
+    excuseCategory: null,
+    source: null,
+    recordedAt: null,
+    version: null,
+  };
+}
+
 let roster = INITIAL_ROSTER.map((entry) => ({ ...entry }));
 let sheetState: 'open' | 'finalized' | 'corrected' = 'open';
 let sheetVersion = 3;
 let finalizedAt: string | null = null;
 let replayConflictAvailable = true;
+let selfRecord = emptySelfRecord();
 const historyByMember = new Map<string, Revision[]>();
 
 export function resetMockAttendanceState(): void {
@@ -78,7 +99,38 @@ export function resetMockAttendanceState(): void {
   sheetVersion = 3;
   finalizedAt = null;
   replayConflictAvailable = true;
+  selfRecord = emptySelfRecord();
   historyByMember.clear();
+}
+
+/** Own per-session record; `status: null` mirrors the backend notRecordedView. */
+export function buildMyAttendance(sessionId: string): AttendanceRecord {
+  return { ...selfRecord, sessionId };
+}
+
+/**
+ * Self check-in mirrors the CURRENT deployed contract: the status derives from
+ * the clock and a repeat POST upserts (no window, no idempotency — those are
+ * the Wave B1 hardenings, deliberately NOT faked here).
+ */
+export function applySelfCheckIn(sessionId: string): AttendanceRecord {
+  selfRecord = {
+    ...selfRecord,
+    sessionId,
+    status: 'present_on_time',
+    checkInAt: SELF_CHECK_IN_AT,
+    source: 'self',
+    recordedAt: SELF_CHECK_IN_AT,
+    version: (selfRecord.version ?? 0) + 1,
+  };
+  return { ...selfRecord };
+}
+
+/** Deterministic weighted-participation projection for the caller. */
+export function buildMyParticipation(
+  seasonId: string | null,
+): BackendApiSchemas['ParticipationResponseDto'] {
+  return { ...makeParticipationDto(), seasonId };
 }
 
 export function buildAttendanceSheet(limit: number, offset: number) {

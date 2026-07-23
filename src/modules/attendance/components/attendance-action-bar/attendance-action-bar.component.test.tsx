@@ -30,4 +30,10 @@ describe('AttendanceActionBar', () => {
     expect(screen.queryByTestId(TEST_IDS.attendanceRetryQueue)).not.toBeInTheDocument();
     expect(screen.getByTestId(TEST_IDS.attendanceSubmit)).toBeInTheDocument();
   });
+
+  it('never renders finalize for a session without the finalize grant', () => {
+    render(<AttendanceActionBar {...buildAttendanceScreenView({ showFinalize: false })} />);
+
+    expect(screen.queryByTestId(TEST_IDS.attendanceFinalize)).not.toBeInTheDocument();
+  });
 });

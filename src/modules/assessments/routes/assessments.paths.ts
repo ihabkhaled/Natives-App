@@ -29,3 +29,13 @@ export function assessmentEntryPath(assessmentId: string): string {
 export function performancePath(): string {
   return APP_PATHS.performance;
 }
+
+/** Deep-linkable measurements tab of the performance area. */
+export function performanceMeasurementsPath(): string {
+  return APP_PATHS.performanceMeasurements;
+}
+
+/** Deep-linkable feedback tab of the performance area. */
+export function performanceFeedbackPath(): string {
+  return APP_PATHS.performanceFeedback;
+}

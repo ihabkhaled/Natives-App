@@ -57,6 +57,16 @@ export function myDevelopmentGoalsPath(teamId: string): string {
   return `${teamPath(teamId)}/my-development-goals`;
 }
 
+/** The signed-in player's own computed performance scores. */
+export function myPerformanceScorePath(teamId: string): string {
+  return `${teamPath(teamId)}/my-performance-score`;
+}
+
+/** The signed-in player's own measurement history, grouped by protocol. */
+export function myMeasurementsPath(teamId: string): string {
+  return `${teamPath(teamId)}/my-measurements`;
+}
+
 /** Team-scoped development goals. */
 function developmentGoalsPath(teamId: string): string {
   return `${teamPath(teamId)}/development-goals`;

@@ -21,14 +21,16 @@ export function AttendanceActionBar(props: AttendanceActionBarProps): React.JSX.
         testId={TEST_IDS.attendanceSubmit}
         onClick={props.onSubmit}
       />
-      <AppButton
-        label={props.finalizeLabel}
-        tone="danger"
-        disabled={!props.canFinalize}
-        loading={props.isFinalizing}
-        testId={TEST_IDS.attendanceFinalize}
-        onClick={props.onFinalize}
-      />
+      {props.showFinalize ? (
+        <AppButton
+          label={props.finalizeLabel}
+          tone="danger"
+          disabled={!props.canFinalize}
+          loading={props.isFinalizing}
+          testId={TEST_IDS.attendanceFinalize}
+          onClick={props.onFinalize}
+        />
+      ) : null}
     </div>
   );
 }

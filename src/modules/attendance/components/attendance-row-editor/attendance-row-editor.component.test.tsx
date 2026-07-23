@@ -25,6 +25,7 @@ describe('AttendanceRowEditor', () => {
         showLateness: true,
         showExcuse: true,
         isLocked: true,
+        showCorrectionEditor: true,
         excuseCategory: 'illness',
       }),
     );
@@ -53,6 +54,20 @@ describe('AttendanceRowEditor', () => {
 
     expect(screen.queryByTestId(TEST_IDS.attendanceLatenessInput)).not.toBeInTheDocument();
     expect(screen.queryByTestId(TEST_IDS.attendanceExcuseSelect)).not.toBeInTheDocument();
+    expect(screen.queryByTestId(TEST_IDS.attendanceCorrectionReason)).not.toBeInTheDocument();
+  });
+
+  it('renders a locked row read-only when the viewer cannot correct it', () => {
+    renderEditor(
+      buildAttendanceRosterRowView({
+        isLocked: true,
+        isReadOnly: true,
+        showExcuse: true,
+        excuseCategory: 'illness',
+      }),
+    );
+
+    expect(screen.getByTestId(TEST_IDS.attendanceStatusSelect)).toHaveProperty('disabled', true);
     expect(screen.queryByTestId(TEST_IDS.attendanceCorrectionReason)).not.toBeInTheDocument();
   });
 });

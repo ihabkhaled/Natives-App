@@ -4,6 +4,7 @@ export const trainingQueryKeys = {
   team: (teamId: string) => [...trainingQueryKeys.all, 'team', teamId] as const,
   types: (teamId: string) => [...trainingQueryKeys.team(teamId), 'activity-types'] as const,
   mySubmissions: (teamId: string) => [...trainingQueryKeys.team(teamId), 'my-submissions'] as const,
+  myBuddies: (teamId: string) => [...trainingQueryKeys.team(teamId), 'my-buddies'] as const,
   submission: (teamId: string, submissionId: string) =>
     [...trainingQueryKeys.team(teamId), 'submission', submissionId] as const,
   evidence: (teamId: string, submissionId: string) =>

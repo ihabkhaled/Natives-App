@@ -2,6 +2,7 @@ import { IonNote, IonText } from '@/packages/ionic';
 import { TEST_IDS } from '@/shared/config';
 import { AsyncStateView, EmptyState, PageShell, SelectField } from '@/shared/ui';
 
+import { BuddyCreditList } from '../buddy-credit-list';
 import { TrainingComposer } from '../training-composer';
 import { TrainingSubmissionList } from '../training-submission-list';
 import { TRAINING_STATE_TEST_IDS } from './training-view.constants';
@@ -23,6 +24,8 @@ export function TrainingView(props: TrainingViewProps): React.JSX.Element {
         </header>
 
         {props.status === 'forbidden' ? null : <TrainingComposer view={props.composer} />}
+
+        {props.status === 'forbidden' ? null : <BuddyCreditList view={props.buddies} />}
 
         <div className="app-training__filters">
           <SelectField

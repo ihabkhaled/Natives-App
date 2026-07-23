@@ -2,6 +2,7 @@ import type { SchemaOutput } from '@/packages/schema';
 
 import type {
   activityTypeListResponseSchema,
+  buddyListResponseSchema,
   buddyResponseSchema,
   evidenceListResponseSchema,
   reviewDetailResponseSchema,
@@ -18,6 +19,7 @@ import type {
   ReviewSubmission,
   ReviewSubmissionDetail,
   TrainingBuddy,
+  TrainingBuddyPage,
   TrainingEvidence,
   TrainingSubmission,
   TrainingSubmissionDetail,
@@ -29,6 +31,7 @@ type SubmissionDto = SchemaOutput<typeof submissionResponseSchema>;
 type SubmissionDetailDto = SchemaOutput<typeof submissionDetailResponseSchema>;
 type SubmissionListDto = SchemaOutput<typeof submissionListResponseSchema>;
 type BuddyDto = SchemaOutput<typeof buddyResponseSchema>;
+type BuddyListDto = SchemaOutput<typeof buddyListResponseSchema>;
 type EvidenceListDto = SchemaOutput<typeof evidenceListResponseSchema>;
 type ReviewSubmissionDto = SchemaOutput<typeof reviewSubmissionResponseSchema>;
 type ReviewDetailDto = SchemaOutput<typeof reviewDetailResponseSchema>;
@@ -65,6 +68,16 @@ function mapBuddy(dto: BuddyDto): TrainingBuddy {
     respondedAtIso: dto.respondedAt,
     createdAtIso: dto.createdAt,
   };
+}
+
+/** One credit as returned by the confirm/decline endpoints. */
+export function mapBuddyRecord(dto: BuddyDto): TrainingBuddy {
+  return mapBuddy(dto);
+}
+
+/** The bounded page of credits naming the caller. */
+export function mapBuddyPage(dto: BuddyListDto): TrainingBuddyPage {
+  return { items: dto.items.map(mapBuddy), total: dto.total };
 }
 
 /** The fields the member projection and the reviewer projection share. */

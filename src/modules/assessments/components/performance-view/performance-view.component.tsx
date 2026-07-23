@@ -1,15 +1,18 @@
-import { IonSelect, IonSelectOption, IonText } from '@/packages/ionic';
+import { IonSegment, IonSegmentButton, IonText } from '@/packages/ionic';
 import { TEST_IDS } from '@/shared/config';
 import { AsyncStateView, PageShell } from '@/shared/ui';
 
 import { CoachFeedbackPanel } from '../coach-feedback-panel';
-import { DevelopmentGoalsPanel } from '../development-goals-panel';
-import { PerformanceRadarChart } from '../performance-radar-chart';
-import { PerformanceTrendChart } from '../performance-trend-chart';
+import { MeasurementHistoryPanel } from '../measurement-history-panel';
+import { PerformanceScoresTab } from '../performance-scores-tab';
 import { PERFORMANCE_STATE_TEST_IDS } from './performance-view.constants';
 import type { PerformanceViewProps } from './performance-view.types';
 
-/** Player performance: accessible charts, coach feedback, development goals. */
+/**
+ * Member performance area: three deep-linkable tabs behind one nav entry —
+ * scores (+ own score card), own measurements, and coach feedback with the
+ * acknowledgement flow.
+ */
 export function PerformanceView(props: PerformanceViewProps): React.JSX.Element {
   return (
     <PageShell title={props.title} testId={TEST_IDS.performancePage}>
@@ -23,50 +26,44 @@ export function PerformanceView(props: PerformanceViewProps): React.JSX.Element 
             <p className="m-0 text-sm">{props.subtitle}</p>
           </IonText>
         </header>
+        {props.tabs.length > 1 ? (
+          <IonSegment
+            data-testid={TEST_IDS.performanceTabBar}
+            aria-label={props.tabBarLabel}
+            value={props.activeTab}
+            onIonChange={(event) => {
+              props.onTabChange(String(event.detail.value));
+            }}
+          >
+            {props.tabs.map((tab) => (
+              <IonSegmentButton
+                key={tab.id}
+                value={tab.id}
+                data-testid={`${TEST_IDS.performanceTab}-${tab.id}`}
+                className="min-h-[44px]"
+              >
+                {tab.label}
+              </IonSegmentButton>
+            ))}
+          </IonSegment>
+        ) : null}
         <AsyncStateView view={props} variant="dashboard" {...PERFORMANCE_STATE_TEST_IDS} />
         {props.status === 'ready' ? (
           <>
-            {/* Charts need the staff-scoped catalog; when it is not readable
-                the whole block stays out instead of an empty select posing as
-                a chart area. */}
-            {props.trend === null && props.radar === null ? null : (
-              <div className="app-performance__charts">
-                <div className="app-performance__chart-head">
-                  <IonSelect
-                    data-testid={TEST_IDS.performanceMetricSelect}
-                    label={props.metricSelectLabel}
-                    value={props.selectedMetricId}
-                    onIonChange={(event) => {
-                      props.onSelectMetric(event.detail.value as string);
-                    }}
-                  >
-                    {props.metricOptions.map((option) => (
-                      <IonSelectOption key={option.value} value={option.value}>
-                        {option.label}
-                      </IonSelectOption>
-                    ))}
-                  </IonSelect>
-                </div>
-                {props.trend === null ? null : <PerformanceTrendChart chart={props.trend} />}
-                {props.radar === null ? null : <PerformanceRadarChart chart={props.radar} />}
-              </div>
-            )}
-            <CoachFeedbackPanel
-              title={props.feedbackTitle}
-              emptyTitle={props.feedbackEmptyTitle}
-              emptyMessage={props.feedbackEmptyMessage}
-              cards={props.feedbackCards}
-              isAcknowledging={props.isAcknowledging}
-              onAcknowledge={props.onAcknowledge}
-            />
-            <DevelopmentGoalsPanel
-              title={props.goalsTitle}
-              emptyTitle={props.goalsEmptyTitle}
-              emptyMessage={props.goalsEmptyMessage}
-              goals={props.goals}
-              isTransitioning={props.isTransitioningGoal}
-              onTransition={props.onGoalTransition}
-            />
+            {props.activeTab === 'scores' ? <PerformanceScoresTab {...props} /> : null}
+            {props.activeTab === 'measurements' ? (
+              <MeasurementHistoryPanel view={props.measurements} />
+            ) : null}
+            {props.activeTab === 'feedback' ? (
+              <CoachFeedbackPanel
+                title={props.feedbackTitle}
+                emptyTitle={props.feedbackEmptyTitle}
+                emptyMessage={props.feedbackEmptyMessage}
+                cards={props.feedbackCards}
+                isAcknowledging={props.isAcknowledging}
+                onAcknowledge={props.onAcknowledge}
+              />
+            ) : null}
           </>
         ) : null}
       </section>

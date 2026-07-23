@@ -17,6 +17,20 @@ test.describe('external training and points', () => {
     );
   });
 
+  test('confirms a pending buddy credit end to end', async ({ page }) => {
+    await signIn(page);
+    await gotoApp(page, APP_ROUTES.training);
+
+    const section = page.getByTestId(TEST_IDS.trainingBuddySection);
+    await expect(section).toBeVisible();
+    await expect(section.getByText('1 pending')).toBeVisible();
+
+    await section.getByTestId(TEST_IDS.trainingBuddyConfirm).click();
+
+    await expect(section.getByTestId(TEST_IDS.trainingBuddyConfirm)).toHaveCount(0);
+    await expect(section.getByText('Confirmed').first()).toBeVisible();
+  });
+
   test('lists the member own claims with their review state', async ({ page }) => {
     await signIn(page);
     await gotoApp(page, APP_ROUTES.training);

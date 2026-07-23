@@ -39,6 +39,10 @@ export interface BuildAttendanceScreenParams {
   readonly error: AppError | null;
   readonly isLoading: boolean;
   readonly isOffline: boolean;
+  /** Whether the effective session holds `attendance.finalize`. */
+  readonly hasFinalizeGrant: boolean;
+  /** Whether the effective session holds `attendance.correct`. */
+  readonly hasCorrectGrant: boolean;
   readonly editor: AttendanceEditorView;
   readonly queue: readonly AttendanceQueuedOperation[];
   readonly isReplaying: boolean;
@@ -82,6 +86,7 @@ function countMarked(sheet: AttendanceSheet | undefined, editor: AttendanceEdito
 
 function canFinalizeSheet(params: BuildAttendanceScreenParams, markedCount: number): boolean {
   return (
+    params.hasFinalizeGrant &&
     params.sheet?.state === ATTENDANCE_SHEET_STATE.open &&
     params.sheet.version !== null &&
     markedCount === params.sheet.total &&
@@ -166,6 +171,7 @@ function buildMutationFields(params: BuildAttendanceScreenParams) {
     ),
     retryQueueLabel: t(I18N_KEYS.attendance.retryQueue),
     resolveConflictLabel: t(I18N_KEYS.attendance.resolveConflict),
+    showFinalize: params.hasFinalizeGrant,
     canUndo: editor.canUndo,
     canSubmit:
       editor.dirtyIds.length > 0 &&

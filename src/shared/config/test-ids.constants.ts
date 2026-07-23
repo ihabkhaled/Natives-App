@@ -4,6 +4,7 @@
  * architecture/no-inline-test-ids).
  */
 import { ADMIN_TEST_IDS } from './admin-test-ids.constants';
+import { SELF_SERVICE_TEST_IDS } from './self-service-test-ids.constants';
 import { COMPETITIONS_TEST_IDS } from './competitions-test-ids.constants';
 import { FEATURE_TEST_IDS } from './feature-test-ids.constants';
 import { MATCHES_TEST_IDS } from './matches-test-ids.constants';
@@ -14,6 +15,7 @@ import { TRYOUTS_TEST_IDS } from './tryouts-test-ids.constants';
 
 export const TEST_IDS = {
   ...FEATURE_TEST_IDS,
+  ...SELF_SERVICE_TEST_IDS,
   ...COMPETITIONS_TEST_IDS,
   ...TRYOUTS_TEST_IDS,
   ...MATCHES_TEST_IDS,

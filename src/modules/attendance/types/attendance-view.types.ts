@@ -5,6 +5,70 @@ import type {
   AttendanceStatus,
 } from '../constants/attendance.constants';
 
+/** Copy for one designed non-ready state block on the member screen. */
+interface MyAttendanceStateCopy {
+  readonly loadingLabel: string;
+  readonly errorTitle: string;
+  readonly errorMessage: string;
+  readonly retryLabel: string;
+  readonly onRetry: () => void;
+  readonly offlineTitle: string;
+  readonly offlineMessage: string;
+  readonly forbiddenTitle: string;
+  readonly forbiddenMessage: string;
+  readonly emptyTitle: string;
+  readonly emptyMessage: string;
+}
+
+interface ParticipationBreakdownRowView {
+  readonly key: string;
+  readonly label: string;
+  readonly valueText: string;
+}
+
+/** The participation summary card, honest about "not enough data". */
+export interface ParticipationCardView {
+  readonly title: string;
+  readonly rateLabel: string;
+  readonly rateText: string;
+  readonly hasRate: boolean;
+  readonly breakdown: readonly ParticipationBreakdownRowView[];
+  readonly ruleNotice: string;
+  readonly candidateNotice: string | null;
+  /** True when the backend reports no approved attendance rule yet. */
+  readonly isNotConfigured: boolean;
+  readonly notConfiguredMessage: string;
+}
+
+/** The per-session self check-in card, driven by the resolved window state. */
+export interface SelfCheckInCardView {
+  readonly title: string;
+  readonly sessionLabel: string | null;
+  readonly noSessionMessage: string;
+  readonly isLoading: boolean;
+  readonly loadingLabel: string;
+  readonly statusChip: { readonly label: string; readonly tone: string } | null;
+  readonly stateMessage: string | null;
+  readonly provisionalNotice: string | null;
+  readonly offlineNotice: string | null;
+  readonly canCheckIn: boolean;
+  readonly checkInLabel: string;
+  readonly isSubmitting: boolean;
+  readonly noteLabel: string;
+  readonly noteValue: string;
+  readonly onNoteChange: (value: string) => void;
+  readonly onCheckIn: () => void;
+}
+
+export interface MyAttendanceScreenView extends MyAttendanceStateCopy {
+  readonly title: string;
+  readonly subtitle: string;
+  readonly privacyNotice: string;
+  readonly status: AttendanceScreenStatus;
+  readonly participation: ParticipationCardView | null;
+  readonly checkIn: SelfCheckInCardView;
+}
+
 export type AttendanceScreenStatus =
   'loading' | 'error' | 'offline' | 'empty' | 'ready' | 'forbidden';
 
@@ -41,6 +105,10 @@ export interface AttendanceRosterRowView {
   readonly correctionReasonPlaceholder: string;
   readonly canSaveCorrection: boolean;
   readonly isLocked: boolean;
+  /** Locked sheet + `attendance.correct`: the audited correction editor shows. */
+  readonly showCorrectionEditor: boolean;
+  /** Locked sheet without `attendance.correct`: the row renders read-only. */
+  readonly isReadOnly: boolean;
   readonly historyLabel: string;
   readonly saveCorrectionLabel: string;
 }
@@ -105,6 +173,8 @@ export interface AttendanceScreenView extends AttendanceScreenActions {
   readonly finalizeLabel: string;
   readonly retryQueueLabel: string;
   readonly resolveConflictLabel: string;
+  /** Whether the finalize action renders at all (`attendance.finalize`). */
+  readonly showFinalize: boolean;
   readonly canUndo: boolean;
   readonly canSubmit: boolean;
   readonly canFinalize: boolean;

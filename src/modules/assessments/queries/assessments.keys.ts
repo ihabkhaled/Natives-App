@@ -12,4 +12,7 @@ export const assessmentsQueryKeys = {
     [...assessmentsQueryKeys.team(teamId), 'my-assessments'] as const,
   myFeedback: (teamId: string) => [...assessmentsQueryKeys.team(teamId), 'my-feedback'] as const,
   myGoals: (teamId: string) => [...assessmentsQueryKeys.team(teamId), 'my-goals'] as const,
+  myScore: (teamId: string) => [...assessmentsQueryKeys.team(teamId), 'my-score'] as const,
+  myMeasurements: (teamId: string) =>
+    [...assessmentsQueryKeys.team(teamId), 'my-measurements'] as const,
 };

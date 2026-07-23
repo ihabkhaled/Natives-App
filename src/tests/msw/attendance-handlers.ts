@@ -1,31 +1,36 @@
 import { http, HttpResponse } from 'msw';
 
 import type { BackendApiSchemas } from '@/packages/api-contract';
+import { PERMISSIONS, type Permission } from '@/shared/security';
 
 import {
   applyBulkAttendance,
   applyOneAttendance,
+  applySelfCheckIn,
   buildAttendanceHistory,
   buildAttendanceSheet,
+  buildMyAttendance,
+  buildMyParticipation,
   consumeReplayConflict,
   correctAttendanceRecord,
   finalizeAttendanceSheet,
 } from './attendance.fixture';
 import { MOCK_ATTENDANCE } from './mock-data.constants';
-import { apiUrl, isAuthorized } from './mock-request.helper';
+import { apiUrl } from './mock-request.helper';
 import { nestErrorResponse } from './nest-error.helper';
+import { permissionsForRequest } from './persona-permissions.helper';
 
 function attendancePath(teamId: string, sessionId: string, suffix = ''): string {
   return `/teams/${teamId}/practice-sessions/${sessionId}/attendance${suffix}`;
 }
 
-function canManage(request: Request, teamId: string): boolean {
-  const authorization = request.headers.get('Authorization') ?? '';
-  return (
-    isAuthorized(request) &&
-    teamId === MOCK_ATTENDANCE.teamId &&
-    !authorization.includes('user-member')
-  );
+/**
+ * Authorize exactly the way the backend does: by the caller's effective
+ * permission, not by their role name. The team scope check keeps cross-team
+ * probes answering 403 like the real guard.
+ */
+function isAllowed(request: Request, teamId: string, permission: Permission): boolean {
+  return teamId === MOCK_ATTENDANCE.teamId && permissionsForRequest(request).includes(permission);
 }
 
 function denied(path: string): Response {
@@ -51,14 +56,14 @@ function parseNumber(value: string | null, fallback: number): number {
   return Number.isNaN(parsed) ? fallback : parsed;
 }
 
-export const attendanceHandlers = [
+const coachHandlers = [
   http.get(
     apiUrl('/teams/:teamId/practice-sessions/:sessionId/attendance'),
     ({ request, params }) => {
       const teamId = String(params['teamId']);
       const sessionId = String(params['sessionId']);
       const path = attendancePath(teamId, sessionId);
-      if (!canManage(request, teamId)) {
+      if (!isAllowed(request, teamId, PERMISSIONS.attendanceReadTeam)) {
         return denied(path);
       }
       const url = new URL(request.url);
@@ -76,7 +81,7 @@ export const attendanceHandlers = [
       const teamId = String(params['teamId']);
       const sessionId = String(params['sessionId']);
       const path = attendancePath(teamId, sessionId, '/bulk');
-      if (!canManage(request, teamId)) {
+      if (!isAllowed(request, teamId, PERMISSIONS.attendanceMark)) {
         return denied(path);
       }
       const body = (await request.json()) as BackendApiSchemas['BulkMarkAttendanceDto'];
@@ -91,7 +96,7 @@ export const attendanceHandlers = [
       const sessionId = String(params['sessionId']);
       const membershipId = String(params['membershipId']);
       const path = attendancePath(teamId, sessionId, `/${membershipId}`);
-      if (!canManage(request, teamId)) {
+      if (!isAllowed(request, teamId, PERMISSIONS.attendanceMark)) {
         return denied(path);
       }
       const body = (await request.json()) as BackendApiSchemas['MarkAttendanceDto'];
@@ -107,7 +112,7 @@ export const attendanceHandlers = [
       const teamId = String(params['teamId']);
       const sessionId = String(params['sessionId']);
       const path = attendancePath(teamId, sessionId, '/finalize');
-      if (!canManage(request, teamId)) {
+      if (!isAllowed(request, teamId, PERMISSIONS.attendanceFinalize)) {
         return denied(path);
       }
       const body = (await request.json()) as BackendApiSchemas['FinalizeAttendanceDto'];
@@ -122,7 +127,7 @@ export const attendanceHandlers = [
       const sessionId = String(params['sessionId']);
       const membershipId = String(params['membershipId']);
       const path = attendancePath(teamId, sessionId, `/${membershipId}/correction`);
-      if (!canManage(request, teamId)) {
+      if (!isAllowed(request, teamId, PERMISSIONS.attendanceCorrect)) {
         return denied(path);
       }
       const body = (await request.json()) as BackendApiSchemas['CorrectAttendanceDto'];
@@ -137,9 +142,50 @@ export const attendanceHandlers = [
       const sessionId = String(params['sessionId']);
       const membershipId = String(params['membershipId']);
       const path = attendancePath(teamId, sessionId, `/${membershipId}/history`);
-      return canManage(request, teamId)
+      return isAllowed(request, teamId, PERMISSIONS.attendanceReadTeam)
         ? HttpResponse.json(buildAttendanceHistory(membershipId))
         : denied(path);
     },
   ),
 ];
+
+/**
+ * Member self-service routes. All three are gated on `attendance.read.self`
+ * exactly like the deployed controllers, so an analyst persona (team reads,
+ * no self grants) receives an honest 403 — never data belonging to someone.
+ */
+const selfHandlers = [
+  http.get(
+    apiUrl('/teams/:teamId/practice-sessions/:sessionId/attendance/me'),
+    ({ request, params }) => {
+      const teamId = String(params['teamId']);
+      const sessionId = String(params['sessionId']);
+      const path = attendancePath(teamId, sessionId, '/me');
+      return isAllowed(request, teamId, PERMISSIONS.attendanceReadSelf)
+        ? HttpResponse.json(buildMyAttendance(sessionId))
+        : denied(path);
+    },
+  ),
+  http.post(
+    apiUrl('/teams/:teamId/practice-sessions/:sessionId/attendance/check-in'),
+    ({ request, params }) => {
+      const teamId = String(params['teamId']);
+      const sessionId = String(params['sessionId']);
+      const path = attendancePath(teamId, sessionId, '/check-in');
+      return isAllowed(request, teamId, PERMISSIONS.attendanceReadSelf)
+        ? HttpResponse.json(applySelfCheckIn(sessionId))
+        : denied(path);
+    },
+  ),
+  http.get(apiUrl('/teams/:teamId/attendance/me/participation'), ({ request, params }) => {
+    const teamId = String(params['teamId']);
+    const path = `/teams/${teamId}/attendance/me/participation`;
+    if (!isAllowed(request, teamId, PERMISSIONS.attendanceReadSelf)) {
+      return denied(path);
+    }
+    const seasonId = new URL(request.url).searchParams.get('seasonId');
+    return HttpResponse.json(buildMyParticipation(seasonId));
+  }),
+];
+
+export const attendanceHandlers = [...coachHandlers, ...selfHandlers];

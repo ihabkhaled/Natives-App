@@ -59,6 +59,8 @@ describe('buildAttendanceScreenView', () => {
       error: null,
       isLoading: false,
       isOffline: false,
+      hasFinalizeGrant: true,
+      hasCorrectGrant: true,
       editor: buildAttendanceEditorStub({ dirtyIds: ['m-1'], drafts: READY_DRAFTS }),
       queue: [
         makeQueuedOperation({ membershipId: 'm-1', state: 'conflict' }),
@@ -106,6 +108,8 @@ describe('buildAttendanceScreenView', () => {
       error: new AppError({ code: APP_ERROR_CODE.Unexpected }),
       isLoading: false,
       isOffline: false,
+      hasFinalizeGrant: true,
+      hasCorrectGrant: true,
       editor: buildAttendanceEditorStub({
         drafts: {
           'm-1': {
@@ -137,8 +141,9 @@ describe('buildAttendanceScreenView', () => {
     expect(view.historyMembershipId).toBe('m-1');
   });
 
-  it('allows finalizing a fully marked, clean, online open sheet', () => {
-    const view = buildAttendanceScreenView({
+  /** A fully marked, clean, online, open one-row sheet — finalize-ready. */
+  function finalizeReadyParams(hasFinalizeGrant: boolean) {
+    return {
       t,
       locale: 'en',
       sessionId: 'sess-abcdef',
@@ -146,10 +151,12 @@ describe('buildAttendanceScreenView', () => {
       error: null,
       isLoading: false,
       isOffline: false,
+      hasFinalizeGrant,
+      hasCorrectGrant: hasFinalizeGrant,
       editor: buildAttendanceEditorStub({
         drafts: {
           'm-1': {
-            status: 'present_on_time',
+            status: 'present_on_time' as const,
             latenessMinutes: null,
             excuseCategory: null,
             expectedVersion: 1,
@@ -166,9 +173,21 @@ describe('buildAttendanceScreenView', () => {
       history: [],
       isHistoryLoading: false,
       actions: NOOP_ACTIONS,
-    });
+    };
+  }
+
+  it('allows finalizing a fully marked, clean, online open sheet', () => {
+    const view = buildAttendanceScreenView(finalizeReadyParams(true));
 
     expect(view.canFinalize).toBe(true);
+    expect(view.showFinalize).toBe(true);
+  });
+
+  it('never offers finalize without the attendance.finalize grant', () => {
+    const view = buildAttendanceScreenView(finalizeReadyParams(false));
+
+    expect(view.showFinalize).toBe(false);
+    expect(view.canFinalize).toBe(false);
   });
 
   it('renders a loading view with summary fallbacks when no sheet has loaded', () => {
@@ -180,6 +199,8 @@ describe('buildAttendanceScreenView', () => {
       error: null,
       isLoading: true,
       isOffline: false,
+      hasFinalizeGrant: true,
+      hasCorrectGrant: true,
       editor: buildAttendanceEditorStub(),
       queue: [],
       isReplaying: false,
