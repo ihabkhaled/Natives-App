@@ -14,6 +14,7 @@ import {
   type AcceptInvitationMutationView,
 } from '../mutations/use-accept-invitation-mutation.hook';
 import { getInvitation } from '../services/get-invitation.service';
+import type { InvitationDetails } from '../types/auth.types';
 import { useAcceptInvitationScreen } from './use-accept-invitation-screen.hook';
 
 vi.mock('../services/get-invitation.service', () => ({ getInvitation: vi.fn() }));
@@ -22,9 +23,9 @@ vi.mock('../mutations/use-accept-invitation-mutation.hook', () => ({
 }));
 
 const STRONG = 'Ranger#Strong1234';
-const DETAILS = {
+const DETAILS: InvitationDetails = {
   email: 'invitee@example.com',
-  role: 'user' as const,
+  role: 'user',
   inviterName: 'Coach Nadia',
   teamRole: 'coach',
   teamName: 'Cairo Natives',
@@ -49,7 +50,7 @@ function renderScreen(initialPath: string) {
 }
 
 /** Resolve one invitation variant and return the intro the screen builds. */
-async function introFor(overrides: Partial<typeof DETAILS>): Promise<string | undefined> {
+async function introFor(overrides: Partial<InvitationDetails>): Promise<string | undefined> {
   mockMutation();
   vi.mocked(getInvitation).mockResolvedValue({ ...DETAILS, ...overrides });
   const { result } = renderScreen('/accept-invitation?token=abc');
