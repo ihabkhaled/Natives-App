@@ -6,15 +6,16 @@ in UTC over the wire and render in Africa/Cairo.
 
 ## Public surface (`index.ts`)
 
-| Export                                                                | Purpose                                                    |
-| --------------------------------------------------------------------- | ---------------------------------------------------------- |
-| `getPracticeRouteDefinitions`                                         | Calendar + detail routes for the app router.               |
-| `practicesPath` / `practiceSessionPath`                               | Typed navigation targets.                                  |
-| `practiceQueryKeys`                                                   | Team-scoped cache key builders.                            |
-| `practiceSessionListResponseSchema` / `practiceSessionResponseSchema` | Exact list and session response DTOs.                      |
-| `practiceRsvpResponseSchema`                                          | Exact self-RSVP response DTO.                              |
-| `PRACTICE_TYPE` / `PRACTICE_STATUS` / `RSVP_STATUS` / `RSVP_REASON`   | App domain vocabularies (as-const, never TypeScript enum). |
-| `PracticeSessionSummary` / `PracticeSessionDetail`                    | App-owned domain types.                                    |
+| Export                                                                | Purpose                                                     |
+| --------------------------------------------------------------------- | ----------------------------------------------------------- |
+| `getPracticeRouteDefinitions`                                         | Calendar + detail routes for the app router.                |
+| `practicesPath` / `practiceSessionPath`                               | Typed navigation targets.                                   |
+| `practiceQueryKeys`                                                   | Team-scoped cache key builders.                             |
+| `practiceSessionListResponseSchema` / `practiceSessionResponseSchema` | Exact list and session response DTOs.                       |
+| `practiceRsvpResponseSchema`                                          | Exact self-RSVP response DTO.                               |
+| `PRACTICE_TYPE` / `PRACTICE_STATUS` / `RSVP_STATUS` / `RSVP_REASON`   | App domain vocabularies (as-const, never TypeScript enum).  |
+| `PRACTICE_TYPE_LABEL_KEYS`                                            | Session-type i18n labels (also used by attendance history). |
+| `PracticeSessionSummary` / `PracticeSessionDetail`                    | App-owned domain types.                                     |
 
 ## Anatomy
 

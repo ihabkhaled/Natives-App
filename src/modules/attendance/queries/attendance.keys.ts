@@ -11,4 +11,8 @@ export const attendanceQueryKeys = {
     [...attendanceQueryKeys.team(teamId), 'participation'] as const,
   participation: (teamId: string, seasonId: string | null) =>
     [...attendanceQueryKeys.participationFamily(teamId), seasonId ?? 'all'] as const,
+  selfHistoryFamily: (teamId: string) =>
+    [...attendanceQueryKeys.team(teamId), 'self-history'] as const,
+  selfHistory: (teamId: string, limit: number) =>
+    [...attendanceQueryKeys.selfHistoryFamily(teamId), limit] as const,
 };

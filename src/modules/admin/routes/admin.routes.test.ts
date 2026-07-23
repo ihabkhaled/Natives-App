@@ -40,7 +40,9 @@ describe('getAdminRouteDefinitions', () => {
     expect(routeAt(APP_PATHS.adminRoles).meta?.permissions).toEqual([
       PERMISSIONS.memberRolesManage,
     ]);
-    expect(routeAt(APP_PATHS.adminRules).meta?.permissions).toEqual([PERMISSIONS.pointsRuleManage]);
+    expect(routeAt(APP_PATHS.adminRules).meta?.permissions).toEqual([
+      PERMISSIONS.calculationRuleManage,
+    ]);
     expect(routeAt(APP_PATHS.adminOperations).meta?.permissions).toEqual([
       PERMISSIONS.outboxManage,
     ]);

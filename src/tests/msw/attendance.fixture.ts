@@ -5,7 +5,6 @@ import type {
 import type { BackendApiSchemas } from '@/packages/api-contract';
 import type { SchemaOutput } from '@/packages/schema';
 
-import { makeParticipationDto } from './attendance-wire.fixture';
 import { MOCK_ATTENDANCE } from './mock-data.constants';
 
 /**
@@ -27,6 +26,8 @@ const INITIAL_ROSTER: readonly RosterEntry[] = [
   {
     membershipId: MOCK_ATTENDANCE.presentMembershipId,
     userId: 'user-player-1',
+    displayName: 'Alex Ranger',
+    rsvpStatus: 'going',
     status: 'present_on_time',
     checkInAt: '2026-07-26T14:58:00.000Z',
     latenessMinutes: null,
@@ -37,6 +38,8 @@ const INITIAL_ROSTER: readonly RosterEntry[] = [
   {
     membershipId: MOCK_ATTENDANCE.lateMembershipId,
     userId: 'user-player-2',
+    displayName: 'Sam Disc',
+    rsvpStatus: 'maybe',
     status: 'present_late',
     checkInAt: '2026-07-26T15:12:00.000Z',
     latenessMinutes: 12,
@@ -47,6 +50,8 @@ const INITIAL_ROSTER: readonly RosterEntry[] = [
   {
     membershipId: MOCK_ATTENDANCE.conflictMembershipId,
     userId: 'user-player-3',
+    displayName: 'Nour Huck',
+    rsvpStatus: 'no_response',
     status: null,
     checkInAt: null,
     latenessMinutes: null,
@@ -55,8 +60,11 @@ const INITIAL_ROSTER: readonly RosterEntry[] = [
     version: null,
   },
   {
+    // Historical snapshot: no profile and no RSVP row — both honestly null.
     membershipId: MOCK_ATTENDANCE.historicalMembershipId,
     userId: null,
+    displayName: null,
+    rsvpStatus: null,
     status: 'excused',
     checkInAt: null,
     latenessMinutes: null,
@@ -66,31 +74,11 @@ const INITIAL_ROSTER: readonly RosterEntry[] = [
   },
 ];
 
-/** The caller's own membership scope, mirroring `buildAuthMembership`. */
-const SELF_MEMBERSHIP_ID = 'membership-natives-1';
-const SELF_CHECK_IN_AT = '2026-07-26T14:59:00.000Z';
-
-function emptySelfRecord(): AttendanceRecord {
-  return {
-    sessionId: MOCK_ATTENDANCE.sessionId,
-    membershipId: SELF_MEMBERSHIP_ID,
-    status: null,
-    checkInAt: null,
-    checkOutAt: null,
-    latenessMinutes: null,
-    excuseCategory: null,
-    source: null,
-    recordedAt: null,
-    version: null,
-  };
-}
-
 let roster = INITIAL_ROSTER.map((entry) => ({ ...entry }));
 let sheetState: 'open' | 'finalized' | 'corrected' = 'open';
 let sheetVersion = 3;
 let finalizedAt: string | null = null;
 let replayConflictAvailable = true;
-let selfRecord = emptySelfRecord();
 const historyByMember = new Map<string, Revision[]>();
 
 export function resetMockAttendanceState(): void {
@@ -99,38 +87,12 @@ export function resetMockAttendanceState(): void {
   sheetVersion = 3;
   finalizedAt = null;
   replayConflictAvailable = true;
-  selfRecord = emptySelfRecord();
   historyByMember.clear();
 }
 
-/** Own per-session record; `status: null` mirrors the backend notRecordedView. */
-export function buildMyAttendance(sessionId: string): AttendanceRecord {
-  return { ...selfRecord, sessionId };
-}
-
-/**
- * Self check-in mirrors the CURRENT deployed contract: the status derives from
- * the clock and a repeat POST upserts (no window, no idempotency — those are
- * the Wave B1 hardenings, deliberately NOT faked here).
- */
-export function applySelfCheckIn(sessionId: string): AttendanceRecord {
-  selfRecord = {
-    ...selfRecord,
-    sessionId,
-    status: 'present_on_time',
-    checkInAt: SELF_CHECK_IN_AT,
-    source: 'self',
-    recordedAt: SELF_CHECK_IN_AT,
-    version: (selfRecord.version ?? 0) + 1,
-  };
-  return { ...selfRecord };
-}
-
-/** Deterministic weighted-participation projection for the caller. */
-export function buildMyParticipation(
-  seasonId: string | null,
-): BackendApiSchemas['ParticipationResponseDto'] {
-  return { ...makeParticipationDto(), seasonId };
+/** The sheet state a session's self check-in must consult (locked = refuse). */
+export function mockAttendanceSheetStateFor(sessionId: string): 'open' | 'finalized' | 'corrected' {
+  return sessionId === MOCK_ATTENDANCE.sessionId ? sheetState : 'open';
 }
 
 export function buildAttendanceSheet(limit: number, offset: number) {
@@ -202,8 +164,8 @@ export function applyBulkAttendance(
   if (hasConflict) {
     return null;
   }
-  // Contract 1.4.0 added `selfCheckIn` eligibility to every bulk record row;
-  // coach-marked rows carry no self-check-in context, honestly null.
+  // The contract carries `selfCheckIn` on every record row; coach-marked
+  // rows never compute the eligibility block, honestly null.
   const items = marks.map((mark) => ({ ...applyMark(mark.membershipId, mark), selfCheckIn: null }));
   return { items, recorded: items.length };
 }

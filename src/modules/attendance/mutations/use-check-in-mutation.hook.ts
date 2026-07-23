@@ -19,8 +19,8 @@ export interface CheckInMutationView {
 
 /**
  * Self check-in. Success invalidates the caller's own record, their
- * participation family, and the Home summary — the member-attendance widget
- * reads the same fact this write just changed.
+ * participation and history families, and the Home summary — the
+ * member-attendance widget reads the same fact this write just changed.
  */
 export function useCheckInMutation(
   teamId: string,
@@ -36,6 +36,9 @@ export function useCheckInMutation(
       });
       void queryClient.invalidateQueries({
         queryKey: attendanceQueryKeys.participationFamily(teamId),
+      });
+      void queryClient.invalidateQueries({
+        queryKey: attendanceQueryKeys.selfHistoryFamily(teamId),
       });
       void queryClient.invalidateQueries({ queryKey: dashboardQueryKeys.summary() });
       callbacks.onSuccess();

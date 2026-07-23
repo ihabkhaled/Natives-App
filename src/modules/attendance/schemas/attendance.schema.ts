@@ -1,7 +1,9 @@
 import { schemaBuilder } from '@/packages/schema';
 
 const isoInstant = schemaBuilder.iso.datetime({ offset: true });
-const attendanceStatusSchema = schemaBuilder.enum([
+
+/** Wire enums shared with the self-service schemas (single source, no drift). */
+export const attendanceStatusSchema = schemaBuilder.enum([
   'present_on_time',
   'present_late',
   'excused',
@@ -10,7 +12,7 @@ const attendanceStatusSchema = schemaBuilder.enum([
   'remote_approved',
   'other_approved',
 ]);
-const excuseCategorySchema = schemaBuilder.enum([
+export const excuseCategorySchema = schemaBuilder.enum([
   'injury',
   'illness',
   'work',
@@ -18,8 +20,21 @@ const excuseCategorySchema = schemaBuilder.enum([
   'personal',
   'other',
 ]);
-const attendanceSourceSchema = schemaBuilder.enum(['self', 'coach', 'admin', 'import', 'system']);
-const sheetStateSchema = schemaBuilder.enum(['open', 'finalized', 'corrected']);
+export const attendanceSourceSchema = schemaBuilder.enum([
+  'self',
+  'coach',
+  'admin',
+  'import',
+  'system',
+]);
+export const sheetStateSchema = schemaBuilder.enum(['open', 'finalized', 'corrected']);
+
+/** The bounded page envelope every attendance list response shares. */
+export const boundedPageEnvelopeSchema = {
+  total: schemaBuilder.number().int().nonnegative(),
+  limit: schemaBuilder.number().int().positive().max(100),
+  offset: schemaBuilder.number().int().nonnegative(),
+};
 
 export const attendanceRecordResponseSchema = schemaBuilder.object({
   sessionId: schemaBuilder.string().min(1),
@@ -37,6 +52,8 @@ export const attendanceRecordResponseSchema = schemaBuilder.object({
 const attendanceRosterEntryResponseSchema = schemaBuilder.object({
   membershipId: schemaBuilder.string().min(1),
   userId: schemaBuilder.string().min(1).nullable(),
+  displayName: schemaBuilder.string().nullable(),
+  rsvpStatus: schemaBuilder.enum(['going', 'not_going', 'maybe', 'no_response']).nullable(),
   status: attendanceStatusSchema.nullable(),
   checkInAt: isoInstant.nullable(),
   latenessMinutes: schemaBuilder.number().nonnegative().nullable(),
@@ -51,9 +68,7 @@ export const attendanceSheetResponseSchema = schemaBuilder.object({
   finalizedAt: isoInstant.nullable(),
   version: schemaBuilder.number().int().nonnegative().nullable(),
   items: schemaBuilder.array(attendanceRosterEntryResponseSchema),
-  total: schemaBuilder.number().int().nonnegative(),
-  limit: schemaBuilder.number().int().positive().max(100),
-  offset: schemaBuilder.number().int().nonnegative(),
+  ...boundedPageEnvelopeSchema,
 });
 
 export const bulkAttendanceResponseSchema = schemaBuilder.object({

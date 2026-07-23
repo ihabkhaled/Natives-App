@@ -5,6 +5,9 @@ import {
   ATTENDANCE_EXCUSE_LABEL_KEYS,
   ATTENDANCE_EXCUSE_OPTIONS,
   ATTENDANCE_QUEUE_STATE,
+  ATTENDANCE_RSVP_LABEL_KEYS,
+  ATTENDANCE_RSVP_STATUS,
+  ATTENDANCE_RSVP_TONES,
   ATTENDANCE_SHEET_STATE,
   ATTENDANCE_STATUS,
   ATTENDANCE_STATUS_LABEL_KEYS,
@@ -70,7 +73,20 @@ function conflictMessage(t: Translate, operation: AttendanceQueuedOperation | nu
     : null;
 }
 
-function playerLabel(t: Translate, isHistorical: boolean, index: number): string {
+/**
+ * The server already resolves the profile fallback: a null `displayName` means
+ * no profile exists, and only then does the deterministic positional label
+ * stand in — the client never invents names.
+ */
+function playerLabel(
+  t: Translate,
+  entry: AttendanceRosterEntry,
+  isHistorical: boolean,
+  index: number,
+): string {
+  if (entry.displayName !== null) {
+    return entry.displayName;
+  }
   return t(
     isHistorical ? I18N_KEYS.attendance.historicalPlayerLabel : I18N_KEYS.attendance.playerLabel,
     { index: index + 1 },
@@ -104,7 +120,8 @@ function buildRow(
   const draft = resolveDraft(entry, editor.drafts);
   const operation = queueByMember.get(entry.membershipId) ?? null;
   const isHistorical = entry.userId === null;
-  const label = playerLabel(t, isHistorical, index);
+  const label = playerLabel(t, entry, isHistorical, index);
+  const rsvpStatus = entry.rsvpStatus ?? ATTENDANCE_RSVP_STATUS.noResponse;
   return {
     ...lockFlags(sheet, params.hasCorrectGrant),
     membershipId: entry.membershipId,
@@ -112,7 +129,8 @@ function buildRow(
     memberIdentifierLabel: t(I18N_KEYS.attendance.memberIdentifier, {
       identifier: entry.membershipId.slice(-6),
     }),
-    rsvpLabel: t(I18N_KEYS.attendance.rsvpUnavailable),
+    rsvpLabel: t(ATTENDANCE_RSVP_LABEL_KEYS[rsvpStatus]),
+    rsvpTone: ATTENDANCE_RSVP_TONES[rsvpStatus],
     isHistorical,
     historicalLabel: t(I18N_KEYS.attendance.historicalBadge),
     isSelected: editor.selectedIds.includes(entry.membershipId),

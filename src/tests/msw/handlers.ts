@@ -13,6 +13,7 @@ import { competitionsHandlers } from './competitions-handlers';
 import { buildDashboardSummaryResponse } from './dashboard-summary.fixture';
 import { attendanceHandlers } from './attendance-handlers';
 import { resetMockAttendanceState } from './attendance.fixture';
+import { resetMockAttendanceSelfState } from './attendance-self.fixture';
 import {
   MOCK_CREDENTIALS,
   MOCK_HEALTH,
@@ -55,6 +56,7 @@ export function resetMockAuthState(): void {
   resetMockRecoveryState();
   resetMockPracticeState();
   resetMockAttendanceState();
+  resetMockAttendanceSelfState();
   resetMockMembersState();
   resetMockAssessmentsState();
   resetMockTrainingState();

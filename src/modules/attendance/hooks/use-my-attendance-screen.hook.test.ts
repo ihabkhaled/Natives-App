@@ -6,18 +6,24 @@ import type * as PracticeModule from '@/modules/practice';
 import { useNetworkStatus } from '@/platform';
 import type * as SharedUiModule from '@/shared/ui';
 import { useAppToast } from '@/shared/ui';
-import { makeParticipationDto, makeSelfRecordDto } from '@/tests/msw/attendance-wire.fixture';
+import {
+  makeParticipationDto,
+  makeSelfHistoryDto,
+  makeSelfRecordDto,
+} from '@/tests/msw/attendance-wire.fixture';
 
 import { renderHookWithProviders } from '../../../../tests/setup/render-with-providers.helper';
 import { setupToastHarness } from '../../../../tests/setup/toast-test.helper';
 import { buildPracticeSessionSummary } from '../../../../tests/factories/practice.factory';
 import {
   mapAttendanceParticipation,
+  mapAttendanceSelfHistory,
   mapAttendanceSelfRecord,
 } from '../mappers/attendance-self.mapper';
 import { APP_ERROR_CODE, AppError } from '@/shared/errors';
 
 import { getMyAttendance } from '../services/get-my-attendance.service';
+import { getMyAttendanceHistory } from '../services/get-my-attendance-history.service';
 import { getMyParticipation } from '../services/get-my-participation.service';
 import { selfCheckIn } from '../services/self-check-in.service';
 import { useAttendanceTeamContext } from './use-attendance-team-context.hook';
@@ -36,6 +42,9 @@ vi.mock('@/shared/ui', async (importOriginal) => ({
   useAppToast: vi.fn(),
 }));
 vi.mock('../services/get-my-attendance.service', () => ({ getMyAttendance: vi.fn() }));
+vi.mock('../services/get-my-attendance-history.service', () => ({
+  getMyAttendanceHistory: vi.fn(),
+}));
 vi.mock('../services/get-my-participation.service', () => ({ getMyParticipation: vi.fn() }));
 vi.mock('../services/self-check-in.service', () => ({ selfCheckIn: vi.fn() }));
 vi.mock('./use-attendance-team-context.hook', () => ({ useAttendanceTeamContext: vi.fn() }));
@@ -70,6 +79,9 @@ beforeEach(() => {
     mapAttendanceParticipation(makeParticipationDto()),
   );
   vi.mocked(getMyAttendance).mockResolvedValue(mapAttendanceSelfRecord(makeSelfRecordDto()));
+  vi.mocked(getMyAttendanceHistory).mockResolvedValue(
+    mapAttendanceSelfHistory(makeSelfHistoryDto({ total: 25 })),
+  );
 });
 
 async function pressCheckInOnReadyScreen() {
@@ -170,5 +182,33 @@ describe('useMyAttendanceScreen', () => {
     await waitFor(() => {
       expect(getMyParticipation).toHaveBeenCalledTimes(2);
     });
+  });
+
+  it('grows the history window one page per press and stops at the 100 cap', async () => {
+    const { result } = renderHookWithProviders(() => useMyAttendanceScreen());
+
+    await waitFor(() => {
+      expect(result.current.status).toBe('ready');
+    });
+    expect(getMyAttendanceHistory).toHaveBeenCalledWith('team-natives', 20);
+    expect(result.current.history.canLoadMore).toBe(true);
+
+    act(() => {
+      result.current.history.onLoadMore();
+    });
+    await waitFor(() => {
+      expect(getMyAttendanceHistory).toHaveBeenCalledWith('team-natives', 40);
+    });
+
+    // Pressing through every window stops exactly at the contract's 100 cap.
+    for (let press = 0; press < 5; press += 1) {
+      act(() => {
+        result.current.history.onLoadMore();
+      });
+    }
+    await waitFor(() => {
+      expect(getMyAttendanceHistory).toHaveBeenCalledWith('team-natives', 100);
+    });
+    expect(getMyAttendanceHistory).not.toHaveBeenCalledWith('team-natives', 120);
   });
 });

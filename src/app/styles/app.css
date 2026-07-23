@@ -4768,14 +4768,19 @@ ion-spinner {
   list-style: none;
 }
 
-.app-reorderable__row {
+/* Shared bordered-card surface (also .app-editor-card further down). */
+.app-reorderable__row,
+.app-editor-card {
   display: flex;
-  align-items: flex-start;
   gap: var(--un-space-2);
   padding: var(--un-space-3);
   border: 1px solid var(--app-hairline);
   border-radius: var(--un-radius-md);
   background: var(--app-card-bg);
+}
+
+.app-reorderable__row {
+  align-items: flex-start;
 }
 
 .app-reorderable__content {
@@ -4833,13 +4838,7 @@ ion-spinner {
 }
 
 .app-editor-card {
-  display: flex;
   flex-direction: column;
-  gap: var(--un-space-2);
-  padding: var(--un-space-3);
-  border: 1px solid var(--app-hairline);
-  border-radius: var(--un-radius-md);
-  background: var(--app-card-bg);
 }
 
 .app-editor-blocked {

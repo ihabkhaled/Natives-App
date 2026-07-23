@@ -55,3 +55,8 @@ export function attendanceCheckInPath(teamId: string, sessionId: string): string
 export function attendanceParticipationSelfPath(teamId: string): string {
   return `${TEAMS_PATH}/${encodeURIComponent(teamId)}/${ATTENDANCE_SEGMENT}/me/participation`;
 }
+
+/** Own attendance across sessions, newest first; membership from the token. */
+export function attendanceSelfHistoryPath(teamId: string): string {
+  return `${TEAMS_PATH}/${encodeURIComponent(teamId)}/${ATTENDANCE_SEGMENT}/me/history`;
+}

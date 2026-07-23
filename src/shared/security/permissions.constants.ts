@@ -77,8 +77,10 @@ export const PERMISSIONS = {
   settingsManage: 'team.settings.manage',
   seasonManage: 'season.manage',
   venueManage: 'venue.manage',
-  pointsRuleManage: 'points.rules.manage',
-  calculationRuleManage: 'rules.manage',
+  // Calculation rules are `points.rules.*` in the backend catalog; the bare
+  // `rules.read`/`rules.manage` pair is the separate team-rules governance
+  // domain (P4 wave 2) and must never gate the calculation-rule screens.
+  calculationRuleManage: 'points.rules.manage',
   auditRead: 'audit.read',
   outboxManage: 'jobs.manage',
 } as const;

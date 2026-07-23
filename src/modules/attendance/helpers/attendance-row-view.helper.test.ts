@@ -124,6 +124,59 @@ describe('buildAttendanceRows', () => {
     expect(row?.isReadOnly).toBe(true);
   });
 
+  it('prefers the server displayName and falls back to the positional label without one', () => {
+    const rows = buildAttendanceRows({
+      t,
+      locale: 'en',
+      sheet: makeAttendanceSheet({
+        items: [
+          makeRosterEntry({ membershipId: 'm-named', displayName: 'Nour Huck' }),
+          makeRosterEntry({ membershipId: 'm-profileless', displayName: null }),
+          makeRosterEntry({
+            membershipId: 'm-hist',
+            userId: null,
+            displayName: null,
+            rsvpStatus: null,
+          }),
+        ],
+      }),
+      hasCorrectGrant: true,
+      editor: buildAttendanceEditorStub(),
+      queue: [],
+    });
+
+    expect(rows[0]?.playerLabel).toBe('Nour Huck');
+    expect(rows[1]?.playerLabel).toBe('attendance.playerLabel');
+    expect(rows[2]?.playerLabel).toBe('attendance.historicalPlayerLabel');
+  });
+
+  it('maps each RSVP answer to its chip copy and tone, null reading as no response', () => {
+    const rows = buildAttendanceRows({
+      t,
+      locale: 'en',
+      sheet: makeAttendanceSheet({
+        items: [
+          makeRosterEntry({ membershipId: 'm-going', rsvpStatus: 'going' }),
+          makeRosterEntry({ membershipId: 'm-out', rsvpStatus: 'not_going' }),
+          makeRosterEntry({ membershipId: 'm-maybe', rsvpStatus: 'maybe' }),
+          makeRosterEntry({ membershipId: 'm-silent', rsvpStatus: 'no_response' }),
+          makeRosterEntry({ membershipId: 'm-none', rsvpStatus: null }),
+        ],
+      }),
+      hasCorrectGrant: true,
+      editor: buildAttendanceEditorStub(),
+      queue: [],
+    });
+
+    expect(rows.map((row) => [row.rsvpLabel, row.rsvpTone])).toEqual([
+      ['attendance.rsvpYes', 'success'],
+      ['attendance.rsvpNo', 'danger'],
+      ['attendance.rsvpMaybe', 'warning'],
+      ['attendance.rsvpNone', 'medium'],
+      ['attendance.rsvpNone', 'medium'],
+    ]);
+  });
+
   it('filters rows by search text and status', () => {
     const loaded = makeAttendanceSheet({
       items: [

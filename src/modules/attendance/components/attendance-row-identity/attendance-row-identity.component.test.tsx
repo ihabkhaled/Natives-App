@@ -22,6 +22,17 @@ describe('AttendanceRowIdentity', () => {
     expect(onToggle).toHaveBeenCalledWith('m-1');
   });
 
+  it('renders the RSVP answer as a chip with its tone', () => {
+    render(
+      <AttendanceRowIdentity
+        row={buildAttendanceRosterRowView({ rsvpLabel: 'Not going', rsvpTone: 'danger' })}
+        onToggle={vi.fn()}
+      />,
+    );
+
+    expect(screen.getByTestId(TEST_IDS.attendanceRsvpChip)).toHaveTextContent('Not going');
+  });
+
   it.each([
     ['conflict', 'In conflict'],
     ['failed', 'Sync failed'],

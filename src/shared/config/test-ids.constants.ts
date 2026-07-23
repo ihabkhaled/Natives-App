@@ -164,6 +164,7 @@ export const TEST_IDS = {
   attendanceFinalize: 'attendance-finalize',
   attendanceRetryQueue: 'attendance-retry-queue',
   attendancePrivacyNotice: 'attendance-privacy-notice',
+  attendanceRsvpChip: 'attendance-rsvp-chip',
   membersPage: 'members-page',
   membersDirectory: 'members-directory',
   membersLoading: 'members-loading',

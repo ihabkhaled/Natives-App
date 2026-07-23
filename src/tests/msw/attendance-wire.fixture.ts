@@ -1,6 +1,7 @@
 import type {
   attendanceHistoryResponseSchema,
   attendanceRecordResponseSchema,
+  attendanceSelfHistoryResponseSchema,
   attendanceSelfRecordSchema,
   attendanceSheetResponseSchema,
   attendanceStatusResponseSchema,
@@ -16,6 +17,8 @@ type BulkDto = SchemaOutput<typeof bulkAttendanceResponseSchema>;
 type StatusDto = SchemaOutput<typeof attendanceStatusResponseSchema>;
 type HistoryDto = SchemaOutput<typeof attendanceHistoryResponseSchema>;
 type SelfRecordDto = SchemaOutput<typeof attendanceSelfRecordSchema>;
+type SelfHistoryDto = SchemaOutput<typeof attendanceSelfHistoryResponseSchema>;
+type SelfHistoryEntryDto = SelfHistoryDto['items'][number];
 type ParticipationDto = SchemaOutput<typeof participationResponseSchema>;
 
 const RECORDED_AT = '2026-07-26T15:05:00.000Z';
@@ -24,6 +27,8 @@ function makeRosterEntryDto(overrides: Partial<RosterEntryDto> = {}): RosterEntr
   return {
     membershipId: 'm-1',
     userId: 'user-1',
+    displayName: 'Alex Ranger',
+    rsvpStatus: 'going',
     status: 'present_late',
     checkInAt: '2026-07-26T15:12:00.000Z',
     latenessMinutes: 12,
@@ -95,6 +100,39 @@ export function makeSelfRecordDto(overrides: Partial<SelfRecordDto> = {}): SelfR
     source: null,
     recordedAt: null,
     version: null,
+    selfCheckIn: {
+      state: 'open',
+      opensAt: '2026-07-26T14:00:00.000Z',
+      closesAt: '2026-07-26T17:00:00.000Z',
+    },
+    ...overrides,
+  };
+}
+
+export function makeSelfHistoryEntryDto(
+  overrides: Partial<SelfHistoryEntryDto> = {},
+): SelfHistoryEntryDto {
+  return {
+    sessionId: 'sess-h-1',
+    startsAt: '2026-07-19T15:00:00.000Z',
+    endsAt: '2026-07-19T17:00:00.000Z',
+    sessionType: 'practice',
+    status: 'present_on_time',
+    latenessMinutes: null,
+    excuseCategory: null,
+    source: 'self',
+    recordedAt: '2026-07-19T14:58:00.000Z',
+    sheetState: 'finalized',
+    ...overrides,
+  };
+}
+
+export function makeSelfHistoryDto(overrides: Partial<SelfHistoryDto> = {}): SelfHistoryDto {
+  return {
+    items: [makeSelfHistoryEntryDto()],
+    total: 1,
+    limit: 20,
+    offset: 0,
     ...overrides,
   };
 }

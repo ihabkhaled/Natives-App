@@ -37,8 +37,16 @@ describe('PERMISSIONS', () => {
     expect(PERMISSIONS.attendanceMark).toBe('attendance.record');
     expect(PERMISSIONS.settingsRead).toBe('team.settings.read');
     expect(PERMISSIONS.settingsManage).toBe('team.settings.manage');
-    expect(PERMISSIONS.pointsRuleManage).toBe('points.rules.manage');
     expect(PERMISSIONS.outboxManage).toBe('jobs.manage');
+  });
+
+  it('pins calculation rules to the points domain, never team-rules governance', () => {
+    // The backend catalog disambiguated the two rule domains: bare
+    // `rules.read`/`rules.manage` govern team rules (a separate P4 surface),
+    // while calculation rules live under `points.rules.manage`. Mapping the
+    // governance string here silently mis-gated the calculation-rule screens.
+    expect(PERMISSIONS.calculationRuleManage).toBe('points.rules.manage');
+    expect(VALUES).not.toContain('rules.manage');
   });
 
   it('pins the squad and tryout grants the selection and privacy rules key on', () => {

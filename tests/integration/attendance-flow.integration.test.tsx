@@ -46,8 +46,22 @@ describe('attendance coach flow (real client + MSW)', () => {
     ).toBeVisible();
     expect(screen.getAllByTestId(TEST_IDS.attendanceRosterRow)).toHaveLength(4);
     expect(screen.getByText(/3 of 4 marked/u)).toBeVisible();
-    expect(screen.getAllByText(/RSVP is not shared/u)).toHaveLength(4);
+
+    // Server-resolved identities render verbatim; only the profile-less
+    // historical snapshot falls back to the deterministic positional label.
+    expect(screen.getByText('Alex Ranger')).toBeVisible();
+    expect(screen.getByText('Sam Disc')).toBeVisible();
+    expect(screen.getByText('Nour Huck')).toBeVisible();
     expect(screen.getByText(/Historical player/u)).toBeVisible();
+
+    // One RSVP chip per row, from the roster's own rsvpStatus. Both the
+    // no_response answer and the RSVP-less historical row read "No response".
+    const chips = screen.getAllByTestId(TEST_IDS.attendanceRsvpChip);
+    expect(chips).toHaveLength(4);
+    const chipTexts = chips.map((chip) => chip.textContent);
+    expect(chipTexts.filter((text) => text.includes('Going'))).toHaveLength(1);
+    expect(chipTexts.filter((text) => text.includes('Maybe'))).toHaveLength(1);
+    expect(chipTexts.filter((text) => text.includes('No response'))).toHaveLength(2);
 
     const submit = screen.getByTestId(TEST_IDS.attendanceSubmit);
     expect(submit).toBeDisabled();

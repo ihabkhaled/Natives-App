@@ -30,6 +30,10 @@ test.describe('coach attendance experience', () => {
     await expect(page.getByText('3 of 4 marked')).toBeVisible();
     await expect(page.getByTestId(TEST_IDS.attendancePrivacyNotice)).toBeVisible();
 
+    // Contract 1.6.0 roster identity: server-resolved names and RSVP chips.
+    await expect(page.getByText('Alex Ranger')).toBeVisible();
+    await expect(page.getByTestId(TEST_IDS.attendanceRsvpChip)).toHaveCount(4);
+
     await page.getByTestId(TEST_IDS.attendanceMarkAllPresent).click();
     // Ionic reflects the disabled state through aria-disabled; ion-button is a
     // custom element, so Playwright's toBeDisabled/toBeEnabled never fire here.
@@ -172,5 +176,30 @@ test.describe('member self-attendance experience', () => {
     await expect(page.getByTestId(TEST_IDS.myAttendanceParticipationRate)).toContainText('90.9%');
     await expect(page.getByTestId(TEST_IDS.myAttendanceCheckInCard)).toBeVisible();
     await expect(page.getByText(/pending approval/u)).toBeVisible();
+
+    // The check-in card renders the SERVER-ruled window: the next mock
+    // session starts tomorrow, so the state is not_open with its instant —
+    // no button, and no client-side provisional caveat anywhere.
+    await expect(page.getByTestId(TEST_IDS.myAttendanceCheckInState)).toContainText(
+      /Check-in opens/u,
+    );
+    await expect(page.getByTestId(TEST_IDS.myAttendanceCheckInButton)).toHaveCount(0);
+    await expect(page.getByText(/Subject to confirmation/u)).toHaveCount(0);
+  });
+
+  test('pages the bounded self history through load-more', async ({ page }) => {
+    await signIn(page, personaLogin(MOCK_PERSONA_EMAILS.member));
+    await expectPresentedPage(page, TEST_IDS.homePage);
+    await gotoApp(page, APP_ROUTES.myAttendance);
+    await expectPresentedPage(page, TEST_IDS.myAttendancePage);
+
+    await expect(page.getByTestId(TEST_IDS.myAttendanceHistorySection)).toBeVisible();
+    await expect(page.getByTestId(TEST_IDS.myAttendanceHistoryRow)).toHaveCount(20);
+    await expect(page.getByText('Not recorded').first()).toBeVisible();
+
+    await page.getByTestId(TEST_IDS.myAttendanceHistoryLoadMore).click();
+
+    await expect(page.getByTestId(TEST_IDS.myAttendanceHistoryRow)).toHaveCount(25);
+    await expect(page.getByTestId(TEST_IDS.myAttendanceHistoryLoadMore)).toHaveCount(0);
   });
 });

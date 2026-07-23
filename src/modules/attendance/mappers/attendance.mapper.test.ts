@@ -30,6 +30,8 @@ describe('mapAttendanceSheet', () => {
         {
           membershipId: 'm-1',
           userId: 'user-1',
+          displayName: 'Alex Ranger',
+          rsvpStatus: 'going',
           status: 'present_late',
           checkInAtIso: '2026-07-26T15:12:00.000Z',
           latenessMinutes: 12,

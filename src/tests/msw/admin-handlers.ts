@@ -37,7 +37,7 @@ function transitionHandler(path: string) {
     if (!isAuthorized(request)) {
       return failRequest(401, 'UNAUTHORIZED', path);
     }
-    if (!permissionsForRequest(request).includes(PERMISSIONS.pointsRuleManage)) {
+    if (!permissionsForRequest(request).includes(PERMISSIONS.calculationRuleManage)) {
       return failRequest(403, 'FORBIDDEN', path);
     }
     const body = await readJsonBody<TransitionBody>(request);

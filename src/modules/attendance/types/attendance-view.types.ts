@@ -40,7 +40,7 @@ export interface ParticipationCardView {
   readonly notConfiguredMessage: string;
 }
 
-/** The per-session self check-in card, driven by the resolved window state. */
+/** The per-session self check-in card, driven by the server-ruled state. */
 export interface SelfCheckInCardView {
   readonly title: string;
   readonly sessionLabel: string | null;
@@ -49,7 +49,6 @@ export interface SelfCheckInCardView {
   readonly loadingLabel: string;
   readonly statusChip: { readonly label: string; readonly tone: string } | null;
   readonly stateMessage: string | null;
-  readonly provisionalNotice: string | null;
   readonly offlineNotice: string | null;
   readonly canCheckIn: boolean;
   readonly checkInLabel: string;
@@ -60,6 +59,32 @@ export interface SelfCheckInCardView {
   readonly onCheckIn: () => void;
 }
 
+/** One session of the member's own history, fully translated. */
+export interface SelfHistoryRowView {
+  readonly sessionId: string;
+  readonly dateLabel: string;
+  readonly typeLabel: string;
+  readonly statusLabel: string;
+  readonly statusTone: string;
+  readonly latenessLabel: string | null;
+  readonly excuseLabel: string | null;
+  readonly sourceLabel: string | null;
+  readonly notFinalizedHint: string | null;
+}
+
+/** The bounded newest-first history section with its load-more window. */
+export interface SelfHistoryListView {
+  readonly title: string;
+  readonly isLoading: boolean;
+  readonly loadingLabel: string;
+  readonly rows: readonly SelfHistoryRowView[];
+  readonly emptyTitle: string;
+  readonly emptyMessage: string;
+  readonly loadMoreLabel: string;
+  readonly canLoadMore: boolean;
+  readonly onLoadMore: () => void;
+}
+
 export interface MyAttendanceScreenView extends MyAttendanceStateCopy {
   readonly title: string;
   readonly subtitle: string;
@@ -67,6 +92,7 @@ export interface MyAttendanceScreenView extends MyAttendanceStateCopy {
   readonly status: AttendanceScreenStatus;
   readonly participation: ParticipationCardView | null;
   readonly checkIn: SelfCheckInCardView;
+  readonly history: SelfHistoryListView;
 }
 
 export type AttendanceScreenStatus =
@@ -82,6 +108,7 @@ export interface AttendanceRosterRowView {
   readonly playerLabel: string;
   readonly memberIdentifierLabel: string;
   readonly rsvpLabel: string;
+  readonly rsvpTone: string;
   readonly isHistorical: boolean;
   readonly historicalLabel: string;
   readonly isSelected: boolean;

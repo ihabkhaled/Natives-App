@@ -4,12 +4,14 @@ import { AsyncStateView, PageShell } from '@/shared/ui';
 
 import { ParticipationSummaryCard } from '../participation-summary-card';
 import { SelfCheckInCard } from '../self-check-in-card';
+import { SelfHistoryList } from '../self-history-list';
 import { MY_ATTENDANCE_STATE_TEST_IDS } from './my-attendance-view.constants';
 import type { MyAttendanceViewProps } from './my-attendance-view.types';
 
 /**
- * Member "My attendance": check-in on top, participation below, and only the
- * caller's own facts — the roster never renders (or loads) here.
+ * Member "My attendance": check-in on top, participation and the bounded own
+ * history below, and only the caller's own facts — the roster never renders
+ * (or loads) here.
  */
 export function MyAttendanceView(props: MyAttendanceViewProps): React.JSX.Element {
   return (
@@ -31,6 +33,7 @@ export function MyAttendanceView(props: MyAttendanceViewProps): React.JSX.Elemen
             {props.participation === null ? null : (
               <ParticipationSummaryCard view={props.participation} />
             )}
+            <SelfHistoryList view={props.history} />
             <IonNote className="block text-xs">{props.privacyNotice}</IonNote>
           </>
         ) : null}

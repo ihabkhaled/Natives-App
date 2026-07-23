@@ -6,6 +6,7 @@ import { TEST_IDS } from '@/shared/config';
 import type {
   MyAttendanceScreenView,
   SelfCheckInCardView,
+  SelfHistoryListView,
 } from '../../types/attendance-view.types';
 import { MyAttendanceView } from './my-attendance-view.component';
 
@@ -18,7 +19,6 @@ function buildCheckIn(): SelfCheckInCardView {
     loadingLabel: 'Loading…',
     statusChip: null,
     stateMessage: null,
-    provisionalNotice: null,
     offlineNotice: null,
     canCheckIn: false,
     checkInLabel: 'Check in',
@@ -27,6 +27,20 @@ function buildCheckIn(): SelfCheckInCardView {
     noteValue: '',
     onNoteChange: vi.fn(),
     onCheckIn: vi.fn(),
+  };
+}
+
+function buildHistory(): SelfHistoryListView {
+  return {
+    title: 'History',
+    isLoading: false,
+    loadingLabel: 'Loading…',
+    rows: [],
+    emptyTitle: 'No attendance yet',
+    emptyMessage: 'Records appear later.',
+    loadMoreLabel: 'Load more',
+    canLoadMore: false,
+    onLoadMore: vi.fn(),
   };
 }
 
@@ -59,16 +73,18 @@ function buildScreen(overrides: Partial<MyAttendanceScreenView> = {}): MyAttenda
       notConfiguredMessage: 'Not configured yet.',
     },
     checkIn: buildCheckIn(),
+    history: buildHistory(),
     ...overrides,
   };
 }
 
 describe('MyAttendanceView', () => {
-  it('renders both self cards and the privacy notice when ready', () => {
+  it('renders the self cards, the history section, and the privacy notice when ready', () => {
     render(<MyAttendanceView {...buildScreen()} />);
 
     expect(screen.getByTestId(TEST_IDS.myAttendanceCheckInCard)).toBeInTheDocument();
     expect(screen.getByTestId(TEST_IDS.myAttendanceParticipationCard)).toBeInTheDocument();
+    expect(screen.getByTestId(TEST_IDS.myAttendanceHistorySection)).toBeInTheDocument();
     expect(screen.getByText('This page shows only your own attendance.')).toBeInTheDocument();
   });
 

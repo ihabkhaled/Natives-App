@@ -30,6 +30,8 @@ export function mapAttendanceSheet(dto: SheetDto): AttendanceSheet {
     items: dto.items.map((item) => ({
       membershipId: item.membershipId,
       userId: item.userId,
+      displayName: item.displayName,
+      rsvpStatus: item.rsvpStatus,
       status: item.status,
       checkInAtIso: item.checkInAt,
       latenessMinutes: item.latenessMinutes,

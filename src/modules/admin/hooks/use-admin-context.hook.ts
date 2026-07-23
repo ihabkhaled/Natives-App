@@ -22,9 +22,7 @@ export function useAdminContext(): AdminContextView {
       granted.includes(PERMISSIONS.settingsRead) || granted.includes(PERMISSIONS.settingsManage),
     canManageSettings: granted.includes(PERMISSIONS.settingsManage),
     canManageRoles: granted.includes(PERMISSIONS.memberRolesManage),
-    canManageRules:
-      granted.includes(PERMISSIONS.pointsRuleManage) ||
-      granted.includes(PERMISSIONS.calculationRuleManage),
+    canManageRules: granted.includes(PERMISSIONS.calculationRuleManage),
     canReadAudit: granted.includes(PERMISSIONS.auditRead),
     canManageOutbox: granted.includes(PERMISSIONS.outboxManage),
     canManagePlatform: granted.includes(PERMISSIONS.platformAdmin),

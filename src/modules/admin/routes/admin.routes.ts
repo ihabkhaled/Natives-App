@@ -99,7 +99,7 @@ function rulesRoute(): AppRouteDefinition {
     meta: {
       key: 'admin-rules',
       titleKey: I18N_KEYS.adminRules.title,
-      permissions: [PERMISSIONS.pointsRuleManage],
+      permissions: [PERMISSIONS.calculationRuleManage],
       requiresTeamContext: true,
       offline: false,
       preload: false,

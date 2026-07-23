@@ -12,6 +12,8 @@ export function makeRosterEntry(
   return {
     membershipId: 'm-1',
     userId: 'user-1',
+    displayName: 'Alex Ranger',
+    rsvpStatus: 'going',
     status: 'present_on_time',
     checkInAtIso: null,
     latenessMinutes: null,

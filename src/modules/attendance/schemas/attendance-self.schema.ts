@@ -1,23 +1,54 @@
 import { schemaBuilder } from '@/packages/schema';
 
-import { attendanceRecordResponseSchema } from './attendance.schema';
+import {
+  attendanceRecordResponseSchema,
+  attendanceSourceSchema,
+  attendanceStatusSchema,
+  boundedPageEnvelopeSchema,
+  excuseCategorySchema,
+  sheetStateSchema,
+} from './attendance.schema';
 
 /**
  * Wire contracts for the member self-service reads. `attendanceSelfRecordSchema`
- * is the coach record DTO plus an OPTIONAL `selfCheckIn` eligibility block: the
- * deployed backend does not send it yet (Wave B1), so the client tolerates its
- * absence instead of inventing a shape the server never returned.
+ * is the record DTO plus the server-ruled `selfCheckIn` eligibility block
+ * (contract 1.6.0): always present, nullable because only the own-record read
+ * computes it — writes and roster rows honestly carry `null`.
  */
 const isoInstant = schemaBuilder.iso.datetime({ offset: true });
 
 const selfCheckInEligibilitySchema = schemaBuilder.object({
   state: schemaBuilder.enum(['not_open', 'open', 'closed', 'locked', 'recorded']),
-  opensAt: isoInstant.nullable(),
-  closesAt: isoInstant.nullable(),
+  opensAt: isoInstant,
+  closesAt: isoInstant,
 });
 
 export const attendanceSelfRecordSchema = attendanceRecordResponseSchema.extend({
-  selfCheckIn: selfCheckInEligibilitySchema.nullable().optional(),
+  selfCheckIn: selfCheckInEligibilitySchema.nullable(),
+});
+
+/**
+ * Exact mirror of `AttendanceSelfHistoryResponseDto`: the caller's own record
+ * joined onto every started, non-cancelled session, newest first. A null
+ * status means "not recorded" (never zero-filled); a null sheetState means no
+ * sheet exists yet.
+ */
+export const attendanceSelfHistoryResponseSchema = schemaBuilder.object({
+  items: schemaBuilder.array(
+    schemaBuilder.object({
+      sessionId: schemaBuilder.string().min(1),
+      startsAt: isoInstant,
+      endsAt: isoInstant,
+      sessionType: schemaBuilder.string(),
+      status: attendanceStatusSchema.nullable(),
+      latenessMinutes: schemaBuilder.number().nonnegative().nullable(),
+      excuseCategory: excuseCategorySchema.nullable(),
+      source: attendanceSourceSchema.nullable(),
+      recordedAt: isoInstant.nullable(),
+      sheetState: sheetStateSchema.nullable(),
+    }),
+  ),
+  ...boundedPageEnvelopeSchema,
 });
 
 /**

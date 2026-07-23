@@ -18,6 +18,7 @@ export {
   bulkAttendanceResponseSchema,
 } from './schemas/attendance.schema';
 export {
+  attendanceSelfHistoryResponseSchema,
   attendanceSelfRecordSchema,
   participationResponseSchema,
 } from './schemas/attendance-self.schema';

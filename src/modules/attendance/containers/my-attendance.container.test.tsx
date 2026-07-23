@@ -35,7 +35,6 @@ describe('MyAttendanceContainer', () => {
         loadingLabel: '',
         statusChip: null,
         stateMessage: null,
-        provisionalNotice: null,
         offlineNotice: null,
         canCheckIn: false,
         checkInLabel: '',
@@ -44,6 +43,17 @@ describe('MyAttendanceContainer', () => {
         noteValue: '',
         onNoteChange: vi.fn(),
         onCheckIn: vi.fn(),
+      },
+      history: {
+        title: '',
+        isLoading: false,
+        loadingLabel: '',
+        rows: [],
+        emptyTitle: '',
+        emptyMessage: '',
+        loadMoreLabel: '',
+        canLoadMore: false,
+        onLoadMore: vi.fn(),
       },
     });
 

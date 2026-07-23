@@ -6,15 +6,18 @@ import { PERMISSIONS, type Permission } from '@/shared/security';
 import {
   applyBulkAttendance,
   applyOneAttendance,
-  applySelfCheckIn,
   buildAttendanceHistory,
   buildAttendanceSheet,
-  buildMyAttendance,
-  buildMyParticipation,
   consumeReplayConflict,
   correctAttendanceRecord,
   finalizeAttendanceSheet,
 } from './attendance.fixture';
+import {
+  applySelfCheckIn,
+  buildMyAttendance,
+  buildMyAttendanceHistory,
+  buildMyParticipation,
+} from './attendance-self.fixture';
 import { MOCK_ATTENDANCE } from './mock-data.constants';
 import { apiUrl } from './mock-request.helper';
 import { nestErrorResponse } from './nest-error.helper';
@@ -47,6 +50,37 @@ function conflict(path: string): Response {
     statusCode: 409,
     code: 'ATTENDANCE_VERSION_CONFLICT',
     message: 'Attendance was changed elsewhere',
+    path: `/api/v1${path}`,
+  });
+}
+
+function sessionNotFound(path: string): Response {
+  return nestErrorResponse({
+    statusCode: 404,
+    code: 'NOT_FOUND',
+    message: 'Practice session not found in this team',
+    path: `/api/v1${path}`,
+  });
+}
+
+/** The A2 window refusal, carrying the backend's exact message key. */
+function windowClosed(path: string): Response {
+  return nestErrorResponse({
+    statusCode: 409,
+    code: 'CHECK_IN_WINDOW_CLOSED',
+    message: 'Check-in is closed for this session',
+    messageKey: 'errors.practices.checkInWindowClosed',
+    path: `/api/v1${path}`,
+  });
+}
+
+/** The finalized-sheet refusal (`attendanceLocked`). */
+function attendanceLocked(path: string): Response {
+  return nestErrorResponse({
+    statusCode: 409,
+    code: 'ATTENDANCE_LOCKED',
+    message: 'Attendance sheet is finalized',
+    messageKey: 'errors.practices.attendanceLocked',
     path: `/api/v1${path}`,
   });
 }
@@ -150,7 +184,7 @@ const coachHandlers = [
 ];
 
 /**
- * Member self-service routes. All three are gated on `attendance.read.self`
+ * Member self-service routes. All four are gated on `attendance.read.self`
  * exactly like the deployed controllers, so an analyst persona (team reads,
  * no self grants) receives an honest 403 — never data belonging to someone.
  */
@@ -161,9 +195,11 @@ const selfHandlers = [
       const teamId = String(params['teamId']);
       const sessionId = String(params['sessionId']);
       const path = attendancePath(teamId, sessionId, '/me');
-      return isAllowed(request, teamId, PERMISSIONS.attendanceReadSelf)
-        ? HttpResponse.json(buildMyAttendance(sessionId))
-        : denied(path);
+      if (!isAllowed(request, teamId, PERMISSIONS.attendanceReadSelf)) {
+        return denied(path);
+      }
+      const result = buildMyAttendance(sessionId);
+      return result.kind === 'not-found' ? sessionNotFound(path) : HttpResponse.json(result.record);
     },
   ),
   http.post(
@@ -172,9 +208,20 @@ const selfHandlers = [
       const teamId = String(params['teamId']);
       const sessionId = String(params['sessionId']);
       const path = attendancePath(teamId, sessionId, '/check-in');
-      return isAllowed(request, teamId, PERMISSIONS.attendanceReadSelf)
-        ? HttpResponse.json(applySelfCheckIn(sessionId))
-        : denied(path);
+      if (!isAllowed(request, teamId, PERMISSIONS.attendanceReadSelf)) {
+        return denied(path);
+      }
+      const result = applySelfCheckIn(sessionId);
+      switch (result.kind) {
+        case 'not-found':
+          return sessionNotFound(path);
+        case 'window':
+          return windowClosed(path);
+        case 'locked':
+          return attendanceLocked(path);
+        case 'ok':
+          return HttpResponse.json(result.record);
+      }
     },
   ),
   http.get(apiUrl('/teams/:teamId/attendance/me/participation'), ({ request, params }) => {
@@ -185,6 +232,20 @@ const selfHandlers = [
     }
     const seasonId = new URL(request.url).searchParams.get('seasonId');
     return HttpResponse.json(buildMyParticipation(seasonId));
+  }),
+  http.get(apiUrl('/teams/:teamId/attendance/me/history'), ({ request, params }) => {
+    const teamId = String(params['teamId']);
+    const path = `/teams/${teamId}/attendance/me/history`;
+    if (!isAllowed(request, teamId, PERMISSIONS.attendanceReadSelf)) {
+      return denied(path);
+    }
+    const url = new URL(request.url);
+    return HttpResponse.json(
+      buildMyAttendanceHistory(
+        Math.min(parseNumber(url.searchParams.get('limit'), 20), 100),
+        parseNumber(url.searchParams.get('offset'), 0),
+      ),
+    );
   }),
 ];
 

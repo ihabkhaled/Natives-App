@@ -44,6 +44,11 @@ describe('attendance wire contract (mock mode = remote contract)', () => {
     expect(parsed.data.limit).toBe(100);
     expect(parsed.data.offset).toBe(0);
     expect(parsed.data.items.some((entry) => entry.userId === null)).toBe(true);
+    // Contract 1.6.0 identity/RSVP context: profile names resolve server-side
+    // (null = no profile) and each row carries its own RSVP answer.
+    expect(parsed.data.items[0]?.displayName).toBe('Alex Ranger');
+    expect(parsed.data.items[0]?.rsvpStatus).toBe('going');
+    expect(parsed.data.items.some((entry) => entry.displayName === null)).toBe(true);
     expect(parsed.data.items[0]).not.toHaveProperty('email');
     expect(parsed.data.items[0]).not.toHaveProperty('notes');
     expect(parsed.data.items[0]).not.toHaveProperty('evidence');
@@ -185,7 +190,10 @@ describe('attendance wire contract (mock mode = remote contract)', () => {
     expect(anonymousResponse.status).toBe(403);
   });
 
-  it('rejects an invented profile-rich sheet shape at runtime', () => {
+  it('rejects a sheet shape that renames the roster envelope at runtime', () => {
+    // `displayName`/`rsvpStatus` are legitimate 1.6.0 row fields now, but the
+    // envelope is still `items` with pagination — an invented `roster` list
+    // (as some older backends shipped) must fail the runtime schema.
     expect(
       safeParseWithSchema(attendanceSheetResponseSchema, {
         sessionId: MOCK_ATTENDANCE.sessionId,

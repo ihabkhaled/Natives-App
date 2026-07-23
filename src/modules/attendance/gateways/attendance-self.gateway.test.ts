@@ -4,6 +4,7 @@ import { getAppHttpClient } from '@/packages/http';
 
 import {
   requestMyAttendance,
+  requestMyAttendanceHistory,
   requestMyParticipation,
   requestSelfCheckIn,
 } from './attendance-self.gateway';
@@ -42,6 +43,16 @@ describe('requestSelfCheckIn', () => {
     await requestSelfCheckIn('team-1', 'sess-1', 'stuck in traffic');
 
     expect(post.mock.calls[0]?.[1]).toEqual({ note: 'stuck in traffic' });
+  });
+});
+
+describe('requestMyAttendanceHistory', () => {
+  it('reads the bounded newest-first window from offset zero', async () => {
+    await requestMyAttendanceHistory('team-1', 40);
+
+    const [path, , options] = get.mock.calls[0] as [string, unknown, { params: object }];
+    expect(path).toBe('/teams/team-1/attendance/me/history');
+    expect(options.params).toEqual({ limit: '40', offset: '0' });
   });
 });
 

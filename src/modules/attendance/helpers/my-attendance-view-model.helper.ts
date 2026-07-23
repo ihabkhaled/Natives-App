@@ -6,11 +6,15 @@ import { I18N_KEYS } from '@/shared/i18n';
 import { mapErrorCodeToI18nKey } from '@/shared/mappers';
 
 import {
-  ATTENDANCE_SOURCE,
   ATTENDANCE_STATUS_LABEL_KEYS,
   SELF_CHECK_IN_STATE,
+  type SelfCheckInState,
 } from '../constants/attendance.constants';
-import { resolveSelfCheckIn, type SelfCheckInResolution } from './attendance-self-window.helper';
+import {
+  attendanceSourceMessage,
+  buildHistorySection,
+  type BuildHistorySectionParams,
+} from './my-attendance-history-view.helper';
 import type {
   AttendanceScreenStatus,
   MyAttendanceScreenView,
@@ -25,13 +29,10 @@ export interface CheckInSessionContext {
   readonly id: string;
   readonly title: string | null;
   readonly startAtIso: string;
-  readonly endAtIso: string;
 }
 
-export interface BuildMyAttendanceParams {
+export interface BuildMyAttendanceParams extends BuildHistorySectionParams {
   readonly t: Translate;
-  readonly locale: string;
-  readonly nowIso: string;
   readonly isOffline: boolean;
   readonly isLoading: boolean;
   readonly participation: AttendanceParticipation | undefined;
@@ -135,56 +136,61 @@ function buildRecordedChip(
   return { label: t(ATTENDANCE_STATUS_LABEL_KEYS[record.status]), tone: 'success' };
 }
 
+/**
+ * The server-ruled eligibility state is the single source of truth. Responses
+ * without the block (writes never compute it) can only read as "not
+ * checkable": a recorded mark stays `recorded`, anything else is `closed` —
+ * the client never re-derives the window on its own clock.
+ */
+function resolveCheckInState(record: AttendanceSelfRecord): SelfCheckInState {
+  if (record.selfCheckIn !== null) {
+    return record.selfCheckIn.state;
+  }
+  return record.status === null ? SELF_CHECK_IN_STATE.closed : SELF_CHECK_IN_STATE.recorded;
+}
+
 function stateMessageFor(
   params: BuildMyAttendanceParams,
   record: AttendanceSelfRecord,
-  resolution: SelfCheckInResolution,
 ): string | null {
   const { t } = params;
-  if (resolution.state === SELF_CHECK_IN_STATE.recorded) {
-    return t(
-      record.source === ATTENDANCE_SOURCE.self
-        ? I18N_KEYS.attendance.checkInRecordedSelf
-        : I18N_KEYS.attendance.checkInRecordedStaff,
-    );
+  const block = record.selfCheckIn;
+  if (block === null) {
+    return record.status === null
+      ? t(I18N_KEYS.attendance.checkInClosed)
+      : attendanceSourceMessage(t, record.source);
   }
-  if (resolution.state === SELF_CHECK_IN_STATE.locked) {
-    return t(I18N_KEYS.attendance.checkInLocked);
+  switch (block.state) {
+    case SELF_CHECK_IN_STATE.recorded:
+      return attendanceSourceMessage(t, record.source);
+    case SELF_CHECK_IN_STATE.locked:
+      return t(I18N_KEYS.attendance.checkInLocked);
+    case SELF_CHECK_IN_STATE.closed:
+      return t(I18N_KEYS.attendance.checkInClosed);
+    case SELF_CHECK_IN_STATE.notOpen:
+      return t(I18N_KEYS.attendance.checkInOpensAt, {
+        when: formatCairoDateTime(block.opensAtIso, params.locale),
+      });
+    case SELF_CHECK_IN_STATE.open:
+      return null;
   }
-  if (resolution.state === SELF_CHECK_IN_STATE.closed) {
-    return t(I18N_KEYS.attendance.checkInClosed);
-  }
-  if (resolution.state === SELF_CHECK_IN_STATE.notOpen) {
-    return resolution.opensAtIso === null
-      ? t(I18N_KEYS.attendance.checkInNotOpen)
-      : t(I18N_KEYS.attendance.checkInOpensAt, {
-          when: formatCairoDateTime(resolution.opensAtIso, params.locale),
-        });
-  }
-  return null;
 }
 
-/** The three action-side facts an OPEN window controls; closed states zero them. */
+/** The action-side facts an OPEN server state controls; others zero them. */
 function buildOpenState(
   params: BuildMyAttendanceParams,
-  resolution: SelfCheckInResolution,
-): Pick<SelfCheckInCardView, 'provisionalNotice' | 'offlineNotice' | 'canCheckIn'> {
-  const { t } = params;
-  if (resolution.state !== SELF_CHECK_IN_STATE.open) {
-    return { provisionalNotice: null, offlineNotice: null, canCheckIn: false };
+  state: SelfCheckInState,
+): Pick<SelfCheckInCardView, 'offlineNotice' | 'canCheckIn'> {
+  if (state !== SELF_CHECK_IN_STATE.open) {
+    return { offlineNotice: null, canCheckIn: false };
   }
   if (params.isOffline) {
     return {
-      provisionalNotice: null,
-      offlineNotice: t(I18N_KEYS.attendance.checkInOfflineNotice),
+      offlineNotice: params.t(I18N_KEYS.attendance.checkInOfflineNotice),
       canCheckIn: false,
     };
   }
-  return {
-    provisionalNotice: resolution.isProvisional ? t(I18N_KEYS.attendance.checkInProvisional) : null,
-    offlineNotice: null,
-    canCheckIn: !params.isSubmitting,
-  };
+  return { offlineNotice: null, canCheckIn: !params.isSubmitting };
 }
 
 function buildCheckInCard(params: BuildMyAttendanceParams): SelfCheckInCardView {
@@ -207,25 +213,19 @@ function buildCheckInCard(params: BuildMyAttendanceParams): SelfCheckInCardView 
       isLoading: nextSession !== null && params.isSelfLoading,
       statusChip: null,
       stateMessage: null,
-      provisionalNotice: null,
       offlineNotice: null,
       canCheckIn: false,
     };
   }
-  const resolution = resolveSelfCheckIn(
-    selfRecord,
-    nextSession.startAtIso,
-    nextSession.endAtIso,
-    params.nowIso,
-  );
+  const state = resolveCheckInState(selfRecord);
   const timeLabel = formatCairoDateTime(nextSession.startAtIso, params.locale);
   return {
     ...shared,
     sessionLabel: nextSession.title === null ? timeLabel : `${nextSession.title} · ${timeLabel}`,
     isLoading: false,
     statusChip: buildRecordedChip(t, selfRecord),
-    stateMessage: stateMessageFor(params, selfRecord, resolution),
-    ...buildOpenState(params, resolution),
+    stateMessage: stateMessageFor(params, selfRecord),
+    ...buildOpenState(params, state),
   };
 }
 
@@ -266,5 +266,6 @@ export function buildMyAttendanceScreenView(
     onRetry: params.onRetry,
     participation: buildParticipationCard(params),
     checkIn: buildCheckInCard(params),
+    history: buildHistorySection(params),
   };
 }

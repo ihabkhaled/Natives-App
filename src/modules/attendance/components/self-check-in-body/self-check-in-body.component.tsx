@@ -6,8 +6,8 @@ import type { SelfCheckInBodyProps } from './self-check-in-body.types';
 
 /**
  * The resolved check-in body: the session line (or the honest no-session
- * message), the recorded chip, the window state copy, and — only inside an
- * open window — the note field with the armed check-in action.
+ * message), the recorded chip, the server-ruled state copy, and — only when
+ * the server says the window is open — the note field with the armed action.
  */
 export function SelfCheckInBody(props: SelfCheckInBodyProps): React.JSX.Element {
   const { view } = props;
@@ -29,7 +29,11 @@ export function SelfCheckInBody(props: SelfCheckInBodyProps): React.JSX.Element 
           />
         </div>
       )}
-      {view.stateMessage === null ? null : <IonNote className="block">{view.stateMessage}</IonNote>}
+      {view.stateMessage === null ? null : (
+        <IonNote className="block" data-testid={TEST_IDS.myAttendanceCheckInState}>
+          {view.stateMessage}
+        </IonNote>
+      )}
       {view.offlineNotice === null ? null : (
         <IonNote color="warning" className="block" role="status">
           {view.offlineNotice}
@@ -51,9 +55,6 @@ export function SelfCheckInBody(props: SelfCheckInBodyProps): React.JSX.Element 
             testId={TEST_IDS.myAttendanceCheckInButton}
             onClick={view.onCheckIn}
           />
-          {view.provisionalNotice === null ? null : (
-            <IonNote className="block text-xs">{view.provisionalNotice}</IonNote>
-          )}
         </div>
       ) : null}
     </div>

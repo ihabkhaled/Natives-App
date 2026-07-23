@@ -39,18 +39,20 @@ route -> screen hook -> sheet/history queries -> services -> gateway -> @/packag
 
 - Route: nav Team group order 12, gated on `attendance.read.self` (Analyst and Scorekeeper hold no
   self grant, so the entry never renders for them and the guard blocks their direct URL).
-- Reads ONLY self endpoints: `…/attendance/me`, `…/attendance/check-in`, and
-  `…/attendance/me/participation`. The roster is never fetched here — pinned by integration tests
-  with counting handlers.
-- Check-in window (Wave F0 interim): the deployed contract has no server window yet, so the button
-  arms only inside the provisional client window `[startsAt − 60m, session end]` with explicit
-  "subject to confirmation" copy. Once the backend ships the `selfCheckIn` eligibility block
-  (Wave B1) the card renders the server state verbatim — the schema already tolerates the optional
-  field, and the client never invents one.
+- Reads ONLY self endpoints: `…/attendance/me`, `…/attendance/check-in`,
+  `…/attendance/me/participation`, and `…/attendance/me/history`. The roster is never fetched
+  here — pinned by integration tests with counting handlers.
+- Check-in window (contract 1.6.0): the server's `selfCheckIn.state`
+  (`not_open | open | closed | locked | recorded`) is the single source of truth — the client
+  renders it verbatim and never re-derives the window from its own clock. A 409
+  (`errors.practices.checkInWindowClosed` / `attendanceLocked`) refetches the own record and shows
+  the mapped copy, never a raw error. Repeat check-ins are server-idempotent: the existing record
+  returns unchanged.
 - Offline policy: a check-in is NOT queued offline — the window cannot be proven client-side, so
   the button disables with honest copy instead of recording a mark the server may refuse.
-- The self-history list is Wave F1: its endpoint is not in the committed contract, so no history
-  section renders in F0 (a hidden feature seam, not a broken panel).
+- Self history: `…/attendance/me/history` is newest-first and bounded — the window grows one page
+  (20) per "load more" press and hard-stops at the contract's 100-item limit. `status: null` rows
+  render "Not recorded"; open-sheet rows carry a "not finalized yet" hint.
 - Participation copy cites the rule version, flags `ruleStatus: 'candidate'` as provisional, and
   renders the backend's `attendanceRuleMissing` answer as calm "not configured yet" copy — never a
   retry loop.
@@ -59,9 +61,9 @@ route -> screen hook -> sheet/history queries -> services -> gateway -> @/packag
 
 - The Preferences queue contains only approved status, lateness, excuse category, IDs, and version.
   Private notes and evidence are never persisted, logged, or rendered.
-- The committed `RosterEntryResponseDto` does not include a display name or RSVP. The UI therefore
-  uses deterministic roster-position/member-ID labels and explicitly marks RSVP as unavailable; it
-  does not invent remote data.
+- Roster rows carry the server-resolved `displayName` (null = no member profile, and only then the
+  deterministic positional label stands in) and `rsvpStatus`, rendered as a chip per status — the
+  client never invents remote data.
 - The committed write contract has no operation-ID request field or idempotency header. The client
   deduplicates its local queue and sends `expectedVersion`, but a first write whose response is lost
   cannot be proven server-idempotent until the backend publishes such a contract.

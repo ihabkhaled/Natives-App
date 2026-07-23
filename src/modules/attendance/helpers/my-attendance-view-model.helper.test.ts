@@ -3,10 +3,16 @@ import { describe, expect, it, vi } from 'vitest';
 import { APP_ERROR_CODE } from '@/shared/errors';
 import { AppError } from '@/shared/errors/app.errors';
 import { I18N_KEYS } from '@/shared/i18n';
-import { makeParticipationDto, makeSelfRecordDto } from '@/tests/msw/attendance-wire.fixture';
+import {
+  makeParticipationDto,
+  makeSelfHistoryDto,
+  makeSelfHistoryEntryDto,
+  makeSelfRecordDto,
+} from '@/tests/msw/attendance-wire.fixture';
 
 import {
   mapAttendanceParticipation,
+  mapAttendanceSelfHistory,
   mapAttendanceSelfRecord,
 } from '../mappers/attendance-self.mapper';
 import {
@@ -22,16 +28,12 @@ const SESSION: CheckInSessionContext = {
   id: 'sess-1',
   title: 'Evening practice',
   startAtIso: '2026-07-26T15:00:00.000Z',
-  endAtIso: '2026-07-26T17:00:00.000Z',
 };
-
-const IN_WINDOW = '2026-07-26T14:30:00.000Z';
 
 function params(overrides: Partial<BuildMyAttendanceParams> = {}): BuildMyAttendanceParams {
   return {
     t,
     locale: 'en',
-    nowIso: IN_WINDOW,
     isOffline: false,
     isLoading: false,
     participation: mapAttendanceParticipation(makeParticipationDto()),
@@ -44,8 +46,28 @@ function params(overrides: Partial<BuildMyAttendanceParams> = {}): BuildMyAttend
     isSubmitting: false,
     onNoteChange: vi.fn(),
     onCheckIn: vi.fn(),
+    history: mapAttendanceSelfHistory(makeSelfHistoryDto()),
+    isHistoryLoading: false,
+    canGrowHistory: true,
+    onLoadMoreHistory: vi.fn(),
     ...overrides,
   };
+}
+
+function recordInState(
+  state: 'not_open' | 'open' | 'closed' | 'locked' | 'recorded',
+  recordOverrides: Parameters<typeof makeSelfRecordDto>[0] = {},
+) {
+  return mapAttendanceSelfRecord(
+    makeSelfRecordDto({
+      selfCheckIn: {
+        state,
+        opensAt: '2026-07-26T14:00:00.000Z',
+        closesAt: '2026-07-26T17:00:00.000Z',
+      },
+      ...recordOverrides,
+    }),
+  );
 }
 
 function ruleMissingError(): AppError {
@@ -148,14 +170,13 @@ describe('participation card', () => {
   });
 });
 
-describe('check-in card', () => {
-  it('arms the button inside the provisional window with the honest caveat', () => {
-    const view = buildMyAttendanceScreenView(params());
+describe('check-in card server-state mapping', () => {
+  it('arms the button only for the server-ruled open state', () => {
+    const view = buildMyAttendanceScreenView(params({ selfRecord: recordInState('open') }));
 
     expect(view.checkIn.sessionLabel).toContain('Evening practice');
     expect(view.checkIn.canCheckIn).toBe(true);
-    expect(view.checkIn.provisionalNotice).toBe('attendance.checkInProvisional');
-    expect(view.checkIn.offlineNotice).toBeNull();
+    expect(view.checkIn.stateMessage).toBeNull();
     expect(view.checkIn.statusChip).toBeNull();
   });
 
@@ -166,7 +187,9 @@ describe('check-in card', () => {
   });
 
   it('disables the button offline with the no-queue policy notice', () => {
-    const view = buildMyAttendanceScreenView(params({ isOffline: true }));
+    const view = buildMyAttendanceScreenView(
+      params({ selfRecord: recordInState('open'), isOffline: true }),
+    );
 
     expect(view.checkIn.canCheckIn).toBe(false);
     expect(view.checkIn.offlineNotice).toBe('attendance.checkInOfflineNotice');
@@ -178,56 +201,54 @@ describe('check-in card', () => {
     );
   });
 
-  it('says when check-in opens before the window and closed after it', () => {
-    const early = buildMyAttendanceScreenView(params({ nowIso: '2026-07-26T10:00:00.000Z' }));
+  it('says when check-in opens using the server instant, and closed after it', () => {
+    const early = buildMyAttendanceScreenView(params({ selfRecord: recordInState('not_open') }));
     expect(early.checkIn.stateMessage).toContain('attendance.checkInOpensAt');
     expect(early.checkIn.canCheckIn).toBe(false);
 
-    const late = buildMyAttendanceScreenView(params({ nowIso: '2026-07-26T18:00:00.000Z' }));
+    const late = buildMyAttendanceScreenView(params({ selfRecord: recordInState('closed') }));
     expect(late.checkIn.stateMessage).toBe('attendance.checkInClosed');
+    expect(late.checkIn.canCheckIn).toBe(false);
   });
 
   it('shows the recorded chip and who recorded it', () => {
     const self = buildMyAttendanceScreenView(
       params({
-        selfRecord: mapAttendanceSelfRecord(
-          makeSelfRecordDto({ status: 'present_on_time', source: 'self' }),
-        ),
+        selfRecord: recordInState('recorded', { status: 'present_on_time', source: 'self' }),
       }),
     );
     expect(self.checkIn.statusChip?.label).toBe('attendance.statusPresent');
     expect(self.checkIn.stateMessage).toBe('attendance.checkInRecordedSelf');
-    expect(self.checkIn.provisionalNotice).toBeNull();
+    expect(self.checkIn.canCheckIn).toBe(false);
 
     const coach = buildMyAttendanceScreenView(
-      params({
-        selfRecord: mapAttendanceSelfRecord(
-          makeSelfRecordDto({ status: 'excused', source: 'coach' }),
-        ),
-      }),
+      params({ selfRecord: recordInState('recorded', { status: 'excused', source: 'coach' }) }),
     );
     expect(coach.checkIn.stateMessage).toBe('attendance.checkInRecordedStaff');
   });
 
-  it('renders the server-ruled locked and not-open states once B1 ships them', () => {
-    const locked = buildMyAttendanceScreenView(
-      params({
-        selfRecord: mapAttendanceSelfRecord(
-          makeSelfRecordDto({ selfCheckIn: { state: 'locked', opensAt: null, closesAt: null } }),
-        ),
-      }),
-    );
-    expect(locked.checkIn.stateMessage).toBe('attendance.checkInLocked');
-    expect(locked.checkIn.canCheckIn).toBe(false);
+  it('renders the locked state for a finalized sheet', () => {
+    const view = buildMyAttendanceScreenView(params({ selfRecord: recordInState('locked') }));
 
-    const notOpen = buildMyAttendanceScreenView(
+    expect(view.checkIn.stateMessage).toBe('attendance.checkInLocked');
+    expect(view.checkIn.canCheckIn).toBe(false);
+  });
+
+  it('never arms without a server ruling — a blockless response reads closed or recorded', () => {
+    const blocklessEmpty = buildMyAttendanceScreenView(
+      params({ selfRecord: mapAttendanceSelfRecord(makeSelfRecordDto({ selfCheckIn: null })) }),
+    );
+    expect(blocklessEmpty.checkIn.canCheckIn).toBe(false);
+    expect(blocklessEmpty.checkIn.stateMessage).toBe('attendance.checkInClosed');
+
+    const blocklessRecorded = buildMyAttendanceScreenView(
       params({
         selfRecord: mapAttendanceSelfRecord(
-          makeSelfRecordDto({ selfCheckIn: { state: 'not_open', opensAt: null, closesAt: null } }),
+          makeSelfRecordDto({ selfCheckIn: null, status: 'present_on_time', source: 'self' }),
         ),
       }),
     );
-    expect(notOpen.checkIn.stateMessage).toBe('attendance.checkInNotOpen');
+    expect(blocklessRecorded.checkIn.stateMessage).toBe('attendance.checkInRecordedSelf');
   });
 
   it('offers no check-in without an upcoming session', () => {
@@ -245,23 +266,107 @@ describe('check-in card', () => {
 
     expect(view.checkIn.isLoading).toBe(true);
   });
+});
 
-  it('opens exactly at the server-ruled open state without the provisional caveat', () => {
+describe('history section', () => {
+  it('translates a recorded row with type, source, and no hints', () => {
+    const view = buildMyAttendanceScreenView(params());
+
+    const [row] = view.history.rows;
+    expect(row?.statusLabel).toBe('attendance.statusPresent');
+    expect(row?.statusTone).toBe('success');
+    expect(row?.typeLabel).toBe('practice.typePractice');
+    expect(row?.sourceLabel).toBe('attendance.checkInRecordedSelf');
+    expect(row?.latenessLabel).toBeNull();
+    expect(row?.excuseLabel).toBeNull();
+    expect(row?.notFinalizedHint).toBeNull();
+  });
+
+  it('renders an unrecorded open-sheet row honestly, with lateness and excuse when present', () => {
     const view = buildMyAttendanceScreenView(
       params({
-        selfRecord: mapAttendanceSelfRecord(
-          makeSelfRecordDto({
-            selfCheckIn: {
-              state: 'open',
-              opensAt: '2026-07-26T14:00:00.000Z',
-              closesAt: '2026-07-26T17:00:00.000Z',
-            },
+        history: mapAttendanceSelfHistory(
+          makeSelfHistoryDto({
+            items: [
+              makeSelfHistoryEntryDto({
+                status: null,
+                source: null,
+                recordedAt: null,
+                sheetState: 'open',
+                sessionType: 'unknown-drill',
+              }),
+              makeSelfHistoryEntryDto({
+                sessionId: 'sess-h-2',
+                status: 'present_late',
+                latenessMinutes: 12,
+                source: 'coach',
+              }),
+              makeSelfHistoryEntryDto({
+                sessionId: 'sess-h-3',
+                status: 'excused',
+                excuseCategory: 'travel',
+                source: 'coach',
+              }),
+            ],
+            total: 3,
           }),
         ),
       }),
     );
 
-    expect(view.checkIn.canCheckIn).toBe(true);
-    expect(view.checkIn.provisionalNotice).toBeNull();
+    expect(view.history.rows).toMatchObject([
+      {
+        statusLabel: 'attendance.historyNotRecorded',
+        statusTone: 'medium',
+        sourceLabel: null,
+        notFinalizedHint: 'attendance.historyNotFinalizedHint',
+        // An unknown session type falls back to the server's literal value.
+        typeLabel: 'unknown-drill',
+      },
+      {
+        latenessLabel: 'attendance.historyLateness|{"minutes":12}',
+        sourceLabel: 'attendance.checkInRecordedStaff',
+      },
+      { excuseLabel: 'attendance.excuseTravel' },
+    ]);
+  });
+
+  it('offers load-more only while the window can still grow and rows remain', () => {
+    const full = buildMyAttendanceScreenView(
+      params({
+        history: mapAttendanceSelfHistory(
+          makeSelfHistoryDto({ items: [makeSelfHistoryEntryDto()], total: 25 }),
+        ),
+      }),
+    );
+    expect(full.history.canLoadMore).toBe(true);
+
+    const complete = buildMyAttendanceScreenView(params());
+    expect(complete.history.canLoadMore).toBe(false);
+
+    const capped = buildMyAttendanceScreenView(
+      params({
+        canGrowHistory: false,
+        history: mapAttendanceSelfHistory(
+          makeSelfHistoryDto({ items: [makeSelfHistoryEntryDto()], total: 25 }),
+        ),
+      }),
+    );
+    expect(capped.history.canLoadMore).toBe(false);
+  });
+
+  it('keeps the loading and empty answers apart', () => {
+    const loading = buildMyAttendanceScreenView(
+      params({ history: undefined, isHistoryLoading: true }),
+    );
+    expect(loading.history.isLoading).toBe(true);
+    expect(loading.history.rows).toEqual([]);
+
+    const empty = buildMyAttendanceScreenView(
+      params({ history: mapAttendanceSelfHistory(makeSelfHistoryDto({ items: [], total: 0 })) }),
+    );
+    expect(empty.history.isLoading).toBe(false);
+    expect(empty.history.rows).toEqual([]);
+    expect(empty.history.emptyTitle).toBe('attendance.selfEmptyTitle');
   });
 });

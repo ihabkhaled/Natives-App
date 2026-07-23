@@ -176,6 +176,20 @@ test.describe('accessibility (WCAG 2.2 AA)', () => {
   });
 });
 
+test.describe('member self-attendance accessibility', () => {
+  test('my-attendance with the check-in card and history has no violations', async ({ page }) => {
+    await signIn(page, {
+      email: MOCK_PERSONA_EMAILS.member,
+      password: MOCK_CREDENTIALS.password,
+    });
+    await gotoApp(page, APP_ROUTES.myAttendance);
+    await expect(page.getByTestId(TEST_IDS.myAttendanceParticipationCard)).toBeVisible();
+    await expect(page.getByTestId(TEST_IDS.myAttendanceHistorySection)).toBeVisible();
+    await waitForAppAnimations(page);
+    expect((await analyze(page)).violations).toEqual([]);
+  });
+});
+
 test.describe('external training and points accessibility', () => {
   test('external training workspace has no violations', async ({ page }) => {
     await signIn(page);

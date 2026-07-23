@@ -1057,7 +1057,10 @@ export interface paths {
             readonly path?: never;
             readonly cookie?: never;
         };
-        /** Chart-ready series for a player dimension */
+        /**
+         * Chart-ready series for a player dimension
+         * @description Dual-gated in the application layer: analytics.read.team reads any player; analytics.read.self reads exactly the caller’s own membership series. Any other combination is a 403 with messageKey errors.analytics.forbidden.
+         */
         readonly get: operations["Analytics.playerSeries"];
         readonly put?: never;
         readonly post?: never;
@@ -3752,7 +3755,8 @@ export interface paths {
             readonly path?: never;
             readonly cookie?: never;
         };
-        readonly get?: never;
+        /** List my active practice calendar feeds (metadata only) */
+        readonly get: operations["PracticeCalendar.list"];
         readonly put?: never;
         /** Create a revocable practice calendar feed */
         readonly post: operations["PracticeCalendar.create"];
@@ -4350,6 +4354,23 @@ export interface paths {
         readonly patch?: never;
         readonly trace?: never;
     };
+    readonly "/teams/{teamId}/practice-sessions/{sessionId}/reminders/status": {
+        readonly parameters: {
+            readonly query?: never;
+            readonly header?: never;
+            readonly path?: never;
+            readonly cookie?: never;
+        };
+        /** Read reminder status for a session (coach, read-only) */
+        readonly get: operations["PracticeReminderAdmin.readStatus"];
+        readonly put?: never;
+        readonly post?: never;
+        readonly delete?: never;
+        readonly options?: never;
+        readonly head?: never;
+        readonly patch?: never;
+        readonly trace?: never;
+    };
     readonly "/teams/{teamId}/practice-sessions/{sessionId}/reminders/test": {
         readonly parameters: {
             readonly query?: never;
@@ -4787,7 +4808,10 @@ export interface paths {
             readonly path?: never;
             readonly cookie?: never;
         };
-        /** List a team’s rules */
+        /**
+         * List a team’s rules
+         * @description Each item carries myAcknowledgedVersion/myAcknowledgedAt — the caller’s own acknowledgement state of that version row, resolved from their active membership (null when they hold none).
+         */
         readonly get: operations["Rules.list"];
         readonly put?: never;
         /** Publish the next version of a rule */
@@ -4805,7 +4829,7 @@ export interface paths {
             readonly path?: never;
             readonly cookie?: never;
         };
-        /** Get one rule version */
+        /** Get one rule version with the caller’s acknowledgement state */
         readonly get: operations["Rules.get"];
         readonly put?: never;
         readonly post?: never;
@@ -4824,8 +4848,31 @@ export interface paths {
         };
         readonly get?: never;
         readonly put?: never;
-        /** Acknowledge a rule version */
+        /**
+         * Acknowledge a rule version (self only)
+         * @description Idempotent upsert of the caller’s own acknowledgement. The membership must belong to the acting user; a third-party membership is a 403 with messageKey errors.governance.acknowledgementForbidden.
+         */
         readonly post: operations["Rules.acknowledge"];
+        readonly delete?: never;
+        readonly options?: never;
+        readonly head?: never;
+        readonly patch?: never;
+        readonly trace?: never;
+    };
+    readonly "/teams/{teamId}/rules/{ruleId}/acknowledgements": {
+        readonly parameters: {
+            readonly query?: never;
+            readonly header?: never;
+            readonly path?: never;
+            readonly cookie?: never;
+        };
+        /**
+         * List one rule version’s acknowledgements (compliance)
+         * @description Bounded page of the memberships that acknowledged this exact version, newest first — the admin compliance grid read.
+         */
+        readonly get: operations["Rules.listAcknowledgements"];
+        readonly put?: never;
+        readonly post?: never;
         readonly delete?: never;
         readonly options?: never;
         readonly head?: never;
@@ -5695,6 +5742,8 @@ export interface components {
             readonly recordVersion: number;
             /** Format: date-time */
             readonly rejectedAt: string | null;
+            /** @description Why the claim was rejected — set by the reject transition. */
+            readonly rejectionReason: string | null;
             /** Format: uuid */
             readonly seasonId: string | null;
             /** @enum {string} */
@@ -6262,6 +6311,17 @@ export interface components {
         readonly BulkRecordResponseDto: {
             readonly items: readonly components["schemas"]["AttendanceResponseDto"][];
             readonly recorded: number;
+        };
+        readonly CalendarFeedMetadataResponseDto: {
+            /** Format: date-time */
+            readonly createdAt: string;
+            /** Format: date-time */
+            readonly expiresAt: string;
+            /** Format: uuid */
+            readonly id: string;
+            /** Format: uuid */
+            readonly seasonId?: string | null;
+            readonly timezone: string;
         };
         readonly CalendarFeedResponseDto: {
             /** Format: date-time */
@@ -8118,6 +8178,9 @@ export interface components {
             readonly offset: number;
             readonly total: number;
         };
+        readonly ListCalendarFeedsResponseDto: {
+            readonly items: readonly components["schemas"]["CalendarFeedMetadataResponseDto"][];
+        };
         readonly ListCatalogEntriesResponseDto: {
             readonly items: readonly components["schemas"]["CatalogEntryResponseDto"][];
             readonly limit: number;
@@ -8355,6 +8418,12 @@ export interface components {
             readonly offset: number;
             readonly total: number;
         };
+        readonly ListRuleAcknowledgementsResponseDto: {
+            readonly items: readonly components["schemas"]["RuleAcknowledgementResponseDto"][];
+            readonly limit: number;
+            readonly offset: number;
+            readonly total: number;
+        };
         readonly ListScalesResponseDto: {
             readonly items: readonly components["schemas"]["ScaleResponseDto"][];
             readonly limit: number;
@@ -8422,7 +8491,7 @@ export interface components {
             readonly total: number;
         };
         readonly ListTeamRulesResponseDto: {
-            readonly items: readonly components["schemas"]["TeamRuleResponseDto"][];
+            readonly items: readonly components["schemas"]["TeamRuleWithAckStateResponseDto"][];
             readonly limit: number;
             readonly offset: number;
             readonly total: number;
@@ -10713,6 +10782,8 @@ export interface components {
             readonly losses: number;
             /** Format: uuid */
             readonly opponentId: string | null;
+            /** @description Resolved opponent display name; null for our-team rows or when the opponent record has been deleted. */
+            readonly opponentName: string | null;
             readonly played: number;
             readonly pointsAgainst: number;
             readonly pointsFor: number;
@@ -10987,6 +11058,36 @@ export interface components {
             readonly title: string;
             readonly version: number;
         };
+        readonly TeamRuleWithAckStateResponseDto: {
+            /** Format: date-time */
+            readonly archivedAt: string | null;
+            /** @enum {string} */
+            readonly audience: "team" | "players" | "staff" | "public";
+            readonly body: string;
+            /** @enum {string} */
+            readonly category: "conduct" | "attendance" | "safety" | "finance" | "spirit" | "general";
+            /** Format: date-time */
+            readonly createdAt: string;
+            /** Format: uuid */
+            readonly createdBy: string | null;
+            /** Format: date-time */
+            readonly effectiveFrom: string;
+            /** Format: date-time */
+            readonly myAcknowledgedAt: string | null;
+            readonly myAcknowledgedVersion: number | null;
+            /** Format: uuid */
+            readonly ownerUserId: string | null;
+            readonly requiresAcknowledgement: boolean;
+            /** Format: uuid */
+            readonly ruleId: string;
+            readonly ruleKey: string;
+            /** @enum {string} */
+            readonly status: "active" | "archived";
+            /** Format: uuid */
+            readonly teamId: string;
+            readonly title: string;
+            readonly version: number;
+        };
         readonly TeamTransitionDto: {
             readonly expectedVersion?: number;
         };
@@ -11027,6 +11128,8 @@ export interface components {
         };
         readonly TransitionAchievementDto: {
             readonly expectedRecordVersion: number;
+            /** @description Optional explanation. Persisted on the claim (and returned as rejectionReason) when the transition is reject; recorded nowhere else — reject is terminal, so the reason is the claim’s epitaph. */
+            readonly reason?: Record<string, never> | null;
             /** @enum {string} */
             readonly transition: "submit" | "approve" | "reject" | "archive";
         };
@@ -14004,6 +14107,13 @@ export interface operations {
             };
             /** @description Unauthorized */
             readonly 401: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Forbidden — neither analytics.read.team nor an own-membership analytics.read.self read (errors.analytics.forbidden) */
+            readonly 403: {
                 headers: {
                     readonly [name: string]: unknown;
                 };
@@ -20833,6 +20943,41 @@ export interface operations {
             };
         };
     };
+    readonly "PracticeCalendar.list": {
+        readonly parameters: {
+            readonly query?: never;
+            readonly header?: never;
+            readonly path: {
+                readonly teamId: string;
+            };
+            readonly cookie?: never;
+        };
+        readonly requestBody?: never;
+        readonly responses: {
+            readonly 200: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content: {
+                    readonly "application/json": components["schemas"]["ListCalendarFeedsResponseDto"];
+                };
+            };
+            /** @description Unauthorized */
+            readonly 401: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Forbidden */
+            readonly 403: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
     readonly "PracticeCalendar.create": {
         readonly parameters: {
             readonly query?: never;
@@ -21131,6 +21276,8 @@ export interface operations {
                 readonly from?: string;
                 readonly limit?: number;
                 readonly offset?: number;
+                /** @description Only occurrences generated from this schedule */
+                readonly scheduleId?: string;
                 readonly seasonId?: string;
                 readonly sessionType?: string;
                 readonly status?: "draft" | "published" | "rescheduled" | "cancelled" | "completed" | "archived";
@@ -22428,6 +22575,42 @@ export interface operations {
             };
         };
     };
+    readonly "PracticeReminderAdmin.readStatus": {
+        readonly parameters: {
+            readonly query?: never;
+            readonly header?: never;
+            readonly path: {
+                readonly sessionId: string;
+                readonly teamId: string;
+            };
+            readonly cookie?: never;
+        };
+        readonly requestBody?: never;
+        readonly responses: {
+            readonly 200: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content: {
+                    readonly "application/json": components["schemas"]["ReminderPreviewResponseDto"];
+                };
+            };
+            /** @description Unauthorized */
+            readonly 401: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Forbidden */
+            readonly 403: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
     readonly "PracticeReminderAdmin.sendTest": {
         readonly parameters: {
             readonly query?: never;
@@ -22813,6 +22996,10 @@ export interface operations {
             readonly query?: {
                 readonly limit?: number;
                 readonly offset?: number;
+                /** @description Only jobs requested by this user (the "my requests" facet). */
+                readonly requestedBy?: string;
+                /** @description Only jobs snapshotting this season. */
+                readonly seasonId?: string;
                 readonly status?: "queued" | "running" | "completed" | "failed" | "expired";
                 readonly template?: "player_performance" | "team_overview" | "attendance" | "training_leaderboard" | "roster" | "match_sheet" | "match_stats" | "analysis" | "tryout_funnel" | "data_quality";
             };
@@ -23610,7 +23797,7 @@ export interface operations {
                     readonly [name: string]: unknown;
                 };
                 content: {
-                    readonly "application/json": components["schemas"]["TeamRuleResponseDto"];
+                    readonly "application/json": components["schemas"]["TeamRuleWithAckStateResponseDto"];
                 };
             };
             /** @description Unauthorized */
@@ -23644,6 +23831,45 @@ export interface operations {
                 };
                 content: {
                     readonly "application/json": components["schemas"]["RuleAcknowledgementResponseDto"];
+                };
+            };
+            /** @description Unauthorized */
+            readonly 401: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Forbidden — the membership does not belong to the acting user (errors.governance.acknowledgementForbidden) */
+            readonly 403: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    readonly "Rules.listAcknowledgements": {
+        readonly parameters: {
+            readonly query?: {
+                readonly limit?: number;
+                readonly offset?: number;
+            };
+            readonly header?: never;
+            readonly path: {
+                readonly ruleId: string;
+                readonly teamId: string;
+            };
+            readonly cookie?: never;
+        };
+        readonly requestBody?: never;
+        readonly responses: {
+            readonly 200: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content: {
+                    readonly "application/json": components["schemas"]["ListRuleAcknowledgementsResponseDto"];
                 };
             };
             /** @description Unauthorized */

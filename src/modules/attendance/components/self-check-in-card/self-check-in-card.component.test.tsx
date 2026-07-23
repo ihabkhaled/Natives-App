@@ -15,7 +15,6 @@ function buildView(overrides: Partial<SelfCheckInCardView> = {}): SelfCheckInCar
     loadingLabel: 'Loading…',
     statusChip: null,
     stateMessage: null,
-    provisionalNotice: 'Subject to confirmation by your coach.',
     offlineNotice: null,
     canCheckIn: true,
     checkInLabel: 'Check in',
@@ -29,23 +28,15 @@ function buildView(overrides: Partial<SelfCheckInCardView> = {}): SelfCheckInCar
 }
 
 describe('SelfCheckInCard', () => {
-  it('arms the check-in flow with the note field and provisional caveat', () => {
+  it('arms the check-in flow with the note field for a server-open window', () => {
     const view = buildView();
     render(<SelfCheckInCard view={view} />);
 
     expect(screen.getByText(/Evening practice/u)).toBeInTheDocument();
     expect(screen.getByTestId(TEST_IDS.myAttendanceCheckInNote)).toBeInTheDocument();
-    expect(screen.getByText('Subject to confirmation by your coach.')).toBeInTheDocument();
 
     fireEvent.click(screen.getByTestId(TEST_IDS.myAttendanceCheckInButton));
     expect(view.onCheckIn).toHaveBeenCalledOnce();
-  });
-
-  it('arms the button without the caveat once the server rules the window', () => {
-    render(<SelfCheckInCard view={buildView({ provisionalNotice: null })} />);
-
-    expect(screen.getByTestId(TEST_IDS.myAttendanceCheckInButton)).toBeInTheDocument();
-    expect(screen.queryByText(/Subject to confirmation/u)).not.toBeInTheDocument();
   });
 
   it('shows the recorded chip and state copy without any button', () => {
@@ -60,7 +51,9 @@ describe('SelfCheckInCard', () => {
     );
 
     expect(screen.getByTestId(TEST_IDS.myAttendanceCheckInStatus)).toBeInTheDocument();
-    expect(screen.getByText('Recorded by you')).toBeInTheDocument();
+    expect(screen.getByTestId(TEST_IDS.myAttendanceCheckInState)).toHaveTextContent(
+      'Recorded by you',
+    );
     expect(screen.queryByTestId(TEST_IDS.myAttendanceCheckInButton)).not.toBeInTheDocument();
   });
 

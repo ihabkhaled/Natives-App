@@ -1,16 +1,21 @@
 import type { SchemaOutput } from '@/packages/schema';
 
 import type {
+  attendanceSelfHistoryResponseSchema,
   attendanceSelfRecordSchema,
   participationResponseSchema,
 } from '../schemas/attendance-self.schema';
-import type { AttendanceParticipation, AttendanceSelfRecord } from '../types/attendance.types';
+import type {
+  AttendanceParticipation,
+  AttendanceSelfHistoryPage,
+  AttendanceSelfRecord,
+} from '../types/attendance.types';
 
 type SelfRecordDto = SchemaOutput<typeof attendanceSelfRecordSchema>;
 type ParticipationDto = SchemaOutput<typeof participationResponseSchema>;
+type SelfHistoryDto = SchemaOutput<typeof attendanceSelfHistoryResponseSchema>;
 
 export function mapAttendanceSelfRecord(dto: SelfRecordDto): AttendanceSelfRecord {
-  const eligibility = dto.selfCheckIn ?? null;
   return {
     sessionId: dto.sessionId,
     membershipId: dto.membershipId,
@@ -22,13 +27,33 @@ export function mapAttendanceSelfRecord(dto: SelfRecordDto): AttendanceSelfRecor
     recordedAtIso: dto.recordedAt,
     version: dto.version,
     selfCheckIn:
-      eligibility === null
+      dto.selfCheckIn === null
         ? null
         : {
-            state: eligibility.state,
-            opensAtIso: eligibility.opensAt,
-            closesAtIso: eligibility.closesAt,
+            state: dto.selfCheckIn.state,
+            opensAtIso: dto.selfCheckIn.opensAt,
+            closesAtIso: dto.selfCheckIn.closesAt,
           },
+  };
+}
+
+export function mapAttendanceSelfHistory(dto: SelfHistoryDto): AttendanceSelfHistoryPage {
+  return {
+    items: dto.items.map((item) => ({
+      sessionId: item.sessionId,
+      startsAtIso: item.startsAt,
+      endsAtIso: item.endsAt,
+      sessionType: item.sessionType,
+      status: item.status,
+      latenessMinutes: item.latenessMinutes,
+      excuseCategory: item.excuseCategory,
+      source: item.source,
+      recordedAtIso: item.recordedAt,
+      sheetState: item.sheetState,
+    })),
+    total: dto.total,
+    limit: dto.limit,
+    offset: dto.offset,
   };
 }
 

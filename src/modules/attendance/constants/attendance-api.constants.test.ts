@@ -9,6 +9,7 @@ import {
   attendanceMemberPath,
   attendanceParticipationSelfPath,
   attendanceRosterPath,
+  attendanceSelfHistoryPath,
   attendanceSelfPath,
 } from './attendance-api.constants';
 
@@ -56,5 +57,9 @@ describe('attendance API path builders', () => {
     expect(attendanceParticipationSelfPath('team/1')).toBe(
       '/teams/team%2F1/attendance/me/participation',
     );
+  });
+
+  it('derives the encoded own-history path', () => {
+    expect(attendanceSelfHistoryPath('team/1')).toBe('/teams/team%2F1/attendance/me/history');
   });
 });
