@@ -12,6 +12,7 @@ export interface MembersTeamContextView {
   readonly canManageRoles: boolean;
   readonly canManageAliases: boolean;
   readonly canEditSelf: boolean;
+  readonly canReadTeamAnalytics: boolean;
 }
 
 /**
@@ -34,5 +35,6 @@ export function useMembersTeamContext(): MembersTeamContextView {
     canManageRoles: hasAllPermissions(permissions, [PERMISSIONS.memberRolesManage]),
     canManageAliases: hasAllPermissions(permissions, [PERMISSIONS.memberAliasesManage]),
     canEditSelf: hasAllPermissions(permissions, [PERMISSIONS.memberProfileUpdateSelf]),
+    canReadTeamAnalytics: hasAllPermissions(permissions, [PERMISSIONS.analyticsReadTeam]),
   };
 }

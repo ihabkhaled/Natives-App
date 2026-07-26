@@ -1,4 +1,6 @@
 import { IonBadge, IonText } from '@/packages/ionic';
+import { TEST_IDS } from '@/shared/config';
+import { AppButton } from '@/shared/ui';
 
 import { MemberAliasesPanel } from '../member-aliases-panel';
 import { MemberAvatar } from '../member-avatar';
@@ -28,6 +30,14 @@ export function MemberProfileBody(props: MemberProfileBodyProps): React.JSX.Elem
             <IonBadge color={props.header.statusTone}>{props.header.statusLabel}</IonBadge>
           </div>
         </header>
+      )}
+      {props.analyticsLink === null ? null : (
+        <AppButton
+          testId={TEST_IDS.memberProfileAnalyticsLink}
+          label={props.analyticsLink.label}
+          tone="secondary"
+          onClick={props.analyticsLink.onOpen}
+        />
       )}
       <MemberProfileFields
         heading={props.fieldsHeading}

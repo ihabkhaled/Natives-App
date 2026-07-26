@@ -14,6 +14,7 @@ import type {
   AliasesPanelView,
   HistoryPanelView,
   LifecyclePanelView,
+  MemberAnalyticsLinkView,
   MemberAvatarView,
   MemberProfileHeaderView,
   MemberProfileView,
@@ -38,6 +39,7 @@ export interface BuildMemberProfileViewParams {
   readonly roles: RolesPanelView;
   readonly aliases: AliasesPanelView;
   readonly history: HistoryPanelView;
+  readonly analyticsLink: MemberAnalyticsLinkView | null;
 }
 
 /** True when the audience shape hides some fields from this viewer. */
@@ -77,6 +79,7 @@ export function buildMemberProfileView(params: BuildMemberProfileViewParams): Me
     forbiddenTitle: t(I18N_KEYS.members.forbiddenTitle),
     forbiddenMessage: t(I18N_KEYS.members.forbiddenMessage),
     header: profile === undefined ? null : buildHeader(t, profile, params.avatar),
+    analyticsLink: params.analyticsLink,
     fieldsHeading: t(I18N_KEYS.members.fieldsHeading),
     restrictedNotice:
       profile !== undefined && isRestrictedAudience(profile)

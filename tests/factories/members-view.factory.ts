@@ -274,6 +274,7 @@ export function buildMemberProfileView(
     forbiddenTitle: 'No access',
     forbiddenMessage: 'Not allowed.',
     header: buildMemberProfileHeaderView(),
+    analyticsLink: null,
     fieldsHeading: 'Profile',
     restrictedNotice: null,
     fields: [{ key: 'fullName', label: 'Full name', value: 'Omar Hassan' }],

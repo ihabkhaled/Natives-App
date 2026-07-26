@@ -29,6 +29,7 @@ export {
   type RosterStatus,
   type ViolationCode,
 } from './constants/rosters.constants';
+export { buildCompetitionsQueryOptions } from './queries/competitions.query';
 export { competitionsQueryKeys } from './queries/competitions.keys';
 export {
   competitionDetailPath,

@@ -15,6 +15,7 @@ const ADMIN_NAV_ITEM = `${TEST_IDS.primaryNavItem}-admin`;
  */
 const MEMBER_NAV_KEYS = [
   'home',
+  'admin-seasons',
   'practice-calendar',
   'my-attendance',
   'members',
@@ -22,6 +23,8 @@ const MEMBER_NAV_KEYS = [
   'training',
   'leaderboard',
   'points-history',
+  'standings',
+  'team-history',
   'competitions',
   'squads',
   'rosters',
@@ -54,7 +57,7 @@ test.describe('permission-aware navigation', () => {
     await expect(page.getByTestId(ADMIN_NAV_ITEM)).toHaveCount(0);
   });
 
-  test('a member persona gets exactly its 14 permitted destinations once scoped grants load', async ({
+  test('a member persona gets exactly its permitted destinations once scoped grants load', async ({
     page,
   }) => {
     await login(page, personaLogin(MOCK_PERSONA_EMAILS.member));
@@ -77,6 +80,39 @@ test.describe('permission-aware navigation', () => {
     await expect(page.getByTestId(`${TEST_IDS.primaryNavItem}-my-attendance`)).toHaveCount(0);
     await expect(page.getByTestId(`${TEST_IDS.primaryNavItem}-performance`)).toHaveCount(0);
     await expect(page.getByTestId(`${TEST_IDS.primaryNavItem}-training`)).toHaveCount(0);
+  });
+
+  test('a member persona never sees the analytics, reports, or achievements destinations', async ({
+    page,
+  }) => {
+    await login(page, personaLogin(MOCK_PERSONA_EMAILS.member));
+    await expectPresentedPage(page, TEST_IDS.homePage);
+    await expect(page.getByTestId(HOME_NAV_ITEM)).toBeVisible();
+
+    await expect(page.getByTestId(`${TEST_IDS.primaryNavItem}-analytics`)).toHaveCount(0);
+    await expect(page.getByTestId(`${TEST_IDS.primaryNavItem}-reports`)).toHaveCount(0);
+    await expect(page.getByTestId(`${TEST_IDS.primaryNavItem}-achievements`)).toHaveCount(0);
+    // But the trophy cabinet and standings are member surfaces.
+    await expect(page.getByTestId(`${TEST_IDS.primaryNavItem}-team-history`)).toHaveCount(1);
+    await expect(page.getByTestId(`${TEST_IDS.primaryNavItem}-standings`)).toHaveCount(1);
+  });
+
+  test('a member deep-linking to reports gets the designed forbidden state', async ({ page }) => {
+    await signIn(page, personaLogin(MOCK_PERSONA_EMAILS.member));
+    await gotoApp(page, APP_ROUTES.reports);
+
+    // The route is gated on report.read, so the member is stopped by the route
+    // guard before the reports container mounts.
+    await expect(page.getByTestId(TEST_IDS.guardForbidden)).toBeVisible();
+  });
+
+  test('an analyst reaches analytics and reports but manages nothing', async ({ page }) => {
+    await login(page, personaLogin(MOCK_PERSONA_EMAILS.analyst));
+    await expectPresentedPage(page, TEST_IDS.homePage);
+
+    await expect(page.getByTestId(`${TEST_IDS.primaryNavItem}-analytics`)).toHaveCount(1);
+    await expect(page.getByTestId(`${TEST_IDS.primaryNavItem}-reports`)).toHaveCount(1);
+    await expect(page.getByTestId(`${TEST_IDS.primaryNavItem}-achievements`)).toHaveCount(0);
   });
 
   test('a direct admin URL reveals no admin content to a member persona', async ({ page }) => {

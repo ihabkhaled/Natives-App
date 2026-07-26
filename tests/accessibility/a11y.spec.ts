@@ -424,4 +424,31 @@ test.describe('matches accessibility', () => {
     await waitForAppAnimations(page);
     expect((await analyze(page)).violations).toEqual([]);
   });
+
+  test('the standings screen has no violations', async ({ page }) => {
+    await signIn(page);
+    await gotoApp(page, APP_ROUTES.standings);
+    await expect(page.getByTestId(TEST_IDS.standingsTable)).toBeVisible();
+    await waitForAppAnimations(page);
+    expect((await analyze(page)).violations).toEqual([]);
+  });
+
+  test('the team analytics screen and its chart table have no violations', async ({ page }) => {
+    await signIn(page);
+    await gotoApp(page, APP_ROUTES.analytics);
+    await expect(page.getByTestId(TEST_IDS.analyticsSeriesChart)).toBeVisible();
+    await page.getByTestId(TEST_IDS.chartDataToggle).first().click();
+    await waitForAppAnimations(page);
+    expect((await analyze(page)).violations).toEqual([]);
+  });
+
+  test('the reports center has no violations, including its progress and countdown labels', async ({
+    page,
+  }) => {
+    await signIn(page);
+    await gotoApp(page, APP_ROUTES.reports);
+    await expect(page.getByTestId(TEST_IDS.reportJobList)).toBeVisible();
+    await waitForAppAnimations(page);
+    expect((await analyze(page)).violations).toEqual([]);
+  });
 });

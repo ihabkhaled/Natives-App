@@ -10,6 +10,7 @@ export {
   type TeamStatus,
   type TeamTransition,
 } from './constants/teams.constants';
+export { buildSeasonsQueryOptions } from './queries/teams.query';
 export { teamsQueryKeys } from './queries/teams.keys';
 export { permissionsMatrixPath, seasonsAdminPath, teamsAdminPath } from './routes/teams.paths';
 export { getTeamsRouteDefinitions } from './routes/teams.routes';

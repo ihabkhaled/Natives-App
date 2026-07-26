@@ -1,4 +1,5 @@
 import { getAdminRouteDefinitions } from '@/modules/admin';
+import { getAnalyticsRouteDefinitions } from '@/modules/analytics';
 import { getAssessmentsRouteDefinitions } from '@/modules/assessments';
 import { getAttendanceRouteDefinitions } from '@/modules/attendance';
 import { getAuthRouteDefinitions } from '@/modules/auth';
@@ -9,7 +10,9 @@ import { getMembersRouteDefinitions } from '@/modules/members';
 import { getNotificationsRouteDefinitions } from '@/modules/notifications';
 import { getPointsRouteDefinitions } from '@/modules/points';
 import { getPracticeRouteDefinitions } from '@/modules/practice';
+import { getReportsRouteDefinitions } from '@/modules/reports';
 import { getSettingsRouteDefinitions } from '@/modules/settings';
+import { getStandingsRouteDefinitions } from '@/modules/standings';
 import { getTeamsRouteDefinitions } from '@/modules/teams';
 import { getTrainingRouteDefinitions } from '@/modules/training';
 import { getTryoutsRouteDefinitions } from '@/modules/tryouts';
@@ -27,6 +30,9 @@ export function getAppRouteDefinitions(): readonly AppRouteDefinition[] {
     ...getAssessmentsRouteDefinitions(),
     ...getTrainingRouteDefinitions(),
     ...getPointsRouteDefinitions(),
+    ...getStandingsRouteDefinitions(),
+    ...getAnalyticsRouteDefinitions(),
+    ...getReportsRouteDefinitions(),
     ...getCompetitionsRouteDefinitions(),
     ...getMatchesRouteDefinitions(),
     ...getTryoutsRouteDefinitions(),

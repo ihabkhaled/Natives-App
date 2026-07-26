@@ -1,6 +1,8 @@
+import { playerAnalyticsPath } from '@/modules/analytics';
 import { useAppTranslation } from '@/packages/i18n';
 import { useAppNavigation, useRouteParam } from '@/packages/router';
 import { useNetworkStatus } from '@/platform';
+import { I18N_KEYS } from '@/shared/i18n';
 
 import { MEMBER_AUDIENCE } from '../constants/members.constants';
 import { buildMemberProfileView } from '../helpers/member-profile-view.helper';
@@ -52,5 +54,16 @@ export function useMemberProfile(): MemberProfileView {
     roles,
     aliases,
     history,
+    // Analytics is the coach/analyst deep-link into this member's series;
+    // hidden without the team-analytics grant, and the backend re-authorizes.
+    analyticsLink:
+      team.canReadTeamAnalytics && membershipId !== ''
+        ? {
+            label: t(I18N_KEYS.members.analyticsLink),
+            onOpen: () => {
+              navigation.push(playerAnalyticsPath(membershipId));
+            },
+          }
+        : null,
   });
 }

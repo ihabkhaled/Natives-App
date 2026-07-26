@@ -21,6 +21,7 @@ const COACH_PERMISSIONS = [
   PERMISSIONS.attendanceReadTeam,
   PERMISSIONS.attendanceFinalize,
   PERMISSIONS.analyticsReadSelf,
+  PERMISSIONS.analyticsReadTeam,
   PERMISSIONS.assessmentReview,
   PERMISSIONS.assessmentReadTeam,
   PERMISSIONS.assessmentReadSelfPublished,
@@ -36,6 +37,9 @@ const COACH_PERMISSIONS = [
   PERMISSIONS.activityCorrect,
   PERMISSIONS.pointsReadSelf,
   PERMISSIONS.pointsReadTeam,
+  // The Coach bundle extends Member, which holds team.read: the trophy
+  // cabinet and season list are read surfaces every coach reaches.
+  PERMISSIONS.teamRead,
   PERMISSIONS.competitionRead,
   PERMISSIONS.competitionManage,
   PERMISSIONS.squadRead,
@@ -65,9 +69,14 @@ const TEAM_ADMIN_PERMISSIONS = [
   PERMISSIONS.memberInvite,
   PERMISSIONS.memberLifecycleManage,
   PERMISSIONS.attendanceCorrect,
-  PERMISSIONS.teamRead,
   PERMISSIONS.settingsManage,
   PERMISSIONS.seasonManage,
+  // Governed reports + the audited achievements import + the analytics
+  // rebuild are the Team Admin's alone (backend TEAM_ADMIN_BUNDLE).
+  PERMISSIONS.reportsRead,
+  PERMISSIONS.reportsGenerate,
+  PERMISSIONS.importManage,
+  PERMISSIONS.dataQualityManage,
 ];
 
 const MEMBER_PERMISSIONS = [
@@ -85,6 +94,9 @@ const MEMBER_PERMISSIONS = [
   PERMISSIONS.activityReadSelf,
   PERMISSIONS.activitySubmitSelf,
   PERMISSIONS.pointsReadSelf,
+  // team.read is the trophy cabinet + season read surface every member holds
+  // (backend MEMBER_BUNDLE); analytics.read.self reads only their own series.
+  PERMISSIONS.teamRead,
   PERMISSIONS.competitionRead,
   PERMISSIONS.squadRead,
   PERMISSIONS.rosterRead,
@@ -105,10 +117,16 @@ const ANALYST_PERMISSIONS = [
   PERMISSIONS.practicesRead,
   PERMISSIONS.attendanceReadTeam,
   PERMISSIONS.assessmentReadTeam,
+  PERMISSIONS.analyticsReadTeam,
   PERMISSIONS.pointsReadTeam,
   PERMISSIONS.matchRead,
   PERMISSIONS.matchStatsRead,
   PERMISSIONS.matchAnalysisReadTeam,
+  // The Analyst reads the team's standings and history and drives reports.
+  PERMISSIONS.teamRead,
+  PERMISSIONS.competitionRead,
+  PERMISSIONS.reportsRead,
+  PERMISSIONS.reportsGenerate,
 ];
 
 export const ADMIN_PERSONA = buildAuthUser();

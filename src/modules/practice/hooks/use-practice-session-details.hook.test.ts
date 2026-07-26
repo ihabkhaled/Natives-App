@@ -1,6 +1,7 @@
 import { act, renderHook } from '@testing-library/react';
 import { afterEach, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
 
+import type * as DatePackage from '@/packages/date';
 import { useEffectivePermissions } from '@/modules/auth';
 import { openExternalUrl } from '@/platform';
 import { APP_ERROR_CODE } from '@/shared/errors';
@@ -29,6 +30,11 @@ vi.mock('@/platform', () => ({
   useNetworkStatus: vi.fn(() => ({ isOnline: true })),
   openExternalUrl: vi.fn(() => Promise.resolve()),
 }));
+// Freeze "now" before the fixture RSVP deadline so canRespond is time-independent.
+vi.mock('@/packages/date', async (importOriginal) => {
+  const actual = await importOriginal<typeof DatePackage>();
+  return { ...actual, nowIso: () => '2026-07-24T09:00:00.000Z' };
+});
 vi.mock('@/shared/ui', () => ({ useAppToast: vi.fn(() => ({ showToast })) }));
 
 function mutationCallbacks() {

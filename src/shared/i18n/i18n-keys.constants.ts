@@ -1,5 +1,6 @@
 import { ADMIN_I18N_KEYS } from './admin-keys.constants';
 import { ADMIN_SETTINGS_TYPED_I18N_KEYS } from './admin-settings-keys.constants';
+import { ANALYTICS_I18N_KEYS } from './analytics-keys.constants';
 import { ASSESSMENTS_I18N_KEYS } from './assessments-keys.constants';
 import { ATTENDANCE_I18N_KEYS } from './attendance-keys.constants';
 import { COMPETITIONS_I18N_KEYS } from './competitions-keys.constants';
@@ -14,8 +15,10 @@ import { MEMBERS_I18N_KEYS } from './members-keys.constants';
 import { NOTIFICATIONS_I18N_KEYS } from './notifications-keys.constants';
 import { POINTS_I18N_KEYS } from './points-keys.constants';
 import { PRACTICE_I18N_KEYS } from './practice-keys.constants';
+import { REPORTS_I18N_KEYS } from './reports-keys.constants';
 import { ROSTERS_I18N_KEYS } from './rosters-keys.constants';
 import { SQUADS_I18N_KEYS } from './squads-keys.constants';
+import { STANDINGS_I18N_KEYS } from './standings-keys.constants';
 import {
   PERMISSIONS_MATRIX_I18N_KEYS,
   SEASONS_ADMIN_I18N_KEYS,
@@ -167,6 +170,9 @@ export const I18N_KEYS = {
   assessments: ASSESSMENTS_I18N_KEYS,
   training: TRAINING_I18N_KEYS,
   points: POINTS_I18N_KEYS,
+  standings: STANDINGS_I18N_KEYS,
+  analytics: ANALYTICS_I18N_KEYS,
+  reports: REPORTS_I18N_KEYS,
   competitions: COMPETITIONS_I18N_KEYS,
   squads: SQUADS_I18N_KEYS,
   rosters: ROSTERS_I18N_KEYS,

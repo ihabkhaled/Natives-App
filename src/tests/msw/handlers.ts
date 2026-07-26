@@ -7,6 +7,8 @@ import { adminHandlers } from './admin-handlers';
 import { resetMockAdminSettings } from './admin.fixture';
 import { resetMockAdminState } from './admin-rules.fixture';
 import { resetMockOperationsState } from './admin-operations.fixture';
+import { analyticsHandlers } from './analytics-handlers';
+import { resetMockAchievementsState } from './achievements.fixture';
 import { assessmentsHandlers } from './assessments-handlers';
 import { resetMockAssessmentsState } from './assessments.fixture';
 import { competitionsHandlers } from './competitions-handlers';
@@ -40,9 +42,13 @@ import { pointsHandlers } from './points-handlers';
 import { practiceHandlers } from './practice-handlers';
 import { resetMockPracticeState } from './practice.fixture';
 import { recoveryHandlers, resetMockRecoveryState } from './recovery-handlers';
+import { reportsHandlers } from './reports-handlers';
+import { resetMockReportsState } from './reports.fixture';
 import { rostersHandlers } from './rosters-handlers';
 import { resetMockRostersState } from './rosters.fixture';
 import { resetMockSquadsState } from './squads.fixture';
+import { standingsHandlers } from './standings-handlers';
+import { resetMockStandingsState } from './standings.fixture';
 import { notificationsHandlers } from './notifications-handlers';
 import { resetMockNotificationsState } from './notifications.fixture';
 import { tryoutsHandlers } from './tryouts-handlers';
@@ -69,6 +75,9 @@ export function resetMockAuthState(): void {
   resetMockOperationsState();
   resetMockPlatformAdminsState();
   resetMockMatchesState();
+  resetMockStandingsState();
+  resetMockAchievementsState();
+  resetMockReportsState();
 }
 
 function apiUrl(path: string): string {
@@ -231,6 +240,9 @@ export const mockApiHandlers = [
   ...notificationsHandlers,
   ...adminHandlers,
   ...pointsHandlers,
+  ...standingsHandlers,
+  ...analyticsHandlers,
+  ...reportsHandlers,
   ...teamsHandlers,
   ...recoveryHandlers,
 ];

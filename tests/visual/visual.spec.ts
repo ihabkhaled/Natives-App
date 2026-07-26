@@ -282,4 +282,60 @@ test.describe('matches visual regression', () => {
     await waitForAppAnimations(page);
     await expect(page).toHaveScreenshot('match-statistics-dark.png', { fullPage: true });
   });
+
+  test('standings table (light)', async ({ page }) => {
+    await signIn(page);
+    await gotoApp(page, APP_ROUTES.standings);
+    await expect(page.getByTestId(TEST_IDS.standingsTable)).toBeVisible();
+    await waitForAppAnimations(page);
+    await expect(page).toHaveScreenshot('standings-light.png', { fullPage: true });
+  });
+
+  test('standings table (Arabic RTL)', async ({ page }) => {
+    await signIn(page);
+    await gotoApp(page, APP_ROUTES.settings);
+    await switchToArabic(page);
+    await gotoApp(page, APP_ROUTES.standings);
+    await expect(page.getByTestId(TEST_IDS.standingsTable)).toBeVisible();
+    await waitForAppAnimations(page);
+    await expect(page).toHaveScreenshot('standings-rtl.png', { fullPage: true });
+  });
+
+  test('trophy cabinet with the gold budget (light)', async ({ page }) => {
+    await signIn(page);
+    await gotoApp(page, APP_ROUTES.teamHistory);
+    await expect(page.getByTestId(TEST_IDS.teamHistoryTimeline)).toBeVisible();
+    await waitForAppAnimations(page);
+    await expect(page).toHaveScreenshot('team-history-light.png', { fullPage: true });
+  });
+
+  test('team analytics with a chart gap (light)', async ({ page }) => {
+    await signIn(page);
+    await gotoApp(page, APP_ROUTES.analytics);
+    await expect(page.getByTestId(TEST_IDS.analyticsSeriesChart)).toBeVisible();
+    await waitForAppAnimations(page);
+    await expect(page).toHaveScreenshot('analytics-light.png', { fullPage: true });
+  });
+
+  test('team analytics (dark)', async ({ page }) => {
+    await signIn(page);
+    await gotoApp(page, APP_ROUTES.settings);
+    await page
+      .getByTestId(TEST_IDS.settingsThemeSelect)
+      .locator('ion-segment-button[value="dark"]')
+      .click();
+    await expect(page.locator('html')).toHaveClass(/ion-palette-dark/u);
+    await gotoApp(page, APP_ROUTES.analytics);
+    await expect(page.getByTestId(TEST_IDS.analyticsSeriesChart)).toBeVisible();
+    await waitForAppAnimations(page);
+    await expect(page).toHaveScreenshot('analytics-dark.png', { fullPage: true });
+  });
+
+  test('reports center with all status chips (light)', async ({ page }) => {
+    await signIn(page);
+    await gotoApp(page, APP_ROUTES.reports);
+    await expect(page.getByTestId(TEST_IDS.reportJobList)).toBeVisible();
+    await waitForAppAnimations(page);
+    await expect(page).toHaveScreenshot('reports-light.png', { fullPage: true });
+  });
 });

@@ -79,6 +79,7 @@ function params(overrides: Partial<BuildMemberProfileViewParams>): BuildMemberPr
     roles,
     aliases,
     history,
+    analyticsLink: null,
     ...overrides,
   };
 }

@@ -72,6 +72,7 @@ export const MEMBERS_I18N_KEYS = {
   inviteRoleUnknown: 'members.inviteRoleUnknown',
   profileTitle: 'members.profileTitle',
   back: 'members.back',
+  analyticsLink: 'members.analyticsLink',
   notFoundTitle: 'members.notFoundTitle',
   notFoundMessage: 'members.notFoundMessage',
   avatarLabel: 'members.avatarLabel',

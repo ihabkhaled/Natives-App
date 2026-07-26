@@ -243,6 +243,12 @@ export interface MemberProfileHeaderView {
   readonly avatar: MemberAvatarView;
 }
 
+/** The permission-gated deep link to this member's analytics screen. */
+export interface MemberAnalyticsLinkView {
+  readonly label: string;
+  readonly onOpen: () => void;
+}
+
 export interface MemberProfileView extends AsyncViewCopy {
   readonly title: string;
   readonly backLabel: string;
@@ -253,6 +259,7 @@ export interface MemberProfileView extends AsyncViewCopy {
   readonly forbiddenTitle: string;
   readonly forbiddenMessage: string;
   readonly header: MemberProfileHeaderView | null;
+  readonly analyticsLink: MemberAnalyticsLinkView | null;
   readonly fieldsHeading: string;
   readonly restrictedNotice: string | null;
   readonly fields: readonly ProfileFieldView[];

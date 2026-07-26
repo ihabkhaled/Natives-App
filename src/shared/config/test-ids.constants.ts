@@ -4,12 +4,15 @@
  * architecture/no-inline-test-ids).
  */
 import { ADMIN_TEST_IDS } from './admin-test-ids.constants';
+import { ANALYTICS_TEST_IDS } from './analytics-test-ids.constants';
 import { ONBOARDING_TEST_IDS } from './onboarding-test-ids.constants';
 import { SELF_SERVICE_TEST_IDS } from './self-service-test-ids.constants';
 import { COMPETITIONS_TEST_IDS } from './competitions-test-ids.constants';
 import { FEATURE_TEST_IDS } from './feature-test-ids.constants';
 import { MATCHES_TEST_IDS } from './matches-test-ids.constants';
 import { NOTIFICATIONS_TEST_IDS } from './notifications-test-ids.constants';
+import { REPORTS_TEST_IDS } from './reports-test-ids.constants';
+import { STANDINGS_TEST_IDS } from './standings-test-ids.constants';
 import { TEAMS_ADMIN_TEST_IDS } from './teams-admin-test-ids.constants';
 import { TEAMS_TEST_IDS } from './teams-test-ids.constants';
 import { TRYOUTS_TEST_IDS } from './tryouts-test-ids.constants';
@@ -25,6 +28,9 @@ export const TEST_IDS = {
   ...ONBOARDING_TEST_IDS,
   ...TEAMS_TEST_IDS,
   ...TEAMS_ADMIN_TEST_IDS,
+  ...STANDINGS_TEST_IDS,
+  ...ANALYTICS_TEST_IDS,
+  ...REPORTS_TEST_IDS,
   appShell: 'app-shell',
   skipLink: 'skip-link',
   mainContent: 'main-content',
