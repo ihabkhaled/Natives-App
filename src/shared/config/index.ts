@@ -6,5 +6,6 @@ export {
   isFeatureEnabled,
   type FeatureFlag,
 } from './feature-flags.constants';
+export { SITE_URL } from './site.constants';
 export { STORAGE_KEYS, type StorageKey } from './storage-keys.constants';
 export { TEST_IDS, type TestId } from './test-ids.constants';

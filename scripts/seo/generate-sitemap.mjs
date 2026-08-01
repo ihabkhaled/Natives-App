@@ -18,7 +18,10 @@ const SITE_URL = 'https://natives-frontend-app.vercel.app';
  * (login/forgot/reset) are intentionally excluded from the sitemap.
  * Extend this list as public pages ship.
  */
-const PUBLIC_ROUTES = [{ path: '/welcome', changefreq: 'weekly', priority: '1.0' }];
+const PUBLIC_ROUTES = [
+  { path: '/welcome', changefreq: 'weekly', priority: '1.0' },
+  { path: '/about', changefreq: 'monthly', priority: '0.8' },
+];
 
 const OUTPUT_PATH = join(
   dirname(fileURLToPath(import.meta.url)),

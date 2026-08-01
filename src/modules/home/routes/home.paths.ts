@@ -7,3 +7,7 @@ export function welcomePath(): string {
 export function homePath(): string {
   return APP_PATHS.home;
 }
+
+export function aboutPath(): string {
+  return APP_PATHS.about;
+}

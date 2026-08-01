@@ -63,6 +63,7 @@ describe('I18N_KEYS', () => {
       'states',
       'pwa',
       'welcome',
+      'about',
       'auth',
       'sessions',
       'home',

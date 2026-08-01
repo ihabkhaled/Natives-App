@@ -19,6 +19,7 @@ describe('getAppRouteDefinitions', () => {
       APP_PATHS.acceptInvitation,
       APP_PATHS.sessions,
       APP_PATHS.welcome,
+      APP_PATHS.about,
       APP_PATHS.home,
       APP_PATHS.practices,
       APP_PATHS.practiceSession,

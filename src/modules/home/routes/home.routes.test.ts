@@ -2,18 +2,23 @@ import { describe, expect, it } from 'vitest';
 
 import { NAV_GROUP, ROUTE_ACCESS } from '@/shared/types';
 
+import { AboutContainer } from '../containers/about.container';
 import { HomeContainer } from '../containers/home.container';
 import { NotFoundContainer } from '../containers/not-found.container';
 import { WelcomeContainer } from '../containers/welcome.container';
-import { homePath, welcomePath } from './home.paths';
+import { aboutPath, homePath, welcomePath } from './home.paths';
 import { getHomeRouteDefinitions, getNotFoundRouteDefinition } from './home.routes';
 
 describe('getHomeRouteDefinitions', () => {
-  it('exposes the welcome and home routes, in that order', () => {
+  it('exposes the welcome, about, and home routes, in that order', () => {
     const definitions = getHomeRouteDefinitions();
 
-    expect(definitions).toHaveLength(2);
-    expect(definitions.map((definition) => definition.path)).toEqual([welcomePath(), homePath()]);
+    expect(definitions).toHaveLength(3);
+    expect(definitions.map((definition) => definition.path)).toEqual([
+      welcomePath(),
+      aboutPath(),
+      homePath(),
+    ]);
   });
 
   it('keeps the welcome screen signed-out-only and exactly matched', () => {
@@ -27,8 +32,17 @@ describe('getHomeRouteDefinitions', () => {
     expect(welcome!.component).toBe(WelcomeContainer);
   });
 
+  it('keeps the about screen public for signed-in and signed-out visitors alike', () => {
+    const [, about] = getHomeRouteDefinitions();
+
+    expect(about!.path).toBe('/about');
+    expect(about!.exact).toBe(true);
+    expect(about!.access).toBe(ROUTE_ACCESS.Public);
+    expect(about!.component).toBe(AboutContainer);
+  });
+
   it('protects the home screen behind a session', () => {
-    const [, home] = getHomeRouteDefinitions();
+    const [, , home] = getHomeRouteDefinitions();
 
     expect(home!.path).toBe('/home');
     expect(home!.exact).toBe(true);
@@ -37,7 +51,7 @@ describe('getHomeRouteDefinitions', () => {
   });
 
   it('is a permission-free primary navigation destination', () => {
-    const [, home] = getHomeRouteDefinitions();
+    const [, , home] = getHomeRouteDefinitions();
 
     expect(home!.meta?.permissions).toEqual([]);
     expect(home!.meta?.nav).toEqual({

@@ -1,3 +1,4 @@
+import { ABOUT_I18N_KEYS } from './about-keys.constants';
 import { ADMIN_I18N_KEYS } from './admin-keys.constants';
 import { ADMIN_SETTINGS_TYPED_I18N_KEYS } from './admin-settings-keys.constants';
 import { ANALYTICS_I18N_KEYS } from './analytics-keys.constants';
@@ -91,6 +92,7 @@ export const I18N_KEYS = {
     subtitle: 'welcome.subtitle',
     loginCta: 'welcome.loginCta',
   },
+  about: ABOUT_I18N_KEYS,
   auth: {
     loginTitle: 'auth.loginTitle',
     emailLabel: 'auth.emailLabel',

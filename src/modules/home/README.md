@@ -1,14 +1,16 @@
 # Home module
 
-Owns the public welcome screen, the protected home screen, and the not-found screen.
+Owns the public welcome screen, the public About Us marketing screen, the protected home screen,
+and the not-found screen.
 
 ## Public surface (`index.ts`)
 
-| Export                       | Purpose                                      |
-| ---------------------------- | -------------------------------------------- |
-| `getHomeRouteDefinitions`    | `/welcome` (public) and `/home` (protected). |
-| `getNotFoundRouteDefinition` | Catch-all; the app router registers it last. |
-| `welcomePath`, `homePath`    | Typed path builders.                         |
+| Export                                 | Purpose                                                           |
+| -------------------------------------- | ----------------------------------------------------------------- |
+| `getHomeRouteDefinitions`              | `/welcome` (public-only), `/about` (public), `/home` (protected). |
+| `getNotFoundRouteDefinition`           | Catch-all; the app router registers it last.                      |
+| `welcomePath`, `aboutPath`, `homePath` | Typed path builders.                                              |
+| `AboutScreenView`                      | About screen's view-model type, for tests/factories.              |
 
 ## Anatomy
 
@@ -25,6 +27,9 @@ containers/*             composition (home injects the health card by slot)
   surfaces only, never deep imports.
 - The health card arrives as a `healthSlot` prop, so `HomeView` stays presentational.
 - Route access is declared, not hand-rolled: the app-level guard enforces it.
+- About is `Public` (not `PublicOnly`): it is static marketing content, so it reads the same for an
+  anonymous visitor and a signed-in user. It publishes per-route SEO metadata via
+  `@/shared/ui`'s `PageSeo` (React 19 native `<title>`/`<meta>`/`<link>` hoisting).
 
 ## Related
 

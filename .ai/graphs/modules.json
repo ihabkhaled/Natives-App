@@ -258,6 +258,7 @@
     {
       "name": "home",
       "publicSurface": [
+        "aboutPath",
         "getHomeRouteDefinitions",
         "getNotFoundRouteDefinition",
         "homePath",

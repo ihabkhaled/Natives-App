@@ -19,6 +19,7 @@ export { AppInput, type AppInputProps, type AppInputType } from './input';
 export { ListScreen, type ListScreenProps } from './list-screen';
 export { LoadingState, type LoadingStateProps } from './loading-state';
 export { OfflineState, type OfflineStateProps } from './offline-state';
+export { PageSeo } from './page-seo';
 export { PageShell, type PageShellProps } from './page-shell';
 export { AppPasswordInput, type AppPasswordInputProps } from './password-input';
 export { PermissionState, type PermissionStateProps } from './permission-state';

@@ -1,10 +1,11 @@
 import { I18N_KEYS } from '@/shared/i18n';
 import { NAV_GROUP, ROUTE_ACCESS, type AppRouteDefinition } from '@/shared/types';
 
+import { AboutContainer } from '../containers/about.container';
 import { HomeContainer } from '../containers/home.container';
 import { NotFoundContainer } from '../containers/not-found.container';
 import { WelcomeContainer } from '../containers/welcome.container';
-import { homePath, welcomePath } from './home.paths';
+import { aboutPath, homePath, welcomePath } from './home.paths';
 
 export function getHomeRouteDefinitions(): readonly AppRouteDefinition[] {
   return [
@@ -18,6 +19,14 @@ export function getHomeRouteDefinitions(): readonly AppRouteDefinition[] {
       // already PublicOnly; welcome was the one screen that was not.
       access: ROUTE_ACCESS.PublicOnly,
       component: WelcomeContainer,
+    },
+    {
+      // Public, not PublicOnly: the About page is static marketing content
+      // that reads the same whether or not a visitor is signed in.
+      path: aboutPath(),
+      exact: true,
+      access: ROUTE_ACCESS.Public,
+      component: AboutContainer,
     },
     {
       path: homePath(),

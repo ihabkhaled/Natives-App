@@ -3,6 +3,7 @@
  * Raw test ids are forbidden everywhere else (ESLint:
  * architecture/no-inline-test-ids).
  */
+import { ABOUT_TEST_IDS } from './about-test-ids.constants';
 import { ADMIN_TEST_IDS } from './admin-test-ids.constants';
 import { ANALYTICS_TEST_IDS } from './analytics-test-ids.constants';
 import { ONBOARDING_TEST_IDS } from './onboarding-test-ids.constants';
@@ -59,6 +60,7 @@ export const TEST_IDS = {
   guardAccountBlocked: 'guard-account-blocked',
   guardTeamRequired: 'guard-team-required',
   adminPage: 'admin-page',
+  ...ABOUT_TEST_IDS,
   welcomePage: 'welcome-page',
   welcomeLoginCta: 'welcome-login-cta',
   loginPage: 'login-page',

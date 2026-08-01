@@ -1,0 +1,33 @@
+/**
+ * About Us page copy. Split out of the aggregate catalog so I18N_KEYS stays
+ * within its size budget; validate-locales.mjs reads every *keys.constants.ts.
+ */
+export const ABOUT_I18N_KEYS = {
+  title: 'about.title',
+  metaDescription: 'about.metaDescription',
+  heroEyebrow: 'about.heroEyebrow',
+  heroTitle: 'about.heroTitle',
+  foundingHeading: 'about.foundingHeading',
+  foundingQuote: 'about.foundingQuote',
+  factsHeading: 'about.factsHeading',
+  factLocationLabel: 'about.factLocationLabel',
+  factLocationValue: 'about.factLocationValue',
+  factFoundedLabel: 'about.factFoundedLabel',
+  factFoundedValue: 'about.factFoundedValue',
+  factRosterLabel: 'about.factRosterLabel',
+  factRosterValue: 'about.factRosterValue',
+  factSportLabel: 'about.factSportLabel',
+  factSportValue: 'about.factSportValue',
+  explainerHeading: 'about.explainerHeading',
+  explainerBody: 'about.explainerBody',
+  spiritHeading: 'about.spiritHeading',
+  spiritIntro: 'about.spiritIntro',
+  spiritValue1Title: 'about.spiritValue1Title',
+  spiritValue1Body: 'about.spiritValue1Body',
+  spiritValue2Title: 'about.spiritValue2Title',
+  spiritValue2Body: 'about.spiritValue2Body',
+  spiritValue3Title: 'about.spiritValue3Title',
+  spiritValue3Body: 'about.spiritValue3Body',
+  spiritValue4Title: 'about.spiritValue4Title',
+  spiritValue4Body: 'about.spiritValue4Body',
+} as const;
