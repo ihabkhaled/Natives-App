@@ -1,0 +1,31 @@
+/**
+ * Contact Us page copy. Split out of the aggregate catalog so I18N_KEYS
+ * stays within its size budget; validate-locales.mjs reads every
+ * *keys.constants.ts.
+ */
+export const CONTACT_I18N_KEYS = {
+  title: 'contact.title',
+  metaDescription: 'contact.metaDescription',
+  heroEyebrow: 'contact.heroEyebrow',
+  heroTitle: 'contact.heroTitle',
+  heroIntro: 'contact.heroIntro',
+  unavailableTitle: 'contact.unavailableTitle',
+  unavailableMessage: 'contact.unavailableMessage',
+  emailLabel: 'contact.emailLabel',
+  emailPlaceholder: 'contact.emailPlaceholder',
+  subjectLabel: 'contact.subjectLabel',
+  subjectPlaceholder: 'contact.subjectPlaceholder',
+  messageLabel: 'contact.messageLabel',
+  messagePlaceholder: 'contact.messagePlaceholder',
+  submit: 'contact.submit',
+  submitting: 'contact.submitting',
+  validationEmailRequired: 'contact.validationEmailRequired',
+  validationEmailInvalid: 'contact.validationEmailInvalid',
+  validationEmailTooLong: 'contact.validationEmailTooLong',
+  validationSubjectTooShort: 'contact.validationSubjectTooShort',
+  validationSubjectTooLong: 'contact.validationSubjectTooLong',
+  validationMessageTooShort: 'contact.validationMessageTooShort',
+  validationMessageTooLong: 'contact.validationMessageTooLong',
+  socialHeading: 'contact.socialHeading',
+  socialIntro: 'contact.socialIntro',
+} as const;

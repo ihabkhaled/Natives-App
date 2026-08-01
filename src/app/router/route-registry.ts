@@ -4,6 +4,7 @@ import { getAssessmentsRouteDefinitions } from '@/modules/assessments';
 import { getAttendanceRouteDefinitions } from '@/modules/attendance';
 import { getAuthRouteDefinitions } from '@/modules/auth';
 import { getCompetitionsRouteDefinitions } from '@/modules/competitions';
+import { getContactRouteDefinitions } from '@/modules/contact';
 import { getHomeRouteDefinitions, getNotFoundRouteDefinition } from '@/modules/home';
 import { getMatchesRouteDefinitions } from '@/modules/matches';
 import { getMembersRouteDefinitions } from '@/modules/members';
@@ -24,6 +25,7 @@ export function getAppRouteDefinitions(): readonly AppRouteDefinition[] {
   return [
     ...getAuthRouteDefinitions(),
     ...getHomeRouteDefinitions(),
+    ...getContactRouteDefinitions(),
     ...getPracticeRouteDefinitions(),
     ...getAttendanceRouteDefinitions(),
     ...getMembersRouteDefinitions(),

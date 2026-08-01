@@ -238,6 +238,13 @@
       ]
     },
     {
+      "name": "contact",
+      "publicSurface": [
+        "contactPath",
+        "getContactRouteDefinitions"
+      ]
+    },
+    {
       "name": "dashboard",
       "publicSurface": [
         "DASHBOARD_WIDGET_KIND",

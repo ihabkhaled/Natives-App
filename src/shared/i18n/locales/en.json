@@ -2903,5 +2903,31 @@
     "spiritValue3Body": "Competitive drive stays rooted in why we play: the sport itself, our teammates, and the community around it.",
     "spiritValue4Title": "Consistent effort",
     "spiritValue4Body": "We show up prepared, communicate clearly, and hold the same standard for ourselves that we expect from the team."
+  },
+  "contact": {
+    "title": "Contact Us",
+    "metaDescription": "Get in touch with Ultimate Natives — questions about tryouts, partnerships, or the team.",
+    "heroEyebrow": "Get in touch",
+    "heroTitle": "Contact Us",
+    "heroIntro": "Have a question about tryouts, partnerships, or anything else? Send us a message below.",
+    "unavailableTitle": "The contact form is not connected yet",
+    "unavailableMessage": "We are still wiring this form up to our inbox. In the meantime, reach us on social media using the links below — we would love to hear from you.",
+    "emailLabel": "Your email",
+    "emailPlaceholder": "you@example.com",
+    "subjectLabel": "Subject",
+    "subjectPlaceholder": "What is this about?",
+    "messageLabel": "Message",
+    "messagePlaceholder": "Tell us more…",
+    "submit": "Send message",
+    "submitting": "Sending…",
+    "validationEmailRequired": "Enter your email address.",
+    "validationEmailInvalid": "Enter a valid email address.",
+    "validationEmailTooLong": "Email must be 254 characters or fewer.",
+    "validationSubjectTooShort": "Subject must be at least 3 characters.",
+    "validationSubjectTooLong": "Subject must be 160 characters or fewer.",
+    "validationMessageTooShort": "Message must be at least 10 characters.",
+    "validationMessageTooLong": "Message must be 4000 characters or fewer.",
+    "socialHeading": "Find us online",
+    "socialIntro": "Follow along or send a direct message on any of these."
   }
 }

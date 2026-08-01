@@ -1,4 +1,5 @@
 import { APP_ICONS } from '@/packages/icons';
+import { SOCIAL_LINKS } from '@/shared/config';
 import { I18N_KEYS } from '@/shared/i18n';
 
 /** Social key → translated label key, kept explicit rather than a dynamic lookup. */
@@ -8,24 +9,19 @@ export const SOCIAL_LABEL_I18N_KEYS = {
   tiktok: I18N_KEYS.publicFooter.tiktokLabel,
 } as const;
 
+/** Social key → icon, kept explicit rather than a dynamic lookup. */
+const SOCIAL_ICONS = {
+  facebook: APP_ICONS.logoFacebook,
+  instagram: APP_ICONS.logoInstagram,
+  tiktok: APP_ICONS.logoTiktok,
+} as const;
+
 /**
- * The real, user-confirmed Ultimate Natives social profiles. Kept as one
- * declaration home (rule 08/20) rather than scattered literals.
+ * The footer's social row: the shared `SOCIAL_LINKS` declaration home
+ * (rule 08/20), decorated with the app-layer icon each platform uses.
  */
-export const PUBLIC_SOCIAL_LINKS = [
-  {
-    key: 'facebook',
-    href: 'https://www.facebook.com/ultimatenatives',
-    icon: APP_ICONS.logoFacebook,
-  },
-  {
-    key: 'instagram',
-    href: 'https://www.instagram.com/ultimatenatives',
-    icon: APP_ICONS.logoInstagram,
-  },
-  {
-    key: 'tiktok',
-    href: 'https://www.tiktok.com/@ultimate.natives',
-    icon: APP_ICONS.logoTiktok,
-  },
-] as const;
+export const PUBLIC_SOCIAL_LINKS = SOCIAL_LINKS.map((social) => ({
+  key: social.key,
+  href: social.href,
+  icon: SOCIAL_ICONS[social.key],
+}));

@@ -21,6 +21,7 @@ describe('getAppRouteDefinitions', () => {
       APP_PATHS.welcome,
       APP_PATHS.about,
       APP_PATHS.home,
+      APP_PATHS.contact,
       APP_PATHS.practices,
       APP_PATHS.practiceSession,
       APP_PATHS.attendance,

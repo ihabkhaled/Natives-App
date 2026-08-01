@@ -5,6 +5,7 @@ import { ANALYTICS_I18N_KEYS } from './analytics-keys.constants';
 import { ASSESSMENTS_I18N_KEYS } from './assessments-keys.constants';
 import { ATTENDANCE_I18N_KEYS } from './attendance-keys.constants';
 import { COMPETITIONS_I18N_KEYS } from './competitions-keys.constants';
+import { CONTACT_I18N_KEYS } from './contact-keys.constants';
 import { DASHBOARD_I18N_KEYS } from './dashboard-keys.constants';
 import {
   MATCH_STATS_I18N_KEYS,
@@ -93,6 +94,7 @@ export const I18N_KEYS = {
     loginCta: 'welcome.loginCta',
   },
   about: ABOUT_I18N_KEYS,
+  contact: CONTACT_I18N_KEYS,
   auth: {
     loginTitle: 'auth.loginTitle',
     emailLabel: 'auth.emailLabel',

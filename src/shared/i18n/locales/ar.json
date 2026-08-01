@@ -2927,5 +2927,31 @@
     "spiritValue3Body": "تبقى روح المنافسة متجذرة في سبب لعبنا: الرياضة نفسها، وزملاء الفريق، والمجتمع من حولها.",
     "spiritValue4Title": "التزام ثابت",
     "spiritValue4Body": "نحضر مستعدين، ونتواصل بوضوح، ونطبق على أنفسنا نفس المعيار الذي نتوقعه من الفريق."
+  },
+  "contact": {
+    "title": "تواصل معنا",
+    "metaDescription": "تواصل مع ألتيميت نيتيفز — أسئلة عن التجارب أو الشراكات أو الفريق.",
+    "heroEyebrow": "تواصل معنا",
+    "heroTitle": "تواصل معنا",
+    "heroIntro": "لديك سؤال عن التجارب أو الشراكات أو أي شيء آخر؟ أرسل لنا رسالة أدناه.",
+    "unavailableTitle": "نموذج التواصل غير مفعّل بعد",
+    "unavailableMessage": "ما زلنا نربط هذا النموذج ببريدنا الإلكتروني. في هذه الأثناء، تواصل معنا عبر وسائل التواصل الاجتماعي باستخدام الروابط أدناه — يسعدنا أن نسمع منك.",
+    "emailLabel": "بريدك الإلكتروني",
+    "emailPlaceholder": "you@example.com",
+    "subjectLabel": "الموضوع",
+    "subjectPlaceholder": "ما هو موضوع رسالتك؟",
+    "messageLabel": "الرسالة",
+    "messagePlaceholder": "أخبرنا بالمزيد…",
+    "submit": "إرسال الرسالة",
+    "submitting": "جارٍ الإرسال…",
+    "validationEmailRequired": "أدخل بريدك الإلكتروني.",
+    "validationEmailInvalid": "أدخل بريدًا إلكترونيًا صحيحًا.",
+    "validationEmailTooLong": "يجب ألا يتجاوز البريد الإلكتروني 254 حرفًا.",
+    "validationSubjectTooShort": "يجب ألا يقل الموضوع عن 3 أحرف.",
+    "validationSubjectTooLong": "يجب ألا يتجاوز الموضوع 160 حرفًا.",
+    "validationMessageTooShort": "يجب ألا تقل الرسالة عن 10 أحرف.",
+    "validationMessageTooLong": "يجب ألا تتجاوز الرسالة 4000 حرف.",
+    "socialHeading": "تابعنا عبر الإنترنت",
+    "socialIntro": "تابعنا أو راسلنا مباشرة عبر أي من هذه الحسابات."
   }
 }
