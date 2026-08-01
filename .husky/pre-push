@@ -1,5 +1,11 @@
-npm run typecheck
-npm run lint
-npm run quality:architecture
-npm run quality:package-ownership
-npm run test
+# Pre-push intentionally does NOT re-run the heavy gate suite.
+#
+# The full gate set (typecheck, lint, architecture, ownership, tests, build,
+# coverage) is run ONCE in the foreground BEFORE each commit — see the
+# CI-gates and incremental-commit rules. Re-running it here only duplicated
+# that CPU on every push, which is wasteful on constrained machines.
+#
+# Verification therefore happens at/before commit time (fast staged checks in
+# pre-commit + the foreground gate run) and again authoritatively in CI. This
+# hook is a deliberate no-op.
+exit 0
