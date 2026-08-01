@@ -1220,7 +1220,9 @@ ion-spinner {
   text-align: center;
 }
 
-[data-testid='login-page'] .app-auth-panel form {
+[data-testid='login-page'] .app-auth-panel form,
+[data-testid='forgot-password-page'] .app-auth-panel form,
+[data-testid='reset-password-page'] .app-auth-panel form {
   padding: 0;
   border: 0;
   border-radius: 0;

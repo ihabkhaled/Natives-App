@@ -11,6 +11,7 @@ import {
 
 interface ForgotPasswordScreenLabels {
   readonly title: string;
+  readonly logoLabel: string;
   readonly intro: string;
   readonly emailLabel: string;
   readonly emailPlaceholder: string;
@@ -44,6 +45,7 @@ export function useForgotPasswordScreen(): ForgotPasswordScreenView {
   return {
     labels: {
       title: t(I18N_KEYS.auth.forgotPasswordTitle),
+      logoLabel: t(I18N_KEYS.brand.logoAlt),
       intro: t(I18N_KEYS.auth.forgotPasswordIntro),
       emailLabel: t(I18N_KEYS.auth.emailLabel),
       emailPlaceholder: t(I18N_KEYS.auth.emailPlaceholder),

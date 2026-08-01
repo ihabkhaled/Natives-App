@@ -22,6 +22,7 @@ function mockScreen(overrides: Partial<ResetPasswordScreenView> = {}): ResetPass
   const view: ResetPasswordScreenView = {
     labels: {
       title: 'Choose a new password',
+      logoLabel: 'Ultimate Natives logo',
       intro: 'Create a strong password.',
       backToLogin: 'Back to sign in',
       successTitle: 'Password updated',

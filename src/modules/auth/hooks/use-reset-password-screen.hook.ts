@@ -11,6 +11,7 @@ import { useSetPasswordForm, type SetPasswordFormView } from './use-set-password
 
 interface ResetPasswordScreenLabels {
   readonly title: string;
+  readonly logoLabel: string;
   readonly intro: string;
   readonly backToLogin: string;
   readonly successTitle: string;
@@ -45,6 +46,7 @@ export function useResetPasswordScreen(): ResetPasswordScreenView {
   return {
     labels: {
       title: t(I18N_KEYS.auth.resetPasswordTitle),
+      logoLabel: t(I18N_KEYS.brand.logoAlt),
       intro: t(I18N_KEYS.auth.resetPasswordIntro),
       backToLogin: t(I18N_KEYS.auth.backToLogin),
       successTitle: t(I18N_KEYS.auth.resetPasswordSuccessTitle),

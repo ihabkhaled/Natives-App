@@ -18,6 +18,7 @@ function mockScreen(overrides: Partial<ForgotPasswordScreenView> = {}): ForgotPa
   const view: ForgotPasswordScreenView = {
     labels: {
       title: 'Reset your password',
+      logoLabel: 'Ultimate Natives logo',
       intro: 'Enter your email.',
       emailLabel: 'Email',
       emailPlaceholder: 'you@example.com',
