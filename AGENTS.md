@@ -48,6 +48,12 @@ npm run knowledge:context -- --task="<exact task>"
   weaken a rule, threshold, or coverage floor, skip a test, or mark a check `continue-on-error`.
   Rebuild `.ai` (`npm run knowledge:build`) and commit it with any `src/**` or corpus change. See
   [`rules/32-ci-gates-before-commit-and-push.md`](rules/32-ci-gates-before-commit-and-push.md).
+- **Commit and push incrementally**: ship small, self-contained, green increments — one coherent
+  unit at a time as it reaches green — and push each; never batch a whole task into one commit or a
+  single final push. Each increment passes the full gate set on its own (composes with rule 37) and
+  is reviewable, revertible, and bisectable; smallness never licenses committing red or partial work.
+  Rebuild `.ai` (`npm run knowledge:build`) inside the increment that touched `src/**` or the corpus.
+  See [`rules/33-commit-and-push-incrementally.md`](rules/33-commit-and-push-incrementally.md).
 - Execute with focus: communicate concisely, avoid unrelated detours and speculative work, make
   reasonable in-scope decisions promptly, and continue through verification. This never permits
   skipping an architecture, security, accessibility, testing, documentation, or release gate.

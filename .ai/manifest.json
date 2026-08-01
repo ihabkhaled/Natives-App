@@ -12,7 +12,7 @@
     "docs"
   ],
   "files": {
-    "rules/00-non-negotiable-rules.md": "b969906d90865d8b",
+    "rules/00-non-negotiable-rules.md": "cbfd26040e8fe624",
     "rules/01-architecture-and-dependency-direction.md": "6d33159df6f24f91",
     "rules/02-feature-modules.md": "aa214a612ba316ea",
     "rules/03-components.md": "702f7eb9c2af7032",
@@ -45,7 +45,8 @@
     "rules/30-release-gates.md": "b3e444b4f6d04d47",
     "rules/31-review-checklist.md": "a06630ea031adce7",
     "rules/32-ci-gates-before-commit-and-push.md": "47ed0af88ae17618",
-    "rules/README.md": "308e585561e83fab",
+    "rules/33-commit-and-push-incrementally.md": "f577014913546ef2",
+    "rules/README.md": "e86a68ff8a946063",
     "rules/ui-ux-quality-mandate.md": "86171258a05634ad",
     "skills/README.md": "b9009ed80b31602d",
     "skills/accessibility-test.md": "8cd9b5976b26f347",
@@ -106,7 +107,7 @@
     "context/test-strategy-map.md": "4eb3a3d990b0ae2a",
     "memory/README.md": "c6e3264174b36407",
     "memory/ionic-router-compatibility.md": "30ac06324ee66e68",
-    "memory/known-pitfalls.md": "e682d29c539a4d8c",
+    "memory/known-pitfalls.md": "452e202525764be5",
     "memory/native-pitfalls.md": "a2b3a7528ff3a168",
     "memory/package-upgrade-notes.md": "6c33f1c13d51ffb7",
     "memory/recurring-review-findings.md": "27213b143e0ad117",

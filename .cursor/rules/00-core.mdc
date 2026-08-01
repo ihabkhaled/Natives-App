@@ -14,6 +14,10 @@ typecheck, contract, coverage, build, architecture, static analysis, e2e, a11y, 
 knowledge build+validate, native, and all-gates-green. Never weaken a rule, threshold, or coverage
 floor to make one pass; rebuild .ai with `npm run knowledge:build` after a src or corpus change.
 
+Commit and push incrementally (rules/33) — ship small, self-contained, green increments one coherent
+unit at a time as each reaches green, and push each; never batch a whole task into one commit or a
+final push. Smallness never licenses committing red or partial work.
+
 UI/UX Quality Mandate (rules/ui-ux-quality-mandate.md): every UI must be cool, clear, vibrant,
 catchy and UX-perfect on web and mobile — responsive (desktop sidebar+navbar, mobile tab bar+
 drawer), polished loaders and skeletons for all async states, first-class dark + light mode, perfect

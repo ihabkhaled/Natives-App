@@ -82,6 +82,11 @@
     check `continue-on-error`. Rebuild `.ai` (`npm run knowledge:build`) and commit it with any
     `src/**` or corpus change. A gate that cannot run here is reported UNVERIFIED with its exact
     reason. [32-ci-gates-before-commit-and-push](32-ci-gates-before-commit-and-push.md)
+38. Work MUST be committed and pushed in small, self-contained, green increments — one coherent unit
+    at a time as it reaches green — never batched into one mega-commit or a single final push. Each
+    increment independently passes the full gate set (composes with rule 37) and is reviewable,
+    revertible, and bisectable on its own; smallness never licenses committing red or partial work.
+    [33-commit-and-push-incrementally](33-commit-and-push-incrementally.md)
 
 ## Forbidden
 
@@ -137,7 +142,7 @@ index at all, and whether an invariant has quietly stopped matching the code it 
 
 ## Definition of done
 
-- [ ] The change violates none of the 37 invariants above.
+- [ ] The change violates none of the 38 invariants above.
 - [ ] Any new invariant is listed here, defined in a rule file, and enforced by a named mechanism.
 - [ ] No gate was weakened, skipped, or scoped away to land the change.
 - [ ] Every gate was run and seen green before the commit and before the push.

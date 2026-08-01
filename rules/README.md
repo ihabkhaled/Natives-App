@@ -51,4 +51,5 @@ the shortest path to a passing review is [31-review-checklist](31-review-checkli
 | [30 — Release gates](30-release-gates.md)                                                 | `validate:web`, `validate:native`, `validate`               |
 | [31 — Review checklist](31-review-checklist.md)                                           | What a reviewer checks that no machine can                  |
 | [32 — CI gates before commit and push](32-ci-gates-before-commit-and-push.md)             | Every gate green before commit and before push              |
+| [33 — Commit and push incrementally](33-commit-and-push-incrementally.md)                 | Small self-contained green increments, never a final batch  |
 | [UI/UX Quality Mandate](ui-ux-quality-mandate.md)                                         | Cool, clear, vibrant, responsive, accessible UI everywhere  |

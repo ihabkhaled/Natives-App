@@ -8,6 +8,9 @@ Do not edit generated .ai files; rebuild them with `npm run knowledge:build`.
 Every CI gate must be green before you commit and before you push, including knowledge
 build+validation and the aggregate all-gates-green. Fix the root cause; never weaken a rule,
 threshold, or coverage floor. Report a gate that cannot run here as UNVERIFIED with the reason.
+Commit and push incrementally (rules/33): ship small, self-contained, green increments one coherent
+unit at a time as each reaches green, and push each; never batch a whole task into one commit or a
+final push. Smallness never licenses committing red or partial work.
 UI/UX Quality Mandate: every UI must be cool, clear, vibrant, catchy and UX-perfect on web and
 mobile — responsive (desktop sidebar+navbar, mobile tab bar+drawer), polished loaders and skeletons
 for all async states, first-class dark + light mode, perfect RTL + LTR, accessible (WCAG AA), refined

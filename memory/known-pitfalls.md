@@ -114,3 +114,18 @@ mobile tab bar+drawer), polished loaders and skeletons for all async states, fir
 mode, perfect RTL + LTR, accessible (WCAG AA), refined components and tasteful motion. Plain/default
 styling is not acceptable. Design every async state with the shared skeleton/state components, verify
 both themes and both directions, and let a human confirm the result is refined, not merely unbroken.
+
+## 13. Batching a whole task into one final commit loses work and hides breakage
+
+It is tempting to keep coding an entire module and commit once at the end. That batch is invisible
+until it lands: an interruption erases hours of green work, a reviewer cannot reason about one
+enormous diff, and `git bisect` cannot find the single line inside it that broke a gate. The final
+mega-push also lets `origin/main` trail local work by a large, unreviewed pile.
+
+**Fix, and the habit that avoids it:** commit and push each coherent, independently-green unit as
+soon as it reaches green — a shared groundwork change before the feature that uses it, then one
+screen (hook + component + container + tests + locales) at a time. This is
+[non-negotiable rule 38](../rules/33-commit-and-push-incrementally.md), composed with
+[rule 37](../rules/32-ci-gates-before-commit-and-push.md): every increment passes the full gate set
+before it is committed and before it is pushed. Smallness never licenses committing red or partial
+work — if a unit cannot be made green on its own, finish it before committing, do not ship it early.

@@ -32,6 +32,10 @@ This file is a pointer. The canonical contract is [`AGENTS.md`](../AGENTS.md) �
   Capacitor sync, Android, iOS, and the aggregate `all-gates-green`. Fix the root cause; never
   weaken a rule, threshold, or coverage floor, skip a test, or mark a check `continue-on-error`.
   See `rules/32-ci-gates-before-commit-and-push.md`.
+- Commit and push incrementally: ship small, self-contained, green increments — one coherent unit at
+  a time as it reaches green — and push each; never batch a whole task into one commit or a final
+  push. Each increment passes the full gate set on its own (composes with rule 37); smallness never
+  licenses committing red or partial work. See `rules/33-commit-and-push-incrementally.md`.
 - Report only gates you actually ran. iOS compilation is UNVERIFIED off macOS.
 
 ## Validation

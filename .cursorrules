@@ -9,6 +9,10 @@ contract, coverage/per-file, build, architecture and ownership checks, static an
 visual, security, knowledge build+validate, Capacitor sync, Android, iOS, and `all-gates-green`.
 Fix the root cause; never weaken a rule, threshold, or coverage floor to make a gate pass. Rebuild
 `.ai` with `npm run knowledge:build` and commit it with any src or corpus change.
+Commit and push incrementally (rules/33) — ship small, self-contained, green increments one coherent
+unit at a time as each reaches green, and push each; never batch a whole task into one commit or a
+final push. Each increment passes the full gate set on its own; smallness never licenses committing
+red or partial work.
 UI/UX Quality Mandate: every UI must be cool, clear, vibrant, catchy and UX-perfect on web and
 mobile — responsive (desktop sidebar+navbar, mobile tab bar+drawer), polished loaders and skeletons
 for all async states, first-class dark + light mode, perfect RTL + LTR, accessible (WCAG AA), refined
