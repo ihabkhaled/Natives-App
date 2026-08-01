@@ -1,0 +1,13 @@
+User-agent: *
+Allow: /
+
+# Auth utility routes are not useful to crawlers.
+Disallow: /login
+Disallow: /forgot-password
+Disallow: /reset-password
+Disallow: /accept-invitation
+Disallow: /sessions
+
+# NOTE: production domain not yet confirmed by the team — keep in sync with
+# index.html <link rel="canonical"> and scripts/seo/generate-sitemap.mjs.
+Sitemap: https://ultimatenatives.com/sitemap.xml
