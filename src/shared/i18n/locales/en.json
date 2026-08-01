@@ -2850,5 +2850,29 @@
     "detailChecksumMissing": "Not available yet",
     "detailSeason": "Season",
     "detailPrivacy": "Privacy class"
+  },
+  "publicNav": {
+    "label": "Public site navigation",
+    "openMenu": "Open menu",
+    "closeMenu": "Close menu",
+    "home": "Home",
+    "about": "About",
+    "tryouts": "Tryouts",
+    "contact": "Contact",
+    "signIn": "Sign in",
+    "switchToDark": "Switch to dark theme",
+    "switchToLight": "Switch to light theme",
+    "switchToArabic": "View in Arabic",
+    "switchToEnglish": "View in English"
+  },
+  "publicFooter": {
+    "label": "Site footer",
+    "tagline": "Elite ultimate. One community.",
+    "navHeading": "Explore",
+    "socialHeading": "Follow us",
+    "facebookLabel": "Ultimate Natives on Facebook",
+    "instagramLabel": "Ultimate Natives on Instagram",
+    "tiktokLabel": "Ultimate Natives on TikTok",
+    "copyright": "© {{year}} Ultimate Natives. All rights reserved."
   }
 }

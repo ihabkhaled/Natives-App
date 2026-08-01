@@ -2874,5 +2874,29 @@
     "detailChecksumMissing": "غير متاح بعد",
     "detailSeason": "الموسم",
     "detailPrivacy": "فئة الخصوصية"
+  },
+  "publicNav": {
+    "label": "تنقل الموقع العام",
+    "openMenu": "فتح القائمة",
+    "closeMenu": "إغلاق القائمة",
+    "home": "الرئيسية",
+    "about": "من نحن",
+    "tryouts": "التجارب",
+    "contact": "تواصل معنا",
+    "signIn": "تسجيل الدخول",
+    "switchToDark": "التبديل إلى الوضع الداكن",
+    "switchToLight": "التبديل إلى الوضع الفاتح",
+    "switchToArabic": "العرض بالعربية",
+    "switchToEnglish": "العرض بالإنجليزية"
+  },
+  "publicFooter": {
+    "label": "تذييل الموقع",
+    "tagline": "ألتيميت النخبة. مجتمع واحد.",
+    "navHeading": "استكشف",
+    "socialHeading": "تابعنا",
+    "facebookLabel": "Ultimate Natives على فيسبوك",
+    "instagramLabel": "Ultimate Natives على إنستغرام",
+    "tiktokLabel": "Ultimate Natives على تيك توك",
+    "copyright": "© {{year}} Ultimate Natives. جميع الحقوق محفوظة."
   }
 }

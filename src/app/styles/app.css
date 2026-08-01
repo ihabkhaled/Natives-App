@@ -5461,3 +5461,291 @@ ion-spinner {
 .app-cabinet__entry-title {
   font-weight: var(--un-font-weight-semibold);
 }
+
+/* ----------------------------------------------------------------------------
+   Public marketing shell — navbar + footer around every signed-out route.
+   Same chrome language as the app bar / primary nav: fixed strips that carve
+   the router outlet's insets rather than sitting in normal document flow.
+---------------------------------------------------------------------------- */
+:root:root {
+  --app-public-footer-h: 8.5rem;
+}
+
+@media (min-width: 720px) {
+  :root:root {
+    --app-public-footer-h: 3.5rem;
+  }
+}
+
+/* Reuses `.app-bar` (position, chrome background, blur, hairline, shadow,
+   flex row) for the strip itself; only the properties that differ from the
+   authenticated app bar are declared here, and win by source order since
+   both selectors carry equal specificity. */
+.app-public-nav {
+  z-index: 25;
+  flex-wrap: wrap;
+  block-size: auto;
+  min-block-size: var(--un-appbar-height);
+  gap: var(--un-space-3);
+  padding-block: var(--un-space-2);
+}
+
+/* The top inset is already covered by `#main-content:has(> .app-bar)`
+   above, since the public navbar carries that class too. */
+#main-content:has(> .app-public-footer) > ion-router-outlet {
+  inset-block-end: var(--app-public-footer-h);
+}
+
+.app-public-nav__brand {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--un-space-2);
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  text-align: start;
+}
+
+.app-public-nav__brand-text {
+  display: none;
+  flex-direction: column;
+  min-inline-size: 0;
+}
+
+.app-public-nav__brand-name {
+  color: var(--app-ink);
+  font-size: var(--un-font-size-md);
+  font-weight: var(--un-font-weight-bold);
+  letter-spacing: var(--un-letter-spacing-tight);
+}
+
+.app-public-nav__brand-tagline {
+  overflow: hidden;
+  color: var(--app-muted);
+  font-size: var(--un-font-size-xs);
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.app-public-nav__links {
+  display: none;
+  align-items: center;
+  gap: var(--un-space-1);
+}
+
+.app-public-nav__link {
+  display: inline-flex;
+  align-items: center;
+  min-block-size: var(--un-control-md);
+  padding-inline: var(--un-space-3);
+  border: none;
+  border-radius: var(--un-radius-md);
+  background: transparent;
+  color: var(--app-muted-strong);
+  font-size: var(--un-font-size-sm);
+  font-weight: var(--un-font-weight-semibold);
+  cursor: pointer;
+  transition:
+    background var(--un-motion-duration-fast) var(--un-motion-easing-standard),
+    color var(--un-motion-duration-fast) var(--un-motion-easing-standard);
+}
+
+.app-public-nav__link:hover {
+  background: var(--app-hover);
+  color: var(--app-ink);
+}
+
+.app-public-nav__link[aria-current='page'] {
+  background: var(--app-lime-soft);
+  color: var(--app-lime-text);
+}
+
+.app-public-nav__actions {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: var(--un-space-2);
+}
+
+/* The navbar's palette and language switches reuse the app bar's icon-button
+   look (`.app-bar__icon-button`, applied alongside this class in markup);
+   only the pressed state needs a public-nav-specific selector since the app
+   bar's equivalent toggles use `aria-expanded`, not `aria-pressed`. */
+.app-bar__icon-button[aria-pressed='true'] {
+  border-color: var(--app-lime-line);
+  background: var(--app-lime-soft);
+  color: var(--app-lime-text);
+}
+
+.app-public-nav__sign-in {
+  display: none;
+}
+
+.app-public-nav__menu-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  inline-size: var(--un-control-md);
+  block-size: var(--un-control-md);
+  border: 1px solid var(--app-hairline);
+  border-radius: var(--un-radius-md);
+  background: var(--app-card-bg);
+  color: var(--app-ink);
+  font-size: 1.25rem;
+  cursor: pointer;
+}
+
+.app-public-nav__drawer {
+  position: absolute;
+  z-index: 30;
+  inset-inline: var(--app-gutter);
+  inset-block-start: calc(100% + var(--un-space-2));
+  display: flex;
+  flex-direction: column;
+  gap: var(--un-space-4);
+  padding: var(--un-space-4);
+  border: 1px solid var(--app-hairline);
+  border-radius: var(--un-radius-xl);
+  background: var(--app-card-bg);
+  box-shadow: var(--app-elevation-pop);
+}
+
+.app-public-nav__drawer-links {
+  display: flex;
+  flex-direction: column;
+  gap: var(--un-space-1);
+}
+
+.app-public-nav__drawer-links .app-public-nav__link {
+  inline-size: 100%;
+  justify-content: flex-start;
+  text-align: start;
+}
+
+@media (min-width: 720px) {
+  .app-public-nav__brand-text {
+    display: flex;
+  }
+
+  .app-public-nav__links {
+    display: flex;
+  }
+
+  .app-public-nav__sign-in {
+    display: inline-flex;
+  }
+
+  .app-public-nav__menu-button {
+    display: none;
+  }
+}
+
+.app-public-footer {
+  position: fixed;
+  z-index: 15;
+  inset-block-end: 0;
+  inset-inline: 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: var(--un-space-2) var(--un-space-5);
+  block-size: var(--app-public-footer-h);
+  overflow: hidden;
+  padding-inline: var(--app-gutter);
+  padding-block: var(--un-space-2);
+  border-block-start: 1px solid var(--app-hairline);
+  background: var(--app-chrome-bg);
+  -webkit-backdrop-filter: saturate(180%) blur(16px);
+  backdrop-filter: saturate(180%) blur(16px);
+}
+
+.app-public-footer__brand {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.app-public-footer__brand-name {
+  margin: 0;
+  color: var(--app-ink);
+  font-weight: var(--un-font-weight-bold);
+}
+
+.app-public-footer__tagline {
+  margin: 0;
+  color: var(--app-muted);
+  font-size: var(--un-font-size-xs);
+}
+
+.app-public-footer__nav {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: var(--un-space-1) var(--un-space-3);
+}
+
+.app-public-footer__heading {
+  display: none;
+}
+
+.app-public-footer__link {
+  border: none;
+  background: transparent;
+  color: var(--app-muted-strong);
+  font-size: var(--un-font-size-sm);
+  font-weight: var(--un-font-weight-medium);
+  cursor: pointer;
+}
+
+.app-public-footer__link:hover {
+  color: var(--app-lime-text);
+}
+
+.app-public-footer__social {
+  display: flex;
+  align-items: center;
+}
+
+.app-public-footer__social-row {
+  display: flex;
+  align-items: center;
+  gap: var(--un-space-3);
+}
+
+.app-public-footer__social-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  inline-size: var(--un-control-md);
+  block-size: var(--un-control-md);
+  border-radius: var(--un-radius-circle);
+  color: var(--app-muted-strong);
+  font-size: 1.25rem;
+  transition: color var(--un-motion-duration-fast) var(--un-motion-easing-standard);
+}
+
+.app-public-footer__social-link:hover {
+  color: var(--app-lime-text);
+}
+
+.app-public-footer__copyright {
+  flex-basis: 100%;
+  margin: 0;
+  color: var(--app-muted);
+  font-size: var(--un-font-size-xs);
+  text-align: center;
+}
+
+@media (min-width: 720px) {
+  .app-public-footer {
+    flex-wrap: nowrap;
+    justify-content: space-between;
+  }
+
+  .app-public-footer__copyright {
+    flex-basis: auto;
+  }
+}

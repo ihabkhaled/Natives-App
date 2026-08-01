@@ -3,15 +3,15 @@
  * discover them. Run before `vite build` (wired into the `build` script) and the
  * output is committed so it is available even without a build.
  *
- * NOTE: SITE_URL is the canonical public origin. The production domain is not
- * yet confirmed by the team — keep this in sync with index.html <link rel="canonical">
+ * NOTE: SITE_URL is the canonical public origin (the confirmed Vercel
+ * deployment) — keep this in sync with index.html <link rel="canonical">
  * and public/robots.txt.
  */
 import { writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-const SITE_URL = 'https://ultimatenatives.com';
+const SITE_URL = 'https://natives-frontend-app.vercel.app';
 
 /**
  * Public, indexable marketing routes only. Auth utility routes

@@ -106,6 +106,8 @@ describe('I18N_KEYS', () => {
       'nav',
       'teams',
       'appBar',
+      'publicNav',
+      'publicFooter',
       'admin',
       'guard',
     ]);

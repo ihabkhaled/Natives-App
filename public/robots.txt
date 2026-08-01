@@ -8,6 +8,6 @@ Disallow: /reset-password
 Disallow: /accept-invitation
 Disallow: /sessions
 
-# NOTE: production domain not yet confirmed by the team — keep in sync with
-# index.html <link rel="canonical"> and scripts/seo/generate-sitemap.mjs.
-Sitemap: https://ultimatenatives.com/sitemap.xml
+# NOTE: keep this origin in sync with index.html <link rel="canonical"> and
+# scripts/seo/generate-sitemap.mjs.
+Sitemap: https://natives-frontend-app.vercel.app/sitemap.xml

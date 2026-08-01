@@ -6,6 +6,8 @@
 export const APP_PATHS = {
   root: '/',
   welcome: '/welcome',
+  about: '/about',
+  contact: '/contact',
   login: '/login',
   forgotPassword: '/forgot-password',
   resetPassword: '/reset-password',

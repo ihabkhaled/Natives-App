@@ -10,6 +10,7 @@ describe('APP_PATHS', () => {
     // asserts the whole sorted table; this pins the route *names* so a screen
     // cannot be dropped from the canonical table unnoticed.
     expect(Object.keys(APP_PATHS).sort()).toEqual([
+      'about',
       'acceptInvitation',
       'achievements',
       'admin',
@@ -27,6 +28,7 @@ describe('APP_PATHS', () => {
       'attendance',
       'competitionDetail',
       'competitions',
+      'contact',
       'forgotPassword',
       'home',
       'leaderboard',

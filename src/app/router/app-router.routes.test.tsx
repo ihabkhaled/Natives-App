@@ -45,6 +45,10 @@ vi.mock('../shell/navigation/primary-navigation.container', () => ({
   PrimaryNavigationContainer: () => null,
 }));
 vi.mock('../shell/app-bar/app-bar.container', () => ({ AppBarContainer: () => null }));
+vi.mock('../shell/public-nav/public-nav.container', () => ({ PublicNavContainer: () => null }));
+vi.mock('../shell/public-footer/public-footer.container', () => ({
+  PublicFooterContainer: () => null,
+}));
 
 /** IonReactRouter owns its own browser history, so drive the real URL. */
 function visit(path: string): void {

@@ -15,6 +15,7 @@ import { MEMBERS_I18N_KEYS } from './members-keys.constants';
 import { NOTIFICATIONS_I18N_KEYS } from './notifications-keys.constants';
 import { POINTS_I18N_KEYS } from './points-keys.constants';
 import { PRACTICE_I18N_KEYS } from './practice-keys.constants';
+import { PUBLIC_FOOTER_I18N_KEYS, PUBLIC_NAV_I18N_KEYS } from './public-keys.constants';
 import { REPORTS_I18N_KEYS } from './reports-keys.constants';
 import { ROSTERS_I18N_KEYS } from './rosters-keys.constants';
 import { SQUADS_I18N_KEYS } from './squads-keys.constants';
@@ -272,6 +273,9 @@ export const I18N_KEYS = {
     settings: 'appBar.settings',
     signOut: 'appBar.signOut',
   },
+  /** The signed-out marketing shell: navbar + footer around every public route. */
+  publicNav: PUBLIC_NAV_I18N_KEYS,
+  publicFooter: PUBLIC_FOOTER_I18N_KEYS,
   admin: {
     title: 'admin.title',
     heading: 'admin.heading',

@@ -23,6 +23,7 @@ describe('APP_DEEP_LINK_POLICY', () => {
     expect(APP_DEEP_LINK_POLICY.allowedPathPrefixes).toEqual(Object.values(APP_PATHS));
     expect([...APP_DEEP_LINK_POLICY.allowedPathPrefixes].sort()).toEqual([
       '/',
+      '/about',
       '/accept-invitation',
       '/achievements',
       '/admin',
@@ -40,6 +41,7 @@ describe('APP_DEEP_LINK_POLICY', () => {
       '/assessments/:assessmentId',
       '/competitions',
       '/competitions/:competitionId',
+      '/contact',
       '/forgot-password',
       '/home',
       '/leaderboard',

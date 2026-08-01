@@ -426,11 +426,13 @@
       "name": "settings",
       "publicSurface": [
         "AppearancePreferences",
+        "LocaleToggleView",
         "ThemeToggleView",
         "getSettingsRouteDefinitions",
         "selectIsDarkTheme",
         "settingsPath",
         "useAppearancePreferences",
+        "useLocaleToggle",
         "useThemeToggle"
       ]
     },
