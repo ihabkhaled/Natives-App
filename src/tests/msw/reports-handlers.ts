@@ -3,7 +3,7 @@ import { http, HttpResponse } from 'msw';
 import { PERMISSIONS } from '@/shared/security';
 
 import { apiUrl, failRequest, isAuthorized, pathParam, readJsonBody } from './mock-request.helper';
-import { permissionsForRequest } from './persona-permissions.helper';
+import { has, queryValue } from './persona-permissions.helper';
 import {
   generateReportJob,
   reportDownloadTicket,
@@ -14,14 +14,6 @@ import {
 
 function teamUrl(suffix: string): string {
   return apiUrl(`/teams/:teamId/reports${suffix}`);
-}
-
-function has(request: Request, permission: string): boolean {
-  return permissionsForRequest(request).includes(permission);
-}
-
-function queryValue(request: Request, key: string): string | null {
-  return new URL(request.url).searchParams.get(key);
 }
 
 /**

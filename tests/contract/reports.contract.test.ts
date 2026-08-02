@@ -1,6 +1,3 @@
-import { readFileSync } from 'node:fs';
-import { fileURLToPath } from 'node:url';
-
 import { assert, describe, expect, it } from 'vitest';
 
 import {
@@ -14,26 +11,14 @@ import { safeParseWithSchema } from '@/packages/schema';
 import { MOCK_PERSONA_EMAILS } from '@/tests/msw/mock-data.constants';
 import { MOCK_REPORTS } from '@/tests/msw/reports.fixture';
 
-import { apiUrl, authGet, authPost, loginAs, teamScopedPath } from '../setup/contract-api.helper';
-
-const CONTRACT_PATH = fileURLToPath(new URL('../../contracts/openapi.json', import.meta.url));
-
-interface OpenApiContract {
-  readonly paths: Record<
-    string,
-    { readonly get?: { readonly parameters?: readonly { readonly name: string }[] } }
-  >;
-  readonly components: {
-    readonly schemas: Record<
-      string,
-      { readonly properties?: Record<string, { readonly enum?: readonly string[] }> }
-    >;
-  };
-}
-
-function contract(): OpenApiContract {
-  return JSON.parse(readFileSync(CONTRACT_PATH, 'utf8')) as OpenApiContract;
-}
+import {
+  apiUrl,
+  authGet,
+  authPost,
+  loginAs,
+  readOpenApiContract,
+  teamScopedPath,
+} from '../setup/contract-api.helper';
 
 function teamPath(suffix: string): string {
   return teamScopedPath(MOCK_REPORTS.teamId, suffix);
@@ -86,16 +71,17 @@ describe('reports wire contract (mock mode = remote contract)', () => {
   });
 
   it('exposes the seasonId and requestedBy list facets (B1)', () => {
-    const params = (contract().paths['/teams/{teamId}/reports']?.get?.parameters ?? []).map(
-      (parameter) => parameter.name,
-    );
+    const params = (
+      readOpenApiContract().paths['/teams/{teamId}/reports']?.get?.parameters ?? []
+    ).map((parameter) => parameter.name);
     expect(params).toContain('seasonId');
     expect(params).toContain('requestedBy');
   });
 
   it('pins the frontend template catalog to the OpenAPI enum', () => {
     const templateEnum =
-      contract().components.schemas['ReportJobResponseDto']?.properties?.['template']?.enum ?? [];
+      readOpenApiContract().components.schemas['ReportJobResponseDto']?.properties?.['template']
+        ?.enum ?? [];
     expect([...templateEnum].toSorted()).toEqual([...REPORT_TEMPLATES].toSorted());
     expect(TEMPLATE_CATALOG.map((entry) => entry.template).toSorted()).toEqual(
       [...REPORT_TEMPLATES].toSorted(),

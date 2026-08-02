@@ -1,3 +1,6 @@
+import { readFileSync } from 'node:fs';
+import { fileURLToPath } from 'node:url';
+
 import { getEnvironment } from '@/packages/environment';
 import { MOCK_CREDENTIALS } from '@/tests/msw/mock-data.constants';
 
@@ -57,4 +60,25 @@ export function authDelete(path: string, token: string): Promise<Response> {
 /** Team-scoped path builder shared by every team-scoped contract test. */
 export function teamScopedPath(teamId: string, suffix: string): string {
   return `/teams/${teamId}${suffix}`;
+}
+
+const CONTRACT_PATH = fileURLToPath(new URL('../../contracts/openapi.json', import.meta.url));
+
+/** Only the slice of the OpenAPI document the contract specs assert against. */
+export interface OpenApiContract {
+  readonly paths: Record<
+    string,
+    { readonly get?: { readonly parameters?: readonly { readonly name: string }[] } }
+  >;
+  readonly components: {
+    readonly schemas: Record<
+      string,
+      { readonly properties?: Record<string, { readonly enum?: readonly string[] }> }
+    >;
+  };
+}
+
+/** Re-reads the committed contract each call, so a spec never asserts on a stale copy. */
+export function readOpenApiContract(): OpenApiContract {
+  return JSON.parse(readFileSync(CONTRACT_PATH, 'utf8')) as OpenApiContract;
 }

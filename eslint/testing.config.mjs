@@ -13,9 +13,10 @@ export const vitestTestConfig = {
   rules: {
     ...vitestPlugin.configs.recommended.rules,
     ...testingLibraryPlugin.configs['flat/react'].rules,
-    // Assertion helpers named expect* wrap expect(); without this the rule
-    // reads the tests that call them as having no assertions at all.
-    'vitest/expect-expect': ['error', { assertFunctionNames: ['expect', 'expect*'] }],
+    // Helpers named expect* wrap expect(), and the contract specs assert with
+    // node:assert. Without naming both, the rule reads the tests that use them
+    // as having no assertions at all.
+    'vitest/expect-expect': ['error', { assertFunctionNames: ['expect', 'expect*', 'assert'] }],
     'vitest/no-focused-tests': 'error',
     'vitest/no-disabled-tests': 'error',
   },

@@ -11,7 +11,7 @@ import {
   transitionAchievementRecord,
 } from './achievements.fixture';
 import { apiUrl, failRequest, isAuthorized, pathParam, readJsonBody } from './mock-request.helper';
-import { permissionsForRequest } from './persona-permissions.helper';
+import { has, queryValue } from './persona-permissions.helper';
 import {
   publishStandingsRule,
   recomputeReport,
@@ -22,14 +22,6 @@ import {
 
 function teamUrl(suffix: string): string {
   return apiUrl(`/teams/:teamId${suffix}`);
-}
-
-function has(request: Request, permission: string): boolean {
-  return permissionsForRequest(request).includes(permission);
-}
-
-function queryValue(request: Request, key: string): string | null {
-  return new URL(request.url).searchParams.get(key);
 }
 
 /**

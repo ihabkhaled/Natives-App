@@ -66,3 +66,13 @@ export function tokensForPersona(user: AuthUser): { accessToken: string; refresh
 }
 
 export { ADMIN_PERSONA };
+
+/** Whether the calling persona holds a permission. */
+export function has(request: Request, permission: string): boolean {
+  return permissionsForRequest(request).includes(permission);
+}
+
+/** A single query-string value, or null when the caller omitted it. */
+export function queryValue(request: Request, key: string): string | null {
+  return new URL(request.url).searchParams.get(key);
+}

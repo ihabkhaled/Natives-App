@@ -1,6 +1,3 @@
-import { readFileSync } from 'node:fs';
-import { fileURLToPath } from 'node:url';
-
 import { assert, describe, expect, it } from 'vitest';
 
 import {
@@ -19,22 +16,14 @@ import { MOCK_ACHIEVEMENTS } from '@/tests/msw/achievements.fixture';
 import { MOCK_PERSONA_EMAILS } from '@/tests/msw/mock-data.constants';
 import { MOCK_STANDINGS } from '@/tests/msw/standings.fixture';
 
-import { apiUrl, authGet, authPost, loginAs, teamScopedPath } from '../setup/contract-api.helper';
-
-const CONTRACT_PATH = fileURLToPath(new URL('../../contracts/openapi.json', import.meta.url));
-
-interface OpenApiContract {
-  readonly components: {
-    readonly schemas: Record<
-      string,
-      { readonly properties?: Record<string, { readonly enum?: readonly string[] }> }
-    >;
-  };
-}
-
-function contract(): OpenApiContract {
-  return JSON.parse(readFileSync(CONTRACT_PATH, 'utf8')) as OpenApiContract;
-}
+import {
+  apiUrl,
+  authGet,
+  authPost,
+  loginAs,
+  readOpenApiContract,
+  teamScopedPath,
+} from '../setup/contract-api.helper';
 
 function teamPath(suffix: string): string {
   return teamScopedPath(MOCK_STANDINGS.teamId, suffix);
@@ -116,7 +105,7 @@ describe('standings wire contract (mock mode = remote contract)', () => {
   });
 
   it('pins the tie-break, category, and status vocabularies to the OpenAPI enums', () => {
-    const schemas = contract().components.schemas;
+    const schemas = readOpenApiContract().components.schemas;
     expect(schemas['StandingsRuleResponseDto']?.properties?.['tieBreakOrder']).toBeDefined();
     const categoryEnum = schemas['AchievementResponseDto']?.properties?.['category']?.enum ?? [];
     const statusEnum = schemas['AchievementResponseDto']?.properties?.['status']?.enum ?? [];
