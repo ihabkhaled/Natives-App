@@ -26,7 +26,13 @@ export interface LandingStaffMember {
 }
 
 export const LANDING_STAFF: readonly LandingStaffMember[] = [
-  { id: 'sherif-ashraf', name: 'Sherif Ashraf', nickname: '3alamy', titles: [STAFF_TITLE.Coach], photoUrl: '/staff/sherif-ashraf.jpg' },
+  {
+    id: 'sherif-ashraf',
+    name: 'Sherif Ashraf',
+    nickname: '3alamy',
+    titles: [STAFF_TITLE.Coach],
+    photoUrl: '/staff/sherif-ashraf.jpg',
+  },
   {
     id: 'khaled-ossama',
     name: 'Khaled Ossama',
@@ -62,7 +68,7 @@ export const LANDING_STAFF: readonly LandingStaffMember[] = [
     id: 'ihab-khaled',
     name: 'Ihab Khaled',
     nickname: 'Hobz',
-    titles: [STAFF_TITLE.Analysis, STAFF_TITLE.Technical, STAFF_TITLE.CoCoach],
-    photoUrl: null,
+    titles: [STAFF_TITLE.Analysis, STAFF_TITLE.Technical],
+    photoUrl: '/staff/ihab-khaled.jpg',
   },
 ] as const;

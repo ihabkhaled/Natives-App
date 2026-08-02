@@ -24,17 +24,23 @@ export function LandingStaffDirectory(props: LandingStaffDirectoryProps): React.
             className="app-landing-staff-card"
             data-testid={`${TEST_IDS.landingStaffCard}-${member.id}`}
           >
-            {member.photoUrl === null ? (
+            {/*
+              The portrait is layered OVER the initials as a background rather
+              than rendered as an <img>. A portrait that has not been supplied
+              yet simply does not paint, and the initials show through — where
+              an <img> would leave a broken-image icon on a public page.
+            */}
+            <div className="app-landing-staff-card__avatar">
               <AvatarFallback name={member.name} label={member.avatarLabel} size="lg" />
-            ) : (
-              <img
-                src={member.photoUrl}
-                alt={member.avatarLabel}
-                className="app-landing-staff-card__photo"
-                loading="lazy"
-                decoding="async"
-              />
-            )}
+              {member.photoUrl === null ? null : (
+                <span
+                  role="img"
+                  aria-label={member.avatarLabel}
+                  className="app-landing-staff-card__photo"
+                  style={{ backgroundImage: `url("${member.photoUrl}")` }}
+                />
+              )}
+            </div>
             <IonText>
               <h3 className="m-0 text-base font-bold">{member.name}</h3>
             </IonText>

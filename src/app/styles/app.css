@@ -6024,16 +6024,27 @@ ion-spinner {
   grid-template-columns: minmax(0, 1fr);
 }
 
-/* Season-Board portrait. The source graphics are 4:5 with the subject in the
-   upper half, so the crop is anchored to the top — centring it decapitates
-   everyone. */
-.app-landing-staff-card__photo {
+/* Season-Board portrait, layered over the initials avatar. The source graphics
+   are 4:5 with the subject in the upper half, so the crop is anchored to the
+   top — centring it decapitates everyone. A portrait that has not been supplied
+   yet simply does not paint, leaving the initials visible underneath. */
+.app-landing-staff-card__avatar {
+  position: relative;
   inline-size: 100%;
   aspect-ratio: 4 / 5;
-  object-fit: cover;
-  object-position: center top;
+  display: grid;
+  place-items: center;
   border-radius: var(--un-radius-md);
+  overflow: hidden;
   background: color-mix(in srgb, var(--app-ink) 8%, transparent);
+}
+
+.app-landing-staff-card__photo {
+  position: absolute;
+  inset: 0;
+  background-position: center top;
+  background-size: cover;
+  background-repeat: no-repeat;
 }
 
 .app-landing-staff-card,
