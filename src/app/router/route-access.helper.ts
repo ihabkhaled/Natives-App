@@ -14,6 +14,12 @@ export interface RouteAccessInput {
   readonly isProfileErrored: boolean;
   readonly featureEnabled: boolean;
   readonly accountActive: boolean;
+  /**
+   * The account exists but is waiting for an administrator to approve it
+   * (self-signup). Distinct from `!accountActive` on purpose: "not approved
+   * yet" and "blocked" are different facts and get different screens.
+   */
+  readonly accountPending: boolean;
   readonly onboardingComplete: boolean;
   readonly requiresTeamContext: boolean;
   readonly hasTeamContext: boolean;
@@ -41,6 +47,7 @@ const ACCESS_RULES: readonly AccessRule[] = [
   { when: (i) => i.isProfileErrored, status: GUARD_STATUS.RedirectLogin },
   { when: (i) => !i.isProfileReady, status: GUARD_STATUS.Loading },
   { when: (i) => !i.featureEnabled, status: GUARD_STATUS.RedirectHome },
+  { when: (i) => i.accountPending, status: GUARD_STATUS.AccountPending },
   { when: (i) => !i.accountActive, status: GUARD_STATUS.AccountBlocked },
   { when: (i) => !i.onboardingComplete, status: GUARD_STATUS.Onboarding },
   { when: (i) => i.requiresTeamContext && !i.hasTeamContext, status: GUARD_STATUS.NoTeam },

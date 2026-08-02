@@ -23,6 +23,7 @@ export const APP_PATHS = {
   newsManage: '/news/manage',
   newsArticle: '/news/:slug',
   login: '/login',
+  signup: '/signup',
   forgotPassword: '/forgot-password',
   resetPassword: '/reset-password',
   acceptInvitation: '/accept-invitation',

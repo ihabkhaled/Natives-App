@@ -23,6 +23,7 @@ const LABELS: LoginScreenLabels = {
   submit: 'Sign in',
   submitting: 'Signing in…',
   forgotPassword: 'Forgot your password?',
+  signUp: 'Create an account',
 };
 
 function buildBinding(name: string, overrides: Partial<FormFieldBinding> = {}): FormFieldBinding {

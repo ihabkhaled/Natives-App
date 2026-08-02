@@ -32,6 +32,13 @@ export function LoginView(props: LoginViewProps): React.JSX.Element {
             onClick={props.onForgotPassword}
             testId={TEST_IDS.loginForgotPasswordLink}
           />
+          <AppButton
+            label={props.labels.signUp}
+            tone="ghost"
+            expand
+            onClick={props.onSignUp}
+            testId={TEST_IDS.loginSignupLink}
+          />
         </section>
       </main>
     </PageShell>

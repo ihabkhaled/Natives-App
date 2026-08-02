@@ -47,6 +47,7 @@ import { reportsHandlers } from './reports-handlers';
 import { resetMockReportsState } from './reports.fixture';
 import { rostersHandlers } from './rosters-handlers';
 import { resetMockRostersState } from './rosters.fixture';
+import { resetMockSignupState, signupHandlers } from './signup-handlers';
 import { resetMockSquadsState } from './squads.fixture';
 import { standingsHandlers } from './standings-handlers';
 import { resetMockStandingsState } from './standings.fixture';
@@ -59,27 +60,35 @@ import { teamsHandlers } from './teams-handlers';
 import { trainingHandlers } from './training-handlers';
 import { resetMockTrainingState } from './training.fixture';
 
+/** Every per-domain mock reset, run as one batch between scenarios. */
+const MOCK_STATE_RESETTERS: readonly (() => void)[] = [
+  forgetIssuedTokens,
+  resetMockSignupState,
+  resetMockRecoveryState,
+  resetMockPracticeState,
+  resetMockAttendanceState,
+  resetMockAttendanceSelfState,
+  resetMockMembersState,
+  resetMockAssessmentsState,
+  resetMockTrainingState,
+  resetMockSquadsState,
+  resetMockRostersState,
+  resetMockTryoutsState,
+  resetMockNotificationsState,
+  resetMockAdminState,
+  resetMockAdminSettings,
+  resetMockOperationsState,
+  resetMockPlatformAdminsState,
+  resetMockMatchesState,
+  resetMockStandingsState,
+  resetMockAchievementsState,
+  resetMockReportsState,
+];
+
 export function resetMockAuthState(): void {
-  forgetIssuedTokens();
-  resetMockRecoveryState();
-  resetMockPracticeState();
-  resetMockAttendanceState();
-  resetMockAttendanceSelfState();
-  resetMockMembersState();
-  resetMockAssessmentsState();
-  resetMockTrainingState();
-  resetMockSquadsState();
-  resetMockRostersState();
-  resetMockTryoutsState();
-  resetMockNotificationsState();
-  resetMockAdminState();
-  resetMockAdminSettings();
-  resetMockOperationsState();
-  resetMockPlatformAdminsState();
-  resetMockMatchesState();
-  resetMockStandingsState();
-  resetMockAchievementsState();
-  resetMockReportsState();
+  for (const reset of MOCK_STATE_RESETTERS) {
+    reset();
+  }
 }
 
 function apiUrl(path: string): string {
@@ -249,4 +258,5 @@ export const mockApiHandlers = [
   ...teamDirectoryHandlers,
   ...recoveryHandlers,
   ...contactHandlers,
+  ...signupHandlers,
 ];

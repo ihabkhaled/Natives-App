@@ -1,13 +1,14 @@
 import { APP_ICONS } from '@/packages/icons';
 import { IonIcon } from '@/packages/ionic';
 import { TEST_IDS } from '@/shared/config';
-import { AppButton, BrandLogo } from '@/shared/ui';
+import { BrandLogo } from '@/shared/ui';
 
+import { PublicNavAuthActions } from '../public-nav-auth-actions';
 import type { PublicNavProps } from './public-nav.types';
 
 /**
  * The signed-out marketing navbar: brand mark, primary links, language and
- * theme switches, and a sign-in call to action. A horizontal bar on desktop;
+ * theme switches, and the sign-in / sign-up pair. A horizontal bar on desktop;
  * on compact viewports the links collapse behind a hamburger that opens a
  * drawer carrying the same destinations and switches (CSS reshapes one
  * markup tree instead of duplicating it, except for the drawer overlay which
@@ -69,11 +70,11 @@ export function PublicNav(props: PublicNavProps): React.JSX.Element | null {
           <IonIcon icon={props.isDark ? APP_ICONS.sun : APP_ICONS.moon} aria-hidden="true" />
         </button>
         <span className="app-public-nav__sign-in">
-          <AppButton
-            label={props.signInLabel}
-            tone="primary"
-            onClick={props.onSignIn}
-            testId={TEST_IDS.publicNavSignIn}
+          <PublicNavAuthActions
+            signInLabel={props.signInLabel}
+            onSignIn={props.onSignIn}
+            signUpLabel={props.signUpLabel}
+            onSignUp={props.onSignUp}
           />
         </span>
         <button
@@ -112,12 +113,12 @@ export function PublicNav(props: PublicNavProps): React.JSX.Element | null {
               </button>
             ))}
           </nav>
-          <AppButton
-            label={props.signInLabel}
-            tone="primary"
-            expand
-            onClick={props.onSignIn}
-            testId={TEST_IDS.publicNavSignInDrawer}
+          <PublicNavAuthActions
+            signInLabel={props.signInLabel}
+            onSignIn={props.onSignIn}
+            signUpLabel={props.signUpLabel}
+            onSignUp={props.onSignUp}
+            inDrawer
           />
         </div>
       ) : null}

@@ -36,6 +36,7 @@ function mockEffectivePermissions(overrides: Partial<EffectivePermissionsView> =
   vi.mocked(useEffectivePermissions).mockReturnValue({
     permissions: ['practice.read'],
     accountActive: true,
+    accountPending: false,
     onboardingComplete: true,
     hasTeamContext: true,
     isLoading: false,

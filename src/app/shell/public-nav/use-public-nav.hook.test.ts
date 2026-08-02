@@ -160,4 +160,15 @@ describe('usePublicNav', () => {
 
     expect(pushSpy).toHaveBeenCalledExactlyOnceWith(APP_PATHS.login);
   });
+
+  it('routes the sign-up call to action to the public signup screen', () => {
+    const { result } = renderHook(() => usePublicNav());
+
+    act(() => {
+      result.current.onSignUp();
+    });
+
+    expect(pushSpy).toHaveBeenCalledExactlyOnceWith(APP_PATHS.signup);
+    expect(result.current.signUpLabel).toBe('Create an account');
+  });
 });

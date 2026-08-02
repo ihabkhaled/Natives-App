@@ -23,6 +23,7 @@ import { PUBLIC_COMPETITIONS_I18N_KEYS } from './public-competitions-keys.consta
 import { PUBLIC_FOOTER_I18N_KEYS, PUBLIC_NAV_I18N_KEYS } from './public-keys.constants';
 import { REPORTS_I18N_KEYS } from './reports-keys.constants';
 import { ROSTERS_I18N_KEYS } from './rosters-keys.constants';
+import { SIGNUP_I18N_KEYS } from './signup-keys.constants';
 import { SQUADS_I18N_KEYS } from './squads-keys.constants';
 import { STANDINGS_I18N_KEYS } from './standings-keys.constants';
 import { TEAM_DIRECTORY_I18N_KEYS } from './team-directory-keys.constants';
@@ -156,6 +157,8 @@ export const I18N_KEYS = {
     invitationInvalidTitle: 'auth.invitationInvalidTitle',
     invitationInvalidMessage: 'auth.invitationInvalidMessage',
   },
+  /** Public self-signup: request an account, then wait for admin approval. */
+  signup: SIGNUP_I18N_KEYS,
   sessions: {
     title: 'sessions.title',
     intro: 'sessions.intro',
@@ -302,6 +305,8 @@ export const I18N_KEYS = {
     onboardingMessage: 'guard.onboardingMessage',
     accountBlockedTitle: 'guard.accountBlockedTitle',
     accountBlockedMessage: 'guard.accountBlockedMessage',
+    accountPendingTitle: 'guard.accountPendingTitle',
+    accountPendingMessage: 'guard.accountPendingMessage',
     teamRequiredTitle: 'guard.teamRequiredTitle',
     teamRequiredMessage: 'guard.teamRequiredMessage',
   },

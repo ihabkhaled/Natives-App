@@ -8,6 +8,8 @@ import { useSession } from './use-session.hook';
 export interface EffectivePermissionsView {
   readonly permissions: readonly string[];
   readonly accountActive: boolean;
+  /** Signed up, not yet approved: the account exists but cannot act yet. */
+  readonly accountPending: boolean;
   readonly onboardingComplete: boolean;
   readonly hasTeamContext: boolean;
   readonly isLoading: boolean;
@@ -21,6 +23,7 @@ function contextFromUser(user: AuthUser | undefined): EffectiveAuthContext {
     return {
       permissions: [],
       accountActive: false,
+      accountPending: false,
       onboardingComplete: false,
       hasTeamContext: false,
     };
@@ -28,6 +31,7 @@ function contextFromUser(user: AuthUser | undefined): EffectiveAuthContext {
   return {
     permissions: user.permissions,
     accountActive: user.accountState === ACCOUNT_STATE.Active,
+    accountPending: user.accountState === ACCOUNT_STATE.Pending,
     onboardingComplete: user.onboardingComplete,
     hasTeamContext: user.memberships.length > 0,
   };

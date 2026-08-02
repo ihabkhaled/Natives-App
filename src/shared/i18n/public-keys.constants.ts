@@ -13,6 +13,7 @@ export const PUBLIC_NAV_I18N_KEYS = {
   tryouts: 'publicNav.tryouts',
   contact: 'publicNav.contact',
   signIn: 'publicNav.signIn',
+  signUp: 'publicNav.signUp',
   switchToDark: 'publicNav.switchToDark',
   switchToLight: 'publicNav.switchToLight',
   switchToArabic: 'publicNav.switchToArabic',

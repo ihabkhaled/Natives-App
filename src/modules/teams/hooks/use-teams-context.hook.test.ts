@@ -25,6 +25,7 @@ function mock(permissions: readonly string[], overrides: { isOnline?: boolean } 
   vi.mocked(useEffectivePermissions).mockReturnValue({
     permissions,
     accountActive: true,
+    accountPending: false,
     onboardingComplete: true,
     hasTeamContext: true,
     isLoading: false,

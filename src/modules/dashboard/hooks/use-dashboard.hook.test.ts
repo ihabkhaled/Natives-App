@@ -68,6 +68,7 @@ function mockPermissions(overrides: Partial<EffectivePermissionsView> = {}): voi
   vi.mocked(useEffectivePermissions).mockReturnValue({
     permissions: MEMBER_PERMISSIONS,
     accountActive: true,
+    accountPending: false,
     onboardingComplete: true,
     hasTeamContext: true,
     isLoading: false,

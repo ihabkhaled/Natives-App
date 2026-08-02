@@ -122,4 +122,24 @@ describe('PublicNav', () => {
     await userEvent.click(screen.getByTestId(TEST_IDS.publicNavSignInDrawer));
     expect(onSignIn).toHaveBeenCalledOnce();
   });
+
+  it('offers self-signup as its own call to action in the bar', async () => {
+    const onSignUp = vi.fn();
+    render(<PublicNav {...view({ onSignUp })} />);
+
+    const signUp = screen.getByTestId(TEST_IDS.publicNavSignUp);
+    expect(signUp).toHaveTextContent('Create an account');
+    await userEvent.click(signUp);
+
+    expect(onSignUp).toHaveBeenCalledOnce();
+  });
+
+  it('carries the sign-up action into the drawer', async () => {
+    const onSignUp = vi.fn();
+    render(<PublicNav {...view({ isMenuOpen: true, onSignUp })} />);
+
+    await userEvent.click(screen.getByTestId(TEST_IDS.publicNavSignUpDrawer));
+
+    expect(onSignUp).toHaveBeenCalledOnce();
+  });
 });

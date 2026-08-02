@@ -14,6 +14,7 @@ describe('getAppRouteDefinitions', () => {
   it('aggregates every module route table', () => {
     expect(paths()).toEqual([
       APP_PATHS.login,
+      APP_PATHS.signup,
       APP_PATHS.forgotPassword,
       APP_PATHS.resetPassword,
       APP_PATHS.acceptInvitation,

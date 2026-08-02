@@ -69,6 +69,7 @@ beforeEach(() => {
   vi.mocked(useEffectivePermissions).mockReturnValue({
     permissions: [PERMISSIONS.practicesRead, PERMISSIONS.practicesRsvpSelf],
     accountActive: true,
+    accountPending: false,
     onboardingComplete: true,
     hasTeamContext: true,
     isLoading: false,
@@ -115,6 +116,7 @@ describe('usePracticeSessionDetails', () => {
     vi.mocked(useEffectivePermissions).mockReturnValue({
       permissions: [PERMISSIONS.practicesRead, PERMISSIONS.attendanceMark],
       accountActive: true,
+      accountPending: false,
       onboardingComplete: true,
       hasTeamContext: true,
       isLoading: false,

@@ -70,6 +70,7 @@ describe('APP_DEEP_LINK_POLICY', () => {
       '/rosters/:rosterId',
       '/sessions',
       '/settings',
+      '/signup',
       '/squads',
       '/squads/:squadId',
       '/standings',

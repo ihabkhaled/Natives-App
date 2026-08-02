@@ -6,12 +6,14 @@ import { ForgotPasswordContainer } from '../containers/forgot-password.container
 import { LoginContainer } from '../containers/login.container';
 import { ResetPasswordContainer } from '../containers/reset-password.container';
 import { SessionsContainer } from '../containers/sessions.container';
+import { SignupContainer } from '../containers/signup.container';
 import {
   acceptInvitationPath,
   forgotPasswordPath,
   loginPath,
   resetPasswordPath,
   sessionsPath,
+  signupPath,
 } from './auth.paths';
 
 export function getAuthRouteDefinitions(): readonly AppRouteDefinition[] {
@@ -21,6 +23,12 @@ export function getAuthRouteDefinitions(): readonly AppRouteDefinition[] {
       exact: true,
       access: ROUTE_ACCESS.PublicOnly,
       component: LoginContainer,
+    },
+    {
+      path: signupPath(),
+      exact: true,
+      access: ROUTE_ACCESS.PublicOnly,
+      component: SignupContainer,
     },
     {
       path: forgotPasswordPath(),

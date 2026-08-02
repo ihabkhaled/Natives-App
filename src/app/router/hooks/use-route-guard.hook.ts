@@ -27,6 +27,7 @@ export function useRouteGuard(definition: AppRouteDefinition): GuardInstruction 
     isProfileErrored: effective.isError,
     featureEnabled: meta.featureEnabled,
     accountActive: effective.accountActive,
+    accountPending: effective.accountPending,
     onboardingComplete: effective.onboardingComplete,
     requiresTeamContext: meta.requiresTeamContext,
     hasTeamContext: effective.hasTeamContext,

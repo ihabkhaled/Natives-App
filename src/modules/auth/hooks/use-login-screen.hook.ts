@@ -4,7 +4,7 @@ import { I18N_KEYS } from '@/shared/i18n';
 import { mapErrorCodeToI18nKey } from '@/shared/mappers';
 
 import { useLoginMutation } from '../mutations/use-login-mutation.hook';
-import { forgotPasswordPath } from '../routes/auth.paths';
+import { forgotPasswordPath, signupPath } from '../routes/auth.paths';
 import { useLoginForm, type LoginFormView } from './use-login-form.hook';
 
 export interface LoginScreenLabels {
@@ -19,6 +19,7 @@ export interface LoginScreenLabels {
   readonly submit: string;
   readonly submitting: string;
   readonly forgotPassword: string;
+  readonly signUp: string;
 }
 
 export interface LoginScreenView {
@@ -27,6 +28,7 @@ export interface LoginScreenView {
   readonly isSubmitting: boolean;
   readonly submitErrorMessage: string | undefined;
   readonly onForgotPassword: () => void;
+  readonly onSignUp: () => void;
 }
 
 /** Everything the login container renders, prepared and translated. */
@@ -53,6 +55,7 @@ export function useLoginScreen(): LoginScreenView {
       submit: t(I18N_KEYS.auth.submit),
       submitting: t(I18N_KEYS.auth.submitting),
       forgotPassword: t(I18N_KEYS.auth.forgotPasswordLink),
+      signUp: t(I18N_KEYS.signup.cta),
     },
     form,
     isSubmitting: loginMutation.isSubmitting,
@@ -60,6 +63,9 @@ export function useLoginScreen(): LoginScreenView {
       loginMutation.error === null ? undefined : t(mapErrorCodeToI18nKey(loginMutation.error.code)),
     onForgotPassword: () => {
       navigation.push(forgotPasswordPath());
+    },
+    onSignUp: () => {
+      navigation.push(signupPath());
     },
   };
 }

@@ -6,6 +6,7 @@ describe('AUTH_API_PATHS', () => {
   it('pins every static auth endpoint to its versioned-base-relative path', () => {
     expect(AUTH_API_PATHS).toEqual({
       login: '/auth/login',
+      signup: '/auth/signup',
       refresh: '/auth/refresh',
       logout: '/auth/logout',
       currentUser: '/auth/me',

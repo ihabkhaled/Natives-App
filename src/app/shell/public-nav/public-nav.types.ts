@@ -18,6 +18,8 @@ export interface PublicNavView {
   readonly onNavigate: (path: string) => void;
   readonly signInLabel: string;
   readonly onSignIn: () => void;
+  readonly signUpLabel: string;
+  readonly onSignUp: () => void;
   readonly isDark: boolean;
   readonly themeToggleLabel: string;
   readonly onToggleTheme: () => void;

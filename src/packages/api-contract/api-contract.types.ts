@@ -10,6 +10,8 @@ export type CurrentUserResponseContract = BackendApiSchemas['AuthUserDto'];
 export type RefreshRequestContract = BackendApiSchemas['RefreshDto'];
 export type RefreshResponseContract = BackendApiSchemas['AuthSessionResponseDto'];
 export type LogoutRequestContract = BackendApiSchemas['LogoutDto'];
+export type SignupRequestContract = BackendApiSchemas['SignupRequestDto'];
+export type SignupAcknowledgementContract = BackendApiSchemas['SignupAcknowledgementResponseDto'];
 export type MessageResponseContract = BackendApiSchemas['MessageResponseDto'];
 /** Public contact relay (`POST /contact`), added by contract 1.7.0. */
 export type ContactRequestContract = BackendApiSchemas['ContactRequestDto'];

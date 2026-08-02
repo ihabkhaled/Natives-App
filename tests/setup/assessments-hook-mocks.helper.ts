@@ -3,6 +3,7 @@ import type { AssessmentsTeamContextView } from '@/modules/assessments/hooks/use
 interface PermissionsStub {
   readonly permissions: readonly string[];
   readonly accountActive: boolean;
+  readonly accountPending: boolean;
   readonly onboardingComplete: boolean;
   readonly hasTeamContext: boolean;
   readonly isLoading: boolean;
@@ -14,6 +15,7 @@ export function stubPermissions(permissions: readonly string[]): PermissionsStub
   return {
     permissions,
     accountActive: true,
+    accountPending: false,
     onboardingComplete: true,
     hasTeamContext: true,
     isLoading: false,
