@@ -1,32 +1,16 @@
+import { wireRealHttpClient } from '../setup/real-http-client.helper';
 import { beforeEach, describe, expect, it } from 'vitest';
 
-import { createRefreshExecutor, getAuthTokenRepository, handleAuthFailure } from '@/modules/auth';
+import { getAuthTokenRepository } from '@/modules/auth';
 import { submitSignup } from '@/modules/auth/services/signup.service';
 import { ACCOUNT_STATE } from '@/modules/auth/types/auth.types';
 import type { SignupFormValues } from '@/modules/auth/types/signup.types';
-import { getEnvironment } from '@/packages/environment';
-import {
-  configureAppHttpClient,
-  createHttpClient,
-  resetAppHttpClientForTesting,
-} from '@/packages/http';
+import { resetAppHttpClientForTesting } from '@/packages/http';
 import { APP_ERROR_CODE } from '@/shared/errors';
 import { MOCK_SIGNUP, MOCK_STRONG_PASSWORD } from '@/tests/msw/mock-data.constants';
 import { resetMockAuthState } from '@/tests/msw/handlers';
 
 import { catchAppError } from '../setup/expect-app-error.helper';
-
-function wireRealHttpClient(): void {
-  const environment = getEnvironment();
-  configureAppHttpClient(
-    createHttpClient({
-      config: { baseUrl: environment.apiBaseUrl, timeoutMs: 2000 },
-      tokenStore: getAuthTokenRepository(),
-      refreshExecutor: createRefreshExecutor(),
-      onAuthFailure: handleAuthFailure,
-    }),
-  );
-}
 
 function request(overrides: Partial<SignupFormValues> = {}): SignupFormValues {
   return {

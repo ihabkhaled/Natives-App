@@ -1,7 +1,6 @@
-import { QueryClientProvider } from '@tanstack/react-query';
+import { renderRoute } from '../setup/render-with-providers.helper';
 import { http, HttpResponse } from 'msw';
-import { fireEvent, render, screen, waitFor, within } from '@testing-library/react';
-import { MemoryRouter, Route } from 'react-router-dom';
+import { fireEvent, screen, waitFor, within } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
 import { TrainingDetailContainer } from '@/modules/training/containers/training-detail.container';
@@ -19,30 +18,19 @@ import {
 } from '../setup/integration-session.helper';
 import { fireIonChange, fireIonInput } from '../setup/ionic-events.helper';
 import { mockApiServer } from '../setup/msw-server.setup';
-import { createTestQueryClient } from '../setup/render-with-providers.helper';
 
 const WAIT = { timeout: 5000 };
 
-function renderAt(path: string, pattern: string, screenNode: React.JSX.Element): void {
-  render(
-    <QueryClientProvider client={createTestQueryClient()}>
-      <MemoryRouter initialEntries={[path]}>
-        <Route path={pattern}>{screenNode}</Route>
-      </MemoryRouter>
-    </QueryClientProvider>,
-  );
-}
-
 function renderWorkspace(): void {
-  renderAt('/training', '/training', <TrainingContainer />);
+  renderRoute('/training', '/training', <TrainingContainer />);
 }
 
 function renderDetail(submissionId: string): void {
-  renderAt(`/training/${submissionId}`, '/training/:submissionId', <TrainingDetailContainer />);
+  renderRoute(`/training/${submissionId}`, '/training/:submissionId', <TrainingDetailContainer />);
 }
 
 function renderReview(): void {
-  renderAt('/training-review', '/training-review', <TrainingReviewContainer />);
+  renderRoute('/training-review', '/training-review', <TrainingReviewContainer />);
 }
 
 /** Fill the composer with a valid gym claim and wait for save to unlock. */
@@ -443,7 +431,7 @@ describe('buddy confirmations inside the training workspace', () => {
 describe('external training detail without a submission id', () => {
   it('waits rather than requesting a claim that was never identified', async () => {
     await signInAs(MOCK_PERSONA_EMAILS.member);
-    renderAt('/training', '/training', <TrainingDetailContainer />);
+    renderRoute('/training', '/training', <TrainingDetailContainer />);
 
     await screen.findByTestId(TEST_IDS.trainingLoading, {}, WAIT);
     expect(screen.queryByTestId(TEST_IDS.trainingHistoryList)).not.toBeInTheDocument();

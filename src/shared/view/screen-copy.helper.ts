@@ -1,3 +1,4 @@
+import { I18N_KEYS } from '../i18n';
 import type { AppError } from '../errors/app.errors';
 import { mapErrorCodeToI18nKey } from '../mappers';
 import type { AsyncViewStatus } from '../ui';
@@ -16,6 +17,20 @@ export interface ScreenCopyKeys {
   readonly forbiddenTitle: string;
   readonly forbiddenMessage: string;
 }
+
+/**
+ * The seven keys that are the same on every screen. Only `loadingLabel` is
+ * genuinely per-feature, so callers spread this and supply that one key.
+ */
+export const SHARED_SCREEN_COPY_KEYS = {
+  errorTitle: I18N_KEYS.states.errorTitle,
+  errorMessage: I18N_KEYS.errors.unexpected,
+  retry: I18N_KEYS.common.retry,
+  offlineTitle: I18N_KEYS.states.offlineTitle,
+  offlineMessage: I18N_KEYS.states.offlineMessage,
+  forbiddenTitle: I18N_KEYS.states.permissionTitle,
+  forbiddenMessage: I18N_KEYS.states.permissionMessage,
+} as const satisfies Omit<ScreenCopyKeys, 'loadingLabel'>;
 
 /** The async + guard + empty copy block every screen renders. */
 export interface ScreenCopy extends AsyncViewCopy {

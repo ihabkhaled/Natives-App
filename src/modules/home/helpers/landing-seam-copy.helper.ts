@@ -1,3 +1,4 @@
+import { SHARED_SCREEN_COPY_KEYS } from '@/shared/view';
 import type { AsyncViewStatus } from '@/shared/ui';
 import { I18N_KEYS } from '@/shared/i18n';
 import { buildScreenCopy, resolveAsyncViewStatus, type ScreenCopy } from '@/shared/view';
@@ -14,13 +15,7 @@ type Translate = (key: string) => string;
  */
 const LANDING_SEAM_COPY_KEYS = {
   loadingLabel: I18N_KEYS.common.loading,
-  errorTitle: I18N_KEYS.states.errorTitle,
-  errorMessage: I18N_KEYS.errors.unexpected,
-  retry: I18N_KEYS.common.retry,
-  offlineTitle: I18N_KEYS.states.offlineTitle,
-  offlineMessage: I18N_KEYS.states.offlineMessage,
-  forbiddenTitle: I18N_KEYS.states.permissionTitle,
-  forbiddenMessage: I18N_KEYS.states.permissionMessage,
+  ...SHARED_SCREEN_COPY_KEYS,
 } as const;
 
 export interface LandingSeamChrome extends ScreenCopy {

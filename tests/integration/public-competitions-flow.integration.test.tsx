@@ -1,6 +1,5 @@
-import { QueryClientProvider } from '@tanstack/react-query';
-import { fireEvent, render, screen, waitFor, within } from '@testing-library/react';
-import { MemoryRouter, Route } from 'react-router-dom';
+import { renderRoute } from '../setup/render-with-providers.helper';
+import { fireEvent, screen, waitFor, within } from '@testing-library/react';
 import { beforeEach, describe, expect, it } from 'vitest';
 
 import { PublicCompetitionDetailContainer } from '@/modules/public-competitions/containers/public-competition-detail.container';
@@ -8,19 +7,8 @@ import { PublicCompetitionsContainer } from '@/modules/public-competitions/conta
 import { TEST_IDS } from '@/shared/config';
 
 import { initTestI18n } from '../setup/i18n-test.helper';
-import { createTestQueryClient } from '../setup/render-with-providers.helper';
 
 const WAIT = { timeout: 5000 };
-
-function renderAt(path: string, pattern: string, screenNode: React.JSX.Element): void {
-  render(
-    <QueryClientProvider client={createTestQueryClient()}>
-      <MemoryRouter initialEntries={[path]}>
-        <Route path={pattern}>{screenNode}</Route>
-      </MemoryRouter>
-    </QueryClientProvider>,
-  );
-}
 
 beforeEach(async () => {
   await initTestI18n();
@@ -35,7 +23,7 @@ beforeEach(async () => {
  */
 describe('public competitions showcase (real query client + MSW, no network)', () => {
   it('moves from skeleton to the seeded competitions without one request', async () => {
-    renderAt('/results', '/results', <PublicCompetitionsContainer />);
+    renderRoute('/results', '/results', <PublicCompetitionsContainer />);
 
     expect(screen.getByTestId(TEST_IDS.publicCompetitionsLoading)).toBeInTheDocument();
 
@@ -47,7 +35,7 @@ describe('public competitions showcase (real query client + MSW, no network)', (
   });
 
   it('says results are pending for every competition rather than inventing a rank', async () => {
-    renderAt('/results', '/results', <PublicCompetitionsContainer />);
+    renderRoute('/results', '/results', <PublicCompetitionsContainer />);
 
     await screen.findByTestId(TEST_IDS.publicCompetitionsList, {}, WAIT);
     const finishes = screen.getAllByTestId(TEST_IDS.publicCompetitionFinish);
@@ -58,14 +46,14 @@ describe('public competitions showcase (real query client + MSW, no network)', (
   });
 
   it('tells visitors outright that the live results feed is not connected yet', async () => {
-    renderAt('/results', '/results', <PublicCompetitionsContainer />);
+    renderRoute('/results', '/results', <PublicCompetitionsContainer />);
 
     const notice = await screen.findByTestId(TEST_IDS.publicCompetitionsSeamNotice, {}, WAIT);
     expect(notice).toHaveTextContent('Live results are not connected yet');
   });
 
   it('opens one competition and shows both result blocks as designed empties', async () => {
-    renderAt(
+    renderRoute(
       '/results/eunc-2026',
       '/results/:competitionSlug',
       <PublicCompetitionDetailContainer />,
@@ -80,7 +68,7 @@ describe('public competitions showcase (real query client + MSW, no network)', (
   });
 
   it('lands an unknown competition on the designed not-found state', async () => {
-    renderAt(
+    renderRoute(
       '/results/worlds-1998',
       '/results/:competitionSlug',
       <PublicCompetitionDetailContainer />,
@@ -91,14 +79,14 @@ describe('public competitions showcase (real query client + MSW, no network)', (
   });
 
   it('publishes a canonical link and description per public route', async () => {
-    renderAt('/results', '/results', <PublicCompetitionsContainer />);
+    renderRoute('/results', '/results', <PublicCompetitionsContainer />);
 
     await screen.findByTestId(TEST_IDS.publicCompetitionsList, {}, WAIT);
     expect(document.title).toBe('Competitions & Results — Ultimate Natives');
   });
 
   it('returns to the list from a competition page', async () => {
-    renderAt(
+    renderRoute(
       '/results/eudl-2026',
       '/results/:competitionSlug',
       <PublicCompetitionDetailContainer />,

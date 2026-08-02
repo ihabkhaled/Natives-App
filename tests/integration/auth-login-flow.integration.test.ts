@@ -1,10 +1,9 @@
+import { wireRealHttpClient } from '../setup/real-http-client.helper';
 import { beforeEach, describe, expect, it } from 'vitest';
 
 import {
   bootstrapSessionFromStoredTokens,
-  createRefreshExecutor,
   getAuthTokenRepository,
-  handleAuthFailure,
   SESSION_STATUS,
 } from '@/modules/auth';
 import { loginUser } from '@/modules/auth/services/login.service';
@@ -12,28 +11,12 @@ import { logoutUser } from '@/modules/auth/services/logout.service';
 import { getCurrentUser } from '@/modules/auth/services/get-current-user.service';
 import { useSessionStore } from '@/modules/auth/store/session.store';
 import { getEnvironment } from '@/packages/environment';
-import {
-  configureAppHttpClient,
-  createHttpClient,
-  resetAppHttpClientForTesting,
-} from '@/packages/http';
+import { resetAppHttpClientForTesting } from '@/packages/http';
 import { APP_ERROR_CODE, type AppError } from '@/shared/errors';
 import { MOCK_CREDENTIALS, MOCK_SCENARIO_EMAILS } from '@/tests/msw/mock-data.constants';
 import { http, HttpResponse } from 'msw';
 
 import { mockApiServer } from '../setup/msw-server.setup';
-
-function wireRealHttpClient(timeoutMs = 2000): void {
-  const environment = getEnvironment();
-  configureAppHttpClient(
-    createHttpClient({
-      config: { baseUrl: environment.apiBaseUrl, timeoutMs },
-      tokenStore: getAuthTokenRepository(),
-      refreshExecutor: createRefreshExecutor(),
-      onAuthFailure: handleAuthFailure,
-    }),
-  );
-}
 
 describe('auth login flow (real client + MSW)', () => {
   beforeEach(async () => {

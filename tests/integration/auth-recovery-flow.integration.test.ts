@@ -1,6 +1,7 @@
+import { wireRealHttpClient } from '../setup/real-http-client.helper';
 import { beforeEach, describe, expect, it } from 'vitest';
 
-import { createRefreshExecutor, getAuthTokenRepository, handleAuthFailure } from '@/modules/auth';
+import { getAuthTokenRepository } from '@/modules/auth';
 import { acceptInvitation } from '@/modules/auth/services/accept-invitation.service';
 import { getInvitation } from '@/modules/auth/services/get-invitation.service';
 import { listSessions } from '@/modules/auth/services/list-sessions.service';
@@ -8,12 +9,7 @@ import { requestPasswordResetLink } from '@/modules/auth/services/request-passwo
 import { resetPassword } from '@/modules/auth/services/reset-password.service';
 import { revokeOtherSessions } from '@/modules/auth/services/revoke-other-sessions.service';
 import { revokeSession } from '@/modules/auth/services/revoke-session.service';
-import { getEnvironment } from '@/packages/environment';
-import {
-  configureAppHttpClient,
-  createHttpClient,
-  resetAppHttpClientForTesting,
-} from '@/packages/http';
+import { resetAppHttpClientForTesting } from '@/packages/http';
 import { APP_ERROR_CODE } from '@/shared/errors';
 import {
   MOCK_INVITATION,
@@ -23,18 +19,6 @@ import {
 } from '@/tests/msw/mock-data.constants';
 
 import { catchAppError } from '../setup/expect-app-error.helper';
-
-function wireRealHttpClient(): void {
-  const environment = getEnvironment();
-  configureAppHttpClient(
-    createHttpClient({
-      config: { baseUrl: environment.apiBaseUrl, timeoutMs: 2000 },
-      tokenStore: getAuthTokenRepository(),
-      refreshExecutor: createRefreshExecutor(),
-      onAuthFailure: handleAuthFailure,
-    }),
-  );
-}
 
 const STRONG_VALUES = { password: MOCK_STRONG_PASSWORD, confirmPassword: MOCK_STRONG_PASSWORD };
 
