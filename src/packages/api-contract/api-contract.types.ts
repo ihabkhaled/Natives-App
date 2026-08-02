@@ -11,6 +11,9 @@ export type RefreshRequestContract = BackendApiSchemas['RefreshDto'];
 export type RefreshResponseContract = BackendApiSchemas['AuthSessionResponseDto'];
 export type LogoutRequestContract = BackendApiSchemas['LogoutDto'];
 export type MessageResponseContract = BackendApiSchemas['MessageResponseDto'];
+/** Public contact relay (`POST /contact`), added by contract 1.7.0. */
+export type ContactRequestContract = BackendApiSchemas['ContactRequestDto'];
+export type ContactResponseContract = BackendApiSchemas['ContactResponseDto'];
 export type PracticeSessionContract = BackendApiSchemas['PracticeSessionResponseDto'];
 export type PracticeSessionListContract = BackendApiSchemas['PracticeListSessionsResponseDto'];
 export type PracticeRsvpContract = BackendApiSchemas['RsvpResponseDto'];

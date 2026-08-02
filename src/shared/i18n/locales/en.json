@@ -2910,8 +2910,8 @@
     "heroEyebrow": "Get in touch",
     "heroTitle": "Contact Us",
     "heroIntro": "Have a question about tryouts, partnerships, or anything else? Send us a message below.",
-    "unavailableTitle": "The contact form is not connected yet",
-    "unavailableMessage": "We are still wiring this form up to our inbox. In the meantime, reach us on social media using the links below — we would love to hear from you.",
+    "unavailableTitle": "The contact form is switched off",
+    "unavailableMessage": "We are not taking messages through this form right now. Reach us on social media using the links below — we would love to hear from you.",
     "emailLabel": "Your email",
     "emailPlaceholder": "you@example.com",
     "subjectLabel": "Subject",
@@ -2928,6 +2928,20 @@
     "validationMessageTooShort": "Message must be at least 10 characters.",
     "validationMessageTooLong": "Message must be 4000 characters or fewer.",
     "socialHeading": "Find us online",
-    "socialIntro": "Follow along or send a direct message on any of these."
+    "socialIntro": "Follow along or send a direct message on any of these.",
+    "retry": "Try again",
+    "sentTitle": "Message sent",
+    "sentMessage": "Thanks for reaching out — we will reply to the email address you gave us.",
+    "errorValidationTitle": "We could not send that message",
+    "errorValidationMessage": "Our server rejected the details you entered. Check the highlighted fields and try again.",
+    "errorFieldRejected": "Our server did not accept this value.",
+    "errorChannelTitle": "Our inbox is not reachable right now",
+    "errorChannelMessage": "Your message was not sent. Please try again in a little while, or reach us on social media using the links below.",
+    "errorRateLimitedTitle": "Too many messages",
+    "errorRateLimitedMessage": "You have sent several messages in a short time, so this one was not delivered. Please wait a few minutes and try again.",
+    "errorNetworkTitle": "We could not reach our servers",
+    "errorNetworkMessage": "Your message was not sent. Check your connection and try again.",
+    "errorUnexpectedTitle": "Your message was not sent",
+    "errorUnexpectedMessage": "Something went wrong on our side. Please try again, or reach us on social media using the links below."
   }
 }

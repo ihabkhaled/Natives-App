@@ -1,59 +1,139 @@
-import { act, renderHook } from '@testing-library/react';
-import { beforeAll, describe, expect, it } from 'vitest';
+import { act, waitFor } from '@testing-library/react';
+import { afterEach, beforeAll, describe, expect, it, vi } from 'vitest';
+
+import { APP_ERROR_CODE, AppError } from '@/shared/errors';
 
 import { buildSubmitEvent, flushAsyncWork } from '../../../../tests/setup/form-test.helper';
 import { initTestI18n } from '../../../../tests/setup/i18n-test.helper';
-import { useContactScreen } from './use-contact-screen.hook';
+import { renderHookWithProviders } from '../../../../tests/setup/render-with-providers.helper';
+import { submitContactRequest } from '../services/submit-contact.service';
+import { useContactScreen, type ContactScreenView } from './use-contact-screen.hook';
+
+vi.mock('../services/submit-contact.service', () => ({
+  submitContactRequest: vi.fn(),
+}));
+
+const VALID_MESSAGE = 'I would like to know more, thanks!';
+
+function renderScreen(): { readonly current: () => ContactScreenView } {
+  const { result } = renderHookWithProviders(() => useContactScreen());
+  return { current: () => result.current };
+}
+
+async function fillAndSubmit(view: { readonly current: () => ContactScreenView }): Promise<void> {
+  act(() => {
+    view.current().form.email.onChange('player@example.com');
+  });
+  act(() => {
+    view.current().form.subject.onChange('Tryout question');
+  });
+  act(() => {
+    view.current().form.message.onChange(VALID_MESSAGE);
+  });
+  await act(async () => {
+    view.current().form.onSubmit(buildSubmitEvent());
+    await flushAsyncWork();
+  });
+}
 
 beforeAll(async () => {
   await initTestI18n();
 });
 
+afterEach(() => {
+  vi.clearAllMocks();
+});
+
 describe('useContactScreen', () => {
   it('resolves the canonical contact path for SEO metadata', () => {
-    const { result } = renderHook(() => useContactScreen());
-
-    expect(result.current.path).toBe('/contact');
+    expect(renderScreen().current().path).toBe('/contact');
   });
 
   it('titles the document with the page and product name', () => {
-    const { result } = renderHook(() => useContactScreen());
-
-    expect(result.current.seoTitle).toBe('Contact Us — Ultimate Natives');
+    expect(renderScreen().current().seoTitle).toBe('Contact Us — Ultimate Natives');
   });
 
-  it('keeps the form disabled until the real endpoint ships', () => {
-    const { result } = renderHook(() => useContactScreen());
+  it('enables the form now that the relay is live, and starts with no notice', () => {
+    const view = renderScreen();
 
-    expect(result.current.isFormEnabled).toBe(false);
-    expect(result.current.unavailableTitle.length).toBeGreaterThan(0);
-    expect(result.current.unavailableMessage.length).toBeGreaterThan(0);
+    expect(view.current().isFormEnabled).toBe(true);
+    expect(view.current().notice).toBeNull();
   });
 
-  it('calls the stub seam on a valid submit and settles back to idle', async () => {
-    const { result } = renderHook(() => useContactScreen());
+  it('sends a valid message to the relay', async () => {
+    vi.mocked(submitContactRequest).mockResolvedValue({ sent: true });
+    const view = renderScreen();
 
-    act(() => {
-      result.current.form.email.onChange('player@example.com');
+    await fillAndSubmit(view);
+
+    expect(submitContactRequest).toHaveBeenCalledExactlyOnceWith({
+      email: 'player@example.com',
+      subject: 'Tryout question',
+      message: VALID_MESSAGE,
     });
-    act(() => {
-      result.current.form.subject.onChange('Tryout question');
+  });
+
+  it('confirms a sent message and clears the form', async () => {
+    vi.mocked(submitContactRequest).mockResolvedValue({ sent: true });
+    const view = renderScreen();
+
+    await fillAndSubmit(view);
+
+    await waitFor(() => {
+      expect(view.current().notice?.tone).toBe('success');
     });
-    act(() => {
-      result.current.form.message.onChange('I would like to know more, thanks!');
+    expect(view.current().notice?.title).toBe('Message sent');
+    expect(view.current().form.email.value).toBe('');
+    expect(view.current().form.message.value).toBe('');
+  });
+
+  it('keeps what the visitor wrote when the send fails, and offers a retry', async () => {
+    vi.mocked(submitContactRequest).mockRejectedValue(
+      new AppError({ code: APP_ERROR_CODE.Server }),
+    );
+    const view = renderScreen();
+
+    await fillAndSubmit(view);
+
+    await waitFor(() => {
+      expect(view.current().notice?.tone).toBe('error');
     });
+    expect(view.current().form.message.value).toBe(VALID_MESSAGE);
+    expect(view.current().notice?.retry).not.toBeNull();
+  });
+
+  it('marks the fields the backend rejected on a 400', async () => {
+    vi.mocked(submitContactRequest).mockRejectedValue(
+      new AppError({
+        code: APP_ERROR_CODE.Validation,
+        fieldErrors: [{ field: 'subject', code: 'LENGTH_OUT_OF_RANGE' }],
+      }),
+    );
+    const view = renderScreen();
+
+    await fillAndSubmit(view);
+
+    await waitFor(() => {
+      expect(view.current().form.subject.errorMessage).toBe(
+        'Our server did not accept this value.',
+      );
+    });
+  });
+
+  it('never sends a message the schema already rejects', async () => {
+    const view = renderScreen();
+
     await act(async () => {
-      result.current.form.onSubmit(buildSubmitEvent());
+      view.current().form.onSubmit(buildSubmitEvent());
       await flushAsyncWork();
     });
 
-    expect(result.current.isSubmitting).toBe(false);
+    expect(submitContactRequest).not.toHaveBeenCalled();
+    expect(view.current().isSubmitting).toBe(false);
   });
 
   it('lists the three real social profiles with a readable label', () => {
-    const { result } = renderHook(() => useContactScreen());
-
-    expect(result.current.socialLinks).toEqual([
+    expect(renderScreen().current().socialLinks).toEqual([
       {
         key: 'facebook',
         href: 'https://www.facebook.com/ultimatenatives',

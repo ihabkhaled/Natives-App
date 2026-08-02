@@ -26,27 +26,44 @@ describe('ContactView', () => {
     expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent('Contact Us');
   });
 
-  it('announces the not-available notice as a live status region', () => {
+  it('announces the submit outcome through the live status region', () => {
     render(
       <ContactView
         {...view({
-          unavailableTitle: 'Not connected yet',
-          unavailableMessage: 'Reach us on social media instead.',
+          notice: {
+            tone: 'success',
+            title: 'Message sent',
+            message: 'We will reply to the email you gave us.',
+            retry: null,
+          },
         })}
       />,
     );
 
-    const notice = screen.getByTestId(TEST_IDS.contactUnavailableNotice);
+    const notice = screen.getByTestId(TEST_IDS.contactNotice);
     expect(notice).toHaveAttribute('role', 'status');
     expect(notice).toHaveAttribute('aria-live', 'polite');
-    expect(notice).toHaveTextContent('Not connected yet');
-    expect(notice).toHaveTextContent('Reach us on social media instead.');
+    expect(notice).toHaveTextContent('Message sent');
+    expect(notice).toHaveTextContent('We will reply to the email you gave us.');
   });
 
-  it('disables the submit button while the endpoint is not live', () => {
+  it('keeps the live region mounted and silent while the form is idle', () => {
+    render(<ContactView {...view({ notice: null })} />);
+
+    expect(screen.getByTestId(TEST_IDS.contactNotice)).toBeEmptyDOMElement();
+  });
+
+  it('enables the submit button while the relay is switched on', () => {
+    render(<ContactView {...view({ isFormEnabled: true })} />);
+
+    expect(screen.getByTestId(TEST_IDS.contactSubmitButton)).toHaveProperty('disabled', false);
+  });
+
+  it('disables the form when the relay kill switch is off', () => {
     render(<ContactView {...view({ isFormEnabled: false })} />);
 
     expect(screen.getByTestId(TEST_IDS.contactSubmitButton)).toHaveProperty('disabled', true);
+    expect(screen.getByTestId(TEST_IDS.contactEmailInput)).toHaveProperty('disabled', true);
   });
 
   it('shows the submitting label while a submission is in flight', () => {

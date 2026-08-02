@@ -1,17 +1,21 @@
 /**
- * TODO(contact-endpoint): flip once `POST /contact` is deployed (see the
- * landing-site spec). The screen reads this flag to disable submission and
- * show the honest "not available yet" notice; every other part of the form
- * (fields, validation) already works and needs no change when this becomes
- * `true` — only this flag and the service body in
- * `services/submit-contact.service.ts` change.
+ * Kill switch for the live contact relay. `POST /contact` shipped in backend
+ * contract 1.7.0, so the form submits for real; flipping this back to `false`
+ * disables submission and shows the "switched off" notice rather than
+ * collecting messages nothing will deliver.
  */
-export const CONTACT_FORM_ENABLED = false;
+export const CONTACT_FORM_ENABLED = true;
 
-export const CONTACT_SUBMIT_STATUS = {
-  Sent: 'sent',
-  Unavailable: 'unavailable',
+/** Tone of the single aria-live notice region above the contact form. */
+export const CONTACT_NOTICE_TONE = {
+  Success: 'success',
+  Warning: 'warning',
+  Error: 'error',
 } as const;
 
-export type ContactSubmitStatus =
-  (typeof CONTACT_SUBMIT_STATUS)[keyof typeof CONTACT_SUBMIT_STATUS];
+export type ContactNoticeTone = (typeof CONTACT_NOTICE_TONE)[keyof typeof CONTACT_NOTICE_TONE];
+
+/** The three fields `ContactRequestDto` carries, in form order. */
+export const CONTACT_FIELD_NAMES = ['email', 'subject', 'message'] as const;
+
+export type ContactFieldName = (typeof CONTACT_FIELD_NAMES)[number];

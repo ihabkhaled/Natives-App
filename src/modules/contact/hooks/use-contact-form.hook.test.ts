@@ -5,13 +5,24 @@ import { translateNow } from '@/packages/i18n';
 
 import { buildSubmitEvent, flushAsyncWork } from '../../../../tests/setup/form-test.helper';
 import { initTestI18n } from '../../../../tests/setup/i18n-test.helper';
+import type { ContactFieldName } from '../contact.constants';
 import { useContactForm, type ContactFormView } from './use-contact-form.hook';
 
-function renderContactForm(onValidSubmit = vi.fn()): {
+function renderContactForm(
+  onValidSubmit = vi.fn(),
+  rejectedFields: readonly ContactFieldName[] = [],
+): {
   readonly current: () => ContactFormView;
   readonly onValidSubmit: typeof onValidSubmit;
 } {
-  const { result } = renderHook(() => useContactForm({ translate: translateNow, onValidSubmit }));
+  const { result } = renderHook(() =>
+    useContactForm({
+      translate: translateNow,
+      onValidSubmit,
+      rejectedFields,
+      rejectedFieldMessage: 'Our server did not accept this value.',
+    }),
+  );
   return { current: () => result.current, onValidSubmit };
 }
 
@@ -84,5 +95,25 @@ describe('useContactForm', () => {
       subject: 'Tryout question',
       message: 'I would like to know more about your next tryout.',
     });
+  });
+
+  it('marks the fields the backend itself rejected', () => {
+    const view = renderContactForm(vi.fn(), ['subject']);
+
+    expect(view.current().subject.errorMessage).toBe('Our server did not accept this value.');
+    expect(view.current().email.errorMessage).toBeUndefined();
+  });
+
+  it('clears every field back to empty on reset', async () => {
+    const view = renderContactForm();
+    await fillValidForm(view);
+
+    act(() => {
+      view.current().reset();
+    });
+
+    expect(view.current().email.value).toBe('');
+    expect(view.current().subject.value).toBe('');
+    expect(view.current().message.value).toBe('');
   });
 });

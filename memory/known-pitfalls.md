@@ -129,3 +129,22 @@ screen (hook + component + container + tests + locales) at a time. This is
 [rule 37](../rules/32-ci-gates-before-commit-and-push.md): every increment passes the full gate set
 before it is committed and before it is pushed. Smallness never licenses committing red or partial
 work — if a unit cannot be made green on its own, finish it before committing, do not ship it early.
+
+## 14. The public navbar and footer are router-level chrome, not per-screen composition
+
+`PublicNavContainer` and `PublicFooterContainer` are mounted once in
+[`app-router.routes.tsx`](../src/app/router/app-router.routes.tsx) as siblings of the
+`IonRouterOutlet`, and their only visibility rule is `resolvePublicShellVisibility(session)` —
+resolved **and** anonymous. They therefore already wrap **every** signed-out route, including the
+ones no marketing increment ever touched: `/accept-invitation`, `/tryout-registration`, and the 404
+fallback. The outlet's bottom inset comes from one global CSS rule
+(`#main-content:has(> .app-public-footer) > ion-router-outlet`).
+
+This has been mis-read once as "the footer is only composed into Welcome/Login/Forgot/Reset and
+About/Contact", because those screens are where the _page_ markup changed. Nothing is composed per
+screen, and adding a footer inside a screen would double it up under the real one.
+
+**Fix, and the habit that avoids it:** before "wiring the shell into" a screen, check
+`app-router.routes.tsx` — if the chrome is a sibling of the outlet, the work is already done.
+[`public-shell-routes.integration.test.tsx`](../tests/integration/public-shell-routes.integration.test.tsx)
+pins this for the three routes that were doubted, so it never needs re-deriving.
