@@ -7,12 +7,14 @@ import { ForgotPasswordContainer } from '../containers/forgot-password.container
 import { LoginContainer } from '../containers/login.container';
 import { ResetPasswordContainer } from '../containers/reset-password.container';
 import { SessionsContainer } from '../containers/sessions.container';
+import { SignupContainer } from '../containers/signup.container';
 import {
   acceptInvitationPath,
   forgotPasswordPath,
   loginPath,
   resetPasswordPath,
   sessionsPath,
+  signupPath,
 } from './auth.paths';
 import { getAuthRouteDefinitions } from './auth.routes';
 
@@ -23,9 +25,10 @@ function definitionFor(path: string) {
 }
 
 describe('getAuthRouteDefinitions', () => {
-  it('exposes the login, recovery, invitation, and session routes', () => {
+  it('exposes the login, signup, recovery, invitation, and session routes', () => {
     expect(getAuthRouteDefinitions().map((definition) => definition.path)).toEqual([
       loginPath(),
+      signupPath(),
       forgotPasswordPath(),
       resetPasswordPath(),
       acceptInvitationPath(),
@@ -39,9 +42,10 @@ describe('getAuthRouteDefinitions', () => {
     }
   });
 
-  it('keeps the public recovery flows public-only', () => {
+  it('keeps the public signup and recovery flows public-only', () => {
     for (const path of [
       loginPath(),
+      signupPath(),
       forgotPasswordPath(),
       resetPasswordPath(),
       acceptInvitationPath(),
@@ -56,6 +60,7 @@ describe('getAuthRouteDefinitions', () => {
 
   it('wires each container to its route', () => {
     expect(definitionFor(loginPath()).component).toBe(LoginContainer);
+    expect(definitionFor(signupPath()).component).toBe(SignupContainer);
     expect(definitionFor(forgotPasswordPath()).component).toBe(ForgotPasswordContainer);
     expect(definitionFor(resetPasswordPath()).component).toBe(ResetPasswordContainer);
     expect(definitionFor(acceptInvitationPath()).component).toBe(AcceptInvitationContainer);

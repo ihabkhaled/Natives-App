@@ -294,6 +294,74 @@ export interface paths {
         readonly patch?: never;
         readonly trace?: never;
     };
+    readonly "/auth/signup": {
+        readonly parameters: {
+            readonly query?: never;
+            readonly header?: never;
+            readonly path?: never;
+            readonly cookie?: never;
+        };
+        readonly get?: never;
+        readonly put?: never;
+        /** Request an account (self-signup, needs approval) */
+        readonly post: operations["Signup.signup"];
+        readonly delete?: never;
+        readonly options?: never;
+        readonly head?: never;
+        readonly patch?: never;
+        readonly trace?: never;
+    };
+    readonly "/auth/signups/{id}/approve": {
+        readonly parameters: {
+            readonly query?: never;
+            readonly header?: never;
+            readonly path?: never;
+            readonly cookie?: never;
+        };
+        readonly get?: never;
+        readonly put?: never;
+        /** Approve a pending signup and activate the account */
+        readonly post: operations["Signup.approve"];
+        readonly delete?: never;
+        readonly options?: never;
+        readonly head?: never;
+        readonly patch?: never;
+        readonly trace?: never;
+    };
+    readonly "/auth/signups/{id}/reject": {
+        readonly parameters: {
+            readonly query?: never;
+            readonly header?: never;
+            readonly path?: never;
+            readonly cookie?: never;
+        };
+        readonly get?: never;
+        readonly put?: never;
+        /** Reject a pending signup; the account stays inert */
+        readonly post: operations["Signup.reject"];
+        readonly delete?: never;
+        readonly options?: never;
+        readonly head?: never;
+        readonly patch?: never;
+        readonly trace?: never;
+    };
+    readonly "/auth/signups/pending": {
+        readonly parameters: {
+            readonly query?: never;
+            readonly header?: never;
+            readonly path?: never;
+            readonly cookie?: never;
+        };
+        /** List self-signups awaiting approval */
+        readonly get: operations["Signup.listPending"];
+        readonly put?: never;
+        readonly post?: never;
+        readonly delete?: never;
+        readonly options?: never;
+        readonly head?: never;
+        readonly patch?: never;
+        readonly trace?: never;
+    };
     readonly "/calendar/feeds/{feedToken}.ics": {
         readonly parameters: {
             readonly query?: never;
@@ -305,6 +373,23 @@ export interface paths {
         readonly get: operations["PublicPracticeCalendar.render"];
         readonly put?: never;
         readonly post?: never;
+        readonly delete?: never;
+        readonly options?: never;
+        readonly head?: never;
+        readonly patch?: never;
+        readonly trace?: never;
+    };
+    readonly "/contact": {
+        readonly parameters: {
+            readonly query?: never;
+            readonly header?: never;
+            readonly path?: never;
+            readonly cookie?: never;
+        };
+        readonly get?: never;
+        readonly put?: never;
+        /** Send a message to the team via the contact form */
+        readonly post: operations["Contact.send"];
         readonly delete?: never;
         readonly options?: never;
         readonly head?: never;
@@ -6578,6 +6663,18 @@ export interface components {
             /** @enum {string} */
             readonly scoringSide: "us" | "them";
         };
+        readonly ContactRequestDto: {
+            readonly email: string;
+            readonly message: string;
+            readonly subject: string;
+        };
+        readonly ContactResponseDto: {
+            /**
+             * @description Always true on a 201
+             * @example true
+             */
+            readonly sent: boolean;
+        };
         readonly ConvertCandidateDto: {
             readonly expectedRecordVersion: number;
             /** Format: uuid */
@@ -9211,6 +9308,18 @@ export interface components {
             readonly seasonId: string | null;
             readonly weightedPresentPoints: number;
         };
+        readonly PendingSignupListResponseDto: {
+            readonly items: readonly components["schemas"]["PendingSignupResponseDto"][];
+        };
+        readonly PendingSignupResponseDto: {
+            readonly displayName: string | null;
+            readonly email: string;
+            readonly id: string;
+            /** Format: date-time */
+            readonly requestedAt: string;
+            /** @enum {string} */
+            readonly state: "active" | "pending" | "suspended";
+        };
         readonly PeriodResponseDto: {
             readonly cohort: string | null;
             /** Format: date-time */
@@ -10696,6 +10805,19 @@ export interface components {
         readonly SignOffComparisonDto: {
             readonly expectedRecordVersion: number;
             readonly signedOffByName: string;
+        };
+        readonly SignupAcknowledgementResponseDto: {
+            readonly message: string;
+            /**
+             * @description Always "pending" immediately after signup
+             * @enum {string}
+             */
+            readonly state: "active" | "pending" | "suspended";
+        };
+        readonly SignupRequestDto: {
+            readonly displayName: string;
+            readonly email: string;
+            readonly password: string;
         };
         readonly SimulateRuleDto: {
             /** Format: uuid */
@@ -12225,6 +12347,115 @@ export interface operations {
             };
         };
     };
+    readonly "Signup.signup": {
+        readonly parameters: {
+            readonly query?: never;
+            readonly header?: never;
+            readonly path?: never;
+            readonly cookie?: never;
+        };
+        readonly requestBody: {
+            readonly content: {
+                readonly "application/json": components["schemas"]["SignupRequestDto"];
+            };
+        };
+        readonly responses: {
+            /** @description Signup received; the account is pending admin approval */
+            readonly 201: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content: {
+                    readonly "application/json": components["schemas"]["SignupAcknowledgementResponseDto"];
+                };
+            };
+        };
+    };
+    readonly "Signup.approve": {
+        readonly parameters: {
+            readonly query?: never;
+            readonly header?: never;
+            readonly path: {
+                readonly id: string;
+            };
+            readonly cookie?: never;
+        };
+        readonly requestBody?: never;
+        readonly responses: {
+            /** @description Signup approved; account activated */
+            readonly 200: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content: {
+                    readonly "application/json": components["schemas"]["PendingSignupResponseDto"];
+                };
+            };
+            /** @description Unauthorized */
+            readonly 401: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    readonly "Signup.reject": {
+        readonly parameters: {
+            readonly query?: never;
+            readonly header?: never;
+            readonly path: {
+                readonly id: string;
+            };
+            readonly cookie?: never;
+        };
+        readonly requestBody?: never;
+        readonly responses: {
+            /** @description Signup rejected */
+            readonly 200: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content: {
+                    readonly "application/json": components["schemas"]["PendingSignupResponseDto"];
+                };
+            };
+            /** @description Unauthorized */
+            readonly 401: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    readonly "Signup.listPending": {
+        readonly parameters: {
+            readonly query?: never;
+            readonly header?: never;
+            readonly path?: never;
+            readonly cookie?: never;
+        };
+        readonly requestBody?: never;
+        readonly responses: {
+            /** @description Pending signups, oldest first */
+            readonly 200: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content: {
+                    readonly "application/json": components["schemas"]["PendingSignupListResponseDto"];
+                };
+            };
+            /** @description Unauthorized */
+            readonly 401: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
     readonly "PublicPracticeCalendar.render": {
         readonly parameters: {
             readonly query?: never;
@@ -12251,6 +12482,30 @@ export interface operations {
                     readonly [name: string]: unknown;
                 };
                 content?: never;
+            };
+        };
+    };
+    readonly "Contact.send": {
+        readonly parameters: {
+            readonly query?: never;
+            readonly header?: never;
+            readonly path?: never;
+            readonly cookie?: never;
+        };
+        readonly requestBody: {
+            readonly content: {
+                readonly "application/json": components["schemas"]["ContactRequestDto"];
+            };
+        };
+        readonly responses: {
+            /** @description Message accepted and handed to the email transport */
+            readonly 201: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content: {
+                    readonly "application/json": components["schemas"]["ContactResponseDto"];
+                };
             };
         };
     };

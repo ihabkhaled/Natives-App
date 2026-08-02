@@ -24,6 +24,7 @@ const LABELS = {
   submit: 'Sign in',
   submitting: 'Signing in…',
   forgotPassword: 'Forgot your password?',
+  signUp: 'Create an account',
 } as const;
 
 function buildBinding(name: string): FormFieldBinding {
@@ -43,6 +44,7 @@ function mockLoginScreen(overrides: Partial<LoginScreenView> = {}): LoginScreenV
     isSubmitting: false,
     submitErrorMessage: undefined,
     onForgotPassword: vi.fn(),
+    onSignUp: vi.fn(),
     ...overrides,
   };
   vi.mocked(useLoginScreen).mockReturnValue(view);

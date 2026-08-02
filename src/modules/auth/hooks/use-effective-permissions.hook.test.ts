@@ -67,6 +67,7 @@ describe('useEffectivePermissions', () => {
     expect(result.current).toEqual({
       permissions: [],
       accountActive: false,
+      accountPending: false,
       onboardingComplete: false,
       hasTeamContext: false,
       isLoading: false,
@@ -112,8 +113,19 @@ describe('useEffectivePermissions', () => {
     const { result } = renderHook(() => useEffectivePermissions());
 
     expect(result.current.accountActive).toBe(false);
+    expect(result.current.accountPending).toBe(false);
     expect(result.current.onboardingComplete).toBe(false);
     expect(result.current.hasTeamContext).toBe(false);
+  });
+
+  it('separates a signed-up-but-unapproved account from a suspended one', () => {
+    mockSession(true);
+    mockCurrentUser({ user: buildAuthUser({ accountState: 'pending' }) });
+
+    const { result } = renderHook(() => useEffectivePermissions());
+
+    expect(result.current.accountPending).toBe(true);
+    expect(result.current.accountActive).toBe(false);
   });
 
   it('surfaces the profile error branch for an authenticated session', () => {

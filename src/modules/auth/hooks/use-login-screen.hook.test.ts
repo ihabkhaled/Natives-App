@@ -62,6 +62,7 @@ describe('useLoginScreen', () => {
       submit: 'Sign in',
       submitting: 'Signing in…',
       forgotPassword: 'Forgot your password?',
+      signUp: 'Create an account',
     });
   });
 
@@ -72,6 +73,15 @@ describe('useLoginScreen', () => {
     result.current.onForgotPassword();
 
     expect(push).toHaveBeenCalledExactlyOnceWith('/forgot-password');
+  });
+
+  it('offers self-signup as a route off the sign-in screen', () => {
+    mockLoginMutation();
+
+    const { result } = renderHook(() => useLoginScreen());
+    result.current.onSignUp();
+
+    expect(push).toHaveBeenCalledExactlyOnceWith('/signup');
   });
 
   it('exposes the login form view model', () => {

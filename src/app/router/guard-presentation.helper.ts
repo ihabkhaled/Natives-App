@@ -30,6 +30,16 @@ const PRESENTATION: Record<GuardStatus, GuardPresentation> = {
       testId: TEST_IDS.guardAccountBlocked,
     },
   },
+  [GUARD_STATUS.AccountPending]: {
+    kind: 'state',
+    state: {
+      iconName: 'time',
+      tone: 'warning',
+      titleKey: I18N_KEYS.guard.accountPendingTitle,
+      messageKey: I18N_KEYS.guard.accountPendingMessage,
+      testId: TEST_IDS.guardAccountPending,
+    },
+  },
   [GUARD_STATUS.Onboarding]: {
     kind: 'state',
     state: {

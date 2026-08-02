@@ -20,6 +20,8 @@ export function buildPublicNavView(overrides: Partial<PublicNavView> = {}): Publ
     onNavigate: vi.fn(),
     signInLabel: 'Sign in',
     onSignIn: vi.fn(),
+    signUpLabel: 'Create an account',
+    onSignUp: vi.fn(),
     isDark: false,
     themeToggleLabel: 'Switch to dark theme',
     onToggleTheme: vi.fn(),

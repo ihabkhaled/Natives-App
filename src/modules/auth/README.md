@@ -1,18 +1,34 @@
 # Auth module
 
 Owns authentication and account recovery: credentials in, a session out. It is the only module that
-touches tokens. Beyond login/logout it owns invitation acceptance, forgot/reset password, and
-device-session management.
+touches tokens. Beyond login/logout it owns public self-signup, invitation acceptance, forgot/reset
+password, and device-session management.
 
 ## Screens
 
 | Route                | Access     | Purpose                                                                 |
 | -------------------- | ---------- | ----------------------------------------------------------------------- |
-| `/login`             | PublicOnly | Sign in; links to the forgot-password flow.                             |
+| `/login`             | PublicOnly | Sign in; links to forgot-password and to self-signup.                   |
+| `/signup`            | PublicOnly | Request an account; ends in an explicit awaiting-approval state.        |
 | `/forgot-password`   | PublicOnly | Request a reset link. Enumeration-safe: one confirmation for any email. |
 | `/reset-password`    | PublicOnly | Set a new password from a `?token=` link; invalid/expired link states.  |
 | `/accept-invitation` | PublicOnly | Look up an invitation by `?token=`, create a password, start a session. |
 | `/sessions`          | Protected  | List active devices, revoke one, or sign out all other devices.         |
+
+## Self-signup invariants
+
+- `POST /auth/signup` (contract 1.7.0) answers `201 { message, state: 'pending' }` and **no tokens**.
+  The flow therefore never authenticates: success renders the awaiting-approval panel, and neither
+  the session store nor the token repository is touched.
+- Client validation in `schemas/signup-form.schema.ts` mirrors the backend `SignupRequestDto`
+  exactly — email up to 320 characters, displayName 1–120, password 12–72 plus the same
+  strong-password rules the reset and invitation flows enforce.
+- A duplicate email answers 409. `helpers/signup-error.helper.ts` words that one case as "already
+  registered or waiting for approval" instead of the generic conflict copy; every other code falls
+  through to the shared error catalog.
+- An account that reaches the app while still `pending` resolves to `GUARD_STATUS.AccountPending` —
+  its own designed state with awaiting-approval copy — never to `AccountBlocked`, which means
+  suspended.
 
 ## Recovery invariants
 
@@ -73,6 +89,7 @@ constants → schemas → mappers → gateways → repositories → services →
 
 - Unit: colocated `*.test.ts(x)`.
 - Integration: [auth login flow](../../../tests/integration/auth-login-flow.integration.test.ts),
+  [self-signup flow](../../../tests/integration/auth-signup-flow.integration.test.ts),
   [token refresh](../../../tests/integration/token-refresh.integration.test.ts).
 - Contract: [auth wire contract](../../../tests/contract/auth.contract.test.ts).
 

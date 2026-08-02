@@ -4,6 +4,10 @@ export function loginPath(): string {
   return APP_PATHS.login;
 }
 
+export function signupPath(): string {
+  return APP_PATHS.signup;
+}
+
 export function forgotPasswordPath(): string {
   return APP_PATHS.forgotPassword;
 }

@@ -9,6 +9,7 @@ export const APP_PATHS = {
   about: '/about',
   contact: '/contact',
   login: '/login',
+  signup: '/signup',
   forgotPassword: '/forgot-password',
   resetPassword: '/reset-password',
   acceptInvitation: '/accept-invitation',

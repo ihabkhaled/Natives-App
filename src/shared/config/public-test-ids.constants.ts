@@ -13,6 +13,8 @@ export const PUBLIC_TEST_IDS = {
   publicNavDrawer: 'public-nav-drawer',
   publicNavSignIn: 'public-nav-sign-in',
   publicNavSignInDrawer: 'public-nav-sign-in-drawer',
+  publicNavSignUp: 'public-nav-sign-up',
+  publicNavSignUpDrawer: 'public-nav-sign-up-drawer',
   publicFooter: 'public-footer',
   publicFooterLink: 'public-footer-link',
   publicFooterSocialLink: 'public-footer-social-link',

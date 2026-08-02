@@ -48,6 +48,7 @@ function mockEffective(overrides: Partial<ReturnType<typeof useEffectivePermissi
   vi.mocked(useEffectivePermissions).mockReturnValue({
     permissions: [],
     accountActive: true,
+    accountPending: false,
     onboardingComplete: true,
     hasTeamContext: true,
     isLoading: false,

@@ -53,6 +53,10 @@ export function usePublicNav(): PublicNavView {
     onSignIn: () => {
       goTo(APP_PATHS.login);
     },
+    signUpLabel: t(I18N_KEYS.publicNav.signUp),
+    onSignUp: () => {
+      goTo(APP_PATHS.signup);
+    },
     isDark: theme.isDark,
     themeToggleLabel: t(
       theme.isDark ? I18N_KEYS.publicNav.switchToLight : I18N_KEYS.publicNav.switchToDark,

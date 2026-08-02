@@ -1196,7 +1196,8 @@ ion-spinner {
 [data-testid='login-page'] form,
 [data-testid='accept-invitation-page'] form,
 [data-testid='forgot-password-page'] form,
-[data-testid='reset-password-page'] form {
+[data-testid='reset-password-page'] form,
+[data-testid='signup-page'] form {
   box-shadow: var(--app-elevation-lift);
 }
 
@@ -1222,7 +1223,8 @@ ion-spinner {
 
 [data-testid='login-page'] .app-auth-panel form,
 [data-testid='forgot-password-page'] .app-auth-panel form,
-[data-testid='reset-password-page'] .app-auth-panel form {
+[data-testid='reset-password-page'] .app-auth-panel form,
+[data-testid='signup-page'] .app-auth-panel form {
   padding: 0;
   border: 0;
   border-radius: 0;
@@ -5633,6 +5635,8 @@ ion-spinner {
 
   .app-public-nav__sign-in {
     display: inline-flex;
+    align-items: center;
+    gap: var(--un-space-1);
   }
 
   .app-public-nav__menu-button {

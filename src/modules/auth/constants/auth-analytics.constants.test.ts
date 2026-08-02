@@ -6,6 +6,7 @@ describe('AUTH_ANALYTICS_EVENTS', () => {
   it('pins the auth event names', () => {
     expect(AUTH_ANALYTICS_EVENTS).toEqual({
       loginSucceeded: 'auth.login_succeeded',
+      signupRequested: 'auth.signup_requested',
       logoutCompleted: 'auth.logout_completed',
       passwordResetRequested: 'auth.password_reset_requested',
       passwordResetCompleted: 'auth.password_reset_completed',

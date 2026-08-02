@@ -45,5 +45,7 @@ export type {
   RefreshResponseContract,
   ReviewDecisionRequestContract,
   SetRsvpRequestContract,
+  SignupAcknowledgementContract,
+  SignupRequestContract,
   UpdateSubmissionRequestContract,
 } from './api-contract.types';

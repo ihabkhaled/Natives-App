@@ -28,6 +28,17 @@ export const MOCK_SCENARIO_EMAILS = {
   timeout: 'timeout@example.com',
 } as const;
 
+/**
+ * Self-signup fixtures. `takenEmail` is any address that already belongs to an
+ * account — including one still waiting for approval — and answers 409, which
+ * is exactly what the screen has to word specifically.
+ */
+export const MOCK_SIGNUP = {
+  email: 'newcomer-signup@example.com',
+  takenEmail: MOCK_CREDENTIALS.email,
+  displayName: 'Nadia Newcomer',
+} as const;
+
 export const MOCK_TOKENS = {
   access: 'mock-access-token',
   refresh: 'mock-refresh-token',

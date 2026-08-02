@@ -15,6 +15,7 @@ function allowInput(overrides: Partial<RouteAccessInput> = {}): RouteAccessInput
     isProfileErrored: false,
     featureEnabled: true,
     accountActive: true,
+    accountPending: false,
     onboardingComplete: true,
     requiresTeamContext: false,
     hasTeamContext: false,
@@ -72,6 +73,19 @@ describe('resolveRouteAccess', () => {
     expect(resolveRouteAccess(allowInput({ accountActive: false }))).toBe(
       GUARD_STATUS.AccountBlocked,
     );
+  });
+
+  it('sends a signed-up-but-unapproved account to the awaiting-approval state', () => {
+    expect(resolveRouteAccess(allowInput({ accountActive: false, accountPending: true }))).toBe(
+      GUARD_STATUS.AccountPending,
+    );
+  });
+
+  it('prefers the awaiting-approval state over the blocked state', () => {
+    const pending = allowInput({ accountActive: false, accountPending: true });
+    const blocked = allowInput({ accountActive: false, accountPending: false });
+
+    expect(resolveRouteAccess(pending)).not.toBe(resolveRouteAccess(blocked));
   });
 
   it('routes an unfinished onboarding to the onboarding state', () => {

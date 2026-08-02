@@ -55,6 +55,7 @@ function mockEffective(overrides: Partial<ReturnType<typeof useEffectivePermissi
   vi.mocked(useEffectivePermissions).mockReturnValue({
     permissions: [],
     accountActive: true,
+    accountPending: false,
     onboardingComplete: true,
     hasTeamContext: true,
     isLoading: false,
@@ -139,6 +140,15 @@ describe('useRouteGuard', () => {
     const instruction = guardOf(definition());
 
     expect(instruction).toMatchObject({ kind: 'state', title: 'Account unavailable' });
+  });
+
+  it('shows an unapproved signup the awaiting-approval state, not the blocked one', () => {
+    mockSession({ isAuthenticated: true, isResolved: true });
+    mockEffective({ accountActive: false, accountPending: true });
+
+    const instruction = guardOf(definition());
+
+    expect(instruction).toMatchObject({ kind: 'state', title: 'Waiting for approval' });
   });
 
   it('requires a team context when the route demands one', () => {

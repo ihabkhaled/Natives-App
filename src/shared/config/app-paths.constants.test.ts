@@ -56,6 +56,7 @@ describe('APP_PATHS', () => {
       'rosters',
       'sessions',
       'settings',
+      'signup',
       'squadDetail',
       'squads',
       'standings',

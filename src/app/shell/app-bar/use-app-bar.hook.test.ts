@@ -54,6 +54,7 @@ function mockEffective(isLoading = false): void {
   vi.mocked(useEffectivePermissions).mockReturnValue({
     permissions: [],
     accountActive: true,
+    accountPending: false,
     onboardingComplete: true,
     hasTeamContext: true,
     isLoading,

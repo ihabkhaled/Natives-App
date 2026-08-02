@@ -30,6 +30,7 @@ function mockGrants(permissions: readonly string[], isLoading = false): void {
   vi.mocked(useEffectivePermissions).mockReturnValue({
     permissions,
     accountActive: true,
+    accountPending: false,
     onboardingComplete: true,
     hasTeamContext: true,
     isLoading,

@@ -9,6 +9,7 @@ export const GUARD_STATUS = {
   RedirectHome: 'redirect-home',
   Forbidden: 'forbidden',
   AccountBlocked: 'account-blocked',
+  AccountPending: 'account-pending',
   Onboarding: 'onboarding',
   NoTeam: 'no-team',
   Allow: 'allow',

@@ -35,10 +35,34 @@ describe('presentGuardStatus', () => {
     });
   });
 
+  it('tells an unapproved account it is waiting, not that it is blocked', () => {
+    expect(presentGuardStatus(GUARD_STATUS.AccountPending)).toEqual({
+      kind: 'state',
+      state: {
+        iconName: 'time',
+        tone: 'warning',
+        titleKey: 'guard.accountPendingTitle',
+        messageKey: 'guard.accountPendingMessage',
+        testId: TEST_IDS.guardAccountPending,
+      },
+    });
+  });
+
+  it('keeps the pending copy separate from the blocked copy', () => {
+    const pending = presentGuardStatus(GUARD_STATUS.AccountPending);
+    const blocked = presentGuardStatus(GUARD_STATUS.AccountBlocked);
+
+    expect(pending.kind === 'state' && blocked.kind === 'state').toBe(true);
+    expect(pending.kind === 'state' ? pending.state.messageKey : '').not.toBe(
+      blocked.kind === 'state' ? blocked.state.messageKey : '',
+    );
+  });
+
   it('gives every blocking state a distinct test id', () => {
     const testIds = [
       GUARD_STATUS.Forbidden,
       GUARD_STATUS.AccountBlocked,
+      GUARD_STATUS.AccountPending,
       GUARD_STATUS.Onboarding,
       GUARD_STATUS.NoTeam,
     ].map((status) => {
@@ -50,6 +74,7 @@ describe('presentGuardStatus', () => {
     expect(testIds).toEqual([
       TEST_IDS.guardForbidden,
       TEST_IDS.guardAccountBlocked,
+      TEST_IDS.guardAccountPending,
       TEST_IDS.guardOnboarding,
       TEST_IDS.guardTeamRequired,
     ]);
