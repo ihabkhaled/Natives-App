@@ -15,6 +15,7 @@ import { useNetworkStatus } from '@/platform';
 import { TEST_IDS } from '@/shared/config';
 
 import { initTestI18n } from '../setup/i18n-test.helper';
+import { wireRealHttpClient } from '../setup/real-http-client.helper';
 import { renderWithProviders } from '../setup/render-with-providers.helper';
 
 vi.mock('@/platform', () => createPlatformMock());
@@ -33,13 +34,15 @@ beforeAll(async () => {
 
 beforeEach(() => {
   vi.mocked(useNetworkStatus).mockReturnValue({ isOnline: true });
+  // The page reads the public endpoint through the real client, over MSW.
+  wireRealHttpClient();
 });
 
 afterEach(async () => {
   await changeAppLocale('en');
 });
 
-describe('public team directory screen (seam source)', () => {
+describe('public team directory screen (live endpoint)', () => {
   it('renders the season board grouped by responsibility', async () => {
     renderWithProviders(<TeamDirectoryContainer />, { initialPath: '/team' });
 
@@ -48,28 +51,28 @@ describe('public team directory screen (seam source)', () => {
     });
     expect(screen.getByRole('heading', { name: 'Coach' })).toBeInTheDocument();
     expect(screen.getByRole('heading', { name: 'Social Media & Marketing' })).toBeInTheDocument();
-    expect(screen.getAllByTestId(TEST_IDS.teamDirectoryStaffGroup)).toHaveLength(7);
+    // Five known titles plus the bucket for one the client has not learned.
+    expect(screen.getAllByTestId(TEST_IDS.teamDirectoryStaffGroup)).toHaveLength(6);
   });
 
-  it('falls back to a branded initials medallion for every person without a photo', async () => {
+  it('shows published portraits and falls back to initials for the rest', async () => {
     renderWithProviders(<TeamDirectoryContainer />, { initialPath: '/team' });
 
     await waitFor(() => {
       expect(screen.getByTestId(TEST_IDS.teamDirectoryRoster)).toBeInTheDocument();
     });
-    expect(screen.queryByTestId(TEST_IDS.teamDirectoryAvatarPhoto)).not.toBeInTheDocument();
-    expect(
-      screen.getAllByTestId(TEST_IDS.teamDirectoryAvatarInitials).length,
-    ).toBeGreaterThanOrEqual(9);
-    expect(screen.getAllByRole('img', { name: 'Sherif Ashraf' }).length).toBeGreaterThan(0);
+    // Both paths render on one page: a real portrait and the branded medallion.
+    expect(screen.getAllByTestId(TEST_IDS.teamDirectoryAvatarPhoto).length).toBeGreaterThan(0);
+    expect(screen.getAllByTestId(TEST_IDS.teamDirectoryAvatarInitials).length).toBeGreaterThan(0);
   });
 
-  it('stays honest that photos and the full roster are still to come', async () => {
+  it('drops the coming-soon notice now the endpoint serves the page', async () => {
     renderWithProviders(<TeamDirectoryContainer />, { initialPath: '/team' });
 
     await waitFor(() => {
-      expect(screen.getByTestId(TEST_IDS.teamDirectorySeamNotice)).toBeInTheDocument();
+      expect(screen.getByTestId(TEST_IDS.teamDirectoryRoster)).toBeInTheDocument();
     });
+    expect(screen.queryByTestId(TEST_IDS.teamDirectorySeamNotice)).not.toBeInTheDocument();
   });
 
   it('renders the whole page in Arabic when the visitor switches language', async () => {
@@ -80,11 +83,11 @@ describe('public team directory screen (seam source)', () => {
       expect(screen.getByTestId(TEST_IDS.teamDirectoryRoster)).toBeInTheDocument();
     });
     expect(screen.getByRole('heading', { name: 'المدرب' })).toBeInTheDocument();
-    expect(screen.getByRole('heading', { name: 'كابتن الروح' })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: 'التحليل' })).toBeInTheDocument();
   });
 });
 
-describe('public team directory endpoint (contract 1.8.0, mocked)', () => {
+describe('public team directory endpoint', () => {
   it('answers the documented route for the team slug', async () => {
     const response = await fetchDirectory(TEAM_DIRECTORY_SLUG);
 
@@ -104,12 +107,18 @@ describe('public team directory endpoint (contract 1.8.0, mocked)', () => {
       slug: TEAM_DIRECTORY_SLUG,
       name: 'Ultimate Natives',
       location: 'El Sheikh Zayed, Giza, Egypt',
-      foundedOn: '2021-10',
+      foundedOn: '2021-10-01',
     });
     expect(directory.team.socialUrls).not.toContain('http://insecure.example.com/ultimatenatives');
-    expect(directory.staff.map((member) => member.displayName)).toContain('Rawan Elessawy');
+    expect(directory.staff.map((member) => member.displayName)).toContain('Rawan E');
     expect(directory.staff[1]?.titles).toEqual(['co-coach']);
-    expect(directory.players.map((player) => player.jerseyNumber)).toEqual(['11', '33', null]);
+    // "011" is a printed label and sorts as eleven, not between "0" and "1".
+    expect(directory.players.map((player) => player.jerseyNumber)).toEqual([
+      '011',
+      '11',
+      '33',
+      null,
+    ]);
   });
 
   it('keeps a published portrait and a missing one side by side', async () => {
@@ -117,7 +126,7 @@ describe('public team directory endpoint (contract 1.8.0, mocked)', () => {
 
     const directory = mapTeamDirectoryResponse(payload as TeamDirectoryResponseDto);
 
-    expect(directory.staff[0]?.photoUrl).toBe('/staff/3alamy.jpg');
+    expect(directory.staff[0]?.photoUrl).toBe('/staff/sherif-ashraf.jpg');
     expect(directory.staff[1]?.photoUrl).toBeNull();
   });
 });

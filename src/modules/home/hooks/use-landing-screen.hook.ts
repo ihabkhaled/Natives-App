@@ -1,10 +1,15 @@
 import { contactPath } from '@/modules/contact';
 import { newsPath } from '@/modules/news';
 import { publicCompetitionsPath } from '@/modules/public-competitions';
-import { teamDirectoryPath } from '@/modules/team-directory';
+import {
+  TEAM_DIRECTORY_SLUG,
+  teamDirectoryPath,
+  useTeamDirectoryQuery,
+} from '@/modules/team-directory';
 import { tryoutRegistrationPath } from '@/modules/tryouts';
 import { useAppTranslation } from '@/packages/i18n';
 import { useAppNavigation } from '@/packages/router';
+import { useNetworkStatus } from '@/platform';
 import { I18N_KEYS } from '@/shared/i18n';
 
 import type { CompetitionsSectionView } from '../helpers/landing-competitive-seam.helper';
@@ -61,6 +66,8 @@ export interface LandingScreenView {
 export function useLandingScreen(): LandingScreenView {
   const { t } = useAppTranslation();
   const navigation = useAppNavigation();
+  const network = useNetworkStatus();
+  const directoryQuery = useTeamDirectoryQuery(TEAM_DIRECTORY_SLUG);
 
   const goTo =
     (path: string): (() => void) =>
@@ -81,7 +88,12 @@ export function useLandingScreen(): LandingScreenView {
     explainer: buildExplainerSection(t),
     explainerLink: { label: seeMore, onClick: goTo(ultimatePath()) },
     aboutPreview: buildAboutPreviewSection(t, goToAbout),
-    staffDirectory: buildStaffDirectorySection(t),
+    staffDirectory: buildStaffDirectorySection(t, directoryQuery.data ?? null, {
+      isLoading: directoryQuery.isLoading,
+      error: directoryQuery.error,
+      isOffline: !network.isOnline,
+      onRetry: directoryQuery.refetch,
+    }),
     staffLink: { label: seeMore, onClick: goTo(teamDirectoryPath()) },
     competitions: buildCompetitionsSection(t),
     competitionsLink: { label: seeMore, onClick: goTo(publicCompetitionsPath()) },

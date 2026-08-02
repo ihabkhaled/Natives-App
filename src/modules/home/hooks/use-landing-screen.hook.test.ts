@@ -1,11 +1,21 @@
-import { act } from '@testing-library/react';
-import { beforeAll, describe, expect, it } from 'vitest';
+import { act, waitFor } from '@testing-library/react';
+import { beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { useAppNavigation, type AppNavigation } from '@/packages/router';
+import { requestPublicTeamDirectory } from '@/modules/team-directory/gateways/team-directory.gateway';
+import { MOCK_TEAM_DIRECTORY } from '@/tests/msw/team-directory.fixture';
 
 import { initTestI18n } from '../../../../tests/setup/i18n-test.helper';
 import { renderHookWithProviders } from '../../../../tests/setup/render-with-providers.helper';
 import { useLandingScreen, type LandingScreenView } from './use-landing-screen.hook';
+
+vi.mock('@/modules/team-directory/gateways/team-directory.gateway', () => ({
+  requestPublicTeamDirectory: vi.fn(),
+}));
+
+beforeEach(() => {
+  vi.mocked(requestPublicTeamDirectory).mockResolvedValue(MOCK_TEAM_DIRECTORY);
+});
 
 interface LandingProbe {
   readonly screen: LandingScreenView;
@@ -88,13 +98,23 @@ describe('useLandingScreen', () => {
     expect(result.current.navigation.currentPath).toBe('/contact');
   });
 
-  it('seeds the leadership & staff seam with all nine Season-Board members', () => {
+  it('fills the leadership & staff seam from the live team directory', async () => {
+    const { result } = renderLanding();
+
+    await waitFor(() => {
+      expect(result.current.screen.staffDirectory.chrome.status).toBe('ready');
+    });
+
+    const { members } = result.current.screen.staffDirectory;
+    expect(members).toHaveLength(MOCK_TEAM_DIRECTORY.staff.length);
+    const ihab = members.find((member) => member.name === 'Ihab Khaled');
+    expect(ihab?.titles).toEqual(['Analysis', 'Technical']);
+  });
+
+  it('shows the staff seam loading before the directory resolves', () => {
     const { staffDirectory } = renderLanding().result.current.screen;
 
-    expect(staffDirectory.chrome.status).toBe('ready');
-    expect(staffDirectory.members).toHaveLength(9);
-    const ihab = staffDirectory.members.find((member) => member.id === 'ihab-khaled');
-    expect(ihab?.titles).toEqual(['Analysis', 'Technical']);
+    expect(staffDirectory.chrome.status).toBe('loading');
   });
 
   it('presents the news seam as honestly empty', () => {

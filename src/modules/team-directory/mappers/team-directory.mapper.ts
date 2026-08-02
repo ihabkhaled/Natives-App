@@ -15,25 +15,44 @@ function textOrNull(value: string | null): string | null {
   return trimmed === '' ? null : trimmed;
 }
 
-/** Title codes are compared, grouped, and keyed — normalize them once. */
+/**
+ * Title codes are compared, grouped, and keyed — normalize them once.
+ *
+ * The API stores titles as the words a human typed ("Social Media &
+ * Marketing"), while this client keys them as codes, so anything that is not
+ * a letter or digit collapses to a single hyphen. Lower-casing alone is not
+ * enough: it leaves "spirit captain", which matches no code and would render
+ * every staff card's title as a missing translation.
+ */
 function normalizeTitles(titles: readonly string[]): readonly string[] {
-  return titles.map((title) => title.trim().toLowerCase()).filter((title) => title !== '');
+  return titles
+    .map((title) =>
+      title
+        .trim()
+        .toLowerCase()
+        .replaceAll(/[^a-z0-9]+/gu, '-')
+        .replaceAll(/^-+|-+$/gu, ''),
+    )
+    .filter((title) => title !== '');
 }
 
 function mapProfile(dto: TeamProfileDto): TeamDirectory['team'] {
   return {
     slug: dto.slug.trim(),
     name: dto.name.trim(),
-    location: dto.location.trim(),
-    foundedOn: dto.foundedOn.trim(),
+    location: textOrNull(dto.location),
+    foundedOn: textOrNull(dto.foundedOn),
     // A public page never links out over plain http, whatever the API stores.
-    socialUrls: dto.socialUrls.filter((url) => url.startsWith(TEAM_SOCIAL_URL_PREFIX)),
+    socialUrls: [dto.facebookUrl, dto.instagramUrl, dto.tiktokUrl]
+      .map((url) => textOrNull(url))
+      .filter((url) => url !== null)
+      .filter((url) => url.startsWith(TEAM_SOCIAL_URL_PREFIX)),
   };
 }
 
 function mapStaffMember(dto: TeamStaffMemberDto): TeamStaffMember {
   return {
-    id: dto.id,
+    id: dto.membershipId,
     displayName: dto.displayName.trim(),
     nickname: textOrNull(dto.nickname),
     titles: normalizeTitles(dto.titles),
@@ -43,11 +62,12 @@ function mapStaffMember(dto: TeamStaffMemberDto): TeamStaffMember {
 
 function mapPlayer(dto: TeamPlayerDto): TeamRosterPlayer {
   return {
-    id: dto.id,
+    id: dto.membershipId,
     displayName: dto.displayName.trim(),
     nickname: textOrNull(dto.nickname),
     jerseyNumber: dto.jerseyNumber,
-    position: textOrNull(dto.position),
+    // The card has room for one position; the rest stay in the payload.
+    position: textOrNull(dto.positions[0] ?? null),
     photoUrl: textOrNull(dto.photoUrl),
   };
 }
@@ -82,7 +102,7 @@ function byJerseyThenName(left: TeamRosterPlayer, right: TeamRosterPlayer): numb
  */
 export function mapTeamDirectoryResponse(dto: TeamDirectoryResponseDto): TeamDirectory {
   return {
-    team: mapProfile(dto.team),
+    team: mapProfile(dto.profile),
     staff: dto.staff.map((member) => mapStaffMember(member)),
     players: [...dto.players].map((player) => mapPlayer(player)).sort(byJerseyThenName),
   };

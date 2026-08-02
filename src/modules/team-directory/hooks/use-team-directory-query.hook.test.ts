@@ -1,5 +1,9 @@
 import { waitFor } from '@testing-library/react';
-import { describe, expect, it } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
+
+import { MOCK_TEAM_DIRECTORY } from '@/tests/msw/team-directory.fixture';
+
+import { requestPublicTeamDirectory } from '../gateways/team-directory.gateway';
 
 import { renderHookWithProviders } from '../../../../tests/setup/render-with-providers.helper';
 import { TEAM_DIRECTORY_SLUG } from '../team-directory.constants';
@@ -12,6 +16,14 @@ function renderQuery(): ReturnType<
     initialPath: '/team',
   });
 }
+
+vi.mock('../gateways/team-directory.gateway', () => ({
+  requestPublicTeamDirectory: vi.fn(),
+}));
+
+beforeEach(() => {
+  vi.mocked(requestPublicTeamDirectory).mockResolvedValue(MOCK_TEAM_DIRECTORY);
+});
 
 describe('useTeamDirectoryQuery', () => {
   it('starts in the loading state so the screen can render its skeleton', () => {
@@ -29,7 +41,7 @@ describe('useTeamDirectoryQuery', () => {
     });
     expect(result.current.error).toBeNull();
     expect(result.current.data?.team.slug).toBe(TEAM_DIRECTORY_SLUG);
-    expect(result.current.data?.staff).toHaveLength(9);
+    expect(result.current.data?.staff).toHaveLength(5);
   });
 
   it('exposes a refetch the error state can retry with', async () => {
@@ -41,7 +53,7 @@ describe('useTeamDirectoryQuery', () => {
     result.current.refetch();
 
     await waitFor(() => {
-      expect(result.current.data?.players).toHaveLength(9);
+      expect(result.current.data?.players).toHaveLength(4);
     });
   });
 });

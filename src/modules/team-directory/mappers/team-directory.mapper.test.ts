@@ -9,10 +9,10 @@ import { mapTeamDirectoryResponse } from './team-directory.mapper';
 
 function staff(overrides: Partial<TeamStaffMemberDto> = {}): TeamStaffMemberDto {
   return {
-    id: 'staff-1',
+    membershipId: 'staff-1',
     displayName: 'Sherif Ashraf',
     nickname: '3alamy',
-    titles: ['coach'],
+    titles: ['Coach'],
     photoUrl: null,
     ...overrides,
   };
@@ -20,11 +20,11 @@ function staff(overrides: Partial<TeamStaffMemberDto> = {}): TeamStaffMemberDto 
 
 function player(overrides: Partial<TeamPlayerDto> = {}): TeamPlayerDto {
   return {
-    id: 'player-1',
+    membershipId: 'player-1',
     displayName: 'Rawan Elessawy',
     nickname: 'Roo',
     jerseyNumber: '11',
-    position: 'Handler',
+    positions: ['Handler'],
     photoUrl: null,
     ...overrides,
   };
@@ -32,12 +32,15 @@ function player(overrides: Partial<TeamPlayerDto> = {}): TeamPlayerDto {
 
 function response(overrides: Partial<TeamDirectoryResponseDto> = {}): TeamDirectoryResponseDto {
   return {
-    team: {
-      slug: ' ultimate-natives ',
+    profile: {
+      id: 'team-1',
+      slug: ' un ',
       name: ' Ultimate Natives ',
       location: ' El Sheikh Zayed, Giza, Egypt ',
       foundedOn: ' 2021-10 ',
-      socialUrls: ['https://www.facebook.com/ultimatenatives', 'http://insecure.example.com'],
+      facebookUrl: 'https://www.facebook.com/ultimatenatives',
+      instagramUrl: 'http://insecure.example.com',
+      tiktokUrl: null,
     },
     staff: [staff()],
     players: [player()],
@@ -48,7 +51,7 @@ function response(overrides: Partial<TeamDirectoryResponseDto> = {}): TeamDirect
 describe('mapTeamDirectoryResponse', () => {
   it('trims every field of the team profile', () => {
     expect(mapTeamDirectoryResponse(response()).team).toMatchObject({
-      slug: 'ultimate-natives',
+      slug: 'un',
       name: 'Ultimate Natives',
       location: 'El Sheikh Zayed, Giza, Egypt',
       foundedOn: '2021-10',
@@ -81,7 +84,7 @@ describe('mapTeamDirectoryResponse', () => {
     const mapped = mapTeamDirectoryResponse(
       response({
         staff: [staff({ nickname: '  ', photoUrl: '  ' })],
-        players: [player({ nickname: null, photoUrl: null, position: '  ' })],
+        players: [player({ nickname: null, photoUrl: null, positions: ['  '] })],
       }),
     );
 
@@ -101,9 +104,9 @@ describe('mapTeamDirectoryResponse', () => {
     const mapped = mapTeamDirectoryResponse(
       response({
         players: [
-          player({ id: 'p-33', jerseyNumber: '33' }),
-          player({ id: 'p-2', jerseyNumber: '2' }),
-          player({ id: 'p-11', jerseyNumber: '11' }),
+          player({ membershipId: 'p-33', jerseyNumber: '33' }),
+          player({ membershipId: 'p-2', jerseyNumber: '2' }),
+          player({ membershipId: 'p-11', jerseyNumber: '11' }),
         ],
       }),
     );
@@ -115,13 +118,13 @@ describe('mapTeamDirectoryResponse', () => {
     const mapped = mapTeamDirectoryResponse(
       response({
         players: [
-          player({ id: 'p-33', jerseyNumber: '33' }),
+          player({ membershipId: 'p-33', jerseyNumber: '33' }),
           // "011" must land next to the other elevens, not between "0" and "1".
-          player({ id: 'p-011', jerseyNumber: '011' }),
-          player({ id: 'p-2', jerseyNumber: '2' }),
+          player({ membershipId: 'p-011', jerseyNumber: '011' }),
+          player({ membershipId: 'p-2', jerseyNumber: '2' }),
           // Defensive: the server pattern rejects this, so it can only arrive
           // from a contract drift — it must sort last, never crash the page.
-          player({ id: 'p-bad', displayName: 'Zed', jerseyNumber: 'n/a' }),
+          player({ membershipId: 'p-bad', displayName: 'Zed', jerseyNumber: 'n/a' }),
         ],
       }),
     );
@@ -133,9 +136,13 @@ describe('mapTeamDirectoryResponse', () => {
     const mapped = mapTeamDirectoryResponse(
       response({
         players: [
-          player({ id: 'p-zahra', displayName: 'Zahra', jerseyNumber: null }),
-          player({ id: 'p-abdel', displayName: 'Abdelrahman Elleimy', jerseyNumber: null }),
-          player({ id: 'p-11', jerseyNumber: '11' }),
+          player({ membershipId: 'p-zahra', displayName: 'Zahra', jerseyNumber: null }),
+          player({
+            membershipId: 'p-abdel',
+            displayName: 'Abdelrahman Elleimy',
+            jerseyNumber: null,
+          }),
+          player({ membershipId: 'p-11', jerseyNumber: '11' }),
         ],
       }),
     );
@@ -146,13 +153,13 @@ describe('mapTeamDirectoryResponse', () => {
   it('never mutates the response it was given', () => {
     const dto = response({
       players: [
-        player({ id: 'p-33', jerseyNumber: '33' }),
-        player({ id: 'p-2', jerseyNumber: '2' }),
+        player({ membershipId: 'p-33', jerseyNumber: '33' }),
+        player({ membershipId: 'p-2', jerseyNumber: '2' }),
       ],
     });
 
     mapTeamDirectoryResponse(dto);
 
-    expect(dto.players.map((entry) => entry.id)).toEqual(['p-33', 'p-2']);
+    expect(dto.players.map((entry) => entry.membershipId)).toEqual(['p-33', 'p-2']);
   });
 });

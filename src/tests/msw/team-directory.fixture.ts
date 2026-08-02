@@ -1,80 +1,97 @@
 import type { TeamDirectoryResponseDto } from '@/modules/team-directory';
 
 /**
- * The payload contract 1.8.0 pins for `GET /public/teams/{slug}/directory`.
+ * The payload `GET /public/teams/{slug}/directory` returns.
  *
- * Deliberately richer than the app's current seed source so the mapper and the
- * screen are proven against the *live* shape rather than only the stub: real
- * portraits AND null ones side by side, a player with a position, an unknown
- * title code the client has not learned yet, an untrimmed name, and a plain
- * `http` social URL a public page must refuse to link out.
+ * Deliberately richer than any one real response so the mapper and the screen
+ * are proven against the awkward cases too: real portraits AND null ones side
+ * by side, a player with positions and one with none, a title the client has
+ * not learned yet, an untrimmed name, a plain `http` social URL a public page
+ * must refuse to link out, and a shirt printed `011` that must survive as a
+ * label rather than becoming eleven.
+ *
+ * Titles arrive as the words a human typed, not as codes — that is what the
+ * API stores, and normalizing them is the mapper's job.
  */
 export const MOCK_TEAM_DIRECTORY: TeamDirectoryResponseDto = {
-  team: {
-    slug: 'ultimate-natives',
+  profile: {
+    id: '8883cd2f-f6cb-45cc-aba0-ca4915fd5f7c',
+    slug: 'un',
     name: 'Ultimate Natives',
     location: 'El Sheikh Zayed, Giza, Egypt',
-    foundedOn: '2021-10',
-    socialUrls: [
-      'https://www.facebook.com/ultimatenatives',
-      'https://www.instagram.com/ultimatenatives',
-      'https://www.tiktok.com/@ultimate.natives',
-      'http://insecure.example.com/ultimatenatives',
-    ],
+    foundedOn: '2021-10-01',
+    facebookUrl: 'https://www.facebook.com/ultimatenatives',
+    instagramUrl: 'https://www.instagram.com/ultimatenatives',
+    tiktokUrl: 'http://insecure.example.com/ultimatenatives',
   },
   staff: [
     {
-      id: 'staff-1',
+      membershipId: 'staff-1',
       displayName: 'Sherif Ashraf',
       nickname: '3alamy',
-      titles: ['coach'],
-      photoUrl: '/staff/3alamy.jpg',
+      titles: ['Coach'],
+      photoUrl: '/staff/sherif-ashraf.jpg',
     },
     {
-      id: 'staff-2',
-      displayName: '  Rawan Elessawy  ',
-      nickname: 'Roo',
-      titles: ['CO-COACH'],
+      membershipId: 'staff-2',
+      displayName: '  Rawan E  ',
+      nickname: 'Rou',
+      titles: ['Co-Coach'],
       photoUrl: null,
     },
     {
-      id: 'staff-3',
+      membershipId: 'staff-3',
       displayName: 'Ihab Khaled',
       nickname: 'Hobz',
-      titles: ['analysis', 'technical', 'co-coach'],
-      photoUrl: null,
+      titles: ['Analysis', 'Technical'],
+      photoUrl: '/staff/ihab-khaled.jpg',
     },
     {
-      id: 'staff-4',
+      membershipId: 'staff-4',
+      displayName: 'Nourane Elsayed',
+      nickname: 'Nouran',
+      titles: ['Social Media & Marketing'],
+      photoUrl: '/staff/nourane.jpg',
+    },
+    {
+      membershipId: 'staff-5',
       displayName: 'Mai Ashraf',
       nickname: null,
-      titles: ['logistics'],
+      titles: ['Logistics'],
       photoUrl: null,
     },
   ],
   players: [
     {
-      id: 'player-1',
-      displayName: 'Rawan Elessawy',
-      nickname: 'Roo',
+      membershipId: 'player-1',
+      displayName: 'Rawan E',
+      nickname: 'Rou',
       jerseyNumber: '11',
-      position: 'Handler',
+      positions: ['Handler'],
       photoUrl: null,
     },
     {
-      id: 'player-2',
+      membershipId: 'player-2',
+      displayName: 'Mahmoud Medhat',
+      nickname: 'Medo',
+      jerseyNumber: '011',
+      positions: ['Cutter', 'Handler'],
+      photoUrl: null,
+    },
+    {
+      membershipId: 'player-3',
       displayName: 'Sherif Ashraf',
       nickname: '3alamy',
       jerseyNumber: '33',
-      position: 'Cutter',
-      photoUrl: '/staff/3alamy.jpg',
+      positions: ['Cutter'],
+      photoUrl: '/staff/sherif-ashraf.jpg',
     },
     {
-      id: 'player-3',
+      membershipId: 'player-4',
       displayName: 'Ihab Khaled',
       nickname: 'Hobz',
       jerseyNumber: null,
-      position: null,
+      positions: [],
       photoUrl: null,
     },
   ],

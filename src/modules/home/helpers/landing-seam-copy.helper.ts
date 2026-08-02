@@ -1,3 +1,4 @@
+import type { AppError } from '@/shared/errors';
 import { SHARED_SCREEN_COPY_KEYS } from '@/shared/view';
 import type { AsyncViewStatus } from '@/shared/ui';
 import { I18N_KEYS } from '@/shared/i18n';
@@ -37,6 +38,47 @@ export function resolveLandingSeamStatus(hasItems: boolean): AsyncViewStatus {
     hasData: true,
     hasItems,
   });
+}
+
+/** The live pieces a seam backed by a real query resolves its state from. */
+export interface LiveSeamState {
+  readonly isLoading: boolean;
+  readonly error: AppError | null;
+  readonly isOffline: boolean;
+  readonly onRetry: () => void;
+  readonly hasItems?: boolean;
+}
+
+/**
+ * The AsyncStateView copy block for a seam wired to a live query: status and
+ * retry come from the query rather than a stub, so the landing teaser shows
+ * the same loading, error and offline states as the page it links to.
+ */
+export function buildLiveSeamChrome(
+  t: Translate,
+  seam: LiveSeamState,
+  emptyTitleKey: string,
+  emptyMessageKey: string,
+): LandingSeamChrome {
+  const copy = buildScreenCopy(t, {
+    keys: LANDING_SEAM_COPY_KEYS,
+    error: seam.error,
+    isOffline: seam.isOffline,
+    onRetry: seam.onRetry,
+    emptyTitleKey,
+    emptyMessageKey,
+  });
+  return {
+    ...copy,
+    status: resolveAsyncViewStatus({
+      isForbidden: false,
+      isLoading: seam.isLoading,
+      hasError: seam.error !== null,
+      isOffline: seam.isOffline,
+      hasData: !seam.isLoading,
+      hasItems: seam.hasItems ?? false,
+    }),
+  };
 }
 
 /** The shared AsyncStateView copy block, specialized only by empty-state copy. */

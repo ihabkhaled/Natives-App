@@ -7,9 +7,15 @@ import { useNetworkStatus } from '@/platform';
 
 import { initTestI18n } from '../../../../tests/setup/i18n-test.helper';
 import { renderHookWithProviders } from '../../../../tests/setup/render-with-providers.helper';
+import { MOCK_TEAM_DIRECTORY } from '@/tests/msw/team-directory.fixture';
+
+import { requestPublicTeamDirectory } from '../gateways/team-directory.gateway';
 import { useTeamDirectoryScreen } from './use-team-directory-screen.hook';
 
 vi.mock('@/platform', () => createPlatformMock());
+vi.mock('../gateways/team-directory.gateway', () => ({
+  requestPublicTeamDirectory: vi.fn(),
+}));
 
 function renderScreen(): ReturnType<
   typeof renderHookWithProviders<ReturnType<typeof useTeamDirectoryScreen>>
@@ -23,6 +29,7 @@ beforeAll(async () => {
 
 beforeEach(() => {
   vi.mocked(useNetworkStatus).mockReturnValue({ isOnline: true });
+  vi.mocked(requestPublicTeamDirectory).mockResolvedValue(MOCK_TEAM_DIRECTORY);
 });
 
 afterEach(() => {
@@ -56,14 +63,15 @@ describe('useTeamDirectoryScreen', () => {
       expect(result.current.status).toBe('ready');
     });
 
+    // Known codes first in catalog order; the unknown "Logistics" title lands
+    // in the trailing bucket instead of vanishing.
     expect(result.current.staffGroups.map((group) => group.heading)).toEqual([
       'Coach',
       'Co-Coach',
-      'Spirit Captain',
-      'Finance',
       'Social Media & Marketing',
       'Analysis',
       'Technical',
+      'Team staff',
     ]);
   });
 
@@ -73,8 +81,8 @@ describe('useTeamDirectoryScreen', () => {
       expect(result.current.status).toBe('ready');
     });
 
-    expect(result.current.rosterCards).toHaveLength(9);
-    expect(result.current.rosterCountLabel).toBe('9 players listed so far');
+    expect(result.current.rosterCards).toHaveLength(4);
+    expect(result.current.rosterCountLabel).toBe('4 players listed so far');
   });
 
   it('publishes the team facts and social profiles in the hero', async () => {
@@ -86,18 +94,17 @@ describe('useTeamDirectoryScreen', () => {
     expect(result.current.hero.facts.map((fact) => fact.value)).toContain(
       'El Sheikh Zayed, Giza, Egypt',
     );
+    // The fixture's TikTok link is plain http, so the hero refuses to show it.
     expect(result.current.hero.socialLinks.map((social) => social.key)).toEqual([
       'facebook',
       'instagram',
-      'tiktok',
     ]);
   });
 
-  it('stays honest about the seam while the endpoint is not deployed', () => {
+  it('drops the coming-soon notice now the endpoint is live', () => {
     const { result } = renderScreen();
 
-    expect(result.current.isEndpointLive).toBe(false);
-    expect(result.current.seamNoticeTitle).toBe('Photos and the full roster are on their way');
+    expect(result.current.isEndpointLive).toBe(true);
   });
 
   it('carries translated copy for every designed non-ready state', () => {

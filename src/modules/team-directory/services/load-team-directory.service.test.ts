@@ -1,96 +1,68 @@
-import { describe, expect, it } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { STAFF_TITLE, TEAM_DIRECTORY_SLUG } from '../team-directory.constants';
+import { MOCK_TEAM_DIRECTORY } from '@/tests/msw/team-directory.fixture';
+
+import { requestPublicTeamDirectory } from '../gateways/team-directory.gateway';
+import { TEAM_DIRECTORY_SLUG } from '../team-directory.constants';
 import { loadTeamDirectory } from './load-team-directory.service';
 
-describe('loadTeamDirectory (TODO seam)', () => {
+vi.mock('../gateways/team-directory.gateway', () => ({
+  requestPublicTeamDirectory: vi.fn(),
+}));
+
+beforeEach(() => {
+  vi.mocked(requestPublicTeamDirectory).mockResolvedValue(MOCK_TEAM_DIRECTORY);
+});
+
+describe('loadTeamDirectory', () => {
+  it('asks the public endpoint for the slug it was given', async () => {
+    await loadTeamDirectory(TEAM_DIRECTORY_SLUG);
+
+    expect(requestPublicTeamDirectory).toHaveBeenCalledWith(TEAM_DIRECTORY_SLUG);
+  });
+
   it('resolves the team profile the public page is built around', async () => {
     const directory = await loadTeamDirectory(TEAM_DIRECTORY_SLUG);
 
     expect(directory.team).toMatchObject({
-      slug: TEAM_DIRECTORY_SLUG,
+      slug: 'un',
       name: 'Ultimate Natives',
       location: 'El Sheikh Zayed, Giza, Egypt',
-      foundedOn: '2021-10',
     });
   });
 
   it('links only the confirmed https social profiles', async () => {
     const directory = await loadTeamDirectory(TEAM_DIRECTORY_SLUG);
 
+    // The fixture's TikTok url is plain http; a public page must not link it.
     expect(directory.team.socialUrls).toEqual([
       'https://www.facebook.com/ultimatenatives',
       'https://www.instagram.com/ultimatenatives',
-      'https://www.tiktok.com/@ultimate.natives',
     ]);
   });
 
-  it('carries the whole confirmed season board', async () => {
+  it('normalizes the titles the API stores as words into codes', async () => {
     const { staff } = await loadTeamDirectory(TEAM_DIRECTORY_SLUG);
 
-    expect(staff.map((member) => member.nickname)).toEqual([
-      '3alamy',
-      'Doda',
-      'Roo',
-      'Zoza',
-      'Elleimy',
-      'Nour',
-      'Lilo',
-      'Riri',
-      'Hobz',
+    expect(staff.map((member) => member.titles)).toEqual([
+      ['coach'],
+      ['co-coach'],
+      ['analysis', 'technical'],
+      ['social-media-marketing'],
+      ['logistics'],
     ]);
   });
 
-  it('uses the corrected titles, never the words printed on the board images', async () => {
-    const { staff } = await loadTeamDirectory(TEAM_DIRECTORY_SLUG);
-    const titleOf = (nickname: string): readonly string[] =>
-      staff.find((member) => member.nickname === nickname)?.titles ?? [];
-
-    expect(titleOf('3alamy')).toEqual([STAFF_TITLE.Coach]);
-    expect(titleOf('Doda')).toEqual([STAFF_TITLE.CoCoach]);
-    expect(titleOf('Roo')).toEqual([STAFF_TITLE.CoCoach]);
-    expect(titleOf('Zoza')).toEqual([STAFF_TITLE.SpiritCaptain]);
-    expect(titleOf('Elleimy')).toEqual([STAFF_TITLE.Finance]);
-    expect(titleOf('Hobz')).toEqual([
-      STAFF_TITLE.Analysis,
-      STAFF_TITLE.Technical,
-      STAFF_TITLE.CoCoach,
-    ]);
-  });
-
-  it('gives the three marketing leads the same responsibility', async () => {
-    const { staff } = await loadTeamDirectory(TEAM_DIRECTORY_SLUG);
-    const marketing = staff.filter((member) =>
-      member.titles.includes(STAFF_TITLE.SocialMediaMarketing),
-    );
-
-    expect(marketing.map((member) => member.nickname)).toEqual(['Nour', 'Lilo', 'Riri']);
-  });
-
-  it('publishes no portrait yet, so every card falls back to initials', async () => {
-    const directory = await loadTeamDirectory(TEAM_DIRECTORY_SLUG);
-
-    expect(directory.staff.every((member) => member.photoUrl === null)).toBe(true);
-    expect(directory.players.every((player) => player.photoUrl === null)).toBe(true);
-  });
-
-  it('orders the roster by the confirmed jersey numbers', async () => {
+  it('orders the roster by jersey number, unnumbered shirts last', async () => {
     const { players } = await loadTeamDirectory(TEAM_DIRECTORY_SLUG);
 
-    expect(players.slice(0, 6).map((player) => player.jerseyNumber)).toEqual([
-      '2',
-      '4',
-      '11',
-      '22',
-      '23',
-      '33',
-    ]);
-    expect(players.slice(6).every((player) => player.jerseyNumber === null)).toBe(true);
+    // "011" is a printed label: it ranks as eleven, not between "0" and "1".
+    expect(players.map((player) => player.jerseyNumber)).toEqual(['011', '11', '33', null]);
   });
 
-  it('makes no network call while the endpoint is not deployed', async () => {
-    await expect(loadTeamDirectory('any-other-slug')).resolves.toMatchObject({
-      team: { slug: TEAM_DIRECTORY_SLUG },
-    });
+  it('carries each player through with the first of their positions', async () => {
+    const { players } = await loadTeamDirectory(TEAM_DIRECTORY_SLUG);
+
+    expect(players.map((player) => player.position)).toEqual(['Cutter', 'Handler', 'Cutter', null]);
   });
 });

@@ -2,17 +2,19 @@ import { SHARED_SCREEN_COPY_KEYS } from '@/shared/view';
 import { I18N_KEYS } from '@/shared/i18n';
 
 /**
- * TODO(team-directory-endpoint): flip once contract 1.8.0 deploys
- * `GET /public/teams/{slug}/directory`. The screen reads this flag to show an
- * honest "photos and the full roster are on their way" notice while the page
- * is served from the pinned seed source. Only this flag and the body of
- * `services/load-team-directory.service.ts` change when the endpoint is live —
- * the query, hooks, view model, and components need no edits.
+ * The public directory endpoint is live, so the screen no longer shows the
+ * "photos and the full roster are on their way" notice.
  */
-export const TEAM_DIRECTORY_ENDPOINT_LIVE = false;
+export const TEAM_DIRECTORY_ENDPOINT_LIVE = true;
 
-/** The one public team this deployment serves; the `{slug}` path parameter. */
-export const TEAM_DIRECTORY_SLUG = 'ultimate-natives';
+/**
+ * The one public team this deployment serves; the `{slug}` path parameter.
+ *
+ * This must match the `teams.slug` the API stores — the endpoint looks the
+ * team up by it, and a mismatch is an unexplained 404 on the public page
+ * rather than an error anyone can read.
+ */
+export const TEAM_DIRECTORY_SLUG = 'un';
 
 /**
  * Staff responsibility codes from the per-team staff-title catalog. Distinct
