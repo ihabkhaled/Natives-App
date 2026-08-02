@@ -23,6 +23,7 @@ import { REPORTS_I18N_KEYS } from './reports-keys.constants';
 import { ROSTERS_I18N_KEYS } from './rosters-keys.constants';
 import { SQUADS_I18N_KEYS } from './squads-keys.constants';
 import { STANDINGS_I18N_KEYS } from './standings-keys.constants';
+import { TEAM_DIRECTORY_I18N_KEYS } from './team-directory-keys.constants';
 import {
   PERMISSIONS_MATRIX_I18N_KEYS,
   SEASONS_ADMIN_I18N_KEYS,
@@ -97,6 +98,7 @@ export const I18N_KEYS = {
   about: ABOUT_I18N_KEYS,
   contact: CONTACT_I18N_KEYS,
   landing: LANDING_I18N_KEYS,
+  teamDirectory: TEAM_DIRECTORY_I18N_KEYS,
   auth: {
     loginTitle: 'auth.loginTitle',
     emailLabel: 'auth.emailLabel',

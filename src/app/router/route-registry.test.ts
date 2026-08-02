@@ -23,6 +23,7 @@ describe('getAppRouteDefinitions', () => {
       APP_PATHS.about,
       APP_PATHS.home,
       APP_PATHS.contact,
+      APP_PATHS.team,
       APP_PATHS.practices,
       APP_PATHS.practiceSession,
       APP_PATHS.attendance,

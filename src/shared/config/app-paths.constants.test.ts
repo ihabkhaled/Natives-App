@@ -60,6 +60,7 @@ describe('APP_PATHS', () => {
       'squads',
       'standings',
       'standingsRules',
+      'team',
       'teamHistory',
       'training',
       'trainingReview',

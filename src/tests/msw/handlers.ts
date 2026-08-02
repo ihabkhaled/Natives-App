@@ -53,6 +53,7 @@ import { notificationsHandlers } from './notifications-handlers';
 import { resetMockNotificationsState } from './notifications.fixture';
 import { tryoutsHandlers } from './tryouts-handlers';
 import { resetMockTryoutsState } from './tryouts.fixture';
+import { teamDirectoryHandlers } from './team-directory-handlers';
 import { teamsHandlers } from './teams-handlers';
 import { trainingHandlers } from './training-handlers';
 import { resetMockTrainingState } from './training.fixture';
@@ -244,5 +245,6 @@ export const mockApiHandlers = [
   ...analyticsHandlers,
   ...reportsHandlers,
   ...teamsHandlers,
+  ...teamDirectoryHandlers,
   ...recoveryHandlers,
 ];

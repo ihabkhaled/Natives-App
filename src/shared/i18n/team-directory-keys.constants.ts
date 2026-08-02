@@ -1,0 +1,41 @@
+/**
+ * Public team directory (`/team`) copy: the season-board leadership grid and
+ * the active roster. Split out of the aggregate catalog so I18N_KEYS stays
+ * within its size budget; validate-locales.mjs reads every *keys.constants.ts.
+ */
+export const TEAM_DIRECTORY_I18N_KEYS = {
+  title: 'teamDirectory.title',
+  metaDescription: 'teamDirectory.metaDescription',
+  heroEyebrow: 'teamDirectory.heroEyebrow',
+  heroTitle: 'teamDirectory.heroTitle',
+  heroTagline: 'teamDirectory.heroTagline',
+  factLocationLabel: 'teamDirectory.factLocationLabel',
+  factFoundedLabel: 'teamDirectory.factFoundedLabel',
+  factFoundedValue: 'teamDirectory.factFoundedValue',
+  factSportLabel: 'teamDirectory.factSportLabel',
+  factSportValue: 'teamDirectory.factSportValue',
+  factSquadLabel: 'teamDirectory.factSquadLabel',
+  factSquadValue: 'teamDirectory.factSquadValue',
+  followHeading: 'teamDirectory.followHeading',
+  seamNoticeTitle: 'teamDirectory.seamNoticeTitle',
+  seamNoticeMessage: 'teamDirectory.seamNoticeMessage',
+  staffHeading: 'teamDirectory.staffHeading',
+  staffIntro: 'teamDirectory.staffIntro',
+  rosterHeading: 'teamDirectory.rosterHeading',
+  rosterIntro: 'teamDirectory.rosterIntro',
+  rosterCountLabel: 'teamDirectory.rosterCountLabel',
+  jerseyLabel: 'teamDirectory.jerseyLabel',
+  portraitAlt: 'teamDirectory.portraitAlt',
+  avatarLabel: 'teamDirectory.avatarLabel',
+  loadingLabel: 'teamDirectory.loadingLabel',
+  emptyTitle: 'teamDirectory.emptyTitle',
+  emptyMessage: 'teamDirectory.emptyMessage',
+  titleCoach: 'teamDirectory.titleCoach',
+  titleCoCoach: 'teamDirectory.titleCoCoach',
+  titleSpiritCaptain: 'teamDirectory.titleSpiritCaptain',
+  titleFinance: 'teamDirectory.titleFinance',
+  titleSocialMedia: 'teamDirectory.titleSocialMedia',
+  titleAnalysis: 'teamDirectory.titleAnalysis',
+  titleTechnical: 'teamDirectory.titleTechnical',
+  titleOther: 'teamDirectory.titleOther',
+} as const;

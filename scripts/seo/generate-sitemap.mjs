@@ -21,6 +21,7 @@ const SITE_URL = 'https://natives-frontend-app.vercel.app';
 const PUBLIC_ROUTES = [
   { path: '/welcome', changefreq: 'weekly', priority: '1.0' },
   { path: '/about', changefreq: 'monthly', priority: '0.8' },
+  { path: '/team', changefreq: 'monthly', priority: '0.8' },
   { path: '/contact', changefreq: 'monthly', priority: '0.6' },
 ];
 
