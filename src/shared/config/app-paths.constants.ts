@@ -9,6 +9,14 @@ export const APP_PATHS = {
   about: '/about',
   contact: '/contact',
   team: '/team',
+  /**
+   * Public competitions showcase (signed-out). `/competitions` and
+   * `/competitions/:competitionId` already belong to the authenticated
+   * competitions workspace, so the marketing pages live under `/results`;
+   * changing these two values is all it takes to move them.
+   */
+  publicCompetitions: '/results',
+  publicCompetitionDetail: '/results/:competitionSlug',
   login: '/login',
   forgotPassword: '/forgot-password',
   resetPassword: '/reset-password',

@@ -10,6 +10,7 @@ import { ASSESSMENTS_TEST_IDS } from './assessments-test-ids.constants';
 import { CONTACT_TEST_IDS } from './contact-test-ids.constants';
 import { LANDING_TEST_IDS } from './landing-test-ids.constants';
 import { ONBOARDING_TEST_IDS } from './onboarding-test-ids.constants';
+import { PUBLIC_COMPETITIONS_TEST_IDS } from './public-competitions-test-ids.constants';
 import { PUBLIC_TEST_IDS } from './public-test-ids.constants';
 import { SELF_SERVICE_TEST_IDS } from './self-service-test-ids.constants';
 import { COMPETITIONS_TEST_IDS } from './competitions-test-ids.constants';
@@ -38,6 +39,7 @@ export const TEST_IDS = {
   ...ANALYTICS_TEST_IDS,
   ...REPORTS_TEST_IDS,
   ...PUBLIC_TEST_IDS,
+  ...PUBLIC_COMPETITIONS_TEST_IDS,
   appShell: 'app-shell',
   skipLink: 'skip-link',
   mainContent: 'main-content',

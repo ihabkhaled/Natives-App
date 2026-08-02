@@ -5917,6 +5917,17 @@ ion-spinner {
    Every offset is a logical property, so Arabic mirrors without an override.
 ---------------------------------------------------------------------------- */
 .app-team-layout {
+   Public competitions showcase — the signed-out results pages.
+
+   The season card is the one bold move: a floodlit slab with the disc-arc
+   motif in the corner and the FINISH promoted above the facts, because a
+   placing is the headline and not a footnote. Where the organiser has not
+   published a placing, an amber "results pending" chip says so outright —
+   never a dash a visitor could read as last place. Ranks and points are the
+   only place gold appears. Every geometric value is logical so Arabic mirrors
+   without a second stylesheet, and every column of digits is tabular-nums.
+---------------------------------------------------------------------------- */
+.app-showcase-layout {
   display: flex;
   flex-direction: column;
   gap: var(--un-space-6);
@@ -6061,6 +6072,14 @@ ion-spinner {
 
 /* Honest seam notice while the public directory endpoint is not live. */
 .app-team-notice {
+.app-showcase-hero {
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+  gap: var(--un-space-2);
+}
+
+.app-showcase-notice {
   display: flex;
   flex-direction: column;
   gap: var(--un-space-1);
@@ -6068,6 +6087,9 @@ ion-spinner {
   border: 1px solid var(--app-gold-line);
   border-radius: var(--un-radius-md);
   background: var(--app-gold-soft);
+  border: 1px solid var(--app-lime-line);
+  border-radius: var(--un-radius-md);
+  background: var(--app-lime-soft);
   color: var(--app-ink);
   font-size: var(--un-font-size-sm);
 }
@@ -6125,6 +6147,83 @@ ion-spinner {
   align-items: flex-start;
   gap: var(--un-space-2);
   padding: var(--un-space-4);
+.app-showcase-notice__title {
+  font-weight: var(--un-font-weight-bold);
+}
+
+.app-showcase-grid {
+  display: grid;
+  gap: var(--un-space-4);
+  margin: 0;
+  padding-inline-start: 0;
+  list-style: none;
+}
+
+.app-showcase-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: var(--un-space-3);
+  block-size: 100%;
+  padding: var(--un-space-4);
+  overflow: hidden;
+  border: 1px solid var(--app-hairline);
+  border-radius: var(--un-radius-xl);
+  background: var(--app-card-bg);
+  box-shadow: var(--app-elevation-card);
+  transition:
+    transform var(--un-motion-duration-base) var(--un-motion-easing-emphasized),
+    box-shadow var(--un-motion-duration-base) var(--un-motion-easing-emphasized);
+}
+
+.app-showcase-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--app-elevation-lift);
+}
+
+/* The disc-flight arc, echoed once per card. Decorative only. */
+.app-showcase-card__arc {
+  position: absolute;
+  inset-block-start: -60%;
+  inset-inline-end: -30%;
+  inline-size: 14rem;
+  block-size: 14rem;
+  border: 2px solid var(--app-arc-line);
+  border-radius: var(--un-radius-circle);
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+.app-showcase-card__season {
+  display: flex;
+  align-items: baseline;
+  gap: var(--un-space-2);
+  margin: 0;
+}
+
+.app-showcase-card__season-value {
+  color: var(--app-lime-text);
+  font-size: var(--un-font-size-sm);
+  font-weight: var(--un-font-weight-bold);
+  font-variant-numeric: tabular-nums;
+}
+
+.app-showcase-card__name {
+  position: relative;
+  margin: 0;
+  color: var(--app-ink);
+  font-size: var(--un-font-size-xl);
+  font-weight: var(--un-font-weight-bold);
+  line-height: var(--un-line-height-tight);
+}
+
+.app-showcase-card__finish {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--un-space-2);
+  margin: 0;
+  padding: var(--un-space-3);
   border: 1px solid var(--app-hairline);
   border-radius: var(--un-radius-lg);
   background: var(--app-page-bg);
@@ -6302,6 +6401,226 @@ ion-spinner {
   }
 
   .app-landing-gallery-grid {
+.app-showcase-card__finish-value {
+  display: flex;
+  align-items: baseline;
+  gap: var(--un-space-2);
+}
+
+.app-showcase-card__rank {
+  color: var(--app-gold-text);
+  font-size: var(--un-font-size-xxl);
+  font-weight: var(--un-font-weight-bold);
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+}
+
+.app-showcase-card__entrants {
+  color: var(--app-muted);
+  font-size: var(--un-font-size-sm);
+}
+
+.app-showcase-card__facts {
+  display: grid;
+  gap: var(--un-space-2);
+  margin: 0;
+}
+
+.app-showcase-card__fact {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--un-space-3);
+  font-size: var(--un-font-size-sm);
+}
+
+.app-showcase-card__fact dt {
+  margin: 0;
+  color: var(--app-muted);
+}
+
+.app-showcase-card__fact dd {
+  margin: 0;
+  color: var(--app-ink);
+  text-align: end;
+}
+
+.app-showcase-scroll {
+  overflow-x: auto;
+}
+
+.app-showcase-table,
+.app-showcase-board,
+.app-showcase-subtable {
+  inline-size: 100%;
+  border-collapse: collapse;
+  font-size: var(--un-font-size-sm);
+}
+
+.app-showcase-table caption,
+.app-showcase-board caption,
+.app-showcase-subtable caption {
+  padding-block-end: var(--un-space-2);
+  color: var(--app-muted);
+  font-size: var(--un-font-size-xs);
+  text-align: start;
+}
+
+.app-showcase-table th,
+.app-showcase-table td,
+.app-showcase-board th,
+.app-showcase-board td,
+.app-showcase-subtable th,
+.app-showcase-subtable td {
+  padding: var(--un-space-2) var(--un-space-3);
+  border-block-end: 1px solid var(--app-hairline);
+  color: var(--app-ink);
+  text-align: start;
+  vertical-align: middle;
+}
+
+/* The uppercase micro-label, in the showcase's dialect. */
+.app-showcase-card__season-label,
+.app-showcase-card__finish-label,
+.app-showcase-table thead th,
+.app-showcase-board thead th,
+.app-showcase-subtable thead th {
+  color: var(--app-muted-strong);
+  font-size: var(--un-font-size-xs);
+  font-weight: var(--un-font-weight-semibold);
+  letter-spacing: var(--un-letter-spacing-wide);
+  text-transform: uppercase;
+}
+
+/* Arabic is never letter-spaced and has no case, so both are dropped in RTL. */
+[dir='rtl'] .app-showcase-card__season-label,
+[dir='rtl'] .app-showcase-card__finish-label,
+[dir='rtl'] .app-showcase-table thead th,
+[dir='rtl'] .app-showcase-board thead th,
+[dir='rtl'] .app-showcase-subtable thead th {
+  letter-spacing: var(--un-letter-spacing-normal);
+  text-transform: none;
+}
+
+/* A 3px inline edge repeats the outcome next to the chip, so a result never
+   depends on colour alone. */
+.app-showcase-table__row {
+  border-inline-start: 3px solid transparent;
+}
+
+.app-showcase-table__row--win {
+  border-inline-start-color: var(--app-lime);
+}
+
+.app-showcase-table__row--loss {
+  border-inline-start-color: var(--ion-color-danger);
+}
+
+.app-showcase-table__row--draw {
+  border-inline-start-color: var(--app-muted);
+}
+
+.app-showcase-table__row--pending {
+  border-inline-start-color: var(--app-gold);
+}
+
+.app-showcase-table__toggle {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  align-items: start;
+  inline-size: 100%;
+  min-block-size: var(--un-control-sm);
+  color: inherit;
+  text-align: start;
+  cursor: pointer;
+}
+
+.app-showcase-table__opponent {
+  color: var(--app-ink);
+  font-weight: var(--un-font-weight-semibold);
+}
+
+.app-showcase-table__hint {
+  color: var(--app-lime-text);
+  font-size: var(--un-font-size-xs);
+}
+
+.app-showcase-table__toggle:hover .app-showcase-table__hint {
+  text-decoration: underline;
+}
+
+.app-showcase-table__score {
+  color: var(--app-ink);
+  font-size: var(--un-font-size-md);
+  font-weight: var(--un-font-weight-bold);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.app-showcase-table__players {
+  padding: var(--un-space-3);
+  background: var(--app-page-bg);
+}
+
+.app-showcase-table__players-empty {
+  margin: 0;
+  color: var(--app-muted);
+  font-size: var(--un-font-size-sm);
+}
+
+.app-showcase-board__row--leader .app-showcase-board__player {
+  color: var(--app-gold-text);
+}
+
+.app-showcase-board__rank {
+  inline-size: 3rem;
+  color: var(--app-gold-text);
+  font-weight: var(--un-font-weight-bold);
+  font-variant-numeric: tabular-nums;
+}
+
+.app-showcase-board__player {
+  font-weight: var(--un-font-weight-semibold);
+}
+
+.app-showcase-board__points {
+  display: flex;
+  align-items: center;
+  gap: var(--un-space-3);
+  min-inline-size: 10rem;
+}
+
+.app-showcase-board__meter {
+  display: block;
+  flex: 1;
+  block-size: 8px;
+  border-radius: var(--un-radius-pill);
+  background: var(--app-track-bg);
+}
+
+.app-showcase-board__fill {
+  display: block;
+  block-size: 100%;
+  min-inline-size: 2px;
+  border-radius: var(--un-radius-pill);
+  background: var(--app-cta-gradient);
+}
+
+.app-showcase-board__value {
+  color: var(--app-ink);
+  font-weight: var(--un-font-weight-semibold);
+  font-variant-numeric: tabular-nums;
+}
+
+@media (min-width: 720px) {
+  .app-showcase-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1100px) {
+  .app-showcase-grid {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 }
@@ -6390,6 +6709,12 @@ ion-spinner {
   }
 
   .app-team-card:hover {
+@media (prefers-reduced-motion: reduce) {
+  .app-showcase-card {
+    transition: none;
+  }
+
+  .app-showcase-card:hover {
     transform: none;
   }
 }

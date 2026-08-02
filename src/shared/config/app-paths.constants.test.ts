@@ -49,6 +49,8 @@ describe('APP_PATHS', () => {
       'points',
       'practiceSession',
       'practices',
+      'publicCompetitionDetail',
+      'publicCompetitions',
       'reports',
       'resetPassword',
       'root',
