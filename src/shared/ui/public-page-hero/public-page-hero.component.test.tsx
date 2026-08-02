@@ -21,10 +21,10 @@ describe('PublicPageHero', () => {
   });
 
   it('keeps a page-specific skin when one is given, and defaults otherwise', () => {
-    const { container, rerender } = render(<PublicPageHero eyebrow="e" title="t" />);
-    expect(container.querySelector('header')).toHaveClass('app-about-hero');
+    const { rerender } = render(<PublicPageHero eyebrow="e" title="t" />);
+    expect(screen.getByRole('banner')).toHaveClass('app-about-hero');
 
     rerender(<PublicPageHero eyebrow="e" title="t" className="app-showcase-hero" />);
-    expect(container.querySelector('header')).toHaveClass('app-showcase-hero');
+    expect(screen.getByRole('banner')).toHaveClass('app-showcase-hero');
   });
 });
