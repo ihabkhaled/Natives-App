@@ -5933,32 +5933,6 @@ ion-spinner {
 }
 
 .app-landing-layout {
-   Team directory (/team) — the public "who's who": a masthead carrying the disc
-   arc, the season board grouped by responsibility, and the active roster.
-
-   Cards sit in a fixed-width auto-fit grid, so a wide desktop shows three or
-   four per row instead of stretching one mobile card across the viewport.
-   Every offset is a logical property, so Arabic mirrors without an override.
----------------------------------------------------------------------------- */
-.app-team-layout {
-   Public competitions showcase — the signed-out results pages.
-
-   The season card is the one bold move: a floodlit slab with the disc-arc
-   motif in the corner and the FINISH promoted above the facts, because a
-   placing is the headline and not a footnote. Where the organiser has not
-   published a placing, an amber "results pending" chip says so outright —
-   never a dash a visitor could read as last place. Ranks and points are the
-   only place gold appears. Every geometric value is logical so Arabic mirrors
-   without a second stylesheet, and every column of digits is tabular-nums.
----------------------------------------------------------------------------- */
-.app-showcase-layout {
-   Public Tryouts — the signed-out application page. Composes the shared
-   surface card, status chip, and section panel; adds a floodlit hero, the
-   session grid with its capacity meter, and the numbered "what happens next"
-   list. Two columns from 1024px so a desktop never renders a stretched mobile
-   card. Logical properties throughout, so Arabic mirrors without overrides.
----------------------------------------------------------------------------- */
-.app-public-tryouts {
   display: flex;
   flex-direction: column;
   gap: var(--un-space-6);
@@ -5994,6 +5968,143 @@ ion-spinner {
 
 .app-landing-hero__title {
   font-size: clamp(2rem, 5vw, 3.25rem);
+  font-weight: var(--un-font-weight-bold);
+  letter-spacing: var(--un-letter-spacing-tight);
+}
+
+.app-landing-hero__tagline {
+  font-size: var(--un-font-size-md);
+  line-height: var(--un-line-height-normal);
+  max-width: 34rem;
+}
+
+.app-landing-hero__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--un-space-3);
+  margin-block-start: var(--un-space-2);
+}
+
+.app-landing-staff-grid,
+.app-landing-competitions-grid {
+  display: grid;
+  gap: var(--un-space-4);
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.app-landing-staff-card,
+.app-landing-competition-card {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--un-space-2);
+  padding: var(--un-space-4);
+  border: 1px solid var(--app-hairline);
+  border-radius: var(--un-radius-lg);
+  background: var(--app-page-bg);
+}
+
+.app-landing-staff-card__titles {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--un-space-1);
+  margin: 0;
+  padding-inline-start: 0;
+  list-style: none;
+  font-size: var(--un-font-size-xs);
+  color: var(--app-muted-strong);
+}
+
+.app-landing-staff-card__titles li {
+  padding: 0.125rem var(--un-space-2);
+  border-radius: var(--un-radius-pill);
+  background: var(--app-gold-soft);
+  color: var(--app-gold-text);
+  font-weight: var(--un-font-weight-semibold);
+}
+
+.app-landing-location {
+  display: flex;
+  flex-direction: column;
+  gap: var(--un-space-4);
+}
+
+.app-landing-location__mark {
+  inline-size: 100%;
+  block-size: 10rem;
+  border-radius: var(--un-radius-lg);
+  background: color-mix(in srgb, var(--app-gold) 16%, var(--app-page-bg));
+  border: 1px dashed var(--app-gold-line);
+}
+
+.app-landing-location__details {
+  display: flex;
+  flex-direction: column;
+  gap: var(--un-space-2);
+}
+
+.app-landing-gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--un-space-3);
+}
+
+.app-landing-gallery-tile {
+  aspect-ratio: 4 / 3;
+  border-radius: var(--un-radius-lg);
+  background: var(--app-skeleton-base);
+  border: 1px solid var(--app-hairline);
+}
+
+@media (min-width: 720px) {
+  .app-landing-staff-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .app-landing-competitions-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .app-landing-location {
+    flex-direction: row;
+    align-items: center;
+  }
+
+  .app-landing-location__mark {
+    flex: 0 0 16rem;
+    block-size: 12rem;
+  }
+
+  .app-landing-gallery-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1080px) {
+  .app-landing-staff-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  .app-landing-gallery-grid {
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+  }
+}
+
+/* ----------------------------------------------------------------------------
+   Team directory (/team) — the public "who's who": a masthead carrying the disc
+   arc, the season board grouped by responsibility, and the active roster.
+
+   Cards sit in a fixed-width auto-fit grid, so a wide desktop shows three or
+   four per row instead of stretching one mobile card across the viewport.
+   Every offset is a logical property, so Arabic mirrors without an override.
+---------------------------------------------------------------------------- */
+.app-team-layout {
+  display: flex;
+  flex-direction: column;
+  gap: var(--un-space-6);
+  padding-block-end: var(--un-space-8);
+}
+
 .app-team-hero {
   position: relative;
   isolation: isolate;
@@ -6041,26 +6152,6 @@ ion-spinner {
 }
 
 .app-team-hero__tagline {
-.app-public-tryouts__hero {
-  display: flex;
-  flex-direction: column;
-  gap: var(--un-space-2);
-  padding: var(--un-space-6);
-  border: 1px solid var(--app-lime-line);
-  border-radius: var(--un-radius-xl);
-  background: var(--app-hero-glow);
-}
-
-.app-public-tryouts__title {
-  color: var(--app-ink);
-  font-size: var(--un-font-size-xxl);
-  font-weight: var(--un-font-weight-bold);
-  line-height: var(--un-line-height-tight);
-  letter-spacing: var(--un-letter-spacing-tight);
-}
-
-.app-public-tryouts__intro {
-  max-inline-size: 62ch;
   font-size: var(--un-font-size-md);
   line-height: var(--un-line-height-normal);
 }
@@ -6123,14 +6214,6 @@ ion-spinner {
 
 /* Honest seam notice while the public directory endpoint is not live. */
 .app-team-notice {
-.app-showcase-hero {
-  display: flex;
-  flex-direction: column;
-  align-items: start;
-  gap: var(--un-space-2);
-}
-
-.app-showcase-notice {
   display: flex;
   flex-direction: column;
   gap: var(--un-space-1);
@@ -6138,9 +6221,6 @@ ion-spinner {
   border: 1px solid var(--app-gold-line);
   border-radius: var(--un-radius-md);
   background: var(--app-gold-soft);
-  border: 1px solid var(--app-lime-line);
-  border-radius: var(--un-radius-md);
-  background: var(--app-lime-soft);
   color: var(--app-ink);
   font-size: var(--un-font-size-sm);
 }
@@ -6171,148 +6251,6 @@ ion-spinner {
   letter-spacing: var(--un-letter-spacing-tight);
 }
 
-.app-landing-hero__tagline {
-  font-size: var(--un-font-size-md);
-  line-height: var(--un-line-height-normal);
-  max-width: 34rem;
-}
-
-.app-landing-hero__actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--un-space-3);
-  margin-block-start: var(--un-space-2);
-}
-
-.app-landing-staff-grid,
-.app-landing-competitions-grid {
-  display: grid;
-  gap: var(--un-space-4);
-  grid-template-columns: minmax(0, 1fr);
-}
-
-.app-landing-staff-card,
-.app-landing-competition-card {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: var(--un-space-2);
-  padding: var(--un-space-4);
-.app-showcase-notice__title {
-  font-weight: var(--un-font-weight-bold);
-}
-
-.app-showcase-grid {
-   Newsroom — the public list and story pages plus the permissioned editor.
-   Everything is logical-property based (inline-start/end, padding-block) so
-   the same rules lay out correctly under `dir="rtl"`, and every colour comes
-   from the app tokens so light and dark both follow the theme.
----------------------------------------------------------------------------- */
-.app-news__hero {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: var(--un-space-2);
-}
-
-.app-news__title {
-  font-size: var(--un-font-size-xxl);
-  font-weight: var(--un-font-weight-bold);
-  line-height: var(--un-line-height-tight);
-}
-
-.app-news__grid {
-  display: grid;
-  gap: var(--un-space-4);
-  margin: 0;
-  padding-inline-start: 0;
-  list-style: none;
-}
-
-.app-showcase-card {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  gap: var(--un-space-3);
-  block-size: 100%;
-  padding: var(--un-space-4);
-  overflow: hidden;
-  border: 1px solid var(--app-hairline);
-  border-radius: var(--un-radius-xl);
-  background: var(--app-card-bg);
-  box-shadow: var(--app-elevation-card);
-  transition:
-    transform var(--un-motion-duration-base) var(--un-motion-easing-emphasized),
-    box-shadow var(--un-motion-duration-base) var(--un-motion-easing-emphasized);
-}
-
-.app-showcase-card:hover {
-.app-news-card {
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-  padding: 0;
-  transition:
-    transform 160ms ease,
-    box-shadow 160ms ease;
-}
-
-.app-news-card:hover {
-  transform: translateY(-2px);
-  box-shadow: var(--app-elevation-lift);
-}
-
-/* The disc-flight arc, echoed once per card. Decorative only. */
-.app-showcase-card__arc {
-  position: absolute;
-  inset-block-start: -60%;
-  inset-inline-end: -30%;
-  inline-size: 14rem;
-  block-size: 14rem;
-  border: 2px solid var(--app-arc-line);
-  border-radius: var(--un-radius-circle);
-  opacity: 0.5;
-  pointer-events: none;
-}
-
-.app-showcase-card__season {
-  display: flex;
-  align-items: baseline;
-  gap: var(--un-space-2);
-  margin: 0;
-}
-
-.app-showcase-card__season-value {
-  color: var(--app-lime-text);
-  font-size: var(--un-font-size-sm);
-  font-weight: var(--un-font-weight-bold);
-  font-variant-numeric: tabular-nums;
-}
-
-.app-showcase-card__name {
-  position: relative;
-  margin: 0;
-  color: var(--app-ink);
-  font-size: var(--un-font-size-xl);
-  font-weight: var(--un-font-weight-bold);
-  line-height: var(--un-line-height-tight);
-}
-
-.app-showcase-card__finish {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: var(--un-space-2);
-  margin: 0;
-  padding: var(--un-space-3);
-  border: 1px solid var(--app-hairline);
-  border-radius: var(--un-radius-lg);
-  background: var(--app-page-bg);
-}
-
-.app-landing-staff-card__titles {
-  display: flex;
-  flex-wrap: wrap;
 .app-team-group__title::before {
   display: block;
   flex: none;
@@ -6398,95 +6336,6 @@ ion-spinner {
 .app-team-card__name {
   color: var(--app-ink);
   font-size: var(--un-font-size-sm);
-.app-news-card__cover {
-  display: block;
-  aspect-ratio: 16 / 9;
-  width: 100%;
-  border-block-end: 1px solid var(--app-hairline);
-  object-fit: cover;
-}
-
-.app-news-card__cover--fallback {
-  display: grid;
-  place-items: center;
-  background: var(--app-lime-soft);
-}
-
-.app-news-card__initial {
-  color: var(--app-lime-text);
-  font-size: var(--un-font-size-xxl);
-  font-weight: var(--un-font-weight-bold);
-  line-height: 1;
-}
-
-.app-news-card__body {
-  display: flex;
-  flex: 1;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: var(--un-space-2);
-  padding: var(--un-space-4);
-}
-
-.app-news-card__title {
-  font-size: var(--un-font-size-lg);
-  font-weight: var(--un-font-weight-semibold);
-  line-height: var(--un-line-height-snug);
-}
-
-.app-news-card__excerpt {
-  font-size: var(--un-font-size-sm);
-  line-height: var(--un-line-height-normal);
-}
-
-.app-news-card__meta {
-  font-size: var(--un-font-size-xs);
-}
-
-.app-news-article__cover {
-  display: block;
-  width: 100%;
-  max-height: 24rem;
-  border: 1px solid var(--app-hairline);
-  border-radius: var(--un-radius-lg);
-  object-fit: cover;
-}
-
-.app-news-article__head {
-  display: flex;
-  flex-direction: column;
-  gap: var(--un-space-2);
-}
-
-.app-news-article__title {
-  font-size: var(--un-font-size-xxl);
-  font-weight: var(--un-font-weight-bold);
-  line-height: var(--un-line-height-tight);
-}
-
-.app-news-article__links {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--un-space-2);
-}
-
-/* Parsed story body. Each block is a real element, never injected markup. */
-.app-news-body {
-  display: flex;
-  flex-direction: column;
-  gap: var(--un-space-4);
-  max-inline-size: 68ch;
-  font-size: var(--un-font-size-md);
-  line-height: var(--un-line-height-normal);
-}
-
-.app-news-body__block {
-  margin: 0;
-}
-
-.app-news-body__block--heading {
-  color: var(--app-lime-text);
-  font-size: var(--un-font-size-xl);
   font-weight: var(--un-font-weight-bold);
   line-height: var(--un-line-height-snug);
 }
@@ -6506,71 +6355,206 @@ ion-spinner {
   margin: 0;
   padding-inline-start: 0;
   list-style: none;
-  font-size: var(--un-font-size-xs);
-  color: var(--app-muted-strong);
 }
 
-.app-landing-staff-card__titles li {
-  padding: 0.125rem var(--un-space-2);
+.app-team-chip {
+  padding: 2px var(--un-space-2);
+  border: 1px solid var(--app-tonal-border);
   border-radius: var(--un-radius-pill);
-  background: var(--app-gold-soft);
-  color: var(--app-gold-text);
-  font-weight: var(--un-font-weight-semibold);
+  background: var(--app-tonal-bg);
+  color: var(--app-tonal-text);
+  font-size: var(--un-font-size-xs);
+  font-weight: var(--un-font-weight-medium);
 }
 
-.app-landing-location {
-  display: flex;
-  flex-direction: column;
-  gap: var(--un-space-4);
+/* Portrait and initials medallion share one frame, so a missing photo reads as
+   a design choice rather than a broken image. */
+.app-team-avatar {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  inline-size: 5rem;
+  block-size: 5rem;
 }
 
-.app-landing-location__mark {
-  inline-size: 100%;
-  block-size: 10rem;
-  border-radius: var(--un-radius-lg);
-  background: color-mix(in srgb, var(--app-gold) 16%, var(--app-page-bg));
-  border: 1px dashed var(--app-gold-line);
+.app-team-avatar__ring {
+  position: absolute;
+  inset: -4px;
+  border-radius: var(--un-radius-circle);
+  background: var(--app-cta-gradient);
+  opacity: 0.28;
 }
 
-.app-landing-location__details {
-  display: flex;
-  flex-direction: column;
-  gap: var(--un-space-2);
+.app-team-avatar__photo {
+  position: relative;
+  inline-size: 5rem;
+  block-size: 5rem;
+  border-radius: var(--un-radius-circle);
+  object-fit: cover;
+  outline: 1px solid var(--app-lime-line);
 }
 
-.app-landing-gallery-grid {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: var(--un-space-3);
-}
-
-.app-landing-gallery-tile {
-  aspect-ratio: 4 / 3;
-  border-radius: var(--un-radius-lg);
-  background: var(--app-skeleton-base);
-  border: 1px solid var(--app-hairline);
+/* Scale the shared initials avatar up to the directory's medallion size. */
+.app-team-avatar > span[role='img'] {
+  position: relative;
+  inline-size: 5rem;
+  block-size: 5rem;
+  font-size: var(--un-font-size-lg);
+  letter-spacing: 0.04em;
 }
 
 @media (min-width: 720px) {
-  .app-landing-staff-grid {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+  .app-team-hero {
+    padding: var(--un-space-8) var(--un-space-6);
   }
 
-  .app-landing-competitions-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+  .app-team-hero__title {
+    font-size: var(--un-font-size-xxl);
   }
 
-  .app-landing-location {
-    flex-direction: row;
-    align-items: center;
+  .app-team-grid {
+    gap: var(--un-space-4);
+    grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+  }
+}
+
+@media (min-width: 1024px) {
+  .app-team-grid {
+    grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .app-team-card,
+  .app-team-social-link {
+    transition: none;
   }
 
-  .app-landing-location__mark {
-    flex: 0 0 16rem;
-    block-size: 12rem;
+  .app-team-card:hover {
+    transform: none;
   }
+}
 
-  .app-landing-gallery-grid {
+/* ----------------------------------------------------------------------------
+   Public competitions showcase — the signed-out results pages.
+
+   The season card is the one bold move: a floodlit slab with the disc-arc
+   motif in the corner and the FINISH promoted above the facts, because a
+   placing is the headline and not a footnote. Where the organiser has not
+   published a placing, an amber "results pending" chip says so outright —
+   never a dash a visitor could read as last place. Ranks and points are the
+   only place gold appears. Every geometric value is logical so Arabic mirrors
+   without a second stylesheet, and every column of digits is tabular-nums.
+---------------------------------------------------------------------------- */
+.app-showcase-layout {
+  display: flex;
+  flex-direction: column;
+  gap: var(--un-space-6);
+  padding-block-end: var(--un-space-8);
+}
+
+.app-showcase-hero {
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+  gap: var(--un-space-2);
+}
+
+.app-showcase-notice {
+  display: flex;
+  flex-direction: column;
+  gap: var(--un-space-1);
+  padding: var(--un-space-3) var(--un-space-4);
+  border: 1px solid var(--app-lime-line);
+  border-radius: var(--un-radius-md);
+  background: var(--app-lime-soft);
+  color: var(--app-ink);
+  font-size: var(--un-font-size-sm);
+}
+
+.app-showcase-notice__title {
+  font-weight: var(--un-font-weight-bold);
+}
+
+.app-showcase-grid {
+  display: grid;
+  gap: var(--un-space-4);
+  margin: 0;
+  padding-inline-start: 0;
+  list-style: none;
+}
+
+.app-showcase-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: var(--un-space-3);
+  block-size: 100%;
+  padding: var(--un-space-4);
+  overflow: hidden;
+  border: 1px solid var(--app-hairline);
+  border-radius: var(--un-radius-xl);
+  background: var(--app-card-bg);
+  box-shadow: var(--app-elevation-card);
+  transition:
+    transform var(--un-motion-duration-base) var(--un-motion-easing-emphasized),
+    box-shadow var(--un-motion-duration-base) var(--un-motion-easing-emphasized);
+}
+
+.app-showcase-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--app-elevation-lift);
+}
+
+/* The disc-flight arc, echoed once per card. Decorative only. */
+.app-showcase-card__arc {
+  position: absolute;
+  inset-block-start: -60%;
+  inset-inline-end: -30%;
+  inline-size: 14rem;
+  block-size: 14rem;
+  border: 2px solid var(--app-arc-line);
+  border-radius: var(--un-radius-circle);
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+.app-showcase-card__season {
+  display: flex;
+  align-items: baseline;
+  gap: var(--un-space-2);
+  margin: 0;
+}
+
+.app-showcase-card__season-value {
+  color: var(--app-lime-text);
+  font-size: var(--un-font-size-sm);
+  font-weight: var(--un-font-weight-bold);
+  font-variant-numeric: tabular-nums;
+}
+
+.app-showcase-card__name {
+  position: relative;
+  margin: 0;
+  color: var(--app-ink);
+  font-size: var(--un-font-size-xl);
+  font-weight: var(--un-font-weight-bold);
+  line-height: var(--un-line-height-tight);
+}
+
+.app-showcase-card__finish {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--un-space-2);
+  margin: 0;
+  padding: var(--un-space-3);
+  border: 1px solid var(--app-hairline);
+  border-radius: var(--un-radius-lg);
+  background: var(--app-page-bg);
+}
+
 .app-showcase-card__finish-value {
   display: flex;
   align-items: baseline;
@@ -6765,6 +6749,84 @@ ion-spinner {
   display: block;
   flex: 1;
   block-size: 8px;
+  border-radius: var(--un-radius-pill);
+  background: var(--app-track-bg);
+}
+
+.app-showcase-board__fill {
+  display: block;
+  block-size: 100%;
+  min-inline-size: 2px;
+  border-radius: var(--un-radius-pill);
+  background: var(--app-cta-gradient);
+}
+
+.app-showcase-board__value {
+  color: var(--app-ink);
+  font-weight: var(--un-font-weight-semibold);
+  font-variant-numeric: tabular-nums;
+}
+
+@media (min-width: 720px) {
+  .app-showcase-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1100px) {
+  .app-showcase-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .app-showcase-card {
+    transition: none;
+  }
+
+  .app-showcase-card:hover {
+    transform: none;
+  }
+}
+
+/* ----------------------------------------------------------------------------
+   Public Tryouts — the signed-out application page. Composes the shared
+   surface card, status chip, and section panel; adds a floodlit hero, the
+   session grid with its capacity meter, and the numbered "what happens next"
+   list. Two columns from 1024px so a desktop never renders a stretched mobile
+   card. Logical properties throughout, so Arabic mirrors without overrides.
+---------------------------------------------------------------------------- */
+.app-public-tryouts {
+  display: flex;
+  flex-direction: column;
+  gap: var(--un-space-6);
+  padding-block-end: var(--un-space-8);
+}
+
+.app-public-tryouts__hero {
+  display: flex;
+  flex-direction: column;
+  gap: var(--un-space-2);
+  padding: var(--un-space-6);
+  border: 1px solid var(--app-lime-line);
+  border-radius: var(--un-radius-xl);
+  background: var(--app-hero-glow);
+}
+
+.app-public-tryouts__title {
+  color: var(--app-ink);
+  font-size: var(--un-font-size-xxl);
+  font-weight: var(--un-font-weight-bold);
+  line-height: var(--un-line-height-tight);
+  letter-spacing: var(--un-letter-spacing-tight);
+}
+
+.app-public-tryouts__intro {
+  max-inline-size: 62ch;
+  font-size: var(--un-font-size-md);
+  line-height: var(--un-line-height-normal);
+}
+
 .app-public-tryouts__layout {
   display: grid;
   align-items: start;
@@ -6884,10 +6946,6 @@ ion-spinner {
   background: var(--app-track-bg);
 }
 
-.app-showcase-board__fill {
-  display: block;
-  block-size: 100%;
-  min-inline-size: 2px;
 .app-public-session__meter-fill {
   display: block;
   block-size: 100%;
@@ -6895,21 +6953,223 @@ ion-spinner {
   background: var(--app-cta-gradient);
 }
 
-.app-showcase-board__value {
+.app-public-session__meter-fill--full {
+  background: var(--ion-color-warning);
+}
+
+/* ---- Application form + its outcome ---- */
+.app-public-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--un-space-4);
+}
+
+/* The live region is invisible until it has something honest to announce. */
+.app-public-form__status:not(:empty) {
+  padding: var(--un-space-2) var(--un-space-3);
+  border-inline-start: 3px solid var(--ion-color-warning-shade);
+  border-radius: var(--un-radius-md);
+  background: color-mix(in srgb, var(--ion-color-warning) 14%, transparent);
   color: var(--app-ink);
-  font-weight: var(--un-font-weight-semibold);
-  font-variant-numeric: tabular-nums;
+  font-size: var(--un-font-size-sm);
+}
+
+.app-public-outcome {
+  align-items: start;
+  gap: var(--un-space-3);
+  border-color: var(--app-lime-line);
+}
+
+.app-public-outcome__title {
+  color: var(--app-ink);
+  font-size: var(--un-font-size-lg);
+  font-weight: var(--un-font-weight-bold);
+  line-height: var(--un-line-height-tight);
+}
+
+/* ---- What happens next ---- */
+.app-public-steps {
+  display: grid;
+  gap: var(--un-space-4);
+  grid-template-columns: 1fr;
+  margin: 0;
+  padding: 0;
+  counter-reset: app-public-step;
+  list-style: none;
 }
 
 @media (min-width: 720px) {
-  .app-showcase-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+  .app-public-steps {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 }
 
-@media (min-width: 1100px) {
-  .app-showcase-grid {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+.app-public-steps__item {
+  display: flex;
+  flex-direction: column;
+  gap: var(--un-space-1);
+  counter-increment: app-public-step;
+}
+
+.app-public-steps__item::before {
+  display: inline-flex;
+  align-items: center;
+  align-self: start;
+  justify-content: center;
+  inline-size: 1.75rem;
+  block-size: 1.75rem;
+  margin-block-end: var(--un-space-1);
+  border: 1px solid var(--app-lime-line);
+  border-radius: var(--un-radius-circle);
+  background: var(--app-lime-soft);
+  color: var(--app-lime-text);
+  content: counter(app-public-step);
+  font-size: var(--un-font-size-xs);
+  font-weight: var(--un-font-weight-bold);
+  font-variant-numeric: tabular-nums;
+}
+
+.app-public-steps__title {
+  color: var(--app-ink);
+  font-size: var(--un-font-size-md);
+  font-weight: var(--un-font-weight-bold);
+}
+
+/* ----------------------------------------------------------------------------
+   Newsroom — the public list and story pages plus the permissioned editor.
+   Everything is logical-property based (inline-start/end, padding-block) so
+   the same rules lay out correctly under `dir="rtl"`, and every colour comes
+   from the app tokens so light and dark both follow the theme.
+---------------------------------------------------------------------------- */
+.app-news__hero {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--un-space-2);
+}
+
+.app-news__title {
+  font-size: var(--un-font-size-xxl);
+  font-weight: var(--un-font-weight-bold);
+  line-height: var(--un-line-height-tight);
+}
+
+.app-news__grid {
+  display: grid;
+  gap: var(--un-space-4);
+  margin: 0;
+  padding-inline-start: 0;
+  list-style: none;
+}
+
+.app-news-card {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  padding: 0;
+  transition:
+    transform 160ms ease,
+    box-shadow 160ms ease;
+}
+
+.app-news-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--app-elevation-lift);
+}
+
+.app-news-card__cover {
+  display: block;
+  aspect-ratio: 16 / 9;
+  width: 100%;
+  border-block-end: 1px solid var(--app-hairline);
+  object-fit: cover;
+}
+
+.app-news-card__cover--fallback {
+  display: grid;
+  place-items: center;
+  background: var(--app-lime-soft);
+}
+
+.app-news-card__initial {
+  color: var(--app-lime-text);
+  font-size: var(--un-font-size-xxl);
+  font-weight: var(--un-font-weight-bold);
+  line-height: 1;
+}
+
+.app-news-card__body {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--un-space-2);
+  padding: var(--un-space-4);
+}
+
+.app-news-card__title {
+  font-size: var(--un-font-size-lg);
+  font-weight: var(--un-font-weight-semibold);
+  line-height: var(--un-line-height-snug);
+}
+
+.app-news-card__excerpt {
+  font-size: var(--un-font-size-sm);
+  line-height: var(--un-line-height-normal);
+}
+
+.app-news-card__meta {
+  font-size: var(--un-font-size-xs);
+}
+
+.app-news-article__cover {
+  display: block;
+  width: 100%;
+  max-height: 24rem;
+  border: 1px solid var(--app-hairline);
+  border-radius: var(--un-radius-lg);
+  object-fit: cover;
+}
+
+.app-news-article__head {
+  display: flex;
+  flex-direction: column;
+  gap: var(--un-space-2);
+}
+
+.app-news-article__title {
+  font-size: var(--un-font-size-xxl);
+  font-weight: var(--un-font-weight-bold);
+  line-height: var(--un-line-height-tight);
+}
+
+.app-news-article__links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--un-space-2);
+}
+
+/* Parsed story body. Each block is a real element, never injected markup. */
+.app-news-body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--un-space-4);
+  max-inline-size: 68ch;
+  font-size: var(--un-font-size-md);
+  line-height: var(--un-line-height-normal);
+}
+
+.app-news-body__block {
+  margin: 0;
+}
+
+.app-news-body__block--heading {
+  color: var(--app-lime-text);
+  font-size: var(--un-font-size-xl);
+  font-weight: var(--un-font-weight-bold);
+  line-height: var(--un-line-height-snug);
+}
+
 .app-news-body__block--quote {
   padding-inline-start: var(--un-space-4);
   border-inline-start: 3px solid var(--app-lime-line);
@@ -7005,144 +7265,12 @@ ion-spinner {
 }
 
 @media (min-width: 1080px) {
-  .app-landing-staff-grid {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-  }
-
-  .app-landing-gallery-grid {
-    grid-template-columns: repeat(6, minmax(0, 1fr));
-}
-
-.app-team-chip {
-  padding: 2px var(--un-space-2);
-  border: 1px solid var(--app-tonal-border);
-  border-radius: var(--un-radius-pill);
-  background: var(--app-tonal-bg);
-  color: var(--app-tonal-text);
-  font-size: var(--un-font-size-xs);
-  font-weight: var(--un-font-weight-medium);
-}
-
-/* Portrait and initials medallion share one frame, so a missing photo reads as
-   a design choice rather than a broken image. */
-.app-team-avatar {
-  position: relative;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  inline-size: 5rem;
-  block-size: 5rem;
-}
-
-.app-team-avatar__ring {
-  position: absolute;
-  inset: -4px;
-  border-radius: var(--un-radius-circle);
-  background: var(--app-cta-gradient);
-  opacity: 0.28;
-}
-
-.app-team-avatar__photo {
-  position: relative;
-  inline-size: 5rem;
-  block-size: 5rem;
-  border-radius: var(--un-radius-circle);
-  object-fit: cover;
-  outline: 1px solid var(--app-lime-line);
-}
-
-/* Scale the shared initials avatar up to the directory's medallion size. */
-.app-team-avatar > span[role='img'] {
-  position: relative;
-  inline-size: 5rem;
-  block-size: 5rem;
-  font-size: var(--un-font-size-lg);
-  letter-spacing: 0.04em;
-}
-
-@media (min-width: 720px) {
-  .app-team-hero {
-    padding: var(--un-space-8) var(--un-space-6);
-  }
-
-  .app-team-hero__title {
-    font-size: var(--un-font-size-xxl);
-  }
-
-  .app-team-grid {
-    gap: var(--un-space-4);
-    grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
-  }
-}
-
-@media (min-width: 1024px) {
-  .app-team-grid {
-    grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
   .app-news__grid {
-.app-public-session__meter-fill--full {
-  background: var(--ion-color-warning);
-}
-
-/* ---- Application form + its outcome ---- */
-.app-public-form {
-  display: flex;
-  flex-direction: column;
-  gap: var(--un-space-4);
-}
-
-/* The live region is invisible until it has something honest to announce. */
-.app-public-form__status:not(:empty) {
-  padding: var(--un-space-2) var(--un-space-3);
-  border-inline-start: 3px solid var(--ion-color-warning-shade);
-  border-radius: var(--un-radius-md);
-  background: color-mix(in srgb, var(--ion-color-warning) 14%, transparent);
-  color: var(--app-ink);
-  font-size: var(--un-font-size-sm);
-}
-
-.app-public-outcome {
-  align-items: start;
-  gap: var(--un-space-3);
-  border-color: var(--app-lime-line);
-}
-
-.app-public-outcome__title {
-  color: var(--app-ink);
-  font-size: var(--un-font-size-lg);
-  font-weight: var(--un-font-weight-bold);
-  line-height: var(--un-line-height-tight);
-}
-
-/* ---- What happens next ---- */
-.app-public-steps {
-  display: grid;
-  gap: var(--un-space-4);
-  grid-template-columns: 1fr;
-  margin: 0;
-  padding: 0;
-  counter-reset: app-public-step;
-  list-style: none;
-}
-
-@media (min-width: 720px) {
-  .app-public-steps {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .app-team-card,
-  .app-team-social-link {
-    transition: none;
-  }
-
-  .app-team-card:hover {
-@media (prefers-reduced-motion: reduce) {
-  .app-showcase-card {
-    transition: none;
-  }
-
-  .app-showcase-card:hover {
   .app-news-card {
     transition: none;
   }
@@ -7150,33 +7278,4 @@ ion-spinner {
   .app-news-card:hover {
     transform: none;
   }
-.app-public-steps__item {
-  display: flex;
-  flex-direction: column;
-  gap: var(--un-space-1);
-  counter-increment: app-public-step;
-}
-
-.app-public-steps__item::before {
-  display: inline-flex;
-  align-items: center;
-  align-self: start;
-  justify-content: center;
-  inline-size: 1.75rem;
-  block-size: 1.75rem;
-  margin-block-end: var(--un-space-1);
-  border: 1px solid var(--app-lime-line);
-  border-radius: var(--un-radius-circle);
-  background: var(--app-lime-soft);
-  color: var(--app-lime-text);
-  content: counter(app-public-step);
-  font-size: var(--un-font-size-xs);
-  font-weight: var(--un-font-weight-bold);
-  font-variant-numeric: tabular-nums;
-}
-
-.app-public-steps__title {
-  color: var(--app-ink);
-  font-size: var(--un-font-size-md);
-  font-weight: var(--un-font-weight-bold);
 }
