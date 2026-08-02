@@ -1,4 +1,4 @@
-import { expect, test } from '@playwright/test';
+import { expect, test, type Page } from '@playwright/test';
 
 import { TEST_IDS } from '@/shared/config';
 
@@ -11,6 +11,19 @@ import {
 } from '../e2e/fixtures/app.fixture';
 
 /** Deterministic screenshots: animations disabled by the config expectation. */
+/**
+ * Switches the app to the dark palette and waits for it to actually apply, so
+ * a dark screenshot can never be taken while the light theme is still on.
+ */
+async function switchToDarkTheme(page: Page): Promise<void> {
+  await gotoApp(page, APP_ROUTES.settings);
+  await page
+    .getByTestId(TEST_IDS.settingsThemeSelect)
+    .locator('ion-segment-button[value="dark"]')
+    .click();
+  await expect(page.locator('html')).toHaveClass(/ion-palette-dark/u);
+}
+
 test.describe('visual regression', () => {
   test('welcome screen (light)', async ({ page }) => {
     await gotoApp(page, APP_ROUTES.welcome);
@@ -41,12 +54,7 @@ test.describe('visual regression', () => {
   });
 
   test('settings screen (dark)', async ({ page }) => {
-    await gotoApp(page, APP_ROUTES.settings);
-    await page
-      .getByTestId(TEST_IDS.settingsThemeSelect)
-      .locator('ion-segment-button[value="dark"]')
-      .click();
-    await expect(page.locator('html')).toHaveClass(/ion-palette-dark/u);
+    await switchToDarkTheme(page);
     await expect(page).toHaveScreenshot('settings-dark.png', { fullPage: true });
   });
 
@@ -271,12 +279,7 @@ test.describe('matches visual regression', () => {
 
   test('match statistics (dark)', async ({ page }) => {
     await signIn(page);
-    await gotoApp(page, APP_ROUTES.settings);
-    await page
-      .getByTestId(TEST_IDS.settingsThemeSelect)
-      .locator('ion-segment-button[value="dark"]')
-      .click();
-    await expect(page.locator('html')).toHaveClass(/ion-palette-dark/u);
+    await switchToDarkTheme(page);
     await gotoApp(page, APP_ROUTES.matchStatistics);
     await expect(page.getByTestId(TEST_IDS.matchStatsPlayers)).toBeVisible();
     await waitForAppAnimations(page);
@@ -319,12 +322,7 @@ test.describe('matches visual regression', () => {
 
   test('team analytics (dark)', async ({ page }) => {
     await signIn(page);
-    await gotoApp(page, APP_ROUTES.settings);
-    await page
-      .getByTestId(TEST_IDS.settingsThemeSelect)
-      .locator('ion-segment-button[value="dark"]')
-      .click();
-    await expect(page.locator('html')).toHaveClass(/ion-palette-dark/u);
+    await switchToDarkTheme(page);
     await gotoApp(page, APP_ROUTES.analytics);
     await expect(page.getByTestId(TEST_IDS.analyticsSeriesChart)).toBeVisible();
     await waitForAppAnimations(page);

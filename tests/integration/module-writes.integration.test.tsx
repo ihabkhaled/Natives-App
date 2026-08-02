@@ -31,6 +31,24 @@ afterEach(async () => {
   await clearSessionAfterTest();
 });
 
+/**
+ * Signs in as the analyst and renders the report jobs list, settled.
+ *
+ * Returns the live renderHook result so callers keep reading fresh rows.
+ */
+async function renderReportJobs(): Promise<
+  ReturnType<typeof renderHookWithProviders<ReturnType<typeof useReportJobs>>>
+> {
+  await signInAs(MOCK_PERSONA_EMAILS.analyst);
+  const view = renderHookWithProviders(() => useReportJobs(), { initialPath: '/reports' });
+
+  await waitFor(() => {
+    expect(view.result.current.rows.length).toBeGreaterThan(0);
+  }, WAIT);
+
+  return view;
+}
+
 describe('analytics rebuild flow (hook-driven)', () => {
   it('rebuilds the projections and banners the report', async () => {
     await signInAs(MOCK_PERSONA_EMAILS.teamAdmin);
@@ -100,14 +118,7 @@ describe('analytics rebuild flow (hook-driven)', () => {
 
 describe('reports actions flow (hook-driven)', () => {
   it('retries a failed job, downloads a completed one, and pages the list', async () => {
-    await signInAs(MOCK_PERSONA_EMAILS.analyst);
-    const { result } = renderHookWithProviders(() => useReportJobs(), {
-      initialPath: '/reports',
-    });
-
-    await waitFor(() => {
-      expect(result.current.rows.length).toBeGreaterThan(0);
-    }, WAIT);
+    const { result } = await renderReportJobs();
 
     // Expand/collapse the same job (both sides of the toggle) while the list is stable.
     const firstRow = result.current.rows[0];
@@ -140,14 +151,7 @@ describe('reports actions flow (hook-driven)', () => {
   });
 
   it('explains a not-ready or expired download and a disallowed retry', async () => {
-    await signInAs(MOCK_PERSONA_EMAILS.analyst);
-    const { result } = renderHookWithProviders(() => useReportJobs(), {
-      initialPath: '/reports',
-    });
-
-    await waitFor(() => {
-      expect(result.current.rows.length).toBeGreaterThan(0);
-    }, WAIT);
+    const { result } = await renderReportJobs();
     // The expired job's download endpoint answers 410 → the "expired" toast branch.
     const expired = result.current.rows.find((row) => row.statusChip.label === 'Expired');
     act(() => expired?.onDownload());

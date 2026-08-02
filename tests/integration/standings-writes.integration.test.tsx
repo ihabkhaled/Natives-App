@@ -31,6 +31,26 @@ afterEach(async () => {
   await clearSessionAfterTest();
 });
 
+/**
+ * Signs in as the coach and renders the achievements workspace, settled.
+ *
+ * Returns the live renderHook result so callers keep reading fresh cards.
+ */
+async function renderAchievementsWorkspace(): Promise<
+  ReturnType<typeof renderHookWithProviders<ReturnType<typeof useAchievementsWorkspace>>>
+> {
+  await signInAs(MOCK_PERSONA_EMAILS.coach);
+  const view = renderHookWithProviders(() => useAchievementsWorkspace(), {
+    initialPath: '/achievements',
+  });
+
+  await waitFor(() => {
+    expect(view.result.current.cards.length).toBeGreaterThan(0);
+  }, WAIT);
+
+  return view;
+}
+
 describe('standings write flows (hook-driven, real client + MSW)', () => {
   it('recomputes a competition and banners the reconciliation report', async () => {
     await signInAs(MOCK_PERSONA_EMAILS.coach);
@@ -199,14 +219,7 @@ describe('standings write flows (hook-driven, real client + MSW)', () => {
   });
 
   it('opens a claim and reads its approval timeline', async () => {
-    await signInAs(MOCK_PERSONA_EMAILS.coach);
-    const { result } = renderHookWithProviders(() => useAchievementsWorkspace(), {
-      initialPath: '/achievements',
-    });
-
-    await waitFor(() => {
-      expect(result.current.cards.length).toBeGreaterThan(0);
-    }, WAIT);
+    const { result } = await renderAchievementsWorkspace();
     const submitted = result.current.cards[0];
     act(() => submitted?.onOpen());
     await waitFor(() => {
@@ -225,14 +238,7 @@ describe('standings write flows (hook-driven, real client + MSW)', () => {
   });
 
   it('approves a submitted claim and records a rejection reason', async () => {
-    await signInAs(MOCK_PERSONA_EMAILS.coach);
-    const { result } = renderHookWithProviders(() => useAchievementsWorkspace(), {
-      initialPath: '/achievements',
-    });
-
-    await waitFor(() => {
-      expect(result.current.cards.length).toBeGreaterThan(0);
-    }, WAIT);
+    const { result } = await renderAchievementsWorkspace();
     act(() => {
       result.current.onStatusFilterChange('submitted');
     });

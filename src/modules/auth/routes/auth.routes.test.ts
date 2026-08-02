@@ -1,3 +1,7 @@
+// jscpd:ignore-start
+// The imports below match auth.routes.ts by design: this spec asserts that
+// every container is mapped to its own path, so it has to name the same
+// containers and the same paths the route table does.
 import { describe, expect, it } from 'vitest';
 
 import { ROUTE_ACCESS } from '@/shared/types';
@@ -17,6 +21,7 @@ import {
   signupPath,
 } from './auth.paths';
 import { getAuthRouteDefinitions } from './auth.routes';
+// jscpd:ignore-end
 
 function definitionFor(path: string) {
   const definition = getAuthRouteDefinitions().find((candidate) => candidate.path === path);

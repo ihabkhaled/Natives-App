@@ -124,6 +124,38 @@ async function previewAchievementImport(
   return view;
 }
 
+/**
+ * Renders the detail hook over the given claims and triggers the first action
+ * on the draft one — the shared opening move of the approval-flow cases.
+ *
+ * Returns the live renderHook result so callers keep reading `result.current`.
+ */
+function triggerDraftAction(input: {
+  readonly items: readonly Achievement[];
+  readonly onChanged: () => void;
+  readonly onRefetch: () => void;
+}) {
+  const view = renderHook(
+    () =>
+      useAchievementDetail(t, {
+        teamId: 't1',
+        locale: 'en',
+        canManage: true,
+        items: input.items,
+        onChanged: input.onChanged,
+        onRefetch: input.onRefetch,
+      }),
+    { wrapper },
+  );
+
+  act(() => {
+    view.result.current.openAchievement('draft-1');
+  });
+  act(() => view.result.current.detail?.actions[0]?.onTrigger());
+
+  return view;
+}
+
 describe('standings write error branches', () => {
   it('surfaces recompute and manual failures on the manage view', async () => {
     vi.mocked(recomputeStandings).mockRejectedValue(new Error('boom'));
@@ -326,24 +358,7 @@ describe('standings write error branches', () => {
       achievement({ achievementId: 'draft-1', status: 'draft' }),
       achievement({ achievementId: 'sub-1', status: 'submitted' }),
     ];
-    const { result } = renderHook(
-      () =>
-        useAchievementDetail(t, {
-          teamId: 't1',
-          locale: 'en',
-          canManage: true,
-          items,
-          onChanged,
-          onRefetch,
-        }),
-      { wrapper },
-    );
-
-    // A draft's only move is submit — no confirm step, fires immediately (onFire).
-    act(() => {
-      result.current.openAchievement('draft-1');
-    });
-    act(() => result.current.detail?.actions[0]?.onTrigger());
+    const { result } = triggerDraftAction({ items, onChanged, onRefetch });
     await waitFor(() => {
       expect(onChanged).toHaveBeenCalled();
     });
@@ -387,23 +402,7 @@ describe('standings write error branches', () => {
       .mockRejectedValueOnce(new Error('boom'));
     const onRefetch = vi.fn();
     const items = [achievement({ achievementId: 'draft-1', status: 'draft' })];
-    const { result } = renderHook(
-      () =>
-        useAchievementDetail(t, {
-          teamId: 't1',
-          locale: 'en',
-          canManage: true,
-          items,
-          onChanged: vi.fn(),
-          onRefetch,
-        }),
-      { wrapper },
-    );
-
-    act(() => {
-      result.current.openAchievement('draft-1');
-    });
-    act(() => result.current.detail?.actions[0]?.onTrigger());
+    const { result } = triggerDraftAction({ items, onChanged: vi.fn(), onRefetch });
     await waitFor(() => {
       expect(result.current.detail?.conflictNotice).toBe('standings.transitionConflict');
     });
