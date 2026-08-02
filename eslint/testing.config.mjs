@@ -13,7 +13,9 @@ export const vitestTestConfig = {
   rules: {
     ...vitestPlugin.configs.recommended.rules,
     ...testingLibraryPlugin.configs['flat/react'].rules,
-    'vitest/expect-expect': 'error',
+    // Assertion helpers named expect* wrap expect(); without this the rule
+    // reads the tests that call them as having no assertions at all.
+    'vitest/expect-expect': ['error', { assertFunctionNames: ['expect', 'expect*'] }],
     'vitest/no-focused-tests': 'error',
     'vitest/no-disabled-tests': 'error',
   },

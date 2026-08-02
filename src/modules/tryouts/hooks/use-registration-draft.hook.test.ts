@@ -5,14 +5,19 @@ import { useRegistrationDraft } from './use-registration-draft.hook';
 
 const RESULT = { outcome: 'registered', reference: 'UN-1', consentVersion: 'v1' } as const;
 
+/** A pristine draft: nothing typed, nothing consented, nothing submitted. */
+function expectEmptyDraft(view: ReturnType<typeof useRegistrationDraft>): void {
+  expect(view.draft.fullName).toBe('');
+  expect(view.draft.consentGiven).toBe(false);
+  expect(view.result).toBeNull();
+  expect(view.hasFailed).toBe(false);
+}
+
 describe('useRegistrationDraft', () => {
   it('starts empty, with no result and no failure', () => {
     const { result } = renderHook(() => useRegistrationDraft());
 
-    expect(result.current.draft.fullName).toBe('');
-    expect(result.current.draft.consentGiven).toBe(false);
-    expect(result.current.result).toBeNull();
-    expect(result.current.hasFailed).toBe(false);
+    expectEmptyDraft(result.current);
   });
 
   it('merges each edit into the draft without dropping the rest', () => {
@@ -75,9 +80,6 @@ describe('useRegistrationDraft', () => {
       result.current.reset();
     });
 
-    expect(result.current.draft.fullName).toBe('');
-    expect(result.current.draft.consentGiven).toBe(false);
-    expect(result.current.result).toBeNull();
-    expect(result.current.hasFailed).toBe(false);
+    expectEmptyDraft(result.current);
   });
 });

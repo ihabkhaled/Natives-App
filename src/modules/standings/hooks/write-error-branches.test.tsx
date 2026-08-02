@@ -85,7 +85,10 @@ afterEach(() => {
  * open — the state every branch below starts from. Returns the live renderHook
  * result so callers keep reading `result.current` after each act/waitFor.
  */
-function renderAchievementImport() {
+/** The wizard's own input type, kept private to the hook — inferred, not re-exported. */
+type ImportOverrides = Partial<Parameters<typeof useAchievementImport>[1]>;
+
+function renderAchievementImport(overrides: ImportOverrides = {}) {
   return renderHook(
     () =>
       useAchievementImport(t, {
@@ -94,9 +97,31 @@ function renderAchievementImport() {
         isOpen: true,
         onClose: vi.fn(),
         onCommitted: vi.fn(),
+        ...overrides,
       }),
     { wrapper },
   );
+}
+
+/**
+ * Renders the wizard and drives it as far as the dry-run preview, which is
+ * where most of these cases actually start.
+ *
+ * Returns the live renderHook result, so callers keep reading `result.current`
+ * as the wizard advances.
+ */
+async function previewAchievementImport(
+  overrides: ImportOverrides = {},
+): Promise<ReturnType<typeof renderAchievementImport>> {
+  const view = renderAchievementImport(overrides);
+
+  act(() => view.result.current?.onInputChange('REF,trophy,Champions,2026-06-20'));
+  act(() => view.result.current?.onParse());
+  await waitFor(() => {
+    expect(view.result.current?.step).toBe('preview');
+  });
+
+  return view;
 }
 
 describe('standings write error branches', () => {
@@ -260,22 +285,7 @@ describe('standings write error branches', () => {
       .mockResolvedValueOnce({ ...dryRunReport, dryRun: false });
     const onClose = vi.fn();
     const onCommitted = vi.fn();
-    const { result } = renderHook(
-      () =>
-        useAchievementImport(t, {
-          teamId: 't1',
-          isOffline: false,
-          isOpen: true,
-          onClose,
-          onCommitted,
-        }),
-      { wrapper },
-    );
-    act(() => result.current?.onInputChange('REF,trophy,Champions,2026-06-20'));
-    act(() => result.current?.onParse());
-    await waitFor(() => {
-      expect(result.current?.step).toBe('preview');
-    });
+    const { result } = await previewAchievementImport({ onClose, onCommitted });
 
     act(() => result.current?.onCommit());
     await waitFor(() => {
@@ -299,22 +309,7 @@ describe('standings write error branches', () => {
   it('steps back from a dry-run preview without closing the wizard', async () => {
     vi.mocked(importAchievements).mockResolvedValue(dryRunReport);
     const onClose = vi.fn();
-    const { result } = renderHook(
-      () =>
-        useAchievementImport(t, {
-          teamId: 't1',
-          isOffline: false,
-          isOpen: true,
-          onClose,
-          onCommitted: vi.fn(),
-        }),
-      { wrapper },
-    );
-    act(() => result.current?.onInputChange('REF,trophy,Champions,2026-06-20'));
-    act(() => result.current?.onParse());
-    await waitFor(() => {
-      expect(result.current?.step).toBe('preview');
-    });
+    const { result } = await previewAchievementImport({ onClose, onCommitted: vi.fn() });
     // Back from a dry-run preview returns to input without closing the wizard.
     act(() => result.current?.onBack());
     await waitFor(() => {

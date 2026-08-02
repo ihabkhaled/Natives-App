@@ -47,14 +47,23 @@ afterEach(() => {
   vi.clearAllMocks();
 });
 
+/**
+ * Renders the actions hook over a single job. Returns the live renderHook
+ * result plus the refetch spy the assertions check.
+ */
+function renderReportActions() {
+  const onRefetch = vi.fn();
+  const view = renderHook(() => useReportActions(t, { context, jobs: [job({})], onRefetch }), {
+    wrapper,
+  });
+
+  return { ...view, onRefetch };
+}
+
 describe('useReportActions branch coverage', () => {
   it('banners a generic retry failure distinctly from a disallowed retry', async () => {
     vi.mocked(retryReport).mockRejectedValue(new Error('boom'));
-    const onRefetch = vi.fn();
-    const { result } = renderHook(
-      () => useReportActions(t, { context, jobs: [job({})], onRefetch }),
-      { wrapper },
-    );
+    const { result, onRefetch } = renderReportActions();
 
     act(() => {
       result.current.onRetry(job({ jobId: 'job-1', status: 'failed' }));
@@ -73,11 +82,7 @@ describe('useReportActions branch coverage', () => {
         messageKey: 'errors.reports.retryNotAllowed',
       }),
     );
-    const onRefetch = vi.fn();
-    const { result } = renderHook(
-      () => useReportActions(t, { context, jobs: [job({})], onRefetch }),
-      { wrapper },
-    );
+    const { result, onRefetch } = renderReportActions();
 
     act(() => {
       result.current.onRetry(job({}));

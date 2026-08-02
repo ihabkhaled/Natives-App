@@ -110,150 +110,6 @@
     },
     {
       "firstFile": {
-        "end": 51,
-        "endLoc": {
-          "column": 7,
-          "line": 51,
-          "position": 1667
-        },
-        "name": "modules\\standings\\components\\manual-standing-form\\manual-standing-form.component.tsx",
-        "start": 40,
-        "startLoc": {
-          "column": 25,
-          "line": 40,
-          "position": 1396
-        }
-      },
-      "format": "tsx",
-      "fragment": "",
-      "lines": 12,
-      "secondFile": {
-        "end": 45,
-        "endLoc": {
-          "column": 7,
-          "line": 45,
-          "position": 1524
-        },
-        "name": "modules\\standings\\components\\rule-version-form\\rule-version-form.component.tsx",
-        "start": 34,
-        "startLoc": {
-          "column": 25,
-          "line": 34,
-          "position": 1253
-        }
-      },
-      "tokens": 60
-    },
-    {
-      "firstFile": {
-        "end": 181,
-        "endLoc": {
-          "column": 28,
-          "line": 181,
-          "position": 5794
-        },
-        "name": "modules\\standings\\components\\standings-components.test.tsx",
-        "start": 146,
-        "startLoc": {
-          "column": 14,
-          "line": 146,
-          "position": 4551
-        }
-      },
-      "format": "tsx",
-      "fragment": "",
-      "lines": 36,
-      "secondFile": {
-        "end": 283,
-        "endLoc": {
-          "column": 24,
-          "line": 283,
-          "position": 9077
-        },
-        "name": "modules\\standings\\components\\standings-screens.test.tsx",
-        "start": 248,
-        "startLoc": {
-          "column": 17,
-          "line": 248,
-          "position": 7974
-        }
-      },
-      "tokens": 169
-    },
-    {
-      "firstFile": {
-        "end": 65,
-        "endLoc": {
-          "column": 6,
-          "line": 65,
-          "position": 1972
-        },
-        "name": "modules\\standings\\gateways\\standings.gateway.test.ts",
-        "start": 49,
-        "startLoc": {
-          "column": 37,
-          "line": 49,
-          "position": 1605
-        }
-      },
-      "format": "typescript",
-      "fragment": "",
-      "lines": 17,
-      "secondFile": {
-        "end": 137,
-        "endLoc": {
-          "column": 10,
-          "line": 137,
-          "position": 4186
-        },
-        "name": "modules\\standings\\services\\standings-services.test.ts",
-        "start": 121,
-        "startLoc": {
-          "column": 34,
-          "line": 121,
-          "position": 3755
-        }
-      },
-      "tokens": 66
-    },
-    {
-      "firstFile": {
-        "end": 27,
-        "endLoc": {
-          "column": 11,
-          "line": 27,
-          "position": 753
-        },
-        "name": "modules\\standings\\helpers\\achievement-view.helper.test.ts",
-        "start": 10,
-        "startLoc": {
-          "column": 34,
-          "line": 10,
-          "position": 255
-        }
-      },
-      "format": "typescript",
-      "fragment": "",
-      "lines": 18,
-      "secondFile": {
-        "end": 26,
-        "endLoc": {
-          "column": 11,
-          "line": 26,
-          "position": 821
-        },
-        "name": "modules\\standings\\helpers\\screen-view-builders.test.ts",
-        "start": 9,
-        "startLoc": {
-          "column": 73,
-          "line": 9,
-          "position": 323
-        }
-      },
-      "tokens": 103
-    },
-    {
-      "firstFile": {
         "end": 280,
         "endLoc": {
           "column": 30,
@@ -323,78 +179,6 @@
         }
       },
       "tokens": 60
-    },
-    {
-      "firstFile": {
-        "end": 181,
-        "endLoc": {
-          "column": 37,
-          "line": 181,
-          "position": 5724
-        },
-        "name": "modules\\tryouts\\hooks\\use-public-tryouts.hook.test.ts",
-        "start": 168,
-        "startLoc": {
-          "column": 4,
-          "line": 168,
-          "position": 5423
-        }
-      },
-      "format": "typescript",
-      "fragment": "",
-      "lines": 14,
-      "secondFile": {
-        "end": 212,
-        "endLoc": {
-          "column": 37,
-          "line": 212,
-          "position": 6506
-        },
-        "name": "modules\\tryouts\\hooks\\use-public-tryouts.hook.test.ts",
-        "start": 199,
-        "startLoc": {
-          "column": 4,
-          "line": 199,
-          "position": 6205
-        }
-      },
-      "tokens": 83
-    },
-    {
-      "firstFile": {
-        "end": 212,
-        "endLoc": {
-          "column": 28,
-          "line": 212,
-          "position": 6497
-        },
-        "name": "modules\\tryouts\\hooks\\use-public-tryouts.hook.test.ts",
-        "start": 198,
-        "startLoc": {
-          "column": 5,
-          "line": 198,
-          "position": 6198
-        }
-      },
-      "format": "typescript",
-      "fragment": "",
-      "lines": 15,
-      "secondFile": {
-        "end": 232,
-        "endLoc": {
-          "column": 28,
-          "line": 232,
-          "position": 7100
-        },
-        "name": "modules\\tryouts\\hooks\\use-public-tryouts.hook.test.ts",
-        "start": 218,
-        "startLoc": {
-          "column": 96,
-          "line": 218,
-          "position": 6801
-        }
-      },
-      "tokens": 83
     },
     {
       "firstFile": {
@@ -686,7 +470,7 @@
     }
   ],
   "statistics": {
-    "detectionDate": "2026-08-02T17:43:05.077Z",
+    "detectionDate": "2026-08-02T17:47:40.827Z",
     "formats": {
       "css": {
         "clones": 0,
@@ -737,41 +521,41 @@
         "tokens": 11851
       },
       "tsx": {
-        "clones": 8,
-        "duplicatedLines": 108,
-        "duplicatedTokens": 645,
-        "lines": 44252,
+        "clones": 6,
+        "duplicatedLines": 62,
+        "duplicatedTokens": 416,
+        "lines": 44179,
         "newClones": 0,
         "newDuplicatedLines": 0,
-        "percentage": 0.24405676579589622,
-        "percentageTokens": 0.2355123397511967,
-        "sources": 598,
-        "tokens": 273871
+        "percentage": 0.1403381697186446,
+        "percentageTokens": 0.15208625045242005,
+        "sources": 599,
+        "tokens": 273529
       },
       "typescript": {
-        "clones": 11,
-        "duplicatedLines": 145,
-        "duplicatedTokens": 794,
-        "lines": 148838,
+        "clones": 7,
+        "duplicatedLines": 85,
+        "duplicatedTokens": 459,
+        "lines": 148875,
         "newClones": 0,
         "newDuplicatedLines": 0,
-        "percentage": 0.09742135744903856,
-        "percentageTokens": 0.09369217988898539,
+        "percentage": 0.05709487825356843,
+        "percentageTokens": 0.05415596919127086,
         "sources": 2017,
-        "tokens": 847456
+        "tokens": 847552
       }
     },
     "total": {
-      "clones": 19,
-      "duplicatedLines": 253,
-      "duplicatedTokens": 1439,
-      "lines": 208623,
+      "clones": 13,
+      "duplicatedLines": 147,
+      "duplicatedTokens": 875,
+      "lines": 208587,
       "newClones": 0,
       "newDuplicatedLines": 0,
-      "percentage": 0.12127138426731472,
-      "percentageTokens": 0.11498643176086658,
-      "sources": 2656,
-      "tokens": 1251452
+      "percentage": 0.0704741906254944,
+      "percentageTokens": 0.06993252909592824,
+      "sources": 2657,
+      "tokens": 1251206
     }
   }
 }
