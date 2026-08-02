@@ -1,0 +1,777 @@
+{
+  "duplicates": [
+    {
+      "firstFile": {
+        "end": 18,
+        "endLoc": {
+          "column": 22,
+          "line": 18,
+          "position": 688
+        },
+        "name": "modules\\auth\\routes\\auth.routes.test.ts",
+        "start": 3,
+        "startLoc": {
+          "column": 22,
+          "line": 3,
+          "position": 70
+        }
+      },
+      "format": "typescript",
+      "fragment": "",
+      "lines": 16,
+      "secondFile": {
+        "end": 17,
+        "endLoc": {
+          "column": 22,
+          "line": 17,
+          "position": 708
+        },
+        "name": "modules\\auth\\routes\\auth.routes.ts",
+        "start": 2,
+        "startLoc": {
+          "column": 47,
+          "line": 2,
+          "position": 90
+        }
+      },
+      "tokens": 64
+    },
+    {
+      "firstFile": {
+        "end": 26,
+        "endLoc": {
+          "column": 6,
+          "line": 26,
+          "position": 1080
+        },
+        "name": "modules\\home\\helpers\\landing-seam-copy.helper.ts",
+        "start": 16,
+        "startLoc": {
+          "column": 40,
+          "line": 16,
+          "position": 732
+        }
+      },
+      "format": "typescript",
+      "fragment": "",
+      "lines": 11,
+      "secondFile": {
+        "end": 77,
+        "endLoc": {
+          "column": 6,
+          "line": 77,
+          "position": 3141
+        },
+        "name": "modules\\team-directory\\team-directory.constants.ts",
+        "start": 66,
+        "startLoc": {
+          "column": 52,
+          "line": 66,
+          "position": 2722
+        }
+      },
+      "tokens": 62
+    },
+    {
+      "firstFile": {
+        "end": 60,
+        "endLoc": {
+          "column": 34,
+          "line": 60,
+          "position": 1958
+        },
+        "name": "modules\\reports\\hooks\\use-report-actions.hook.test.tsx",
+        "start": 52,
+        "startLoc": {
+          "column": 62,
+          "line": 52,
+          "position": 1738
+        }
+      },
+      "format": "tsx",
+      "fragment": "",
+      "lines": 9,
+      "secondFile": {
+        "end": 83,
+        "endLoc": {
+          "column": 34,
+          "line": 83,
+          "position": 2641
+        },
+        "name": "modules\\reports\\hooks\\use-report-actions.hook.test.tsx",
+        "start": 75,
+        "startLoc": {
+          "column": 4,
+          "line": 75,
+          "position": 2421
+        }
+      },
+      "tokens": 63
+    },
+    {
+      "firstFile": {
+        "end": 51,
+        "endLoc": {
+          "column": 7,
+          "line": 51,
+          "position": 1667
+        },
+        "name": "modules\\standings\\components\\manual-standing-form\\manual-standing-form.component.tsx",
+        "start": 40,
+        "startLoc": {
+          "column": 25,
+          "line": 40,
+          "position": 1396
+        }
+      },
+      "format": "tsx",
+      "fragment": "",
+      "lines": 12,
+      "secondFile": {
+        "end": 45,
+        "endLoc": {
+          "column": 7,
+          "line": 45,
+          "position": 1524
+        },
+        "name": "modules\\standings\\components\\rule-version-form\\rule-version-form.component.tsx",
+        "start": 34,
+        "startLoc": {
+          "column": 25,
+          "line": 34,
+          "position": 1253
+        }
+      },
+      "tokens": 60
+    },
+    {
+      "firstFile": {
+        "end": 181,
+        "endLoc": {
+          "column": 28,
+          "line": 181,
+          "position": 5794
+        },
+        "name": "modules\\standings\\components\\standings-components.test.tsx",
+        "start": 146,
+        "startLoc": {
+          "column": 14,
+          "line": 146,
+          "position": 4551
+        }
+      },
+      "format": "tsx",
+      "fragment": "",
+      "lines": 36,
+      "secondFile": {
+        "end": 283,
+        "endLoc": {
+          "column": 24,
+          "line": 283,
+          "position": 9077
+        },
+        "name": "modules\\standings\\components\\standings-screens.test.tsx",
+        "start": 248,
+        "startLoc": {
+          "column": 17,
+          "line": 248,
+          "position": 7974
+        }
+      },
+      "tokens": 169
+    },
+    {
+      "firstFile": {
+        "end": 65,
+        "endLoc": {
+          "column": 6,
+          "line": 65,
+          "position": 1972
+        },
+        "name": "modules\\standings\\gateways\\standings.gateway.test.ts",
+        "start": 49,
+        "startLoc": {
+          "column": 37,
+          "line": 49,
+          "position": 1605
+        }
+      },
+      "format": "typescript",
+      "fragment": "",
+      "lines": 17,
+      "secondFile": {
+        "end": 137,
+        "endLoc": {
+          "column": 10,
+          "line": 137,
+          "position": 4186
+        },
+        "name": "modules\\standings\\services\\standings-services.test.ts",
+        "start": 121,
+        "startLoc": {
+          "column": 34,
+          "line": 121,
+          "position": 3755
+        }
+      },
+      "tokens": 66
+    },
+    {
+      "firstFile": {
+        "end": 27,
+        "endLoc": {
+          "column": 11,
+          "line": 27,
+          "position": 753
+        },
+        "name": "modules\\standings\\helpers\\achievement-view.helper.test.ts",
+        "start": 10,
+        "startLoc": {
+          "column": 34,
+          "line": 10,
+          "position": 255
+        }
+      },
+      "format": "typescript",
+      "fragment": "",
+      "lines": 18,
+      "secondFile": {
+        "end": 26,
+        "endLoc": {
+          "column": 11,
+          "line": 26,
+          "position": 821
+        },
+        "name": "modules\\standings\\helpers\\screen-view-builders.test.ts",
+        "start": 9,
+        "startLoc": {
+          "column": 73,
+          "line": 9,
+          "position": 323
+        }
+      },
+      "tokens": 103
+    },
+    {
+      "firstFile": {
+        "end": 280,
+        "endLoc": {
+          "column": 30,
+          "line": 280,
+          "position": 9733
+        },
+        "name": "modules\\standings\\hooks\\write-error-branches.test.tsx",
+        "start": 270,
+        "startLoc": {
+          "column": 21,
+          "line": 270,
+          "position": 9453
+        }
+      },
+      "format": "tsx",
+      "fragment": "",
+      "lines": 11,
+      "secondFile": {
+        "end": 319,
+        "endLoc": {
+          "column": 30,
+          "line": 319,
+          "position": 11095
+        },
+        "name": "modules\\standings\\hooks\\write-error-branches.test.tsx",
+        "start": 309,
+        "startLoc": {
+          "column": 30,
+          "line": 309,
+          "position": 10736
+        }
+      },
+      "tokens": 72
+    },
+    {
+      "firstFile": {
+        "end": 353,
+        "endLoc": {
+          "column": 13,
+          "line": 353,
+          "position": 12157
+        },
+        "name": "modules\\standings\\hooks\\write-error-branches.test.tsx",
+        "start": 341,
+        "startLoc": {
+          "column": 19,
+          "line": 341,
+          "position": 11834
+        }
+      },
+      "format": "tsx",
+      "fragment": "",
+      "lines": 13,
+      "secondFile": {
+        "end": 413,
+        "endLoc": {
+          "column": 13,
+          "line": 413,
+          "position": 14082
+        },
+        "name": "modules\\standings\\hooks\\write-error-branches.test.tsx",
+        "start": 402,
+        "startLoc": {
+          "column": 28,
+          "line": 402,
+          "position": 13845
+        }
+      },
+      "tokens": 60
+    },
+    {
+      "firstFile": {
+        "end": 181,
+        "endLoc": {
+          "column": 37,
+          "line": 181,
+          "position": 5724
+        },
+        "name": "modules\\tryouts\\hooks\\use-public-tryouts.hook.test.ts",
+        "start": 168,
+        "startLoc": {
+          "column": 4,
+          "line": 168,
+          "position": 5423
+        }
+      },
+      "format": "typescript",
+      "fragment": "",
+      "lines": 14,
+      "secondFile": {
+        "end": 212,
+        "endLoc": {
+          "column": 37,
+          "line": 212,
+          "position": 6506
+        },
+        "name": "modules\\tryouts\\hooks\\use-public-tryouts.hook.test.ts",
+        "start": 199,
+        "startLoc": {
+          "column": 4,
+          "line": 199,
+          "position": 6205
+        }
+      },
+      "tokens": 83
+    },
+    {
+      "firstFile": {
+        "end": 212,
+        "endLoc": {
+          "column": 28,
+          "line": 212,
+          "position": 6497
+        },
+        "name": "modules\\tryouts\\hooks\\use-public-tryouts.hook.test.ts",
+        "start": 198,
+        "startLoc": {
+          "column": 5,
+          "line": 198,
+          "position": 6198
+        }
+      },
+      "format": "typescript",
+      "fragment": "",
+      "lines": 15,
+      "secondFile": {
+        "end": 232,
+        "endLoc": {
+          "column": 28,
+          "line": 232,
+          "position": 7100
+        },
+        "name": "modules\\tryouts\\hooks\\use-public-tryouts.hook.test.ts",
+        "start": 218,
+        "startLoc": {
+          "column": 96,
+          "line": 218,
+          "position": 6801
+        }
+      },
+      "tokens": 83
+    },
+    {
+      "firstFile": {
+        "end": 18,
+        "endLoc": {
+          "column": 4,
+          "line": 18,
+          "position": 655
+        },
+        "name": "modules\\tryouts\\hooks\\use-registration-draft.hook.test.ts",
+        "start": 10,
+        "startLoc": {
+          "column": 62,
+          "line": 10,
+          "position": 433
+        }
+      },
+      "format": "typescript",
+      "fragment": "",
+      "lines": 9,
+      "secondFile": {
+        "end": 83,
+        "endLoc": {
+          "column": 1,
+          "line": 83,
+          "position": 2669
+        },
+        "name": "modules\\tryouts\\hooks\\use-registration-draft.hook.test.ts",
+        "start": 76,
+        "startLoc": {
+          "column": 5,
+          "line": 76,
+          "position": 2451
+        }
+      },
+      "tokens": 64
+    },
+    {
+      "firstFile": {
+        "end": 33,
+        "endLoc": {
+          "column": 12,
+          "line": 33,
+          "position": 1072
+        },
+        "name": "tests\\msw\\reports-handlers.ts",
+        "start": 16,
+        "startLoc": {
+          "column": 41,
+          "line": 16,
+          "position": 489
+        }
+      },
+      "format": "typescript",
+      "fragment": "",
+      "lines": 18,
+      "secondFile": {
+        "end": 41,
+        "endLoc": {
+          "column": 12,
+          "line": 41,
+          "position": 1258
+        },
+        "name": "tests\\msw\\standings-handlers.ts",
+        "start": 24,
+        "startLoc": {
+          "column": 33,
+          "line": 24,
+          "position": 677
+        }
+      },
+      "tokens": 66
+    },
+    {
+      "firstFile": {
+        "end": 39,
+        "endLoc": {
+          "column": 24,
+          "line": 39,
+          "position": 1206
+        },
+        "name": "contract\\reports.contract.test.ts",
+        "start": 26,
+        "startLoc": {
+          "column": 2,
+          "line": 26,
+          "position": 851
+        }
+      },
+      "format": "typescript",
+      "fragment": "",
+      "lines": 14,
+      "secondFile": {
+        "end": 40,
+        "endLoc": {
+          "column": 24,
+          "line": 40,
+          "position": 1288
+        },
+        "name": "contract\\standings.contract.test.ts",
+        "start": 27,
+        "startLoc": {
+          "column": 2,
+          "line": 27,
+          "position": 933
+        }
+      },
+      "tokens": 73
+    },
+    {
+      "firstFile": {
+        "end": 37,
+        "endLoc": {
+          "column": 1,
+          "line": 37,
+          "position": 1507
+        },
+        "name": "integration\\auth-recovery-flow.integration.test.ts",
+        "start": 23,
+        "startLoc": {
+          "column": 40,
+          "line": 23,
+          "position": 1096
+        }
+      },
+      "format": "typescript",
+      "fragment": "",
+      "lines": 15,
+      "secondFile": {
+        "end": 29,
+        "endLoc": {
+          "column": 1,
+          "line": 29,
+          "position": 1143
+        },
+        "name": "integration\\auth-signup-flow.integration.test.ts",
+        "start": 15,
+        "startLoc": {
+          "column": 57,
+          "line": 15,
+          "position": 732
+        }
+      },
+      "tokens": 63
+    },
+    {
+      "firstFile": {
+        "end": 34,
+        "endLoc": {
+          "column": 1,
+          "line": 34,
+          "position": 1507
+        },
+        "name": "integration\\external-training-flow.integration.test.tsx",
+        "start": 21,
+        "startLoc": {
+          "column": 57,
+          "line": 21,
+          "position": 1083
+        }
+      },
+      "format": "tsx",
+      "fragment": "",
+      "lines": 14,
+      "secondFile": {
+        "end": 23,
+        "endLoc": {
+          "column": 1,
+          "line": 23,
+          "position": 1034
+        },
+        "name": "integration\\public-competitions-flow.integration.test.tsx",
+        "start": 10,
+        "startLoc": {
+          "column": 56,
+          "line": 10,
+          "position": 610
+        }
+      },
+      "tokens": 92
+    },
+    {
+      "firstFile": {
+        "end": 113,
+        "endLoc": {
+          "column": 9,
+          "line": 113,
+          "position": 3784
+        },
+        "name": "integration\\module-writes.integration.test.tsx",
+        "start": 102,
+        "startLoc": {
+          "column": 74,
+          "line": 102,
+          "position": 3407
+        }
+      },
+      "format": "tsx",
+      "fragment": "",
+      "lines": 12,
+      "secondFile": {
+        "end": 152,
+        "endLoc": {
+          "column": 9,
+          "line": 152,
+          "position": 5080
+        },
+        "name": "integration\\module-writes.integration.test.tsx",
+        "start": 142,
+        "startLoc": {
+          "column": 70,
+          "line": 142,
+          "position": 4706
+        }
+      },
+      "tokens": 65
+    },
+    {
+      "firstFile": {
+        "end": 209,
+        "endLoc": {
+          "column": 13,
+          "line": 209,
+          "position": 7929
+        },
+        "name": "integration\\standings-writes.integration.test.tsx",
+        "start": 201,
+        "startLoc": {
+          "column": 52,
+          "line": 201,
+          "position": 7637
+        }
+      },
+      "format": "tsx",
+      "fragment": "",
+      "lines": 9,
+      "secondFile": {
+        "end": 235,
+        "endLoc": {
+          "column": 13,
+          "line": 235,
+          "position": 8859
+        },
+        "name": "integration\\standings-writes.integration.test.tsx",
+        "start": 227,
+        "startLoc": {
+          "column": 64,
+          "line": 227,
+          "position": 8567
+        }
+      },
+      "tokens": 64
+    },
+    {
+      "firstFile": {
+        "end": 280,
+        "endLoc": {
+          "column": 35,
+          "line": 280,
+          "position": 12060
+        },
+        "name": "visual\\visual.spec.ts",
+        "start": 272,
+        "startLoc": {
+          "column": 32,
+          "line": 272,
+          "position": 11727
+        }
+      },
+      "format": "typescript",
+      "fragment": "",
+      "lines": 9,
+      "secondFile": {
+        "end": 328,
+        "endLoc": {
+          "column": 35,
+          "line": 328,
+          "position": 14111
+        },
+        "name": "visual\\visual.spec.ts",
+        "start": 320,
+        "startLoc": {
+          "column": 30,
+          "line": 320,
+          "position": 13778
+        }
+      },
+      "tokens": 67
+    }
+  ],
+  "statistics": {
+    "detectionDate": "2026-08-02T17:43:05.077Z",
+    "formats": {
+      "css": {
+        "clones": 0,
+        "duplicatedLines": 0,
+        "duplicatedTokens": 0,
+        "lines": 7501,
+        "newClones": 0,
+        "newDuplicatedLines": 0,
+        "percentage": 0.0,
+        "percentageTokens": 0.0,
+        "sources": 3,
+        "tokens": 80469
+      },
+      "json": {
+        "clones": 0,
+        "duplicatedLines": 0,
+        "duplicatedTokens": 0,
+        "lines": 6616,
+        "newClones": 0,
+        "newDuplicatedLines": 0,
+        "percentage": 0.0,
+        "percentageTokens": 0.0,
+        "sources": 2,
+        "tokens": 25938
+      },
+      "markdown": {
+        "clones": 0,
+        "duplicatedLines": 0,
+        "duplicatedTokens": 0,
+        "lines": 717,
+        "newClones": 0,
+        "newDuplicatedLines": 0,
+        "percentage": 0.0,
+        "percentageTokens": 0.0,
+        "sources": 18,
+        "tokens": 11867
+      },
+      "text": {
+        "clones": 0,
+        "duplicatedLines": 0,
+        "duplicatedTokens": 0,
+        "lines": 699,
+        "newClones": 0,
+        "newDuplicatedLines": 0,
+        "percentage": 0.0,
+        "percentageTokens": 0.0,
+        "sources": 18,
+        "tokens": 11851
+      },
+      "tsx": {
+        "clones": 8,
+        "duplicatedLines": 108,
+        "duplicatedTokens": 645,
+        "lines": 44252,
+        "newClones": 0,
+        "newDuplicatedLines": 0,
+        "percentage": 0.24405676579589622,
+        "percentageTokens": 0.2355123397511967,
+        "sources": 598,
+        "tokens": 273871
+      },
+      "typescript": {
+        "clones": 11,
+        "duplicatedLines": 145,
+        "duplicatedTokens": 794,
+        "lines": 148838,
+        "newClones": 0,
+        "newDuplicatedLines": 0,
+        "percentage": 0.09742135744903856,
+        "percentageTokens": 0.09369217988898539,
+        "sources": 2017,
+        "tokens": 847456
+      }
+    },
+    "total": {
+      "clones": 19,
+      "duplicatedLines": 253,
+      "duplicatedTokens": 1439,
+      "lines": 208623,
+      "newClones": 0,
+      "newDuplicatedLines": 0,
+      "percentage": 0.12127138426731472,
+      "percentageTokens": 0.11498643176086658,
+      "sources": 2656,
+      "tokens": 1251452
+    }
+  }
+}

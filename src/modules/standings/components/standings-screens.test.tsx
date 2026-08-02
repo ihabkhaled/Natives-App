@@ -9,6 +9,7 @@ import {
   buildStandingsRulesScreenView,
   buildStandingsScreenView,
   buildTeamHistoryScreenView,
+  buildAchievementFormView,
 } from '../../../../tests/factories/standings-view.factory';
 import { AchievementDetail } from './achievement-detail';
 import { AchievementForm } from './achievement-form';
@@ -245,49 +246,7 @@ describe('standings screen components (both branches)', () => {
   });
 
   it('renders the achievements screen with a create form and import wizard present', () => {
-    const form = {
-      heading: 'Create',
-      titleLabel: 'Title',
-      titleValue: '',
-      onTitleChange: noop,
-      categoryLabel: 'Category',
-      categoryValue: 'trophy',
-      categoryOptions: [{ value: 'trophy', label: 'Trophy' }],
-      onCategoryChange: noop,
-      dateLabel: 'Date',
-      dateValue: '',
-      dateDisplayValue: '',
-      datePlaceholder: 'pick',
-      dateOpenLabel: 'open',
-      dateDialogTitle: 'title',
-      dateCloseLabel: 'close',
-      isDateOpen: false,
-      onDateOpen: noop,
-      onDateDismiss: noop,
-      onDateChange: noop,
-      memberLabel: 'Member',
-      memberValue: 'none',
-      memberOptions: [{ value: 'none', label: 'Team' }],
-      onMemberChange: noop,
-      descriptionLabel: 'Description',
-      descriptionValue: '',
-      onDescriptionChange: noop,
-      evidenceLabel: 'Evidence',
-      evidenceValue: '',
-      onEvidenceChange: noop,
-      visibilityLabel: 'Visibility',
-      visibilityHint: 'hint',
-      visibilityValue: 'team',
-      visibilityOptions: [{ value: 'team', label: 'Team' }],
-      onVisibilityChange: noop,
-      validationMessage: null,
-      submitLabel: 'Create',
-      cancelLabel: 'Cancel',
-      canSubmit: false,
-      isSaving: false,
-      onSubmit: noop,
-      onCancel: noop,
-    };
+    const form = buildAchievementFormView({ onSubmit: noop });
     const wizard = {
       heading: 'Import',
       intro: 'intro',

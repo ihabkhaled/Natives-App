@@ -1,6 +1,7 @@
+import { buildStandingRow } from '../../../../tests/factories/standings-view.factory';
 import { describe, expect, it } from 'vitest';
 
-import type { StandingRow, StandingsRule } from '../types/standings.types';
+import type { StandingsRule } from '../types/standings.types';
 import {
   buildQualificationChip,
   buildRuleFooter,
@@ -15,37 +16,6 @@ import {
 
 const t = (key: string, params?: Record<string, string | number>): string =>
   params === undefined ? key : `${key}:${Object.values(params).join(',')}`;
-
-function row(overrides: Partial<StandingRow>): StandingRow {
-  return {
-    standingId: 's1',
-    seasonId: 'se1',
-    competitionId: 'c1',
-    stageId: null,
-    ruleVersionId: 'rv1',
-    poolLabel: null,
-    entrantKind: 'opponent',
-    opponentId: 'o1',
-    opponentName: 'Giza',
-    played: 5,
-    wins: 3,
-    losses: 2,
-    ties: 0,
-    pointsFor: 60,
-    pointsAgainst: 55,
-    standingPoints: 9,
-    spiritScore: null,
-    finalPlace: 2,
-    qualification: 'undecided',
-    source: 'derived',
-    sourceReference: null,
-    reconciliationNote: null,
-    recordVersion: 1,
-    recordedBy: null,
-    computedAtIso: '2026-07-10T09:00:00.000Z',
-    ...overrides,
-  };
-}
 
 describe('formatDiff', () => {
   it('prefixes a positive difference with +', () => {
@@ -74,17 +44,19 @@ describe('formatSpirit', () => {
 
 describe('resolveEntrantLabel', () => {
   it('labels our team', () => {
-    expect(resolveEntrantLabel(t, row({ entrantKind: 'team', opponentName: null }))).toBe(
-      'standings.ourTeamLabel',
-    );
+    expect(
+      resolveEntrantLabel(t, buildStandingRow({ entrantKind: 'team', opponentName: null })),
+    ).toBe('standings.ourTeamLabel');
   });
 
   it('uses the resolved opponent name', () => {
-    expect(resolveEntrantLabel(t, row({ opponentName: 'Giza' }))).toBe('Giza');
+    expect(resolveEntrantLabel(t, buildStandingRow({ opponentName: 'Giza' }))).toBe('Giza');
   });
 
   it('falls back to the unknown-opponent label when the name is absent', () => {
-    expect(resolveEntrantLabel(t, row({ opponentName: null }))).toBe('standings.unknownOpponent');
+    expect(resolveEntrantLabel(t, buildStandingRow({ opponentName: null }))).toBe(
+      'standings.unknownOpponent',
+    );
   });
 });
 
@@ -118,8 +90,8 @@ describe('buildSourceChip', () => {
 describe('buildStandingRowViews', () => {
   it('numbers rows by their final place, falling back to index order', () => {
     const views = buildStandingRowViews(t, 'en', [
-      row({ standingId: 'a', finalPlace: null }),
-      row({ standingId: 'b', finalPlace: 4 }),
+      buildStandingRow({ standingId: 'a', finalPlace: null }),
+      buildStandingRow({ standingId: 'b', finalPlace: 4 }),
     ]);
     expect(views[0]?.place).toBe('1');
     expect(views[1]?.place).toBe('4');
@@ -127,8 +99,8 @@ describe('buildStandingRowViews', () => {
 
   it('highlights our team and carries provenance only for reconciled rows', () => {
     const views = buildStandingRowViews(t, 'en', [
-      row({ entrantKind: 'team', opponentName: null }),
-      row({ source: 'manual', reconciliationNote: 'from paper' }),
+      buildStandingRow({ entrantKind: 'team', opponentName: null }),
+      buildStandingRow({ source: 'manual', reconciliationNote: 'from paper' }),
     ]);
     expect(views[0]?.isOurTeam).toBe(true);
     expect(views[0]?.provenance).toBeNull();
@@ -159,7 +131,7 @@ describe('buildRuleFooter', () => {
   };
 
   it('cites the rule version the rows were computed under', () => {
-    expect(buildRuleFooter(t, [row({ ruleVersionId: 'rv1' })], [rule])).toBe(
+    expect(buildRuleFooter(t, [buildStandingRow({ ruleVersionId: 'rv1' })], [rule])).toBe(
       'standings.ruleFooter:League,2',
     );
   });
@@ -169,7 +141,7 @@ describe('buildRuleFooter', () => {
   });
 
   it('reports an unknown rule when the cited version is missing', () => {
-    expect(buildRuleFooter(t, [row({ ruleVersionId: 'gone' })], [rule])).toBe(
+    expect(buildRuleFooter(t, [buildStandingRow({ ruleVersionId: 'gone' })], [rule])).toBe(
       'standings.ruleFooterUnknown',
     );
   });

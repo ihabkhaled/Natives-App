@@ -1,6 +1,6 @@
+import { buildAchievement as achievement } from '../../../../tests/factories/standings-view.factory';
 import { describe, expect, it } from 'vitest';
 
-import type { Achievement } from '../types/achievements.types';
 import {
   buildSourceTag,
   buildStatusChip,
@@ -11,29 +11,6 @@ import {
 
 const t = (key: string, params?: Record<string, string | number>): string =>
   params === undefined ? key : `${key}:${Object.values(params).join(',')}`;
-
-function achievement(overrides: Partial<Achievement>): Achievement {
-  return {
-    achievementId: 'a1',
-    seasonId: null,
-    competitionId: null,
-    membershipId: null,
-    category: 'trophy',
-    title: 'Champions',
-    description: null,
-    achievedOn: '2026-06-20',
-    evidenceReference: null,
-    visibility: 'public',
-    status: 'draft',
-    source: 'manual',
-    importReference: null,
-    rejectionReason: null,
-    recordVersion: 1,
-    approvedBy: null,
-    approvedAtIso: null,
-    ...overrides,
-  };
-}
 
 describe('resolveCategoryIcon', () => {
   it('maps categories to their medal icon family', () => {

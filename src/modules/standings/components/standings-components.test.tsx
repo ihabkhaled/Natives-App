@@ -1,3 +1,4 @@
+import { buildAchievementFormView } from '../../../../tests/factories/standings-view.factory';
 import { fireEvent, render, screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 
@@ -143,49 +144,7 @@ describe('standings dumb components render', () => {
     const onInputChange = vi.fn();
     render(
       <AchievementForm
-        view={{
-          heading: 'Create',
-          titleLabel: 'Title',
-          titleValue: '',
-          onTitleChange: noop,
-          categoryLabel: 'Category',
-          categoryValue: 'trophy',
-          categoryOptions: [{ value: 'trophy', label: 'Trophy' }],
-          onCategoryChange: noop,
-          dateLabel: 'Date',
-          dateValue: '',
-          dateDisplayValue: '',
-          datePlaceholder: 'pick',
-          dateOpenLabel: 'open',
-          dateDialogTitle: 'title',
-          dateCloseLabel: 'close',
-          isDateOpen: false,
-          onDateOpen: noop,
-          onDateDismiss: noop,
-          onDateChange: noop,
-          memberLabel: 'Member',
-          memberValue: 'none',
-          memberOptions: [{ value: 'none', label: 'Team' }],
-          onMemberChange: noop,
-          descriptionLabel: 'Description',
-          descriptionValue: '',
-          onDescriptionChange: noop,
-          evidenceLabel: 'Evidence',
-          evidenceValue: '',
-          onEvidenceChange: noop,
-          visibilityLabel: 'Visibility',
-          visibilityHint: 'hint',
-          visibilityValue: 'team',
-          visibilityOptions: [{ value: 'team', label: 'Team' }],
-          onVisibilityChange: noop,
-          validationMessage: 'bad',
-          submitLabel: 'Create',
-          cancelLabel: 'Cancel',
-          canSubmit: false,
-          isSaving: false,
-          onSubmit,
-          onCancel: noop,
-        }}
+        view={buildAchievementFormView({ onTitleChange: onInputChange, onSubmit })}
       />,
     );
     fireEvent.submit(screen.getByTestId(TEST_IDS.achievementForm));

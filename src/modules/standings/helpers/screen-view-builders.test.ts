@@ -1,3 +1,4 @@
+import { buildAchievement } from '../../../../tests/factories/standings-view.factory';
 import { describe, expect, it, vi } from 'vitest';
 
 import type { Achievement } from '../types/achievements.types';
@@ -8,31 +9,12 @@ import {
 } from './achievement-detail-view.helper';
 import { buildStandingsManageView } from './standings-screen-view.helper';
 
+/** This spec builds submitted achievements; everything else is shared. */
+const achievement = (overrides: Partial<Achievement> = {}): Achievement =>
+  buildAchievement({ status: 'submitted', ...overrides });
+
 const t = (key: string, params?: Record<string, string | number>): string =>
   params === undefined ? key : `${key}:${Object.values(params).join(',')}`;
-
-function achievement(overrides: Partial<Achievement>): Achievement {
-  return {
-    achievementId: 'a1',
-    seasonId: null,
-    competitionId: null,
-    membershipId: null,
-    category: 'trophy',
-    title: 'Champions',
-    description: null,
-    achievedOn: '2026-06-20',
-    evidenceReference: null,
-    visibility: 'public',
-    status: 'submitted',
-    source: 'manual',
-    importReference: null,
-    rejectionReason: null,
-    recordVersion: 1,
-    approvedBy: null,
-    approvedAtIso: null,
-    ...overrides,
-  };
-}
 
 describe('buildTransitionActions', () => {
   it('offers nothing to a non-manager', () => {

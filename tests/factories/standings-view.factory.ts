@@ -1,4 +1,7 @@
+import type { Achievement } from '@/modules/standings/types/achievements.types';
+import type { StandingRow } from '@/modules/standings/types/standings.types';
 import type {
+  AchievementFormView,
   AchievementsScreenView,
   TeamHistoryScreenView,
 } from '@/modules/standings/types/achievements-view.types';
@@ -211,6 +214,128 @@ export function buildAchievementsScreenView(
     onOpenImport: noop,
     importWizard: null,
     banner: null,
+    ...overrides,
+  };
+}
+
+/**
+ * A derived standings row for the two helper specs that build one.
+ *
+ * Both declared a byte-identical copy of this literal. Defaults describe a
+ * derived row with no manual provenance; the provenance spec overrides
+ * `source`, `sourceReference` and `reconciliationNote` to exercise the manual
+ * path.
+ */
+export function buildStandingRow(overrides: Partial<StandingRow> = {}): StandingRow {
+  return {
+    standingId: 's1',
+    seasonId: 'se1',
+    competitionId: 'c1',
+    stageId: null,
+    ruleVersionId: 'rv1',
+    poolLabel: null,
+    entrantKind: 'opponent',
+    opponentId: 'o1',
+    opponentName: 'Giza',
+    played: 5,
+    wins: 3,
+    losses: 2,
+    ties: 0,
+    pointsFor: 60,
+    pointsAgainst: 55,
+    standingPoints: 9,
+    spiritScore: null,
+    finalPlace: 2,
+    qualification: 'undecided',
+    source: 'derived',
+    sourceReference: null,
+    reconciliationNote: null,
+    recordVersion: 1,
+    recordedBy: 'coach',
+    computedAtIso: '2026-07-10T09:00:00.000Z',
+    ...overrides,
+  };
+}
+
+/**
+ * The achievement create/edit form view.
+ *
+ * Forty fields, spelled out identically in the standings component and screen
+ * specs. Callers override only what their assertion is about.
+ */
+export function buildAchievementFormView(
+  overrides: Partial<AchievementFormView> = {},
+): AchievementFormView {
+  const noop = (): void => undefined;
+  return {
+    heading: 'Create',
+    titleLabel: 'Title',
+    titleValue: '',
+    onTitleChange: noop,
+    categoryLabel: 'Category',
+    categoryValue: 'trophy',
+    categoryOptions: [{ value: 'trophy', label: 'Trophy' }],
+    onCategoryChange: noop,
+    dateLabel: 'Date',
+    dateValue: '',
+    dateDisplayValue: '',
+    datePlaceholder: 'pick',
+    dateOpenLabel: 'open',
+    dateDialogTitle: 'title',
+    dateCloseLabel: 'close',
+    isDateOpen: false,
+    onDateOpen: noop,
+    onDateDismiss: noop,
+    onDateChange: noop,
+    memberLabel: 'Member',
+    memberValue: 'none',
+    memberOptions: [{ value: 'none', label: 'Team' }],
+    onMemberChange: noop,
+    descriptionLabel: 'Description',
+    descriptionValue: '',
+    onDescriptionChange: noop,
+    evidenceLabel: 'Evidence',
+    evidenceValue: '',
+    onEvidenceChange: noop,
+    visibilityLabel: 'Visibility',
+    visibilityHint: 'hint',
+    visibilityValue: 'team',
+    visibilityOptions: [{ value: 'team', label: 'Team' }],
+    onVisibilityChange: noop,
+    validationMessage: 'bad',
+    submitLabel: 'Create',
+    cancelLabel: 'Cancel',
+    canSubmit: false,
+    isSaving: false,
+    onSubmit: noop,
+    onCancel: noop,
+    ...overrides,
+  };
+}
+
+/**
+ * A domain achievement. Both standings helper specs declared this literal;
+ * they differed only in `status`, so that stays an ordinary override.
+ */
+export function buildAchievement(overrides: Partial<Achievement> = {}): Achievement {
+  return {
+    achievementId: 'a1',
+    seasonId: null,
+    competitionId: null,
+    membershipId: null,
+    category: 'trophy',
+    title: 'Champions',
+    description: null,
+    achievedOn: '2026-06-20',
+    evidenceReference: null,
+    visibility: 'public',
+    status: 'draft',
+    source: 'manual',
+    importReference: null,
+    rejectionReason: null,
+    recordVersion: 1,
+    approvedBy: null,
+    approvedAtIso: null,
     ...overrides,
   };
 }
