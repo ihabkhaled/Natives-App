@@ -246,7 +246,8 @@ describe('standings screen components (both branches)', () => {
   });
 
   it('renders the achievements screen with a create form and import wizard present', () => {
-    const form = buildAchievementFormView({ onSubmit: noop });
+    // No validation message here — the components spec covers the error side.
+    const form = buildAchievementFormView({ onSubmit: noop, validationMessage: null });
     const wizard = {
       heading: 'Import',
       intro: 'intro',
