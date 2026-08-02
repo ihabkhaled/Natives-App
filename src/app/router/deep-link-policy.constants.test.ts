@@ -72,6 +72,7 @@ describe('APP_DEEP_LINK_POLICY', () => {
       '/squads/:squadId',
       '/standings',
       '/standings/rules',
+      '/team',
       '/team-history',
       '/training',
       '/training-review',

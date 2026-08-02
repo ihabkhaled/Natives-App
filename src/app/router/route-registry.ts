@@ -14,6 +14,7 @@ import { getPracticeRouteDefinitions } from '@/modules/practice';
 import { getReportsRouteDefinitions } from '@/modules/reports';
 import { getSettingsRouteDefinitions } from '@/modules/settings';
 import { getStandingsRouteDefinitions } from '@/modules/standings';
+import { getTeamDirectoryRouteDefinitions } from '@/modules/team-directory';
 import { getTeamsRouteDefinitions } from '@/modules/teams';
 import { getTrainingRouteDefinitions } from '@/modules/training';
 import { getTryoutsRouteDefinitions } from '@/modules/tryouts';
@@ -26,6 +27,7 @@ export function getAppRouteDefinitions(): readonly AppRouteDefinition[] {
     ...getAuthRouteDefinitions(),
     ...getHomeRouteDefinitions(),
     ...getContactRouteDefinitions(),
+    ...getTeamDirectoryRouteDefinitions(),
     ...getPracticeRouteDefinitions(),
     ...getAttendanceRouteDefinitions(),
     ...getMembersRouteDefinitions(),

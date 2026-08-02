@@ -17,6 +17,7 @@ import { MATCHES_TEST_IDS } from './matches-test-ids.constants';
 import { NOTIFICATIONS_TEST_IDS } from './notifications-test-ids.constants';
 import { REPORTS_TEST_IDS } from './reports-test-ids.constants';
 import { STANDINGS_TEST_IDS } from './standings-test-ids.constants';
+import { TEAM_DIRECTORY_TEST_IDS } from './team-directory-test-ids.constants';
 import { TEAMS_ADMIN_TEST_IDS } from './teams-admin-test-ids.constants';
 import { TEAMS_TEST_IDS } from './teams-test-ids.constants';
 import { TRYOUTS_TEST_IDS } from './tryouts-test-ids.constants';
@@ -64,6 +65,7 @@ export const TEST_IDS = {
   adminPage: 'admin-page',
   ...ABOUT_TEST_IDS,
   ...CONTACT_TEST_IDS,
+  ...TEAM_DIRECTORY_TEST_IDS,
   welcomePage: 'welcome-page',
   welcomeLoginCta: 'welcome-login-cta',
   loginPage: 'login-page',

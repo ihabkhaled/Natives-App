@@ -28,6 +28,7 @@ export function usePublicNav(): PublicNavView {
   const rawLinks: readonly Omit<PublicNavLink, 'isActive'>[] = [
     { key: 'home', label: t(I18N_KEYS.publicNav.home), path: APP_PATHS.welcome },
     { key: 'about', label: t(I18N_KEYS.publicNav.about), path: APP_PATHS.about },
+    { key: 'team', label: t(I18N_KEYS.publicNav.team), path: APP_PATHS.team },
     { key: 'tryouts', label: t(I18N_KEYS.publicNav.tryouts), path: tryoutRegistrationPath() },
     { key: 'contact', label: t(I18N_KEYS.publicNav.contact), path: APP_PATHS.contact },
   ];

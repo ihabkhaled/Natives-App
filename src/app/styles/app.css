@@ -5843,3 +5843,349 @@ ion-spinner {
 .app-contact-social-link:hover {
   text-decoration: underline;
 }
+
+/* ----------------------------------------------------------------------------
+   Team directory (/team) — the public "who's who": a masthead carrying the disc
+   arc, the season board grouped by responsibility, and the active roster.
+
+   Cards sit in a fixed-width auto-fit grid, so a wide desktop shows three or
+   four per row instead of stretching one mobile card across the viewport.
+   Every offset is a logical property, so Arabic mirrors without an override.
+---------------------------------------------------------------------------- */
+.app-team-layout {
+  display: flex;
+  flex-direction: column;
+  gap: var(--un-space-6);
+  padding-block-end: var(--un-space-8);
+}
+
+.app-team-hero {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  padding: var(--un-space-6) var(--un-space-4);
+  border: 1px solid var(--app-hairline);
+  border-radius: var(--un-radius-xl);
+  background:
+    radial-gradient(
+      120% 140% at 100% 0%,
+      color-mix(in srgb, var(--un-brand-lime) 16%, transparent) 0%,
+      transparent 62%
+    ),
+    var(--app-card-bg);
+  box-shadow: var(--app-elevation-card);
+}
+
+/* The signature disc-flight arc, echoed once per view. */
+.app-team-hero__arc {
+  position: absolute;
+  z-index: -1;
+  inset-block-start: -9rem;
+  inset-inline-end: -8rem;
+  inline-size: min(28rem, 78vw);
+  aspect-ratio: 1;
+  border: 3px solid transparent;
+  border-block-end-color: var(--app-arc-line);
+  border-inline-start-color: var(--app-arc-strong);
+  border-radius: var(--un-radius-circle);
+  opacity: 0.7;
+}
+
+.app-team-hero__content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--un-space-3);
+  max-inline-size: 46rem;
+}
+
+.app-team-hero__title {
+  font-size: var(--un-font-size-xl);
+  font-weight: var(--un-font-weight-bold);
+  letter-spacing: var(--un-letter-spacing-tight);
+  line-height: var(--un-line-height-tight);
+}
+
+.app-team-hero__tagline {
+  font-size: var(--un-font-size-md);
+  line-height: var(--un-line-height-normal);
+}
+
+.app-team-hero__facts {
+  display: grid;
+  gap: var(--un-space-2);
+  margin: 0;
+  grid-template-columns: repeat(auto-fit, minmax(9rem, 1fr));
+}
+
+.app-team-fact {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: var(--un-space-2) var(--un-space-3);
+  border: 1px solid var(--app-hairline);
+  border-radius: var(--un-radius-md);
+  background: var(--app-page-bg);
+}
+
+.app-team-fact__label {
+  color: var(--app-lime-text);
+  font-size: var(--un-font-size-xs);
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+[dir='rtl'] .app-team-fact__label {
+  letter-spacing: var(--un-letter-spacing-normal);
+  text-transform: none;
+}
+
+.app-team-fact__value {
+  color: var(--app-ink);
+  font-size: var(--un-font-size-sm);
+  font-weight: var(--un-font-weight-semibold);
+}
+
+.app-team-hero__social {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--un-space-2);
+}
+
+.app-team-social-link {
+  padding: var(--un-space-1) var(--un-space-3);
+  border: 1px solid var(--app-lime-line);
+  border-radius: var(--un-radius-pill);
+  color: var(--app-lime-text);
+  font-size: var(--un-font-size-sm);
+  font-weight: var(--un-font-weight-semibold);
+  transition: background var(--un-motion-duration-fast) var(--un-motion-easing-standard);
+}
+
+.app-team-social-link:hover {
+  background: var(--app-lime-soft);
+}
+
+/* Honest seam notice while the public directory endpoint is not live. */
+.app-team-notice {
+  display: flex;
+  flex-direction: column;
+  gap: var(--un-space-1);
+  padding: var(--un-space-3) var(--un-space-4);
+  border: 1px solid var(--app-gold-line);
+  border-radius: var(--un-radius-md);
+  background: var(--app-gold-soft);
+  color: var(--app-ink);
+  font-size: var(--un-font-size-sm);
+}
+
+.app-team-notice__title {
+  font-weight: var(--un-font-weight-bold);
+}
+
+.app-team-groups {
+  display: flex;
+  flex-direction: column;
+  gap: var(--un-space-6);
+}
+
+.app-team-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--un-space-3);
+}
+
+.app-team-group__title {
+  display: flex;
+  align-items: center;
+  gap: var(--un-space-2);
+  color: var(--app-ink);
+  font-size: var(--un-font-size-md);
+  font-weight: var(--un-font-weight-bold);
+  letter-spacing: var(--un-letter-spacing-tight);
+}
+
+.app-team-group__title::before {
+  display: block;
+  flex: none;
+  inline-size: 3px;
+  block-size: 1.1em;
+  border-radius: var(--un-radius-pill);
+  background: var(--app-cta-gradient);
+  content: '';
+}
+
+.app-team-grid {
+  display: grid;
+  gap: var(--un-space-3);
+  margin: 0;
+  padding-inline-start: 0;
+  grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr));
+  list-style: none;
+}
+
+.app-team-card {
+  position: relative;
+  isolation: isolate;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--un-space-2);
+  overflow: hidden;
+  padding: var(--un-space-4) var(--un-space-3);
+  border: 1px solid var(--app-hairline);
+  border-radius: var(--un-radius-xl);
+  background: var(--app-card-bg);
+  box-shadow: var(--app-elevation-card);
+  text-align: center;
+  transition:
+    transform var(--un-motion-duration-fast) var(--un-motion-easing-standard),
+    box-shadow var(--un-motion-duration-fast) var(--un-motion-easing-standard);
+}
+
+.app-team-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--app-elevation-lift);
+}
+
+.app-team-card__arc {
+  position: absolute;
+  z-index: -1;
+  inset-block-start: 0;
+  inset-inline: 0;
+  block-size: 3px;
+  background: var(--app-cta-gradient);
+  opacity: 0.85;
+}
+
+.app-team-card__jersey {
+  position: absolute;
+  inset-block-start: var(--un-space-2);
+  inset-inline-end: var(--un-space-2);
+  display: inline-flex;
+  align-items: baseline;
+  padding: 2px var(--un-space-2);
+  border: 1px solid var(--app-gold-line);
+  border-radius: var(--un-radius-pill);
+  background: var(--app-gold-soft);
+  color: var(--app-gold-text);
+  font-size: var(--un-font-size-xs);
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+}
+
+.app-team-card__jersey::before {
+  color: var(--app-gold-text);
+  content: '#';
+  opacity: 0.65;
+}
+
+.app-team-card__body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--un-space-1);
+}
+
+.app-team-card__name {
+  color: var(--app-ink);
+  font-size: var(--un-font-size-sm);
+  font-weight: var(--un-font-weight-bold);
+  line-height: var(--un-line-height-snug);
+}
+
+.app-team-card__nickname {
+  color: var(--app-lime-text);
+  font-size: var(--un-font-size-xs);
+  font-weight: var(--un-font-weight-semibold);
+  letter-spacing: 0.04em;
+}
+
+.app-team-card__tags {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--un-space-1);
+  margin: 0;
+  padding-inline-start: 0;
+  list-style: none;
+}
+
+.app-team-chip {
+  padding: 2px var(--un-space-2);
+  border: 1px solid var(--app-tonal-border);
+  border-radius: var(--un-radius-pill);
+  background: var(--app-tonal-bg);
+  color: var(--app-tonal-text);
+  font-size: var(--un-font-size-xs);
+  font-weight: var(--un-font-weight-medium);
+}
+
+/* Portrait and initials medallion share one frame, so a missing photo reads as
+   a design choice rather than a broken image. */
+.app-team-avatar {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  inline-size: 5rem;
+  block-size: 5rem;
+}
+
+.app-team-avatar__ring {
+  position: absolute;
+  inset: -4px;
+  border-radius: var(--un-radius-circle);
+  background: var(--app-cta-gradient);
+  opacity: 0.28;
+}
+
+.app-team-avatar__photo {
+  position: relative;
+  inline-size: 5rem;
+  block-size: 5rem;
+  border-radius: var(--un-radius-circle);
+  object-fit: cover;
+  outline: 1px solid var(--app-lime-line);
+}
+
+/* Scale the shared initials avatar up to the directory's medallion size. */
+.app-team-avatar > span[role='img'] {
+  position: relative;
+  inline-size: 5rem;
+  block-size: 5rem;
+  font-size: var(--un-font-size-lg);
+  letter-spacing: 0.04em;
+}
+
+@media (min-width: 720px) {
+  .app-team-hero {
+    padding: var(--un-space-8) var(--un-space-6);
+  }
+
+  .app-team-hero__title {
+    font-size: var(--un-font-size-xxl);
+  }
+
+  .app-team-grid {
+    gap: var(--un-space-4);
+    grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+  }
+}
+
+@media (min-width: 1024px) {
+  .app-team-grid {
+    grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .app-team-card,
+  .app-team-social-link {
+    transition: none;
+  }
+
+  .app-team-card:hover {
+    transform: none;
+  }
+}

@@ -9,6 +9,7 @@ export const PUBLIC_NAV_I18N_KEYS = {
   closeMenu: 'publicNav.closeMenu',
   home: 'publicNav.home',
   about: 'publicNav.about',
+  team: 'publicNav.team',
   tryouts: 'publicNav.tryouts',
   contact: 'publicNav.contact',
   signIn: 'publicNav.signIn',
