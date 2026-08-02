@@ -1,3 +1,4 @@
+import { buildManualStandingCommand } from '../../../../tests/factories/standings-view.factory';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import {
@@ -46,23 +47,7 @@ describe('standings.gateway', () => {
     await requestRecomputeStandings('t1', { competitionId: 'c1', ruleKey: 'league' });
     expect(post.mock.calls[0]?.[0]).toBe('/teams/t1/standings/recompute');
 
-    await requestRecordManualStanding('t1', {
-      competitionId: 'c1',
-      entrantKind: 'team',
-      opponentId: null,
-      played: 1,
-      wins: 1,
-      losses: 0,
-      ties: 0,
-      pointsFor: 15,
-      pointsAgainst: 10,
-      spiritScore: null,
-      finalPlace: null,
-      qualification: null,
-      sourceReference: null,
-      reconciliationNote: 'note',
-      ruleKey: 'league',
-    });
+    await requestRecordManualStanding('t1', buildManualStandingCommand());
     expect(post.mock.calls[1]?.[0]).toBe('/teams/t1/standings/manual');
   });
 

@@ -95,7 +95,7 @@ export interface RecomputeDialogView {
 }
 
 /** One labelled numeric field of the manual-standing form. */
-interface ManualFieldView {
+export interface ManualFieldView {
   readonly id: string;
   readonly label: string;
   readonly value: string;

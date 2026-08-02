@@ -1,3 +1,4 @@
+import { StandingsNumberFields } from '../standings-number-fields';
 import { IonNote, IonText } from '@/packages/ionic';
 import { TEST_IDS } from '@/shared/config';
 import { AppButton, AppInput } from '@/shared/ui';
@@ -31,16 +32,7 @@ export function RuleVersionForm(props: RuleVersionFormProps): React.JSX.Element 
         onValueChange={view.onNameChange}
       />
       <div className="app-standings-dialog__grid">
-        {view.pointFields.map((field) => (
-          <AppInput
-            key={field.id}
-            label={field.label}
-            name={field.id}
-            type="number"
-            value={field.value}
-            onValueChange={field.onChange}
-          />
-        ))}
+        <StandingsNumberFields fields={view.pointFields} />
       </div>
       <IonText>
         <h4 className="m-0 text-sm">{view.tieBreakHeading}</h4>

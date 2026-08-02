@@ -40,6 +40,29 @@ function completeForm(view: PublicTryoutsView): void {
   view.form.onConsentChange(true);
 }
 
+/**
+ * Renders the hook, waits for the page to settle, fills the minimum a real
+ * application needs and submits it.
+ *
+ * Returns the live renderHook result — not a snapshot of `result.current` —
+ * so callers keep reading fresh state from their own `waitFor` blocks.
+ */
+async function submitCompletedForm(): Promise<ReturnType<typeof render>> {
+  const view = render();
+
+  await waitFor(() => {
+    expect(view.result.current.status).toBe('ready');
+  });
+  act(() => {
+    completeForm(view.result.current);
+  });
+  act(() => {
+    view.result.current.form.onSubmit();
+  });
+
+  return view;
+}
+
 beforeAll(async () => {
   await initTestI18n();
 });
@@ -165,17 +188,7 @@ describe('usePublicTryouts', () => {
   });
 
   it('shows the confirmation once the server answers, and can start over', async () => {
-    const { result } = render();
-
-    await waitFor(() => {
-      expect(result.current.status).toBe('ready');
-    });
-    act(() => {
-      completeForm(result.current);
-    });
-    act(() => {
-      result.current.form.onSubmit();
-    });
+    const { result } = await submitCompletedForm();
 
     await waitFor(() => {
       expect(result.current.outcome?.reference).toBe('UN-2026-0099');
@@ -196,17 +209,7 @@ describe('usePublicTryouts', () => {
       reference: null,
       consentVersion: 'v1',
     });
-    const { result } = render();
-
-    await waitFor(() => {
-      expect(result.current.status).toBe('ready');
-    });
-    act(() => {
-      completeForm(result.current);
-    });
-    act(() => {
-      result.current.form.onSubmit();
-    });
+    const { result } = await submitCompletedForm();
 
     await waitFor(() => {
       expect(result.current.outcome?.tone).toBe('medium');
@@ -216,17 +219,7 @@ describe('usePublicTryouts', () => {
 
   it('says nothing was saved when the call fails, and keeps the form filled', async () => {
     vi.mocked(registerCandidate).mockRejectedValue(new AppError({ code: APP_ERROR_CODE.Server }));
-    const { result } = render();
-
-    await waitFor(() => {
-      expect(result.current.status).toBe('ready');
-    });
-    act(() => {
-      completeForm(result.current);
-    });
-    act(() => {
-      result.current.form.onSubmit();
-    });
+    const { result } = await submitCompletedForm();
 
     await waitFor(() => {
       expect(result.current.form.statusMessage).toContain('not sent');

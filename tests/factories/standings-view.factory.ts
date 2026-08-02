@@ -1,5 +1,8 @@
 import type { Achievement } from '@/modules/standings/types/achievements.types';
-import type { StandingRow } from '@/modules/standings/types/standings.types';
+import type {
+  RecordManualStandingCommand,
+  StandingRow,
+} from '@/modules/standings/types/standings.types';
 import type {
   AchievementFormView,
   AchievementsScreenView,
@@ -336,6 +339,33 @@ export function buildAchievement(overrides: Partial<Achievement> = {}): Achievem
     recordVersion: 1,
     approvedBy: null,
     approvedAtIso: null,
+    ...overrides,
+  };
+}
+
+/**
+ * A minimal valid manual-standing command, written out identically by the
+ * standings gateway and service specs.
+ */
+export function buildManualStandingCommand(
+  overrides: Partial<RecordManualStandingCommand> = {},
+): RecordManualStandingCommand {
+  return {
+    competitionId: 'c1',
+    entrantKind: 'team',
+    opponentId: null,
+    played: 1,
+    wins: 1,
+    losses: 0,
+    ties: 0,
+    pointsFor: 15,
+    pointsAgainst: 10,
+    spiritScore: null,
+    finalPlace: null,
+    qualification: null,
+    sourceReference: null,
+    reconciliationNote: 'note',
+    ruleKey: 'league',
     ...overrides,
   };
 }

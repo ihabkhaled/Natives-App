@@ -1,3 +1,4 @@
+import { buildManualStandingCommand } from '../../../../tests/factories/standings-view.factory';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import * as achievementsGateway from '../gateways/achievements.gateway';
@@ -116,27 +117,7 @@ describe('standings services', () => {
     expect(
       (await recomputeStandings('t1', { competitionId: 'c1', ruleKey: 'league' })).entrants,
     ).toBe(2);
-    expect(
-      (
-        await recordManualStanding('t1', {
-          competitionId: 'c1',
-          entrantKind: 'team',
-          opponentId: null,
-          played: 1,
-          wins: 1,
-          losses: 0,
-          ties: 0,
-          pointsFor: 15,
-          pointsAgainst: 10,
-          spiritScore: null,
-          finalPlace: null,
-          qualification: null,
-          sourceReference: null,
-          reconciliationNote: 'note',
-          ruleKey: 'league',
-        })
-      ).standingId,
-    ).toBe('s1');
+    expect((await recordManualStanding('t1', buildManualStandingCommand())).standingId).toBe('s1');
   });
 
   it('publishes a rule version', async () => {

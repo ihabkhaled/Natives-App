@@ -1,3 +1,4 @@
+import { StandingsNumberFields } from '../standings-number-fields';
 import { IonNote } from '@/packages/ionic';
 import { TEST_IDS } from '@/shared/config';
 import { AppButton, AppInput, ReasonField, SelectField } from '@/shared/ui';
@@ -37,16 +38,7 @@ export function ManualStandingForm(props: ManualStandingFormProps): React.JSX.El
             onValueChange={field.onChange}
           />
         ))}
-        {view.scoreFields.map((field) => (
-          <AppInput
-            key={field.id}
-            label={field.label}
-            name={field.id}
-            type="number"
-            value={field.value}
-            onValueChange={field.onChange}
-          />
-        ))}
+        <StandingsNumberFields fields={view.scoreFields} />
       </div>
       <AppInput
         label={view.spiritField.label}
