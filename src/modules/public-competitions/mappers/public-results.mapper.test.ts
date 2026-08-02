@@ -89,7 +89,7 @@ describe('toPublicMatchRowView', () => {
           {
             playerId: 'p1',
             displayName: 'Sherif Ashraf',
-            jerseyNumber: 33,
+            jerseyNumber: '33',
             goals: 3,
             assists: 2,
             blocks: 1,

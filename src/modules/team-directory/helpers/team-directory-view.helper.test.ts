@@ -35,7 +35,7 @@ function player(overrides: Partial<TeamRosterPlayer> = {}): TeamRosterPlayer {
     id: 'player-1',
     displayName: 'Rawan Elessawy',
     nickname: 'Roo',
-    jerseyNumber: 11,
+    jerseyNumber: '11',
     position: 'Handler',
     photoUrl: null,
     ...overrides,

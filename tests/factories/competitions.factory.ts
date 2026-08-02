@@ -77,7 +77,7 @@ export function buildCandidate(
   return {
     membershipId: 'm-1',
     fullName: 'Omar Hassan',
-    jerseyNumber: 7,
+    jerseyNumber: '7',
     attendancePct: 92,
     availability: 'available',
     selected: false,

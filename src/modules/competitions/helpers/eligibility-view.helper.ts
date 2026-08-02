@@ -48,10 +48,14 @@ export function formatAvailability(
     : t(AVAILABILITY_LABEL_KEYS[availability]);
 }
 
-export function formatJersey(t: Translate, jerseyNumber: number | null, locale: string): string {
-  return jerseyNumber === null
-    ? t(I18N_KEYS.squads.jerseyNone)
-    : formatNumber(jerseyNumber, locale);
+/**
+ * A shirt number is a printed label, not a quantity, so it is rendered
+ * verbatim — never through `formatNumber`. Localising it would rewrite "011"
+ * into Arabic-Indic digits and drop the leading zero, neither of which is what
+ * is printed on the shirt.
+ */
+export function formatJersey(t: Translate, jerseyNumber: string | null): string {
+  return jerseyNumber === null ? t(I18N_KEYS.squads.jerseyNone) : jerseyNumber;
 }
 
 export function buildSignalChips(
@@ -105,7 +109,7 @@ export function buildCandidateRow(
     fullName: candidate.fullName,
     attendanceLabel: formatAttendance(t, candidate.attendancePct, locale),
     availabilityLabel: formatAvailability(t, candidate.availability),
-    jerseyLabel: formatJersey(t, candidate.jerseyNumber, locale),
+    jerseyLabel: formatJersey(t, candidate.jerseyNumber),
     overallLabel: t(SIGNAL_STATUS_LABEL_KEYS[candidate.overall]),
     overallTone: SIGNAL_STATUS_TONES[candidate.overall],
     signals: buildSignalChips(t, candidate),

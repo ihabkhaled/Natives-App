@@ -60,7 +60,7 @@ function roster(overrides: Partial<RosterDto> & { rosterId: string }): RosterDto
 function entry(overrides: Partial<EntryDto> & { entryId: string; membershipId: string }): EntryDto {
   return {
     rosterId: MOCK_ROSTERS.competitionRosterId,
-    jerseyNumber: 7,
+    jerseyNumber: '7',
     entryRole: 'player',
     lineAssignment: 'any',
     fieldPosition: 'handler',
@@ -100,7 +100,7 @@ const ENTRY_SEEDS: readonly EntryDto[] = [
   entry({
     entryId: '12000000-0000-4000-8000-000000000003',
     membershipId: MOCK_SQUADS.failedMembershipId,
-    jerseyNumber: 12,
+    jerseyNumber: '12',
     lineAssignment: 'defense',
     genderBucket: 'women',
     constraintOverridden: true,

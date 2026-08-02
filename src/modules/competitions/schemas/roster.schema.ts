@@ -59,7 +59,7 @@ export const rosterEntryResponseSchema = schemaBuilder.object({
   entryId: schemaBuilder.string().min(1),
   rosterId: schemaBuilder.string().min(1),
   membershipId: schemaBuilder.string().min(1),
-  jerseyNumber: schemaBuilder.number().int().nullable(),
+  jerseyNumber: schemaBuilder.string().nullable(),
   entryRole: schemaBuilder.enum(ENTRY_ROLES),
   lineAssignment: schemaBuilder.enum(LINE_ASSIGNMENTS),
   fieldPosition: schemaBuilder.enum(FIELD_POSITIONS),

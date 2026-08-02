@@ -32,7 +32,7 @@ describe('member-form.helper', () => {
         fullName: null,
         displayName: 'Omar',
         nickname: null,
-        jerseyNumber: 7,
+        jerseyNumber: '7',
       }),
     ).toEqual({ fullName: 'Omar', nickname: '', jersey: '7' });
     expect(

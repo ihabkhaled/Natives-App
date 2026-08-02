@@ -10,7 +10,7 @@ export function buildMemberProfile(overrides: Partial<MemberProfile> = {}): Memb
     displayName: 'Omar Hassan',
     nickname: 'Omo',
     positions: ['handler'],
-    jerseyNumber: 7,
+    jerseyNumber: '7',
     division: 'open',
     hasAvatar: false,
     preferredName: 'Omar',

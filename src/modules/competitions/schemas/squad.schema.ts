@@ -50,7 +50,7 @@ const eligibilitySignalSchema = schemaBuilder.object({
 const memberEligibilitySchema = schemaBuilder.object({
   membershipId: schemaBuilder.string().min(1),
   fullName: schemaBuilder.string().min(1),
-  jerseyNumber: schemaBuilder.number().int().nullable(),
+  jerseyNumber: schemaBuilder.string().nullable(),
   attendancePct: schemaBuilder.number().nullable(),
   availability: schemaBuilder.enum(AVAILABILITY_VALUES).nullable(),
   selected: schemaBuilder.boolean(),

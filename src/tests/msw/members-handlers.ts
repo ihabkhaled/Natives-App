@@ -24,14 +24,14 @@ import {
 } from './members.fixture';
 
 interface ProfileBody {
-  readonly profile?: { fullName?: string; nickname?: string; jerseyNumber?: number };
+  readonly profile?: { fullName?: string; nickname?: string; jerseyNumber?: string };
   readonly expectedVersion?: number;
 }
 
 function toProfilePatch(body: ProfileBody): {
   fullName: string;
   nickname: string | null;
-  jerseyNumber: number | null;
+  jerseyNumber: string | null;
   expectedVersion: number;
 } {
   const profile = body.profile ?? {};

@@ -33,7 +33,7 @@ export const CANDIDATE_SEEDS: readonly Omit<CandidateDto, 'selected' | 'overall'
   {
     membershipId: MOCK_CANDIDATES.eligibleMembershipId,
     fullName: 'Omar Hassan',
-    jerseyNumber: 7,
+    jerseyNumber: '7',
     attendancePct: 92,
     availability: 'available',
     flagged: false,
@@ -51,7 +51,7 @@ export const CANDIDATE_SEEDS: readonly Omit<CandidateDto, 'selected' | 'overall'
   {
     membershipId: MOCK_CANDIDATES.failedMembershipId,
     fullName: 'Youssef Adel',
-    jerseyNumber: 12,
+    jerseyNumber: '12',
     attendancePct: 41,
     availability: 'available',
     flagged: true,
@@ -69,7 +69,7 @@ export const CANDIDATE_SEEDS: readonly Omit<CandidateDto, 'selected' | 'overall'
   {
     membershipId: MOCK_CANDIDATES.selectedMembershipId,
     fullName: 'Mariam Zaki',
-    jerseyNumber: 3,
+    jerseyNumber: '3',
     attendancePct: 88,
     availability: 'available',
     flagged: false,

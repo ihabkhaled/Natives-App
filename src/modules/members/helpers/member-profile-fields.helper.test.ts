@@ -35,7 +35,7 @@ const full: MemberProfile = {
   ...empty,
   audience: 'admin',
   positions: ['handler'],
-  jerseyNumber: 7,
+  jerseyNumber: '7',
   division: 'open',
   preferredName: 'O',
   gender: 'man',

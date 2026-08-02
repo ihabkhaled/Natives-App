@@ -20,7 +20,7 @@ export interface MemberDirectoryItem {
   readonly status: MembershipStatus;
   readonly displayName: string;
   readonly nickname: string | null;
-  readonly jerseyNumber: number | null;
+  readonly jerseyNumber: string | null;
   readonly positions: readonly string[];
   readonly hasAvatar: boolean;
 }
@@ -41,7 +41,7 @@ export interface MemberProfile {
   readonly displayName: string;
   readonly nickname: string | null;
   readonly positions: readonly string[];
-  readonly jerseyNumber: number | null;
+  readonly jerseyNumber: string | null;
   readonly division: string | null;
   readonly hasAvatar: boolean;
   readonly preferredName: string | null;
@@ -111,7 +111,7 @@ export interface MembersFilterState {
 export interface InviteMemberInput {
   readonly fullName: string;
   readonly nickname: string | null;
-  readonly jerseyNumber: number | null;
+  readonly jerseyNumber: string | null;
 }
 
 /** The team-scoped invitation an administrator sends by email. */
@@ -147,7 +147,7 @@ export interface InvitationDelivery {
 export interface UpdateProfileInput {
   readonly fullName: string;
   readonly nickname: string | null;
-  readonly jerseyNumber: number | null;
+  readonly jerseyNumber: string | null;
   readonly expectedVersion: number;
 }
 

@@ -10,7 +10,7 @@ const items: readonly MemberDirectoryItem[] = [
     status: 'active',
     displayName: 'Omar Hassan',
     nickname: 'O',
-    jerseyNumber: 7,
+    jerseyNumber: '7',
     positions: ['handler', 'cutter'],
     hasAvatar: false,
   },

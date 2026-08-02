@@ -20,7 +20,7 @@ const directoryItem = {
   status: 'active' as const,
   displayName: 'Omar',
   nickname: 'O',
-  jerseyNumber: 7,
+  jerseyNumber: '7',
   positions: ['handler'],
   hasAvatar: true,
 };
@@ -33,7 +33,7 @@ const memberView = {
   displayName: 'Omar',
   nickname: 'O',
   positions: ['handler'],
-  jerseyNumber: 7,
+  jerseyNumber: '7',
   division: 'open',
   hasAvatar: true,
   preferredName: 'Omar',

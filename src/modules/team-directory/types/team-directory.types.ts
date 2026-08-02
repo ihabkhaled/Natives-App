@@ -34,7 +34,7 @@ export interface TeamPlayerDto {
   readonly id: string;
   readonly displayName: string;
   readonly nickname: string | null;
-  readonly jerseyNumber: number | null;
+  readonly jerseyNumber: string | null;
   readonly position: string | null;
   readonly photoUrl: string | null;
 }
@@ -66,7 +66,7 @@ export interface TeamRosterPlayer {
   readonly id: string;
   readonly displayName: string;
   readonly nickname: string | null;
-  readonly jerseyNumber: number | null;
+  readonly jerseyNumber: string | null;
   readonly position: string | null;
   readonly photoUrl: string | null;
 }

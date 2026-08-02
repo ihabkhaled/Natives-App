@@ -47,7 +47,7 @@ export function buildRosterRows(
     .map((candidate) => ({
       membershipId: candidate.membershipId,
       fullName: candidate.fullName,
-      jerseyLabel: formatJersey(t, candidate.jerseyNumber, locale),
+      jerseyLabel: formatJersey(t, candidate.jerseyNumber),
       roleLabel: t(
         SELECTION_ROLE_LABEL_KEYS[roles.get(candidate.membershipId)?.selectionRole ?? 'player'],
       ),

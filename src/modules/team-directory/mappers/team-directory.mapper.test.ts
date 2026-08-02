@@ -23,7 +23,7 @@ function player(overrides: Partial<TeamPlayerDto> = {}): TeamPlayerDto {
     id: 'player-1',
     displayName: 'Rawan Elessawy',
     nickname: 'Roo',
-    jerseyNumber: 11,
+    jerseyNumber: '11',
     position: 'Handler',
     photoUrl: null,
     ...overrides,
@@ -101,9 +101,9 @@ describe('mapTeamDirectoryResponse', () => {
     const mapped = mapTeamDirectoryResponse(
       response({
         players: [
-          player({ id: 'p-33', jerseyNumber: 33 }),
-          player({ id: 'p-2', jerseyNumber: 2 }),
-          player({ id: 'p-11', jerseyNumber: 11 }),
+          player({ id: 'p-33', jerseyNumber: '33' }),
+          player({ id: 'p-2', jerseyNumber: '2' }),
+          player({ id: 'p-11', jerseyNumber: '11' }),
         ],
       }),
     );
@@ -117,7 +117,7 @@ describe('mapTeamDirectoryResponse', () => {
         players: [
           player({ id: 'p-zahra', displayName: 'Zahra', jerseyNumber: null }),
           player({ id: 'p-abdel', displayName: 'Abdelrahman Elleimy', jerseyNumber: null }),
-          player({ id: 'p-11', jerseyNumber: 11 }),
+          player({ id: 'p-11', jerseyNumber: '11' }),
         ],
       }),
     );
@@ -127,7 +127,7 @@ describe('mapTeamDirectoryResponse', () => {
 
   it('never mutates the response it was given', () => {
     const dto = response({
-      players: [player({ id: 'p-33', jerseyNumber: 33 }), player({ id: 'p-2', jerseyNumber: 2 })],
+      players: [player({ id: 'p-33', jerseyNumber: '33' }), player({ id: 'p-2', jerseyNumber: '2' })],
     });
 
     mapTeamDirectoryResponse(dto);

@@ -40,13 +40,13 @@ describe('patchProfileOptimistically', () => {
     const patched = patchProfileOptimistically(profile, {
       fullName: 'New',
       nickname: 'N',
-      jerseyNumber: 9,
+      jerseyNumber: '9',
     });
     expect(patched).toMatchObject({
       displayName: 'New',
       fullName: 'New',
       nickname: 'N',
-      jerseyNumber: 9,
+      jerseyNumber: '9',
     });
   });
 });

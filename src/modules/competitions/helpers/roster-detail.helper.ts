@@ -131,7 +131,6 @@ export function buildRosterFacts(
 /** The roster table, with every unrecorded value spelled out. */
 export function buildEntryRows(
   t: Translate,
-  locale: string,
   entries: readonly RosterEntry[],
   canManage: boolean,
 ): readonly RosterEntryRowView[] {
@@ -140,10 +139,8 @@ export function buildEntryRows(
     .map((entry) => ({
       entryId: entry.entryId,
       membershipId: entry.membershipId,
-      jerseyLabel:
-        entry.jerseyNumber === null
-          ? t(I18N_KEYS.rosters.jerseyNone)
-          : formatNumber(entry.jerseyNumber, locale),
+      // Printed verbatim: see formatJersey in eligibility-view.helper.
+      jerseyLabel: entry.jerseyNumber ?? t(I18N_KEYS.rosters.jerseyNone),
       roleLabel: t(ENTRY_ROLE_LABEL_KEYS[entry.entryRole]),
       lineLabel: t(LINE_LABEL_KEYS[entry.lineAssignment]),
       positionLabel: t(POSITION_LABEL_KEYS[entry.fieldPosition]),
@@ -256,7 +253,7 @@ export function buildRosterSections(t: Translate, input: RosterSectionsInput): R
     entriesIntro: t(I18N_KEYS.rosters.entriesIntro),
     entriesEmptyLabel: t(I18N_KEYS.rosters.entriesEmpty),
     entriesColumns: buildEntryColumns(t),
-    entries: buildEntryRows(t, input.locale, input.entries, input.canRemoveEntries),
+    entries: buildEntryRows(t, input.entries, input.canRemoveEntries),
     historyHeading: t(I18N_KEYS.rosters.historyHeading),
     historyEmptyLabel: t(I18N_KEYS.rosters.historyEmpty),
     history: buildHistoryRows(t, input.locale, input.formatInstant, input.snapshots),

@@ -41,8 +41,8 @@ describe('formatAvailability and formatJersey', () => {
   });
 
   it('reports an unassigned jersey instead of number zero', () => {
-    expect(formatJersey(t, null, LOCALE)).toBe('squads.jerseyNone');
-    expect(formatJersey(t, 12, LOCALE)).toBe('12');
+    expect(formatJersey(t, null)).toBe('squads.jerseyNone');
+    expect(formatJersey(t, '12')).toBe('12');
   });
 });
 

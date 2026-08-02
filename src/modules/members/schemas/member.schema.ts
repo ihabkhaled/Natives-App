@@ -49,7 +49,7 @@ export const memberDirectoryItemSchema = schemaBuilder.object({
   status: membershipStatusSchema,
   displayName: schemaBuilder.string(),
   nickname: schemaBuilder.string().nullable(),
-  jerseyNumber: schemaBuilder.number().int().nullable(),
+  jerseyNumber: schemaBuilder.string().nullable(),
   positions: schemaBuilder.array(schemaBuilder.string()),
   hasAvatar: schemaBuilder.boolean(),
 });
@@ -69,7 +69,7 @@ export const memberViewResponseSchema = schemaBuilder.object({
   displayName: schemaBuilder.string(),
   nickname: schemaBuilder.string().nullable(),
   positions: schemaBuilder.array(schemaBuilder.string()),
-  jerseyNumber: schemaBuilder.number().int().nullable(),
+  jerseyNumber: schemaBuilder.string().nullable(),
   division: schemaBuilder.string().nullable(),
   hasAvatar: schemaBuilder.boolean(),
   preferredName: schemaBuilder.string().nullable(),

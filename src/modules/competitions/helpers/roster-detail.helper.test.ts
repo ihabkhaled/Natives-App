@@ -49,7 +49,7 @@ function entry(overrides: Partial<RosterEntry> = {}): RosterEntry {
   return {
     entryId: 'e-1',
     membershipId: 'm-1',
-    jerseyNumber: 7,
+    jerseyNumber: '7',
     entryRole: 'player',
     lineAssignment: 'any',
     fieldPosition: 'handler',
@@ -202,10 +202,7 @@ describe('buildValidationPanel', () => {
 
 describe('buildEntryRows', () => {
   it('drops withdrawn entries and spells out every missing value', () => {
-    const rows = buildEntryRows(
-      t,
-      LOCALE,
-      [
+    const rows = buildEntryRows(t, [
         entry(),
         entry({
           entryId: 'e-2',
@@ -230,10 +227,7 @@ describe('buildEntryRows', () => {
   });
 
   it('keeps the override provenance on an entry added past a constraint', () => {
-    const rows = buildEntryRows(
-      t,
-      LOCALE,
-      [entry({ constraintOverridden: true, overrideReason: 'Handler depth.' })],
+    const rows = buildEntryRows(t, [entry({ constraintOverridden: true, overrideReason: 'Handler depth.' })],
       true,
     );
 
@@ -241,7 +235,7 @@ describe('buildEntryRows', () => {
   });
 
   it('states an override with no recorded reason rather than hiding it', () => {
-    const rows = buildEntryRows(t, LOCALE, [entry({ constraintOverridden: true })], false);
+    const rows = buildEntryRows(t, [entry({ constraintOverridden: true })], false);
 
     expect(rows[0]?.overrideNote).toBe('rosters.overrideNote');
     expect(rows[0]?.isRemovable).toBe(false);

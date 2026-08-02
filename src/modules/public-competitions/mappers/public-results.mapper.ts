@@ -34,7 +34,8 @@ function resolveOutcome(ourScore: number | null, opponentScore: number | null): 
 }
 
 function toPlayerRow(dto: PublicPlayerScoreDto, locale: string): PublicPlayerScoreRowView {
-  const jersey = dto.jerseyNumber === null ? '' : ` ${formatNumber(dto.jerseyNumber, locale)}`;
+  // Printed verbatim: a shirt number is a label, not a quantity.
+  const jersey = dto.jerseyNumber === null ? '' : ` ${dto.jerseyNumber}`;
   return {
     key: dto.playerId,
     nameText: `${dto.displayName}${jersey}`,

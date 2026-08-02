@@ -156,7 +156,7 @@ export function getMemberView(
 export function inviteMemberRecord(
   fullName: string,
   nickname: string | null,
-  jerseyNumber: number | null,
+  jerseyNumber: string | null,
 ): JsonObject {
   const created = buildMemberRecord({
     membershipId: `mem-new-${String(records.length)}`,
@@ -196,7 +196,7 @@ export function transitionRecord(
 interface ProfilePatch {
   readonly fullName: string;
   readonly nickname: string | null;
-  readonly jerseyNumber: number | null;
+  readonly jerseyNumber: string | null;
   readonly expectedVersion: number;
 }
 

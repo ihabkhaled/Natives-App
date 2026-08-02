@@ -13,7 +13,7 @@ const t = (key: string): string => key;
 
 describe('member-format.helper', () => {
   it('formats jersey label or null', () => {
-    expect(formatJerseyLabel(t, 7)).toBe('members.jerseyLabel');
+    expect(formatJerseyLabel(t, '7')).toBe('members.jerseyLabel');
     expect(formatJerseyLabel(t, null)).toBeNull();
   });
 

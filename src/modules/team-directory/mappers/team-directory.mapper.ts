@@ -52,9 +52,17 @@ function mapPlayer(dto: TeamPlayerDto): TeamRosterPlayer {
   };
 }
 
-/** Unnumbered shirts sort after every numbered one. */
+/**
+ * Unnumbered shirts sort after every numbered one. The number is a printed
+ * label, so it is parsed only to order the roster — "011" ranks as 11, next to
+ * the other elevens, rather than lexically between "0" and "1".
+ */
 function jerseyRank(player: TeamRosterPlayer): number {
-  return player.jerseyNumber ?? Number.MAX_SAFE_INTEGER;
+  if (player.jerseyNumber === null) {
+    return Number.MAX_SAFE_INTEGER;
+  }
+  const parsed = Number.parseInt(player.jerseyNumber, 10);
+  return Number.isNaN(parsed) ? Number.MAX_SAFE_INTEGER : parsed;
 }
 
 /** Numbered shirts first in ascending order, then everyone else by name. */

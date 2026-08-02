@@ -1,11 +1,15 @@
+const JERSEY_INPUT_PATTERN = /^[0-9]{1,4}$/;
+
 /** Parse a free-text jersey field into a bounded number, or null when blank/invalid. */
-export function parseJerseyInput(value: string): number | null {
+/**
+ * A shirt number is a printed label, so the typed value is kept verbatim
+ * rather than parsed to an integer — parseInt would silently turn "011" into
+ * 11. Anything that is not one to four digits is rejected as absent, matching
+ * the server's ^[0-9]{1,4}$ check.
+ */
+export function parseJerseyInput(value: string): string | null {
   const trimmed = value.trim();
-  if (trimmed === '') {
-    return null;
-  }
-  const parsed = Number.parseInt(trimmed, 10);
-  return Number.isNaN(parsed) ? null : parsed;
+  return JERSEY_INPUT_PATTERN.test(trimmed) ? trimmed : null;
 }
 
 /** A full name is required; returns the trimmed value or null when blank. */
@@ -30,7 +34,7 @@ interface SelfEditSource {
   readonly fullName: string | null;
   readonly displayName: string;
   readonly nickname: string | null;
-  readonly jerseyNumber: number | null;
+  readonly jerseyNumber: string | null;
 }
 
 /** Seed the self-edit form from the loaded profile (blank when absent). */

@@ -31,7 +31,7 @@ export interface MemberRecord {
   status: MembershipStatus;
   displayName: string;
   nickname: string | null;
-  jerseyNumber: number | null;
+  jerseyNumber: string | null;
   positions: readonly string[];
   hasAvatar: boolean;
   fullName: string | null;
@@ -105,7 +105,7 @@ function buildPersonaMemberRecords(): MemberRecord[] {
       displayName: 'Omar Hassan',
       status: 'active',
       nickname: 'Omo',
-      jerseyNumber: 7,
+      jerseyNumber: '7',
       positions: ['handler', 'cutter'],
       hasAvatar: true,
       fullName: 'Omar Hassan',
@@ -136,7 +136,7 @@ function buildPersonaMemberRecords(): MemberRecord[] {
       membershipId: 'mem-admin',
       displayName: 'Admin Ranger',
       status: 'active',
-      jerseyNumber: 1,
+      jerseyNumber: '1',
       positions: ['handler'],
       fullName: 'Ranger One',
       roles: ['member', 'coach', 'team_admin'],
@@ -152,14 +152,14 @@ function buildRosterMemberRecords(): MemberRecord[] {
       membershipId: 'mem-sara',
       displayName: 'Sara Adel',
       status: 'invited',
-      jerseyNumber: 12,
+      jerseyNumber: '12',
       positions: ['cutter', 'deep'],
     }),
     buildMemberRecord({
       membershipId: 'mem-ali',
       displayName: 'Ali Mostafa',
       status: 'suspended',
-      jerseyNumber: 3,
+      jerseyNumber: '3',
       positions: ['handler'],
       statusReason: 'Code of conduct review',
     }),
@@ -167,21 +167,21 @@ function buildRosterMemberRecords(): MemberRecord[] {
       membershipId: 'mem-lina',
       displayName: 'Lina Yousry',
       status: 'inactive',
-      jerseyNumber: 9,
+      jerseyNumber: '9',
       positions: ['deep'],
     }),
     buildMemberRecord({
       membershipId: 'mem-zed',
       displayName: 'Zeyad Kamal',
       status: 'left',
-      jerseyNumber: 21,
+      jerseyNumber: '21',
       positions: ['cutter'],
     }),
     buildMemberRecord({
       membershipId: 'mem-mai',
       displayName: 'Mai Salah',
       status: 'archived',
-      jerseyNumber: 5,
+      jerseyNumber: '5',
       positions: ['handler'],
     }),
   ];

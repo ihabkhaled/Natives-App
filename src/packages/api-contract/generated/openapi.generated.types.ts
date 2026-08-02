@@ -583,6 +583,23 @@ export interface paths {
         readonly patch?: never;
         readonly trace?: never;
     };
+    readonly "/public/teams/{slug}/directory": {
+        readonly parameters: {
+            readonly query?: never;
+            readonly header?: never;
+            readonly path?: never;
+            readonly cookie?: never;
+        };
+        /** Get a team’s public profile, staff, and roster */
+        readonly get: operations["PublicTeamDirectory.get"];
+        readonly put?: never;
+        readonly post?: never;
+        readonly delete?: never;
+        readonly options?: never;
+        readonly head?: never;
+        readonly patch?: never;
+        readonly trace?: never;
+    };
     readonly "/rbac/assignments": {
         readonly parameters: {
             readonly query?: never;
@@ -5259,6 +5276,41 @@ export interface paths {
         readonly patch?: never;
         readonly trace?: never;
     };
+    readonly "/teams/{teamId}/staff": {
+        readonly parameters: {
+            readonly query?: never;
+            readonly header?: never;
+            readonly path?: never;
+            readonly cookie?: never;
+        };
+        /** List a team’s staff-title assignments */
+        readonly get: operations["Staff.list"];
+        readonly put?: never;
+        /** Assign a staff title to a membership */
+        readonly post: operations["Staff.create"];
+        readonly delete?: never;
+        readonly options?: never;
+        readonly head?: never;
+        readonly patch?: never;
+        readonly trace?: never;
+    };
+    readonly "/teams/{teamId}/staff/{assignmentId}": {
+        readonly parameters: {
+            readonly query?: never;
+            readonly header?: never;
+            readonly path?: never;
+            readonly cookie?: never;
+        };
+        readonly get?: never;
+        readonly put?: never;
+        readonly post?: never;
+        /** Remove a staff-title assignment */
+        readonly delete: operations["Staff.archive"];
+        readonly options?: never;
+        readonly head?: never;
+        readonly patch?: never;
+        readonly trace?: never;
+    };
     readonly "/teams/{teamId}/standings": {
         readonly parameters: {
             readonly query?: never;
@@ -5905,7 +5957,8 @@ export interface components {
              * @enum {string}
              */
             readonly fieldPosition: "handler" | "cutter" | "hybrid" | "unspecified";
-            readonly jerseyNumber?: Record<string, never> | null;
+            /** @description Shirt number exactly as printed, including any leading zero */
+            readonly jerseyNumber?: string | null;
             /**
              * @default any
              * @enum {string}
@@ -6095,6 +6148,13 @@ export interface components {
             readonly roleKey: "SUPER_ADMIN" | "MEMBER" | "COACH" | "TEAM_ADMIN" | "SCOREKEEPER" | "ANALYST";
             /** Format: uuid */
             readonly userId: string;
+        };
+        readonly AssignStaffTitleDto: {
+            /** @description The membership to grant the staff title to */
+            readonly membershipId: string;
+            readonly photoUrl?: string | null;
+            /** @description A staff_title reference-catalog entry id */
+            readonly titleEntryId: string;
         };
         readonly AttemptInputDto: {
             /** @default false */
@@ -6439,7 +6499,7 @@ export interface components {
         };
         readonly CatalogEntryResponseDto: {
             /** @enum {string} */
-            readonly catalog: "division" | "gender_format" | "position";
+            readonly catalog: "division" | "gender_format" | "position" | "staff_title";
             /** Format: date-time */
             readonly createdAt: string;
             readonly createdBy: string | null;
@@ -6853,7 +6913,7 @@ export interface components {
         };
         readonly CreateCatalogEntryDto: {
             /** @enum {string} */
-            readonly catalog: "division" | "gender_format" | "position";
+            readonly catalog: "division" | "gender_format" | "position" | "staff_title";
             readonly key: string;
             readonly label: string;
             readonly metadata?: Record<string, never>;
@@ -8569,6 +8629,12 @@ export interface components {
             readonly offset: number;
             readonly total: number;
         };
+        readonly ListStaffAssignmentsResponseDto: {
+            readonly items: readonly components["schemas"]["StaffAssignmentResponseDto"][];
+            readonly limit: number;
+            readonly offset: number;
+            readonly total: number;
+        };
         readonly ListStandingsResponseDto: {
             readonly items: readonly components["schemas"]["StandingResponseDto"][];
             readonly limit: number;
@@ -8997,7 +9063,7 @@ export interface components {
             readonly availability: "available" | "unavailable" | "tentative" | null;
             readonly flagged: boolean;
             readonly fullName: string;
-            readonly jerseyNumber: number | null;
+            readonly jerseyNumber: string | null;
             /** Format: uuid */
             readonly membershipId: string;
             /** @enum {string} */
@@ -9251,7 +9317,8 @@ export interface components {
              * @enum {string}
              */
             readonly fieldPosition: "handler" | "cutter" | "hybrid" | "unspecified";
-            readonly jerseyNumber?: Record<string, never> | null;
+            /** @description Shirt number exactly as printed, including any leading zero */
+            readonly jerseyNumber?: string | null;
             /**
              * @default any
              * @enum {string}
@@ -9465,7 +9532,8 @@ export interface components {
             /** @enum {string} */
             readonly gender?: "man" | "woman" | "nonbinary" | "undisclosed";
             readonly heightCm?: number;
-            readonly jerseyNumber?: number;
+            /** @description Shirt number exactly as printed. A string, not an integer: "011" is not 11 and the leading zero is part of the number. */
+            readonly jerseyNumber?: string;
             readonly jerseySize?: string;
             readonly nickname?: string;
             readonly phone?: string;
@@ -9682,6 +9750,42 @@ export interface components {
              * @example coach
              */
             readonly teamRole: string;
+        };
+        readonly PublicRosterPlayerResponseDto: {
+            readonly displayName: string;
+            /** @description Shirt number exactly as printed, including any leading zero */
+            readonly jerseyNumber: string | null;
+            readonly membershipId: string;
+            readonly nickname: string | null;
+            /** @description Direct photo URL, null until an admin attaches one */
+            readonly photoUrl: string | null;
+            readonly positions: readonly string[];
+        };
+        readonly PublicStaffMemberResponseDto: {
+            readonly displayName: string;
+            readonly membershipId: string;
+            readonly nickname: string | null;
+            readonly photoUrl: string | null;
+            readonly titles: readonly string[];
+        };
+        readonly PublicTeamDirectoryResponseDto: {
+            readonly players: readonly components["schemas"]["PublicRosterPlayerResponseDto"][];
+            readonly profile: components["schemas"]["PublicTeamProfileResponseDto"];
+            readonly staff: readonly components["schemas"]["PublicStaffMemberResponseDto"][];
+        };
+        readonly PublicTeamProfileResponseDto: {
+            readonly facebookUrl: string | null;
+            /**
+             * Format: date
+             * @description Date-only, ISO YYYY-MM-DD
+             */
+            readonly foundedOn: string | null;
+            readonly id: string;
+            readonly instagramUrl: string | null;
+            readonly location: string | null;
+            readonly name: string;
+            readonly slug: string;
+            readonly tiktokUrl: string | null;
         };
         readonly PublishRuleDto: {
             /** @enum {string} */
@@ -10863,6 +10967,24 @@ export interface components {
             readonly teamId: string;
             /** Format: date-time */
             readonly updatedAt: string;
+        };
+        readonly StaffAssignmentResponseDto: {
+            /** Format: date-time */
+            readonly createdAt: string;
+            readonly createdBy: string | null;
+            readonly id: string;
+            readonly membershipId: string;
+            readonly photoUrl: string | null;
+            /** Format: date-time */
+            readonly removedAt: string | null;
+            readonly removedBy: string | null;
+            /** @enum {string} */
+            readonly status: "active" | "removed";
+            readonly teamId: string;
+            readonly titleEntryId: string;
+            /** Format: date-time */
+            readonly updatedAt: string;
+            readonly version: number;
         };
         readonly StageImportDto: {
             /**
@@ -12858,6 +12980,35 @@ export interface operations {
             };
             /** @description Unauthorized */
             readonly 401: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    readonly "PublicTeamDirectory.get": {
+        readonly parameters: {
+            readonly query?: never;
+            readonly header?: never;
+            readonly path: {
+                readonly slug: string;
+            };
+            readonly cookie?: never;
+        };
+        readonly requestBody?: never;
+        readonly responses: {
+            /** @description Public team directory */
+            readonly 200: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content: {
+                    readonly "application/json": components["schemas"]["PublicTeamDirectoryResponseDto"];
+                };
+            };
+            /** @description Team not found */
+            readonly 404: {
                 headers: {
                     readonly [name: string]: unknown;
                 };
@@ -15317,7 +15468,7 @@ export interface operations {
     readonly "Catalogs.list": {
         readonly parameters: {
             readonly query: {
-                readonly catalog: "division" | "gender_format" | "position";
+                readonly catalog: "division" | "gender_format" | "position" | "staff_title";
                 readonly limit?: number;
                 readonly offset?: number;
             };
@@ -25027,6 +25178,115 @@ export interface operations {
                 };
                 content: {
                     readonly "application/json": components["schemas"]["SquadResponseDto"];
+                };
+            };
+            /** @description Unauthorized */
+            readonly 401: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Forbidden */
+            readonly 403: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    readonly "Staff.list": {
+        readonly parameters: {
+            readonly query?: {
+                readonly limit?: number;
+                readonly offset?: number;
+            };
+            readonly header?: never;
+            readonly path: {
+                readonly teamId: string;
+            };
+            readonly cookie?: never;
+        };
+        readonly requestBody?: never;
+        readonly responses: {
+            /** @description Staff assignments */
+            readonly 200: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content: {
+                    readonly "application/json": components["schemas"]["ListStaffAssignmentsResponseDto"];
+                };
+            };
+            /** @description Unauthorized */
+            readonly 401: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    readonly "Staff.create": {
+        readonly parameters: {
+            readonly query?: never;
+            readonly header?: never;
+            readonly path: {
+                readonly teamId: string;
+            };
+            readonly cookie?: never;
+        };
+        readonly requestBody: {
+            readonly content: {
+                readonly "application/json": components["schemas"]["AssignStaffTitleDto"];
+            };
+        };
+        readonly responses: {
+            /** @description Staff assignment created */
+            readonly 201: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content: {
+                    readonly "application/json": components["schemas"]["StaffAssignmentResponseDto"];
+                };
+            };
+            /** @description Unauthorized */
+            readonly 401: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Forbidden */
+            readonly 403: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    readonly "Staff.archive": {
+        readonly parameters: {
+            readonly query?: never;
+            readonly header?: never;
+            readonly path: {
+                readonly assignmentId: string;
+                readonly teamId: string;
+            };
+            readonly cookie?: never;
+        };
+        readonly requestBody?: never;
+        readonly responses: {
+            /** @description Staff assignment removed */
+            readonly 200: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content: {
+                    readonly "application/json": components["schemas"]["StaffAssignmentResponseDto"];
                 };
             };
             /** @description Unauthorized */

@@ -37,7 +37,7 @@ export interface PublicCompetitionSummaryDto {
 export interface PublicPlayerScoreDto {
   readonly playerId: string;
   readonly displayName: string;
-  readonly jerseyNumber: number | null;
+  readonly jerseyNumber: string | null;
   readonly goals: number;
   readonly assists: number;
   readonly blocks: number;

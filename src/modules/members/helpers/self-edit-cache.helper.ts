@@ -3,7 +3,7 @@ import type { MemberProfile } from '../types/members.types';
 export interface ProfilePatch {
   readonly fullName: string;
   readonly nickname: string | null;
-  readonly jerseyNumber: number | null;
+  readonly jerseyNumber: string | null;
 }
 
 /**

@@ -72,7 +72,7 @@ describe('members.gateway', () => {
     await requestUpdateProfile('t', 'm', {
       fullName: 'O',
       nickname: 'N',
-      jerseyNumber: 9,
+      jerseyNumber: '9',
       expectedVersion: 3,
     });
     const [path, body] = patch.mock.calls[0] as [
@@ -81,7 +81,7 @@ describe('members.gateway', () => {
     ];
     expect(path).toBe('/teams/t/members/m/profile');
     expect(body).toEqual({
-      profile: { fullName: 'O', nickname: 'N', jerseyNumber: 9 },
+      profile: { fullName: 'O', nickname: 'N', jerseyNumber: '9' },
       expectedVersion: 3,
     });
   });

@@ -118,7 +118,7 @@ interface EligibilitySignal {
 export interface EligibilityCandidate {
   readonly membershipId: string;
   readonly fullName: string;
-  readonly jerseyNumber: number | null;
+  readonly jerseyNumber: string | null;
   readonly attendancePct: number | null;
   readonly availability: AvailabilityValue | null;
   readonly selected: boolean;

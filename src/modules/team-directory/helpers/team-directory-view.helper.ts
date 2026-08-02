@@ -24,7 +24,7 @@ interface CardSource {
   readonly displayName: string;
   readonly nickname: string | null;
   readonly photoUrl: string | null;
-  readonly jerseyNumber: number | null;
+  readonly jerseyNumber: string | null;
   readonly tags: readonly string[];
 }
 

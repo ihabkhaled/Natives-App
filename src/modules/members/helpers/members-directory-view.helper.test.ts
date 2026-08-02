@@ -62,7 +62,7 @@ const item: MemberDirectoryItem = {
   status: 'active',
   displayName: 'Omar',
   nickname: 'O',
-  jerseyNumber: 7,
+  jerseyNumber: '7',
   positions: ['handler'],
   hasAvatar: false,
 };

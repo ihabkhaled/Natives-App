@@ -48,7 +48,7 @@ export interface RosterPage {
 export interface RosterEntry {
   readonly entryId: string;
   readonly membershipId: string;
-  readonly jerseyNumber: number | null;
+  readonly jerseyNumber: string | null;
   readonly entryRole: EntryRole;
   readonly lineAssignment: LineAssignment;
   readonly fieldPosition: FieldPosition;

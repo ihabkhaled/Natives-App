@@ -13,8 +13,11 @@ type Translate = (key: string, params?: TranslateParams) => string;
 /** Positions are backend keys joined for a compact, dot-separated summary. */
 const POSITION_SEPARATOR = ' · ';
 
-/** Translated `#12` jersey label, or null when no number is set. */
-export function formatJerseyLabel(t: Translate, jerseyNumber: number | null): string | null {
+/**
+ * Translated `#12` jersey label, or null when no number is set. The number is
+ * interpolated as the printed string, so a leading zero survives.
+ */
+export function formatJerseyLabel(t: Translate, jerseyNumber: string | null): string | null {
   return jerseyNumber === null ? null : t(I18N_KEYS.members.jerseyLabel, { number: jerseyNumber });
 }
 
