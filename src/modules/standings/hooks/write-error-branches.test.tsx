@@ -80,6 +80,25 @@ afterEach(() => {
   vi.clearAllMocks();
 });
 
+/**
+ * Renders the achievement importer for an online team admin with the dialog
+ * open — the state every branch below starts from. Returns the live renderHook
+ * result so callers keep reading `result.current` after each act/waitFor.
+ */
+function renderAchievementImport() {
+  return renderHook(
+    () =>
+      useAchievementImport(t, {
+        teamId: 't1',
+        isOffline: false,
+        isOpen: true,
+        onClose: vi.fn(),
+        onCommitted: vi.fn(),
+      }),
+    { wrapper },
+  );
+}
+
 describe('standings write error branches', () => {
   it('surfaces recompute and manual failures on the manage view', async () => {
     vi.mocked(recomputeStandings).mockRejectedValue(new Error('boom'));
@@ -153,17 +172,7 @@ describe('standings write error branches', () => {
 
   it('surfaces an import failure', async () => {
     vi.mocked(importAchievements).mockRejectedValue(new Error('boom'));
-    const { result } = renderHook(
-      () =>
-        useAchievementImport(t, {
-          teamId: 't1',
-          isOffline: false,
-          isOpen: true,
-          onClose: vi.fn(),
-          onCommitted: vi.fn(),
-        }),
-      { wrapper },
-    );
+    const { result } = renderAchievementImport();
     act(() => result.current?.onInputChange('REF,trophy,Champions,2026-06-20'));
     act(() => result.current?.onParse());
     await waitFor(() => {
@@ -172,17 +181,7 @@ describe('standings write error branches', () => {
   });
 
   it('reports too-many-rows before any network call', () => {
-    const { result } = renderHook(
-      () =>
-        useAchievementImport(t, {
-          teamId: 't1',
-          isOffline: false,
-          isOpen: true,
-          onClose: vi.fn(),
-          onCommitted: vi.fn(),
-        }),
-      { wrapper },
-    );
+    const { result } = renderAchievementImport();
     const rows = Array.from({ length: 501 }, () => 'REF,trophy,T,2026-01-01').join('\n');
     act(() => result.current?.onInputChange(rows));
     act(() => result.current?.onParse());
@@ -289,17 +288,7 @@ describe('standings write error branches', () => {
   });
 
   it('treats an all-blank paste as an empty parse with no error and no request', () => {
-    const { result } = renderHook(
-      () =>
-        useAchievementImport(t, {
-          teamId: 't1',
-          isOffline: false,
-          isOpen: true,
-          onClose: vi.fn(),
-          onCommitted: vi.fn(),
-        }),
-      { wrapper },
-    );
+    const { result } = renderAchievementImport();
     act(() => result.current?.onInputChange('   \n  \n'));
     act(() => result.current?.onParse());
     expect(result.current?.parseError).toBeNull();

@@ -35,6 +35,7 @@ export {
 } from './reorderable-rows';
 export { SectionPanel, type SectionPanelProps } from './section-panel';
 export { SelectField, type SelectFieldOption, type SelectFieldProps } from './select-field';
+export { PublicPageHero, type PublicPageHeroProps } from './public-page-hero';
 export { StatusChip, type StatusChipProps } from './status-chip';
 export { StatusView, type StatusTone, type StatusViewProps } from './status-view';
 export { useAppToast, type AppToastApi, type ShowToastOptions, type ToastTone } from './toast';
