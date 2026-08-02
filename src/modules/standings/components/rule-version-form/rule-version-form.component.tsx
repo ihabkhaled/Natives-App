@@ -3,6 +3,7 @@ import { TEST_IDS } from '@/shared/config';
 import { AppButton, AppInput } from '@/shared/ui';
 
 import { TieBreakOrderBuilder } from '../tie-break-order-builder';
+import { StandingsDialogForm } from '../standings-dialog-form';
 import type { RuleVersionFormProps } from './rule-version-form.types';
 
 /**
@@ -13,18 +14,7 @@ import type { RuleVersionFormProps } from './rule-version-form.types';
 export function RuleVersionForm(props: RuleVersionFormProps): React.JSX.Element {
   const { view } = props;
   return (
-    <form
-      data-testid={TEST_IDS.ruleForm}
-      aria-label={view.heading}
-      className="app-surface-card app-standings-dialog"
-      onSubmit={(event) => {
-        event.preventDefault();
-        view.onSubmit();
-      }}
-    >
-      <IonText>
-        <h3 className="app-standings-dialog__title m-0">{view.heading}</h3>
-      </IonText>
+    <StandingsDialogForm testId={TEST_IDS.ruleForm} heading={view.heading} onSubmit={view.onSubmit}>
       <AppInput
         testId={TEST_IDS.ruleFormKey}
         label={view.keyLabel}
@@ -69,6 +59,6 @@ export function RuleVersionForm(props: RuleVersionFormProps): React.JSX.Element 
         disabled={!view.canSubmit}
         loading={view.isSaving}
       />
-    </form>
+    </StandingsDialogForm>
   );
 }

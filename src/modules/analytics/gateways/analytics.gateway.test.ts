@@ -1,7 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { getAppHttpClient } from '@/packages/http';
-
 import {
   requestCohortComparison,
   requestPlayerSeries,
@@ -9,17 +7,16 @@ import {
   requestTeamSeries,
 } from './analytics.gateway';
 
+import {
+  gatewayHttp,
+  resetGatewayHttpDouble,
+} from '../../../../tests/setup/gateway-http-double.helper';
+
 vi.mock('@/packages/http', () => ({ getAppHttpClient: vi.fn() }));
 
-const get = vi.fn();
-const post = vi.fn();
+const { get, post } = gatewayHttp;
 
-beforeEach(() => {
-  vi.clearAllMocks();
-  get.mockResolvedValue({});
-  post.mockResolvedValue({});
-  vi.mocked(getAppHttpClient).mockReturnValue({ get, post } as never);
-});
+beforeEach(resetGatewayHttpDouble);
 
 describe('analytics.gateway', () => {
   it('reads the player and team series from their paths', async () => {

@@ -1,7 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { getAppHttpClient } from '@/packages/http';
-
 import {
   requestCreateStandingsRule,
   requestRecomputeStandings,
@@ -10,17 +8,16 @@ import {
   requestStandingsRules,
 } from './standings.gateway';
 
+import {
+  gatewayHttp,
+  resetGatewayHttpDouble,
+} from '../../../../tests/setup/gateway-http-double.helper';
+
 vi.mock('@/packages/http', () => ({ getAppHttpClient: vi.fn() }));
 
-const get = vi.fn();
-const post = vi.fn();
+const { get, post } = gatewayHttp;
 
-beforeEach(() => {
-  vi.clearAllMocks();
-  get.mockResolvedValue({});
-  post.mockResolvedValue({});
-  vi.mocked(getAppHttpClient).mockReturnValue({ get, post } as never);
-});
+beforeEach(resetGatewayHttpDouble);
 
 describe('standings.gateway', () => {
   it('reads the table for a competition, omitting an unset source facet', async () => {

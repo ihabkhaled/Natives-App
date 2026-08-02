@@ -1,10 +1,10 @@
-import { IonText } from '@/packages/ionic';
 import { TEST_IDS } from '@/shared/config';
-import { AsyncStateView, PageShell, SelectField } from '@/shared/ui';
+import { AsyncStateView, SelectField } from '@/shared/ui';
 
 import { StandingsManagePanel } from '../standings-manage-panel';
 import { StandingsTable } from '../standings-table';
 import { STANDINGS_STATE_TEST_IDS } from './standings-view.constants';
+import { StandingsScreenShell } from '../standings-screen-shell';
 import type { StandingsScreenProps } from './standings-view.types';
 
 /**
@@ -14,51 +14,44 @@ import type { StandingsScreenProps } from './standings-view.types';
  */
 export function StandingsScreen(props: StandingsScreenProps): React.JSX.Element {
   return (
-    <PageShell title={props.title} testId={TEST_IDS.standingsPage}>
-      <section
-        data-testid={TEST_IDS.standingsView}
-        aria-label={props.title}
-        className="app-standings flex flex-col gap-5"
-      >
-        <header className="app-screen-intro">
-          <IonText color="medium">
-            <p className="m-0 text-sm">{props.subtitle}</p>
-          </IonText>
-        </header>
+    <StandingsScreenShell
+      pageTestId={TEST_IDS.standingsPage}
+      viewTestId={TEST_IDS.standingsView}
+      title={props.title}
+      subtitle={props.subtitle}
+    >
+      <div className="app-standings__filters">
+        <SelectField
+          testId={TEST_IDS.standingsCompetitionSelect}
+          label={props.competitionLabel}
+          value={props.competitionValue}
+          options={props.competitionOptions}
+          onChange={props.onCompetitionChange}
+        />
+        <SelectField
+          testId={TEST_IDS.standingsSourceSelect}
+          label={props.sourceLabel}
+          value={props.sourceValue}
+          options={props.sourceOptions}
+          onChange={props.onSourceChange}
+        />
+      </div>
 
-        <div className="app-standings__filters">
-          <SelectField
-            testId={TEST_IDS.standingsCompetitionSelect}
-            label={props.competitionLabel}
-            value={props.competitionValue}
-            options={props.competitionOptions}
-            onChange={props.onCompetitionChange}
-          />
-          <SelectField
-            testId={TEST_IDS.standingsSourceSelect}
-            label={props.sourceLabel}
-            value={props.sourceValue}
-            options={props.sourceOptions}
-            onChange={props.onSourceChange}
-          />
-        </div>
+      {props.manage === null ? null : <StandingsManagePanel manage={props.manage} />}
 
-        {props.manage === null ? null : <StandingsManagePanel manage={props.manage} />}
+      {props.recomputeBanner === null ? null : (
+        <p
+          className="app-pending-notice m-0"
+          role="status"
+          data-testid={TEST_IDS.standingsRecomputeReport}
+        >
+          {props.recomputeBanner}
+        </p>
+      )}
 
-        {props.recomputeBanner === null ? null : (
-          <p
-            className="app-pending-notice m-0"
-            role="status"
-            data-testid={TEST_IDS.standingsRecomputeReport}
-          >
-            {props.recomputeBanner}
-          </p>
-        )}
+      <AsyncStateView view={props} variant="list" {...STANDINGS_STATE_TEST_IDS} />
 
-        <AsyncStateView view={props} variant="list" {...STANDINGS_STATE_TEST_IDS} />
-
-        {props.status === 'ready' ? <StandingsTable view={props} /> : null}
-      </section>
-    </PageShell>
+      {props.status === 'ready' ? <StandingsTable view={props} /> : null}
+    </StandingsScreenShell>
   );
 }

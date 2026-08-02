@@ -1,37 +1,22 @@
 import { act, renderHook, waitFor } from '@testing-library/react';
-import { MemoryRouter } from 'react-router-dom';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
-import { createAppQueryClient, QueryClientProvider } from '@/packages/query';
 import { AppError } from '@/shared/errors/app.errors';
 import { APP_ERROR_CODE } from '@/shared/errors';
 
 import { generateReport } from '../services/generate-report.service';
 import { useReportRequest } from './use-report-request.hook';
-import type { ReportsContextView } from './use-reports-context.hook';
+
+import {
+  REPORTS_CONTEXT as context,
+  reportsHookWrapper as wrapper,
+  translateKey as t,
+} from '../../../../tests/setup/reports-hook-harness.helper';
 
 vi.mock('../services/generate-report.service', () => ({ generateReport: vi.fn() }));
 vi.mock('@/modules/teams', () => ({
   buildSeasonsQueryOptions: () => ({ queryKey: ['seasons'], queryFn: () => [], enabled: false }),
 }));
-
-function wrapper({ children }: { children: React.ReactNode }): React.JSX.Element {
-  return (
-    <QueryClientProvider client={createAppQueryClient()}>
-      <MemoryRouter>{children}</MemoryRouter>
-    </QueryClientProvider>
-  );
-}
-
-const t = (key: string): string => key;
-
-const context: ReportsContextView = {
-  teamId: 't1',
-  isOffline: false,
-  canRead: true,
-  canGenerate: true,
-  isLoading: false,
-};
 
 afterEach(() => {
   vi.clearAllMocks();

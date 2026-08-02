@@ -1,8 +1,9 @@
-import { IonNote, IonText } from '@/packages/ionic';
+import { IonNote } from '@/packages/ionic';
 import { TEST_IDS } from '@/shared/config';
 import { AppButton, AppDateField, AppInput, SelectField } from '@/shared/ui';
 
 import { ACHIEVED_ON_DATETIME_ID } from './achievement-form.constants';
+import { StandingsDialogForm } from '../standings-dialog-form';
 import type { AchievementFormProps } from './achievement-form.types';
 
 /**
@@ -13,18 +14,11 @@ import type { AchievementFormProps } from './achievement-form.types';
 export function AchievementForm(props: AchievementFormProps): React.JSX.Element {
   const { view } = props;
   return (
-    <form
-      data-testid={TEST_IDS.achievementForm}
-      aria-label={view.heading}
-      className="app-surface-card app-standings-dialog"
-      onSubmit={(event) => {
-        event.preventDefault();
-        view.onSubmit();
-      }}
+    <StandingsDialogForm
+      testId={TEST_IDS.achievementForm}
+      heading={view.heading}
+      onSubmit={view.onSubmit}
     >
-      <IonText>
-        <h3 className="app-standings-dialog__title m-0">{view.heading}</h3>
-      </IonText>
       <AppInput
         testId={TEST_IDS.achievementFormTitle}
         label={view.titleLabel}
@@ -101,6 +95,6 @@ export function AchievementForm(props: AchievementFormProps): React.JSX.Element 
           onClick={view.onCancel}
         />
       </div>
-    </form>
+    </StandingsDialogForm>
   );
 }

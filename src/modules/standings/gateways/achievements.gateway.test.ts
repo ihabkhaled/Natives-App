@@ -1,7 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { getAppHttpClient } from '@/packages/http';
-
 import {
   requestAchievement,
   requestAchievements,
@@ -11,17 +9,16 @@ import {
   requestTransitionAchievement,
 } from './achievements.gateway';
 
+import {
+  gatewayHttp,
+  resetGatewayHttpDouble,
+} from '../../../../tests/setup/gateway-http-double.helper';
+
 vi.mock('@/packages/http', () => ({ getAppHttpClient: vi.fn() }));
 
-const get = vi.fn();
-const post = vi.fn();
+const { get, post } = gatewayHttp;
 
-beforeEach(() => {
-  vi.clearAllMocks();
-  get.mockResolvedValue({});
-  post.mockResolvedValue({});
-  vi.mocked(getAppHttpClient).mockReturnValue({ get, post } as never);
-});
+beforeEach(resetGatewayHttpDouble);
 
 describe('achievements.gateway', () => {
   it('reads a filtered achievements page', async () => {

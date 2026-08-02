@@ -1,7 +1,8 @@
-import { IonNote, IonText } from '@/packages/ionic';
+import { IonNote } from '@/packages/ionic';
 import { TEST_IDS } from '@/shared/config';
 import { AppButton, AppInput, ReasonField, SelectField } from '@/shared/ui';
 
+import { StandingsDialogForm } from '../standings-dialog-form';
 import type { ManualStandingFormProps } from './manual-standing-form.types';
 
 /**
@@ -13,18 +14,11 @@ import type { ManualStandingFormProps } from './manual-standing-form.types';
 export function ManualStandingForm(props: ManualStandingFormProps): React.JSX.Element {
   const { view } = props;
   return (
-    <form
-      data-testid={TEST_IDS.standingsManualForm}
-      aria-label={view.heading}
-      className="app-surface-card app-standings-dialog"
-      onSubmit={(event) => {
-        event.preventDefault();
-        view.onSubmit();
-      }}
+    <StandingsDialogForm
+      testId={TEST_IDS.standingsManualForm}
+      heading={view.heading}
+      onSubmit={view.onSubmit}
     >
-      <IonText>
-        <h3 className="app-standings-dialog__title m-0">{view.heading}</h3>
-      </IonText>
       <IonNote>{view.intro}</IonNote>
       <SelectField
         label={view.entrantLabel}
@@ -97,6 +91,6 @@ export function ManualStandingForm(props: ManualStandingFormProps): React.JSX.El
           onClick={view.onCancel}
         />
       </div>
-    </form>
+    </StandingsDialogForm>
   );
 }
