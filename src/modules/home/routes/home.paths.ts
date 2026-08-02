@@ -16,3 +16,23 @@ export function homePath(): string {
 export function aboutPath(): string {
   return APP_PATHS.about;
 }
+
+export function ultimatePath(): string {
+  return APP_PATHS.ultimate;
+}
+
+export function spiritPath(): string {
+  return APP_PATHS.spirit;
+}
+
+export function galleryPath(): string {
+  return APP_PATHS.gallery;
+}
+
+export function locationPath(): string {
+  return APP_PATHS.location;
+}
+
+export function achievementsPath(): string {
+  return APP_PATHS.publicAchievements;
+}

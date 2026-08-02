@@ -8,6 +8,11 @@ import type {
   RegistrationOutcomeView,
 } from '../types/public-tryouts-view.types';
 
+// The draft type is part of this helper's API surface — EMPTY_REGISTRATION_DRAFT
+// and canSubmitRegistration are both expressed in terms of it — so callers get
+// it from here rather than reaching into the types module separately.
+export type { RegistrationDraft };
+
 type Translate = (key: string, params?: TranslateParams) => string;
 
 export const EMPTY_REGISTRATION_DRAFT: RegistrationDraft = {

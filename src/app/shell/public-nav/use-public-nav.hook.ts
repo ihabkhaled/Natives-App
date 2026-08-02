@@ -27,9 +27,15 @@ export function usePublicNav(): PublicNavView {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const rawLinks: readonly Omit<PublicNavLink, 'isActive'>[] = [
+    // The primary spine of the marketing site. The remaining pages (spirit,
+    // gallery, location, at-a-glance) are secondary and live in the footer, so
+    // the bar stays legible on a phone.
     { key: 'home', label: t(I18N_KEYS.publicNav.home), path: APP_PATHS.root },
+    { key: 'ultimate', label: t(I18N_KEYS.publicNav.ultimate), path: APP_PATHS.ultimate },
     { key: 'about', label: t(I18N_KEYS.publicNav.about), path: APP_PATHS.about },
     { key: 'team', label: t(I18N_KEYS.publicNav.team), path: APP_PATHS.team },
+    { key: 'results', label: t(I18N_KEYS.publicNav.results), path: APP_PATHS.publicCompetitions },
+    { key: 'news', label: t(I18N_KEYS.publicNav.news), path: APP_PATHS.news },
     { key: 'tryouts', label: t(I18N_KEYS.publicNav.tryouts), path: tryoutRegistrationPath() },
     { key: 'contact', label: t(I18N_KEYS.publicNav.contact), path: APP_PATHS.contact },
   ];

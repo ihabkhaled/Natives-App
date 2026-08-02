@@ -45,6 +45,10 @@ export function buildLandingScreenView(
       heading: 'What is Ultimate Frisbee?',
       body: 'A fast-paced, self-officiated team sport played with a flying disc.',
     },
+    explainerLink: { label: 'See more', onClick: vi.fn() },
+    staffLink: { label: 'See more', onClick: vi.fn() },
+    competitionsLink: { label: 'See more', onClick: vi.fn() },
+    newsLink: { label: 'See more', onClick: vi.fn() },
     aboutPreview: {
       heading: 'Our story',
       quote: 'Founded in October 2021 by Captain Dalia Elgharib and Coach Youssef Aboutaleb.',
@@ -66,11 +70,6 @@ export function buildLandingScreenView(
         },
       ],
     },
-    activePlayers: {
-      heading: 'Active players',
-      intro: 'The players competing for Ultimate Natives this season.',
-      chrome: EMPTY_CHROME,
-    },
     competitions: {
       heading: 'Competitions & ranks',
       intro: 'Where Ultimate Natives competes this season.',
@@ -80,48 +79,10 @@ export function buildLandingScreenView(
         { id: 'eudl-2026', name: 'EUDL', season: '2026', rankStatus: 'Rank pending' },
       ],
     },
-    matchScores: {
-      heading: 'Recent match scores',
-      intro: 'How we did on the field, and in which competition.',
-      chrome: EMPTY_CHROME,
-    },
-    leaderboard: {
-      heading: 'Leaderboard',
-      intro: 'Top individual scorers, per competition.',
-      chrome: EMPTY_CHROME,
-    },
     news: {
       heading: 'News',
       intro: 'Announcements from the club.',
       chrome: EMPTY_CHROME,
-    },
-    spiritValues: {
-      heading: 'Spirit of the Game',
-      intro: 'Every player is responsible for fair play.',
-      values: [
-        { key: 'fairness', title: 'Self-officiated fairness', body: 'Players call their own fouls.' },
-        { key: 'respect', title: 'Respect for opponents', body: 'We compete fiercely and fairly.' },
-      ],
-    },
-    location: {
-      heading: 'Where we play',
-      intro: 'Find us on the field.',
-      address: 'El Sheikh Zayed, Giza, Egypt',
-      ctaLabel: 'Open in Maps',
-      mapAlt: 'Map marker for El Sheikh Zayed, Giza, Egypt',
-      mapsHref: 'https://www.google.com/maps/search/?api=1&query=El+Sheikh+Zayed%2C+Giza%2C+Egypt',
-    },
-    gallery: {
-      heading: 'Gallery',
-      intro: 'Moments from the season.',
-      tiles: [{ key: 'tile-1', alt: 'Ultimate Natives gallery placeholder' }],
-    },
-    achievements: {
-      heading: 'Ultimate Natives at a glance',
-      items: [
-        { key: 'founded', label: 'Founded', value: 'October 2021' },
-        { key: 'roster', label: 'Roster', value: '25 players' },
-      ],
     },
     social: {
       heading: 'Follow along',

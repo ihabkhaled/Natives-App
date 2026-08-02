@@ -2927,7 +2927,10 @@
     "switchToDark": "Switch to dark theme",
     "switchToLight": "Switch to light theme",
     "switchToArabic": "View in Arabic",
-    "switchToEnglish": "View in English"
+    "switchToEnglish": "View in English",
+    "ultimate": "The sport",
+    "results": "Results",
+    "news": "News"
   },
   "publicFooter": {
     "label": "Site footer",
@@ -3262,5 +3265,33 @@
     "errorNetworkMessage": "Your message was not sent. Check your connection and try again.",
     "errorUnexpectedTitle": "Your message was not sent",
     "errorUnexpectedMessage": "Something went wrong on our side. Please try again, or reach us on social media using the links below."
+  },
+  "publicPages": {
+    "ultimateEyebrow": "New to the sport?",
+    "ultimateTitle": "What is Ultimate Frisbee?",
+    "ultimateMetaTitle": "What is Ultimate Frisbee? — Ultimate Natives",
+    "ultimateMetaDescription": "Ultimate is a fast-paced, non-contact team sport played with a flying disc and self-officiated by the players. Learn the basics before you join us in El Sheikh Zayed.",
+    "spiritEyebrow": "How we play",
+    "spiritTitle": "Spirit of the Game",
+    "spiritMetaTitle": "Spirit of the Game — Ultimate Natives",
+    "spiritMetaDescription": "Ultimate has no referees. The values that keep our games fair and joyful: fairness, respect, joy and effort — the Spirit of the Game at Ultimate Natives.",
+    "galleryEyebrow": "On the field",
+    "galleryTitle": "Gallery",
+    "galleryMetaTitle": "Gallery — Ultimate Natives",
+    "galleryMetaDescription": "Moments from the season with Ultimate Natives, the Ultimate Frisbee team from El Sheikh Zayed, Giza, Egypt.",
+    "locationEyebrow": "Find us",
+    "locationTitle": "Home turf",
+    "locationMetaTitle": "Where we play — Ultimate Natives, El Sheikh Zayed",
+    "locationMetaDescription": "Ultimate Natives train and play in El Sheikh Zayed, Giza, Egypt. Directions to our home turf, and how to come and find us.",
+    "achievementsEyebrow": "By the numbers",
+    "achievementsTitle": "Ultimate Natives at a glance",
+    "achievementsMetaTitle": "Our record — Ultimate Natives",
+    "achievementsMetaDescription": "Founded October 2021, 25 players, based in El Sheikh Zayed, Giza. The competitions Ultimate Natives entered this season, at a glance.",
+    "navUltimate": "The sport",
+    "navSpirit": "Spirit",
+    "navGallery": "Gallery",
+    "navLocation": "Find us",
+    "navAchievements": "At a glance",
+    "seeAll": "See more"
   }
 }

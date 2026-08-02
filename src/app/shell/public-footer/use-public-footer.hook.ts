@@ -38,6 +38,19 @@ export function usePublicFooter(): PublicFooterView {
         path: tryoutRegistrationPath(),
       },
       { key: 'contact', label: t(I18N_KEYS.publicNav.contact), path: APP_PATHS.contact },
+      // Secondary marketing pages: reachable from every page here rather than
+      // crowding the navbar, and crawlable because the footer is site-wide.
+      { key: 'ultimate', label: t(I18N_KEYS.publicNav.ultimate), path: APP_PATHS.ultimate },
+      { key: 'results', label: t(I18N_KEYS.publicNav.results), path: APP_PATHS.publicCompetitions },
+      { key: 'news', label: t(I18N_KEYS.publicNav.news), path: APP_PATHS.news },
+      { key: 'spirit', label: t(I18N_KEYS.publicPages.navSpirit), path: APP_PATHS.spirit },
+      { key: 'gallery', label: t(I18N_KEYS.publicPages.navGallery), path: APP_PATHS.gallery },
+      { key: 'location', label: t(I18N_KEYS.publicPages.navLocation), path: APP_PATHS.location },
+      {
+        key: 'achievements',
+        label: t(I18N_KEYS.publicPages.navAchievements),
+        path: APP_PATHS.publicAchievements,
+      },
     ],
     onNavigate: navigation.push,
     socialHeading: t(I18N_KEYS.publicFooter.socialHeading),

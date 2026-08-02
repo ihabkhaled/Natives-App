@@ -21,43 +21,43 @@ export interface LandingStaffMember {
   readonly name: string;
   readonly nickname: string;
   readonly titles: readonly StaffTitle[];
-  /** Ready for the day staff photos are DB-managed; renders an initials avatar until then. */
+  /** Season-Board portrait served from `public/staff/`; null renders an initials avatar. */
   readonly photoUrl: string | null;
 }
 
 export const LANDING_STAFF: readonly LandingStaffMember[] = [
-  { id: 'sherif-ashraf', name: 'Sherif Ashraf', nickname: '3alamy', titles: [STAFF_TITLE.Coach], photoUrl: null },
+  { id: 'sherif-ashraf', name: 'Sherif Ashraf', nickname: '3alamy', titles: [STAFF_TITLE.Coach], photoUrl: '/staff/sherif-ashraf.jpg' },
   {
     id: 'khaled-ossama',
     name: 'Khaled Ossama',
     nickname: 'Doda',
     titles: [STAFF_TITLE.CoCoach],
-    photoUrl: null,
+    photoUrl: '/staff/khaled-ossama.jpg',
   },
   {
     id: 'rawan-elessawy',
     name: 'Rawan Elessawy',
     nickname: 'Roo',
     titles: [STAFF_TITLE.CoCoach],
-    photoUrl: null,
+    photoUrl: '/staff/rawan-elessawy.jpg',
   },
-  { id: 'zahra', name: 'Zahra', nickname: 'Zoza', titles: [STAFF_TITLE.SpiritCaptain], photoUrl: null },
+  { id: 'zahra', name: 'Zahra', nickname: 'Zoza', titles: [STAFF_TITLE.SpiritCaptain], photoUrl: '/staff/zahra.jpg' },
   {
     id: 'abdelrahman-elleimy',
     name: 'Abdelrahman Elleimy',
     nickname: 'Elleimy',
     titles: [STAFF_TITLE.Finance],
-    photoUrl: null,
+    photoUrl: '/staff/abdelrahman-elleimy.jpg',
   },
   {
     id: 'nourane',
     name: 'Nourane',
     nickname: 'Nour',
     titles: [STAFF_TITLE.SocialMedia],
-    photoUrl: null,
+    photoUrl: '/staff/nourane.jpg',
   },
-  { id: 'lina', name: 'Lina', nickname: 'Lilo', titles: [STAFF_TITLE.SocialMedia], photoUrl: null },
-  { id: 'roaa', name: 'Roaa', nickname: 'Riri', titles: [STAFF_TITLE.SocialMedia], photoUrl: null },
+  { id: 'lina', name: 'Lina', nickname: 'Lilo', titles: [STAFF_TITLE.SocialMedia], photoUrl: '/staff/lina.jpg' },
+  { id: 'roaa', name: 'Roaa', nickname: 'Riri', titles: [STAFF_TITLE.SocialMedia], photoUrl: '/staff/roaa.jpg' },
   {
     id: 'ihab-khaled',
     name: 'Ihab Khaled',

@@ -2,11 +2,44 @@ import { I18N_KEYS } from '@/shared/i18n';
 import { NAV_GROUP, ROUTE_ACCESS, type AppRouteDefinition } from '@/shared/types';
 
 import { AboutContainer } from '../containers/about.container';
+import { AchievementsContainer } from '../containers/achievements.container';
+import { GalleryContainer } from '../containers/gallery.container';
 import { HomeContainer } from '../containers/home.container';
 import { LandingContainer } from '../containers/landing.container';
+import { LocationContainer } from '../containers/location.container';
 import { NotFoundContainer } from '../containers/not-found.container';
+import { SpiritContainer } from '../containers/spirit.container';
+import { UltimateContainer } from '../containers/ultimate.container';
 import { WelcomeContainer } from '../containers/welcome.container';
-import { aboutPath, homePath, rootPath, welcomePath } from './home.paths';
+import {
+  aboutPath,
+  achievementsPath,
+  galleryPath,
+  homePath,
+  locationPath,
+  rootPath,
+  spiritPath,
+  ultimatePath,
+  welcomePath,
+} from './home.paths';
+
+/**
+ * The marketing subject pages split out of the landing page. All Public rather
+ * than PublicOnly: they are static content that reads the same signed in or
+ * out, so nobody should ever be bounced away from one.
+ */
+const PUBLIC_SECTION_ROUTES: readonly AppRouteDefinition[] = [
+  { path: ultimatePath(), component: UltimateContainer },
+  { path: spiritPath(), component: SpiritContainer },
+  { path: galleryPath(), component: GalleryContainer },
+  { path: locationPath(), component: LocationContainer },
+  { path: achievementsPath(), component: AchievementsContainer },
+].map((route) => ({
+  path: route.path,
+  exact: true,
+  access: ROUTE_ACCESS.Public,
+  component: route.component,
+}));
 
 export function getHomeRouteDefinitions(): readonly AppRouteDefinition[] {
   return [
@@ -37,6 +70,7 @@ export function getHomeRouteDefinitions(): readonly AppRouteDefinition[] {
       access: ROUTE_ACCESS.Public,
       component: AboutContainer,
     },
+    ...PUBLIC_SECTION_ROUTES,
     {
       path: homePath(),
       exact: true,

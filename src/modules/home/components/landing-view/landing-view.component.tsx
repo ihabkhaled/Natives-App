@@ -1,52 +1,43 @@
 import { TEST_IDS } from '@/shared/config';
-import { AppButton, FactList, PageSeo, PageShell, SectionPanel } from '@/shared/ui';
+import { AppButton, PageSeo, PageShell, SectionPanel } from '@/shared/ui';
 
 import { LandingAboutPreview } from '../landing-about-preview';
-import { LandingActivePlayers } from '../landing-active-players';
 import { LandingCompetitions } from '../landing-competitions';
 import { LandingExplainer } from '../landing-explainer';
-import { LandingGallery } from '../landing-gallery';
 import { LandingHero } from '../landing-hero';
-import { LandingLeaderboard } from '../landing-leaderboard';
-import { LandingLocation } from '../landing-location';
-import { LandingMatchScores } from '../landing-match-scores';
 import { LandingNews } from '../landing-news';
+import { LandingSectionMore } from '../landing-section-more';
 import { LandingStaffDirectory } from '../landing-staff-directory';
-import { SpiritValuesGrid } from '../spirit-values-grid';
 import type { LandingViewProps } from './landing-view.types';
 
-/** The public marketing landing page at `/`: the team's full front door. */
+/**
+ * The public landing page at `/` — a front door, not the whole site.
+ *
+ * Each subject has its own page (`/ultimate`, `/spirit`, `/team`, `/results`,
+ * `/news`, `/gallery`, `/location`, `/achievements`); the sections here are
+ * teasers that link through. Keeping the front door short is what lets every
+ * subject carry its own title, description and canonical URL.
+ */
 export function LandingView(props: LandingViewProps): React.JSX.Element {
   return (
     <PageShell title={props.hero.title} testId={TEST_IDS.landingPage} immersive>
       <PageSeo title={props.seoTitle} description={props.seoDescription} path={props.path} />
       <div className="app-landing-layout">
         <LandingHero view={props.hero} />
-        <LandingExplainer view={props.explainer} />
-        <LandingAboutPreview view={props.aboutPreview} />
-        <LandingStaffDirectory view={props.staffDirectory} />
-        <LandingActivePlayers view={props.activePlayers} />
-        <LandingCompetitions view={props.competitions} />
-        <LandingMatchScores view={props.matchScores} />
-        <LandingLeaderboard view={props.leaderboard} />
-        <LandingNews view={props.news} />
-        <SpiritValuesGrid
-          heading={props.spiritValues.heading}
-          intro={props.spiritValues.intro}
-          values={props.spiritValues.values}
-          cardTestIdPrefix={TEST_IDS.spiritValueCard}
-          sectionTestId={TEST_IDS.landingSpiritValues}
-        />
-        <LandingLocation view={props.location} />
-        <LandingGallery view={props.gallery} />
 
-        <SectionPanel heading={props.achievements.heading} testId={TEST_IDS.landingAchievements}>
-          <FactList
-            items={props.achievements.items}
-            ariaLabel={props.achievements.heading}
-            testId={TEST_IDS.landingAchievements}
-          />
-        </SectionPanel>
+        <LandingExplainer view={props.explainer} />
+        <LandingSectionMore view={props.explainerLink} sectionKey="ultimate" />
+
+        <LandingAboutPreview view={props.aboutPreview} />
+
+        <LandingStaffDirectory view={props.staffDirectory} />
+        <LandingSectionMore view={props.staffLink} sectionKey="team" />
+
+        <LandingCompetitions view={props.competitions} />
+        <LandingSectionMore view={props.competitionsLink} sectionKey="results" />
+
+        <LandingNews view={props.news} />
+        <LandingSectionMore view={props.newsLink} sectionKey="news" />
 
         <SectionPanel
           heading={props.social.heading}

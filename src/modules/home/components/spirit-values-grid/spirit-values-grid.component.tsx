@@ -9,7 +9,11 @@ import type { SpiritValuesGridProps } from './spirit-values-grid.types';
  */
 export function SpiritValuesGrid(props: SpiritValuesGridProps): React.JSX.Element {
   return (
-    <SectionPanel heading={props.heading} intro={props.intro} testId={props.sectionTestId}>
+    <SectionPanel
+      heading={props.heading}
+      intro={props.intro}
+      {...(props.sectionTestId === undefined ? {} : { testId: props.sectionTestId })}
+    >
       <div className="app-about-spirit-grid">
         {props.values.map((value) => (
           <div

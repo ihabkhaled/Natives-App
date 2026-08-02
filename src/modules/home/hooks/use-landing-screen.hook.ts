@@ -1,43 +1,36 @@
 import { contactPath } from '@/modules/contact';
+import { newsPath } from '@/modules/news';
+import { publicCompetitionsPath } from '@/modules/public-competitions';
+import { teamDirectoryPath } from '@/modules/team-directory';
 import { tryoutRegistrationPath } from '@/modules/tryouts';
 import { useAppTranslation } from '@/packages/i18n';
 import { useAppNavigation } from '@/packages/router';
 import { I18N_KEYS } from '@/shared/i18n';
 
-import type { ActivePlayersSectionView, StaffDirectorySectionView } from '../helpers/landing-team-seam.helper';
-import { buildActivePlayersSection, buildStaffDirectorySection } from '../helpers/landing-team-seam.helper';
-import type {
-  CompetitionsSectionView,
-  LeaderboardSectionView,
-  MatchScoresSectionView,
-} from '../helpers/landing-competitive-seam.helper';
-import {
-  buildCompetitionsSection,
-  buildLeaderboardSection,
-  buildMatchScoresSection,
-} from '../helpers/landing-competitive-seam.helper';
+import type { CompetitionsSectionView } from '../helpers/landing-competitive-seam.helper';
+import { buildCompetitionsSection } from '../helpers/landing-competitive-seam.helper';
 import { buildHeroSection, type HeroSectionView } from '../helpers/landing-hero.helper';
 import { buildNewsSection, type NewsSectionView } from '../helpers/landing-news-seam.helper';
 import { buildSocialSection, type SocialSectionView } from '../helpers/landing-social.helper';
+import type { StaffDirectorySectionView } from '../helpers/landing-team-seam.helper';
+import { buildStaffDirectorySection } from '../helpers/landing-team-seam.helper';
 import type {
   AboutPreviewSectionView,
-  AchievementsSectionView,
   ExplainerSectionView,
   FinalCtaSectionView,
-  GallerySectionView,
-  LocationSectionView,
-  SpiritValuesSectionView,
 } from '../helpers/landing-static-sections.helper';
 import {
   buildAboutPreviewSection,
-  buildAchievementsSection,
   buildExplainerSection,
   buildFinalCtaSection,
-  buildGallerySection,
-  buildLocationSection,
-  buildSpiritValuesSection,
 } from '../helpers/landing-static-sections.helper';
-import { aboutPath, rootPath } from '../routes/home.paths';
+import { aboutPath, rootPath, ultimatePath } from '../routes/home.paths';
+
+/** A "see more" affordance pointing from a landing teaser to its full page. */
+export interface SectionLinkView {
+  readonly label: string;
+  readonly onClick: () => void;
+}
 
 export interface LandingScreenView {
   readonly path: string;
@@ -45,34 +38,40 @@ export interface LandingScreenView {
   readonly seoDescription: string;
   readonly hero: HeroSectionView;
   readonly explainer: ExplainerSectionView;
+  readonly explainerLink: SectionLinkView;
   readonly aboutPreview: AboutPreviewSectionView;
   readonly staffDirectory: StaffDirectorySectionView;
-  readonly activePlayers: ActivePlayersSectionView;
+  readonly staffLink: SectionLinkView;
   readonly competitions: CompetitionsSectionView;
-  readonly matchScores: MatchScoresSectionView;
-  readonly leaderboard: LeaderboardSectionView;
+  readonly competitionsLink: SectionLinkView;
   readonly news: NewsSectionView;
-  readonly spiritValues: SpiritValuesSectionView;
-  readonly location: LocationSectionView;
-  readonly gallery: GallerySectionView;
-  readonly achievements: AchievementsSectionView;
+  readonly newsLink: SectionLinkView;
   readonly social: SocialSectionView;
   readonly finalCta: FinalCtaSectionView;
 }
 
-/** Prepared, translated view model for the public landing page at `/`. */
+/**
+ * View model for the landing page at `/`.
+ *
+ * The landing page is a front door, not the whole site: each subject (the
+ * sport, spirit, the roster, results, news, the gallery, our turf) has its own
+ * page, and the section here is a teaser that links to it. Sections reuse the
+ * same builders those pages use, so a teaser can never drift from its page.
+ */
 export function useLandingScreen(): LandingScreenView {
   const { t } = useAppTranslation();
   const navigation = useAppNavigation();
-  const goToTryouts = (): void => {
-    navigation.push(tryoutRegistrationPath());
-  };
-  const goToAbout = (): void => {
-    navigation.push(aboutPath());
-  };
-  const goToContact = (): void => {
-    navigation.push(contactPath());
-  };
+
+  const goTo =
+    (path: string): (() => void) =>
+    (): void => {
+      navigation.push(path);
+    };
+
+  const goToTryouts = goTo(tryoutRegistrationPath());
+  const goToAbout = goTo(aboutPath());
+  const goToContact = goTo(contactPath());
+  const seeMore = t(I18N_KEYS.publicPages.seeAll);
 
   return {
     path: rootPath(),
@@ -80,17 +79,14 @@ export function useLandingScreen(): LandingScreenView {
     seoDescription: t(I18N_KEYS.landing.metaDescription),
     hero: buildHeroSection(t, goToTryouts, goToAbout),
     explainer: buildExplainerSection(t),
+    explainerLink: { label: seeMore, onClick: goTo(ultimatePath()) },
     aboutPreview: buildAboutPreviewSection(t, goToAbout),
     staffDirectory: buildStaffDirectorySection(t),
-    activePlayers: buildActivePlayersSection(t),
+    staffLink: { label: seeMore, onClick: goTo(teamDirectoryPath()) },
     competitions: buildCompetitionsSection(t),
-    matchScores: buildMatchScoresSection(t),
-    leaderboard: buildLeaderboardSection(t),
+    competitionsLink: { label: seeMore, onClick: goTo(publicCompetitionsPath()) },
     news: buildNewsSection(t),
-    spiritValues: buildSpiritValuesSection(t),
-    location: buildLocationSection(t),
-    gallery: buildGallerySection(t),
-    achievements: buildAchievementsSection(t),
+    newsLink: { label: seeMore, onClick: goTo(newsPath()) },
     social: buildSocialSection(t),
     finalCta: buildFinalCtaSection(t, goToTryouts, goToContact),
   };

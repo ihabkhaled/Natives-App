@@ -18,6 +18,7 @@ import { MEMBERS_I18N_KEYS } from './members-keys.constants';
 import { NEWS_EDITOR_I18N_KEYS, NEWS_I18N_KEYS } from './news-keys.constants';
 import { NOTIFICATIONS_I18N_KEYS } from './notifications-keys.constants';
 import { POINTS_I18N_KEYS } from './points-keys.constants';
+import { PUBLIC_PAGES_I18N_KEYS } from './public-pages-keys.constants';
 import { PRACTICE_I18N_KEYS } from './practice-keys.constants';
 import { PUBLIC_COMPETITIONS_I18N_KEYS } from './public-competitions-keys.constants';
 import { PUBLIC_FOOTER_I18N_KEYS, PUBLIC_NAV_I18N_KEYS } from './public-keys.constants';
@@ -101,6 +102,7 @@ export const I18N_KEYS = {
   about: ABOUT_I18N_KEYS,
   contact: CONTACT_I18N_KEYS,
   landing: LANDING_I18N_KEYS,
+  publicPages: PUBLIC_PAGES_I18N_KEYS,
   teamDirectory: TEAM_DIRECTORY_I18N_KEYS,
   news: NEWS_I18N_KEYS,
   newsEditor: NEWS_EDITOR_I18N_KEYS,

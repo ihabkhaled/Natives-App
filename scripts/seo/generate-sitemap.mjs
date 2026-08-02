@@ -19,9 +19,20 @@ const SITE_URL = 'https://natives-frontend-app.vercel.app';
  * Extend this list as public pages ship.
  */
 const PUBLIC_ROUTES = [
-  { path: '/welcome', changefreq: 'weekly', priority: '1.0' },
+  // `/` is the site's front door — the marketing landing page. `/welcome` is
+  // the lightweight signed-out app entry kept alive for old deep links, so it
+  // is deliberately NOT listed: two URLs claiming to be the home page compete
+  // with each other.
+  { path: '/', changefreq: 'weekly', priority: '1.0' },
+  { path: '/ultimate', changefreq: 'monthly', priority: '0.8' },
   { path: '/about', changefreq: 'monthly', priority: '0.8' },
+  { path: '/spirit', changefreq: 'monthly', priority: '0.7' },
   { path: '/team', changefreq: 'monthly', priority: '0.8' },
+  { path: '/at-a-glance', changefreq: 'monthly', priority: '0.6' },
+  { path: '/gallery', changefreq: 'monthly', priority: '0.5' },
+  { path: '/location', changefreq: 'monthly', priority: '0.6' },
+  { path: '/news', changefreq: 'weekly', priority: '0.8' },
+  { path: '/tryouts', changefreq: 'weekly', priority: '0.9' },
   { path: '/contact', changefreq: 'monthly', priority: '0.6' },
   // Public competitions showcase. Per-competition pages are intentionally
   // absent: their slugs come from the (not yet live) showcase endpoint, and a

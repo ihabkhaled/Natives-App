@@ -10,6 +10,20 @@ export const APP_PATHS = {
   contact: '/contact',
   team: '/team',
   /**
+   * The public marketing site is split across dedicated pages rather than one
+   * scrolling landing page: `/` is a curated front door that teases each of
+   * these and links to it. Each page owns one subject so it can carry its own
+   * title, description and canonical URL — a single long page can only ever
+   * rank for one of them.
+   */
+  ultimate: '/ultimate',
+  spirit: '/spirit',
+  gallery: '/gallery',
+  location: '/location',
+  publicAchievements: '/at-a-glance',
+  teamStaff: '/team/staff',
+  teamPlayers: '/team/players',
+  /**
    * Public competitions showcase (signed-out). `/competitions` and
    * `/competitions/:competitionId` already belong to the authenticated
    * competitions workspace, so the marketing pages live under `/results`;

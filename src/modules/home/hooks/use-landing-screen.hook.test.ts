@@ -97,13 +97,24 @@ describe('useLandingScreen', () => {
     expect(ihab?.titles).toEqual(['Analysis', 'Technical', 'Co-Coach']);
   });
 
-  it('presents the active players, matches, leaderboard, and news seams as honestly empty', () => {
-    const { activePlayers, matchScores, leaderboard, news } = renderLanding().result.current.screen;
+  it('presents the news seam as honestly empty', () => {
+    const { news } = renderLanding().result.current.screen;
 
-    expect(activePlayers.chrome.status).toBe('empty');
-    expect(matchScores.chrome.status).toBe('empty');
-    expect(leaderboard.chrome.status).toBe('empty');
     expect(news.chrome.status).toBe('empty');
+  });
+
+  it('links every teaser through to the page that owns that subject', () => {
+    const screen = renderLanding().result.current.screen;
+
+    for (const link of [
+      screen.explainerLink,
+      screen.staffLink,
+      screen.competitionsLink,
+      screen.newsLink,
+    ]) {
+      expect(link.label).not.toBe('');
+      expect(typeof link.onClick).toBe('function');
+    }
   });
 
   it('seeds the competitions seam with the two entered competitions and a pending rank', () => {
@@ -119,24 +130,9 @@ describe('useLandingScreen', () => {
     );
   });
 
-  it('reuses the About page spirit-of-the-game copy verbatim', () => {
-    const { spiritValues } = renderLanding().result.current.screen;
+  it('lists the social links', () => {
+    const { social } = renderLanding().result.current.screen;
 
-    expect(spiritValues.heading).toBe('Spirit of the Game');
-    expect(spiritValues.values).toHaveLength(4);
-  });
-
-  it('lists the real location, gallery, achievements, and social sections', () => {
-    const { location, gallery, achievements, social } = renderLanding().result.current.screen;
-
-    expect(location.address).toBe('El Sheikh Zayed, Giza, Egypt');
-    expect(gallery.tiles.length).toBeGreaterThan(0);
-    expect(achievements.items.map((item) => item.key)).toEqual([
-      'founded',
-      'roster',
-      'location',
-      'competitions',
-    ]);
     expect(social.links.map((link) => link.key)).toEqual(['facebook', 'instagram', 'tiktok']);
   });
 });

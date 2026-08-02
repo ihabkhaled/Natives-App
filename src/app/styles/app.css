@@ -5963,6 +5963,14 @@ ion-spinner {
   padding-inline: var(--app-gutter-public);
 }
 
+/* The "see more" link under a landing teaser. Pulled up against the section it
+   belongs to, so it reads as part of that block rather than a peer of it. */
+.app-landing-more {
+  display: flex;
+  justify-content: flex-start;
+  margin-block-start: calc(var(--un-space-4) * -1);
+}
+
 .app-landing-hero {
   position: relative;
   isolation: isolate;
@@ -6014,6 +6022,18 @@ ion-spinner {
   display: grid;
   gap: var(--un-space-4);
   grid-template-columns: minmax(0, 1fr);
+}
+
+/* Season-Board portrait. The source graphics are 4:5 with the subject in the
+   upper half, so the crop is anchored to the top — centring it decapitates
+   everyone. */
+.app-landing-staff-card__photo {
+  inline-size: 100%;
+  aspect-ratio: 4 / 5;
+  object-fit: cover;
+  object-position: center top;
+  border-radius: var(--un-radius-md);
+  background: color-mix(in srgb, var(--app-ink) 8%, transparent);
 }
 
 .app-landing-staff-card,

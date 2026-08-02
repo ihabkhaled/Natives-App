@@ -24,7 +24,17 @@ export function LandingStaffDirectory(props: LandingStaffDirectoryProps): React.
             className="app-landing-staff-card"
             data-testid={`${TEST_IDS.landingStaffCard}-${member.id}`}
           >
-            <AvatarFallback name={member.name} label={member.avatarLabel} size="lg" />
+            {member.photoUrl === null ? (
+              <AvatarFallback name={member.name} label={member.avatarLabel} size="lg" />
+            ) : (
+              <img
+                src={member.photoUrl}
+                alt={member.avatarLabel}
+                className="app-landing-staff-card__photo"
+                loading="lazy"
+                decoding="async"
+              />
+            )}
             <IonText>
               <h3 className="m-0 text-base font-bold">{member.name}</h3>
             </IonText>

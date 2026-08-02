@@ -2951,7 +2951,10 @@
     "switchToDark": "التبديل إلى الوضع الداكن",
     "switchToLight": "التبديل إلى الوضع الفاتح",
     "switchToArabic": "العرض بالعربية",
-    "switchToEnglish": "العرض بالإنجليزية"
+    "switchToEnglish": "العرض بالإنجليزية",
+    "ultimate": "اللعبة",
+    "results": "النتائج",
+    "news": "الأخبار"
   },
   "publicFooter": {
     "label": "تذييل الموقع",
@@ -3286,5 +3289,33 @@
     "errorNetworkMessage": "لم يتم إرسال رسالتك. تحقق من اتصالك ثم حاول مرة أخرى.",
     "errorUnexpectedTitle": "لم يتم إرسال رسالتك",
     "errorUnexpectedMessage": "حدث خطأ من جانبنا. حاول مرة أخرى، أو تواصل معنا عبر وسائل التواصل الاجتماعي باستخدام الروابط أدناه."
+  },
+  "publicPages": {
+    "ultimateEyebrow": "جديد على اللعبة؟",
+    "ultimateTitle": "ما هي رياضة الألتيميت فريزبي؟",
+    "ultimateMetaTitle": "ما هي رياضة الألتيميت فريزبي؟ — ألتيميت نيتيفز",
+    "ultimateMetaDescription": "الألتيميت رياضة جماعية سريعة الإيقاع بلا احتكاك، تُلعب بقرص طائر ويحكمها اللاعبون أنفسهم. تعرّف على الأساسيات قبل أن تنضم إلينا في الشيخ زايد.",
+    "spiritEyebrow": "كيف نلعب",
+    "spiritTitle": "روح اللعبة",
+    "spiritMetaTitle": "روح اللعبة — ألتيميت نيتيفز",
+    "spiritMetaDescription": "الألتيميت بلا حكام. القيم التي تحفظ نزاهة مبارياتنا ومتعتها: الإنصاف والاحترام والبهجة والاجتهاد — روح اللعبة لدى ألتيميت نيتيفز.",
+    "galleryEyebrow": "داخل الملعب",
+    "galleryTitle": "معرض الصور",
+    "galleryMetaTitle": "معرض الصور — ألتيميت نيتيفز",
+    "galleryMetaDescription": "لحظات من الموسم مع ألتيميت نيتيفز، فريق الألتيميت فريزبي من الشيخ زايد، الجيزة، مصر.",
+    "locationEyebrow": "أين تجدنا",
+    "locationTitle": "ملعبنا",
+    "locationMetaTitle": "أين نلعب — ألتيميت نيتيفز، الشيخ زايد",
+    "locationMetaDescription": "يتدرب ألتيميت نيتيفز ويلعب في الشيخ زايد، الجيزة، مصر. إرشادات الوصول إلى ملعبنا وكيفية العثور علينا.",
+    "achievementsEyebrow": "بالأرقام",
+    "achievementsTitle": "ألتيميت نيتيفز في لمحة",
+    "achievementsMetaTitle": "سجلّنا — ألتيميت نيتيفز",
+    "achievementsMetaDescription": "تأسس في أكتوبر ٢٠٢١، ٢٥ لاعبًا، ومقره الشيخ زايد بالجيزة. البطولات التي خاضها ألتيميت نيتيفز هذا الموسم في لمحة.",
+    "navUltimate": "اللعبة",
+    "navSpirit": "روح اللعبة",
+    "navGallery": "الصور",
+    "navLocation": "أين تجدنا",
+    "navAchievements": "في لمحة",
+    "seeAll": "اعرف المزيد"
   }
 }
