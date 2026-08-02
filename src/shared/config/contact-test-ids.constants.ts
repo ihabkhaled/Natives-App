@@ -4,7 +4,9 @@
  */
 export const CONTACT_TEST_IDS = {
   contactPage: 'contact-page',
-  contactUnavailableNotice: 'contact-unavailable-notice',
+  contactForm: 'contact-form',
+  contactNotice: 'contact-notice',
+  contactNoticeRetry: 'contact-notice-retry',
   contactEmailInput: 'contact-email-input',
   contactSubjectInput: 'contact-subject-input',
   contactMessageInput: 'contact-message-input',

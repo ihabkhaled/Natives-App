@@ -5846,8 +5846,28 @@ ion-spinner {
   font-size: var(--un-font-size-sm);
 }
 
+.app-contact-notice--success {
+  border-color: color-mix(in srgb, var(--ion-color-success) 32%, transparent);
+  background: color-mix(in srgb, var(--ion-color-success) 10%, transparent);
+}
+
+.app-contact-notice--warning {
+  border-color: color-mix(in srgb, var(--ion-color-warning) 32%, transparent);
+  background: color-mix(in srgb, var(--ion-color-warning) 12%, transparent);
+}
+
+.app-contact-notice--error {
+  border-color: color-mix(in srgb, var(--ion-color-danger) 32%, transparent);
+  background: color-mix(in srgb, var(--ion-color-danger) 10%, transparent);
+}
+
 .app-contact-notice__title {
   font-weight: var(--un-font-weight-bold);
+}
+
+.app-contact-notice__actions {
+  display: flex;
+  margin-block-start: var(--un-space-2);
 }
 
 .app-contact-social-list {

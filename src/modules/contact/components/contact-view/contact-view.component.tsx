@@ -2,9 +2,10 @@ import { IonText } from '@/packages/ionic';
 import { TEST_IDS } from '@/shared/config';
 import { AppButton, AppInput, PageSeo, PageShell, ReasonField, SectionPanel } from '@/shared/ui';
 
+import { ContactNotice } from '../contact-notice';
 import type { ContactViewProps } from './contact-view.types';
 
-/** Static Contact Us screen: intro, a real (but not-yet-live) form, and social links. */
+/** Contact Us screen: intro, the live message form, and social links. */
 export function ContactView(props: ContactViewProps): React.JSX.Element {
   return (
     <PageShell title={props.heroTitle} testId={TEST_IDS.contactPage}>
@@ -23,16 +24,13 @@ export function ContactView(props: ContactViewProps): React.JSX.Element {
         </header>
 
         <SectionPanel heading={props.heroTitle}>
-          <form onSubmit={props.form.onSubmit} noValidate className="flex flex-col gap-4">
-            <div
-              role="status"
-              aria-live="polite"
-              className="app-contact-notice"
-              data-testid={TEST_IDS.contactUnavailableNotice}
-            >
-              <p className="app-contact-notice__title m-0">{props.unavailableTitle}</p>
-              <p className="m-0">{props.unavailableMessage}</p>
-            </div>
+          <form
+            onSubmit={props.form.onSubmit}
+            noValidate
+            data-testid={TEST_IDS.contactForm}
+            className="flex flex-col gap-4"
+          >
+            <ContactNotice notice={props.notice} />
 
             <AppInput
               label={props.emailLabel}
@@ -44,6 +42,7 @@ export function ContactView(props: ContactViewProps): React.JSX.Element {
               placeholder={props.emailPlaceholder}
               errorMessage={props.form.email.errorMessage}
               autocomplete="email"
+              disabled={!props.isFormEnabled}
               testId={TEST_IDS.contactEmailInput}
             />
             <AppInput
@@ -54,6 +53,7 @@ export function ContactView(props: ContactViewProps): React.JSX.Element {
               onBlur={props.form.subject.onBlur}
               placeholder={props.subjectPlaceholder}
               errorMessage={props.form.subject.errorMessage}
+              disabled={!props.isFormEnabled}
               testId={TEST_IDS.contactSubjectInput}
             />
             <ReasonField

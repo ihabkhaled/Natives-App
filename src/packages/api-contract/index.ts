@@ -25,6 +25,8 @@ export type {
   BackendApiOperations,
   BackendApiPaths,
   BackendApiSchemas,
+  ContactRequestContract,
+  ContactResponseContract,
   CreateSubmissionRequestContract,
   CurrentUserResponseContract,
   DashboardSummaryContract,

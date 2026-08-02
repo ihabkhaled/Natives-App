@@ -1,12 +1,15 @@
-import { useState } from 'react';
+import { useEffect } from 'react';
 
 import { useAppTranslation } from '@/packages/i18n';
 import { SOCIAL_LINKS } from '@/shared/config';
 import { I18N_KEYS } from '@/shared/i18n';
 
 import { CONTACT_FORM_ENABLED } from '../contact.constants';
+import { resolveRejectedContactFields } from '../helpers/contact-field-errors.helper';
+import { buildContactNotice } from '../helpers/contact-notice.helper';
+import { useSubmitContactMutation } from '../mutations/use-submit-contact-mutation.hook';
 import { contactPath } from '../routes/contact.paths';
-import { submitContactRequest } from '../services/submit-contact.service';
+import type { ContactNoticeView } from '../types/contact.types';
 import { useContactForm, type ContactFormView } from './use-contact-form.hook';
 
 interface ContactSocialLink {
@@ -23,8 +26,7 @@ export interface ContactScreenView {
   readonly heroTitle: string;
   readonly heroIntro: string;
   readonly isFormEnabled: boolean;
-  readonly unavailableTitle: string;
-  readonly unavailableMessage: string;
+  readonly notice: ContactNoticeView | null;
   readonly emailLabel: string;
   readonly emailPlaceholder: string;
   readonly subjectLabel: string;
@@ -41,27 +43,29 @@ export interface ContactScreenView {
 }
 
 /**
- * View model for the Contact Us screen. Fields validate for real (the same
- * bounds the backend DTO will enforce). The submit *button* is disabled by
- * `isFormEnabled` (from `CONTACT_FORM_ENABLED`) so a visitor can never fire
- * a request to the not-yet-live endpoint; the handler here always calls the
- * stub seam on a valid submit — harmless today (it makes no network call and
- * always reports "unavailable"), and already wired for the day the flag
- * flips, with nothing left to change in this hook.
+ * View model for the Contact Us screen. A valid submit goes straight to the
+ * live `POST /contact` relay; the single notice region announces the outcome
+ * — sent, rejected, rate-limited, or channel-unavailable — and the form is
+ * cleared only once the send is confirmed, so a failure never loses what the
+ * visitor wrote.
  */
 export function useContactScreen(): ContactScreenView {
   const { t } = useAppTranslation();
   const keys = I18N_KEYS.contact;
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const mutation = useSubmitContactMutation();
   const form = useContactForm({
     translate: t,
-    onValidSubmit: (values) => {
-      setIsSubmitting(true);
-      void submitContactRequest(values).finally(() => {
-        setIsSubmitting(false);
-      });
-    },
+    onValidSubmit: mutation.submit,
+    rejectedFields: resolveRejectedContactFields(mutation.error),
+    rejectedFieldMessage: t(keys.errorFieldRejected),
   });
+  const { reset } = form;
+  const { isSent } = mutation;
+  useEffect(() => {
+    if (isSent) {
+      reset();
+    }
+  }, [isSent, reset]);
   return {
     path: contactPath(),
     seoTitle: `${t(keys.title)} — ${t(I18N_KEYS.common.appName)}`,
@@ -70,8 +74,13 @@ export function useContactScreen(): ContactScreenView {
     heroTitle: t(keys.heroTitle),
     heroIntro: t(keys.heroIntro),
     isFormEnabled: CONTACT_FORM_ENABLED,
-    unavailableTitle: t(keys.unavailableTitle),
-    unavailableMessage: t(keys.unavailableMessage),
+    notice: buildContactNotice({
+      translate: t,
+      isFormEnabled: CONTACT_FORM_ENABLED,
+      isSent,
+      error: mutation.error,
+      onRetry: mutation.retry,
+    }),
     emailLabel: t(keys.emailLabel),
     emailPlaceholder: t(keys.emailPlaceholder),
     subjectLabel: t(keys.subjectLabel),
@@ -80,7 +89,7 @@ export function useContactScreen(): ContactScreenView {
     messagePlaceholder: t(keys.messagePlaceholder),
     submitLabel: t(keys.submit),
     submittingLabel: t(keys.submitting),
-    isSubmitting,
+    isSubmitting: mutation.isSubmitting,
     form,
     socialHeading: t(keys.socialHeading),
     socialIntro: t(keys.socialIntro),

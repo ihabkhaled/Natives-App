@@ -12,6 +12,7 @@ import { resetMockAchievementsState } from './achievements.fixture';
 import { assessmentsHandlers } from './assessments-handlers';
 import { resetMockAssessmentsState } from './assessments.fixture';
 import { competitionsHandlers } from './competitions-handlers';
+import { contactHandlers } from './contact-handlers';
 import { buildDashboardSummaryResponse } from './dashboard-summary.fixture';
 import { attendanceHandlers } from './attendance-handlers';
 import { resetMockAttendanceState } from './attendance.fixture';
@@ -247,4 +248,5 @@ export const mockApiHandlers = [
   ...teamsHandlers,
   ...teamDirectoryHandlers,
   ...recoveryHandlers,
+  ...contactHandlers,
 ];

@@ -11,7 +11,11 @@ import type { PublicFooterView } from './public-footer.types';
 
 /**
  * Prepared view model for the signed-out marketing footer. Shares the same
- * anonymous-only visibility rule as the public navbar.
+ * anonymous-only visibility rule as the public navbar, and — like the navbar —
+ * is composed once as router-level chrome, so it already wraps every anonymous
+ * route: welcome, login, forgot/reset password, accept-invitation, about,
+ * contact, tryout registration, and the 404 fallback. Nothing is composed per
+ * screen; a footer added inside a screen would double up under this one.
  */
 export function usePublicFooter(): PublicFooterView {
   const session = useSession();
