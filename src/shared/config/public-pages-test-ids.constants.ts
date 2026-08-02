@@ -8,6 +8,8 @@ export const PUBLIC_PAGES_TEST_IDS = {
   spiritPage: 'spirit-page',
   galleryPage: 'gallery-page',
   locationPage: 'location-page',
-  achievementsPage: 'achievements-page',
+  // publicAchievementsPage, not achievementsPage: standings-test-ids.constants.ts
+  // already claims 'achievements-page' for the protected standings screen.
+  publicAchievementsPage: 'public-achievements-page',
   landingSectionMore: 'landing-section-more',
 } as const;

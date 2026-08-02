@@ -14,7 +14,7 @@ describe('buildStaffDirectorySection', () => {
     const sherif = section.members.find((member) => member.id === 'sherif-ashraf');
     expect(sherif?.titles).toEqual(['t:landing.staffTitleCoach']);
     expect(sherif?.avatarLabel).toBe('t:landing.staffAvatarLabel:{"name":"Sherif Ashraf"}');
-    expect(sherif?.photoUrl).toBeNull();
+    expect(sherif?.photoUrl).toBe('/staff/sherif-ashraf.jpg');
   });
 
   it('gives every staff title a translated label', () => {
@@ -24,7 +24,6 @@ describe('buildStaffDirectorySection', () => {
     expect(ihab?.titles).toEqual([
       't:landing.staffTitleAnalysis',
       't:landing.staffTitleTechnical',
-      't:landing.staffTitleCoCoach',
     ]);
   });
 });

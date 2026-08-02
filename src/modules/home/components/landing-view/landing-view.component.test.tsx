@@ -31,9 +31,6 @@ describe('LandingView', () => {
 
     expect(screen.getByTestId(TEST_IDS.landingExplainer)).toBeInTheDocument();
     expect(screen.getByTestId(TEST_IDS.landingAboutPreview)).toBeInTheDocument();
-    expect(screen.getByTestId(TEST_IDS.landingSpiritValues)).toBeInTheDocument();
-    expect(screen.getByTestId(TEST_IDS.landingLocation)).toBeInTheDocument();
-    expect(screen.getByTestId(TEST_IDS.landingGallery)).toBeInTheDocument();
     expect(screen.getByTestId(TEST_IDS.landingSocial)).toBeInTheDocument();
     expect(screen.getByTestId(TEST_IDS.landingFinalCta)).toBeInTheDocument();
   });
@@ -43,19 +40,17 @@ describe('LandingView', () => {
 
     expect(screen.getByTestId(TEST_IDS.landingStaff)).toBeInTheDocument();
     expect(screen.getByTestId('landing-staff-card-sherif-ashraf')).toBeInTheDocument();
-    expect(screen.getByTestId(TEST_IDS.landingPlayersEmpty)).toBeInTheDocument();
     expect(screen.getByTestId(TEST_IDS.landingCompetitions)).toBeInTheDocument();
-    expect(screen.getByTestId(TEST_IDS.landingMatchesEmpty)).toBeInTheDocument();
-    expect(screen.getByTestId(TEST_IDS.landingLeaderboardEmpty)).toBeInTheDocument();
     expect(screen.getByTestId(TEST_IDS.landingNewsEmpty)).toBeInTheDocument();
   });
 
-  it('lists the achievement facts', () => {
+  it('links each teaser through to the page that owns that subject', () => {
     render(<LandingView {...view()} />);
 
-    const facts = screen.getByTestId(TEST_IDS.landingAchievements);
-    expect(facts).toHaveTextContent('October 2021');
-    expect(facts).toHaveTextContent('25 players');
+    expect(screen.getByTestId(`${TEST_IDS.landingSectionMore}-ultimate`)).toBeInTheDocument();
+    expect(screen.getByTestId(`${TEST_IDS.landingSectionMore}-team`)).toBeInTheDocument();
+    expect(screen.getByTestId(`${TEST_IDS.landingSectionMore}-results`)).toBeInTheDocument();
+    expect(screen.getByTestId(`${TEST_IDS.landingSectionMore}-news`)).toBeInTheDocument();
   });
 
   it('links every social profile out safely', () => {

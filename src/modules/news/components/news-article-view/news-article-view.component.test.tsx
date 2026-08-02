@@ -29,7 +29,9 @@ describe('NewsArticleView', () => {
       />,
     );
 
-    expect(screen.getByText('Part of a competition')).toBeInTheDocument();
+    // StatusChip renders its label twice for accessibility (a visually hidden
+    // copy plus an aria-hidden visible one), so both matches are expected.
+    expect(screen.getAllByText('Part of a competition')).toHaveLength(2);
   });
 
   it('shows a skeleton and hides the story while the read is pending', () => {

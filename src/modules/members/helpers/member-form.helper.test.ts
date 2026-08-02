@@ -8,10 +8,14 @@ import {
 } from './member-form.helper';
 
 describe('member-form.helper', () => {
-  it('parses jersey input', () => {
+  it('keeps a shirt number verbatim, including any leading zero', () => {
     expect(parseJerseyInput('')).toBeNull();
     expect(parseJerseyInput('abc')).toBeNull();
-    expect(parseJerseyInput('12')).toBe(12);
+    expect(parseJerseyInput('12')).toBe('12');
+    expect(parseJerseyInput('011')).toBe('011');
+    expect(parseJerseyInput('  7  ')).toBe('7');
+    expect(parseJerseyInput('12345')).toBeNull();
+    expect(parseJerseyInput('-1')).toBeNull();
   });
 
   it('normalizes required and optional text', () => {

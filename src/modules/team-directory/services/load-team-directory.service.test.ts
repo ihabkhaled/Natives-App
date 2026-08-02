@@ -78,7 +78,7 @@ describe('loadTeamDirectory (TODO seam)', () => {
     const { players } = await loadTeamDirectory(TEAM_DIRECTORY_SLUG);
 
     expect(players.slice(0, 6).map((player) => player.jerseyNumber)).toEqual([
-      2, 4, 11, 22, 23, 33,
+      '2', '4', '11', '22', '23', '33',
     ]);
     expect(players.slice(6).every((player) => player.jerseyNumber === null)).toBe(true);
   });

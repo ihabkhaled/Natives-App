@@ -73,7 +73,7 @@ describe('useNewsEditor', () => {
   it('warns that writes go nowhere while the 1.8.0 seam is a stub', async () => {
     const { result } = await renderEditor();
 
-    expect(result.current.notice).toContain('not connected yet');
+    expect(result.current.notice).toContain('nothing you type is sent anywhere');
   });
 
   it('starts a new draft with an empty form and no revision warning', async () => {
@@ -124,7 +124,9 @@ describe('useNewsEditor', () => {
     });
 
     await waitFor(() => {
-      expect(doubles.publish).toHaveBeenCalledWith('news-2');
+      // mutate() forwards a React Query options object as a second argument;
+      // only the story id this call actually chose is under test here.
+      expect(doubles.publish.mock.calls[0]?.[0]).toBe('news-2');
     });
     await waitFor(() => {
       expect(doubles.showToast).toHaveBeenCalledWith({

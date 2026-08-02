@@ -94,7 +94,7 @@ describe('useLandingScreen', () => {
     expect(staffDirectory.chrome.status).toBe('ready');
     expect(staffDirectory.members).toHaveLength(9);
     const ihab = staffDirectory.members.find((member) => member.id === 'ihab-khaled');
-    expect(ihab?.titles).toEqual(['Analysis', 'Technical', 'Co-Coach']);
+    expect(ihab?.titles).toEqual(['Analysis', 'Technical']);
   });
 
   it('presents the news seam as honestly empty', () => {

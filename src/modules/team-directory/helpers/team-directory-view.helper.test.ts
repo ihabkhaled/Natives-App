@@ -120,7 +120,7 @@ describe('buildRosterCardViews', () => {
 
     expect(cards[0]?.jersey).toEqual({
       text: '11',
-      label: 'teamDirectory.jerseyLabel({"number":11})',
+      label: 'teamDirectory.jerseyLabel({"number":"11"})',
     });
   });
 

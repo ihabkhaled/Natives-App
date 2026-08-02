@@ -1,4 +1,4 @@
-import { act } from '@testing-library/react';
+import { act, waitFor } from '@testing-library/react';
 import { beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { buildNewsArticle } from '../../../../tests/factories/news.factory';
@@ -23,14 +23,14 @@ vi.mock('@/packages/router', () => ({
   useRouteParam: () => doubles.slug,
 }));
 
-async function renderArticle() {
-  const rendered = renderHookWithProviders(() => useNewsArticle(), {
+// The hook resolves through useAppQuery (React Query), which settles over
+// several render/microtask cycles — a single flushed tick leaves status stuck
+// at "loading". `waitFor` polls until the query has actually settled, the same
+// pattern used by every other React-Query-backed hook test in this codebase.
+function renderArticle(): ReturnType<typeof renderHookWithProviders<ReturnType<typeof useNewsArticle>>> {
+  return renderHookWithProviders(() => useNewsArticle(), {
     initialPath: '/news/first-league-win',
   });
-  await act(async () => {
-    await Promise.resolve();
-  });
-  return rendered;
 }
 
 beforeAll(async () => {
@@ -45,15 +45,20 @@ beforeEach(() => {
 
 describe('useNewsArticle', () => {
   it('says the story could not be found rather than "no stories"', async () => {
-    const { result } = await renderArticle();
+    const { result } = renderArticle();
 
-    expect(result.current.status).toBe('empty');
+    await waitFor(() => {
+      expect(result.current.status).toBe('empty');
+    });
     expect(result.current.emptyTitle).toBe('We could not find that story');
   });
 
   it('falls back to the site description when there is no story to summarize', async () => {
-    const { result } = await renderArticle();
+    const { result } = renderArticle();
 
+    await waitFor(() => {
+      expect(result.current.status).toBe('empty');
+    });
     expect(result.current.seoDescription).toContain('Ultimate Natives');
     expect(result.current.seoImageUrl).toBeNull();
     expect(result.current.seoPublishedTime).toBeNull();
@@ -61,9 +66,11 @@ describe('useNewsArticle', () => {
 
   it('builds article SEO facts from a resolved story', async () => {
     doubles.result = { status: 'ready', article: buildNewsArticle() };
-    const { result } = await renderArticle();
+    const { result } = renderArticle();
 
-    expect(result.current.status).toBe('ready');
+    await waitFor(() => {
+      expect(result.current.status).toBe('ready');
+    });
     expect(result.current.seoTitle).toBe('First league win — Ultimate Natives');
     expect(result.current.seoDescription).toBe('The Natives took the opener 15-12.');
     expect(result.current.seoImageUrl).toBe('https://cdn.example.com/first-win.jpg');
@@ -73,26 +80,39 @@ describe('useNewsArticle', () => {
 
   it('parses the body into typed blocks instead of handing the view markup', async () => {
     doubles.result = { status: 'ready', article: buildNewsArticle() };
-    const { result } = await renderArticle();
+    const { result } = renderArticle();
 
+    await waitFor(() => {
+      expect(result.current.blocks.length).toBeGreaterThan(0);
+    });
     expect(result.current.blocks.map((block) => block.kind)).toEqual(['heading', 'paragraph']);
   });
 
   it('parses nothing when there is no story yet', async () => {
-    const { result } = await renderArticle();
+    const { result } = renderArticle();
 
+    await waitFor(() => {
+      expect(result.current.status).toBe('empty');
+    });
     expect(result.current.blocks).toEqual([]);
   });
 
   it('names the domain records the story is attached to', async () => {
     doubles.result = { status: 'ready', article: buildNewsArticle({ matchId: 'm1' }) };
-    const { result } = await renderArticle();
+    const { result } = renderArticle();
 
+    await waitFor(() => {
+      expect(result.current.status).toBe('ready');
+    });
     expect(result.current.linkLabels).toEqual(['Linked to a match']);
   });
 
   it('returns to the list', async () => {
-    const { result } = await renderArticle();
+    const { result } = renderArticle();
+
+    await waitFor(() => {
+      expect(result.current.status).toBe('empty');
+    });
     act(() => {
       result.current.onBack();
     });
@@ -102,8 +122,10 @@ describe('useNewsArticle', () => {
 
   it('tolerates a route with no slug at all', async () => {
     doubles.slug = null;
-    const { result } = await renderArticle();
+    const { result } = renderArticle();
 
-    expect(result.current.path).toBe('/news/');
+    await waitFor(() => {
+      expect(result.current.path).toBe('/news/');
+    });
   });
 });

@@ -7,20 +7,46 @@ import { HomeContainer } from '../containers/home.container';
 import { LandingContainer } from '../containers/landing.container';
 import { NotFoundContainer } from '../containers/not-found.container';
 import { WelcomeContainer } from '../containers/welcome.container';
-import { aboutPath, homePath, rootPath, welcomePath } from './home.paths';
+import {
+  aboutPath,
+  achievementsPath,
+  galleryPath,
+  homePath,
+  locationPath,
+  rootPath,
+  spiritPath,
+  ultimatePath,
+  welcomePath,
+} from './home.paths';
 import { getHomeRouteDefinitions, getNotFoundRouteDefinition } from './home.routes';
 
 describe('getHomeRouteDefinitions', () => {
-  it('exposes the landing, welcome, about, and home routes, in that order', () => {
+  it('exposes the landing, welcome, about, the standalone subject pages, and home, in that order', () => {
     const definitions = getHomeRouteDefinitions();
 
-    expect(definitions).toHaveLength(4);
+    expect(definitions).toHaveLength(9);
     expect(definitions.map((definition) => definition.path)).toEqual([
       rootPath(),
       welcomePath(),
       aboutPath(),
+      ultimatePath(),
+      spiritPath(),
+      galleryPath(),
+      locationPath(),
+      achievementsPath(),
       homePath(),
     ]);
+  });
+
+  it('keeps every standalone subject page public, exact, and unauthenticated-readable', () => {
+    const definitions = getHomeRouteDefinitions();
+    const subjectPaths = [ultimatePath(), spiritPath(), galleryPath(), locationPath(), achievementsPath()];
+
+    for (const path of subjectPaths) {
+      const route = definitions.find((definition) => definition.path === path);
+      expect(route?.exact).toBe(true);
+      expect(route?.access).toBe(ROUTE_ACCESS.Public);
+    }
   });
 
   it('keeps the landing page public for signed-in and signed-out visitors alike', () => {
@@ -53,7 +79,7 @@ describe('getHomeRouteDefinitions', () => {
   });
 
   it('protects the home screen behind a session', () => {
-    const [, , , home] = getHomeRouteDefinitions();
+    const home = getHomeRouteDefinitions().find((definition) => definition.path === homePath());
 
     expect(home!.path).toBe('/home');
     expect(home!.exact).toBe(true);
@@ -62,7 +88,7 @@ describe('getHomeRouteDefinitions', () => {
   });
 
   it('is a permission-free primary navigation destination', () => {
-    const [, , , home] = getHomeRouteDefinitions();
+    const home = getHomeRouteDefinitions().find((definition) => definition.path === homePath());
 
     expect(home!.meta?.permissions).toEqual([]);
     expect(home!.meta?.nav).toEqual({
