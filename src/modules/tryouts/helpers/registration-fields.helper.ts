@@ -93,6 +93,11 @@ export interface RegistrationChromeInput {
   readonly formatInstant: (iso: string) => string;
 }
 
+/** The version the candidate is actually shown: the event's, or the app default. */
+function consentVersionOf(selected: TryoutEvent | null): string {
+  return selected?.consentVersion ?? CONSENT_VERSION;
+}
+
 /**
  * The event picker plus the consent gate. A full session says so rather than
  * silently accepting a registration it cannot honour.
@@ -110,7 +115,9 @@ export function buildRegistrationChrome(
       label: `${item.name} — ${input.formatInstant(item.heldAt)}`,
     })),
     capacityNotice: isFull ? t(I18N_KEYS.tryouts.capacityFullNotice) : null,
-    consentVersionLabel: t(I18N_KEYS.tryouts.consentVersionLabel, { version: CONSENT_VERSION }),
+    consentVersionLabel: t(I18N_KEYS.tryouts.consentVersionLabel, {
+      version: consentVersionOf(selected),
+    }),
     consentGiven: input.consentGiven,
     consentError: input.consentGiven ? null : t(I18N_KEYS.tryouts.consentRequired),
     submitLabel: input.isSubmitting

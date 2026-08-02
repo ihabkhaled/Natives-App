@@ -1,8 +1,8 @@
-import { TryoutRegistrationView } from '../components/tryout-registration-view';
-import { useTryoutRegistration } from '../hooks/use-tryout-registration.hook';
+import { PublicTryoutsView } from '../components/public-tryouts-view';
+import { usePublicTryouts } from '../hooks/use-public-tryouts.hook';
 
-/** The public candidate registration screen. */
+/** The public tryouts screen: open sessions plus the application form. */
 export function TryoutRegistrationContainer(): React.JSX.Element {
-  const view = useTryoutRegistration();
-  return <TryoutRegistrationView {...view} />;
+  const view = usePublicTryouts();
+  return <PublicTryoutsView {...view} />;
 }

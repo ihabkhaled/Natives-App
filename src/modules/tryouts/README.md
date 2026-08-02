@@ -32,17 +32,39 @@ mappers/tryout.mapper.ts                wire DTO -> app domain, preserving restr
 gateways/tryouts.gateway.ts             exact public + authenticated calls (React-free)
 services/*.service.ts                   one use case each; HttpError -> AppError
 queries/tryouts.keys.ts|.query.ts       cache keys + query options
-hooks/use-tryout-registration.hook.ts   the public consent-gated registration form
+constants/public-tryouts.constants.ts   the "what happens next" step table the public page renders
+hooks/use-public-tryouts.hook.ts        the public screen: open sessions + the application form
+hooks/use-registration-draft.hook.ts    the application draft, its result, and the failure flag
 hooks/use-tryout-workspace.hook.ts      staff candidate roll + check-in + selected candidate
 hooks/use-candidate-*.hook.ts           evaluation, decision, conversion sub-panels
 mutations/*.hook.ts                     register, check in, evaluate, decide, convert
 helpers/candidate-view.helper.ts        rows, event facts, and the two restricted-block builders
 helpers/decision-view.helper.ts         score options, the null-score rule, conversion preview
-helpers/registration-*.helper.ts        draft validation, field models, consent gate
+helpers/public-tryouts.helper.ts        session cards, capacity meter, session selection
+helpers/registration-*.helper.ts        draft validation, field models, consent gate, form view
+components/public-tryouts-view/*        the public page: hero, sessions, form, outcome, steps
 components/*                            UI-only form, roll, restricted blocks, panels
 containers/*.container.tsx              one screen hook wired to one component
 routes/tryouts.paths.ts|.routes.ts      APP_PATHS builders + access policy
 ```
+
+## The public page (`/tryout-registration`)
+
+The only signed-out surface. It lists the open sessions from `GET /public/tryout-events` — date and
+time in Africa/Cairo via `@/packages/date`, venue, remaining places, and status — and binds the
+application form to the session the visitor picks. It carries its own `PageSeo` (title, description,
+canonical, Open Graph) and renders inside the router-level `PublicNavContainer` /
+`PublicFooterContainer` chrome, which every anonymous route already gets.
+
+It is honest in every state: a closed session is blocked with a reason and its action disabled, a
+full one says new applications join the waitlist, a duplicate email is reported as a duplicate, and
+a failed call says nothing was saved instead of showing a blank confirmation. The submit button,
+the in-flight notice, and the outcome are all announced through `role="status" aria-live="polite"`.
+
+> The public page is deliberately routed at `APP_PATHS.tryoutRegistration` (`/tryout-registration`)
+> rather than `/tryouts`: `/tryouts` is the team-scoped staff workspace, and the route table
+> requires unique paths (`src/app/router/route-registry.test.ts`). The public navbar and footer
+> already link here under the label "Tryouts".
 
 ## Privacy rules (the reason this module exists)
 

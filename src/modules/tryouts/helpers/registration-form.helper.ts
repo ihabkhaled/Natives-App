@@ -3,20 +3,12 @@ import { I18N_KEYS } from '@/shared/i18n';
 
 import { TRYOUT_LIMITS } from '../constants/tryouts.constants';
 import type { RegistrationResult } from '../types/tryouts.types';
-import type { RegistrationResultView } from '../types/tryouts-view.types';
+import type {
+  RegistrationDraft,
+  RegistrationOutcomeView,
+} from '../types/public-tryouts-view.types';
 
 type Translate = (key: string, params?: TranslateParams) => string;
-
-/** The raw values the public registration form collects. */
-export interface RegistrationDraft {
-  readonly tryoutId: string;
-  readonly fullName: string;
-  readonly preferredName: string;
-  readonly email: string;
-  readonly phone: string;
-  readonly birthYear: string;
-  readonly consentGiven: boolean;
-}
 
 export const EMPTY_REGISTRATION_DRAFT: RegistrationDraft = {
   tryoutId: '',
@@ -89,25 +81,34 @@ export function fieldError(
   return value.trim() !== '' && !isValid ? t(key) : null;
 }
 
+/**
+ * Every outcome the server can report gets its own honest copy and tone: a
+ * duplicate is not dressed up as a success, and a waitlist placement says so
+ * rather than implying a confirmed place.
+ */
 const OUTCOME_COPY = {
   registered: {
     title: I18N_KEYS.tryouts.registeredTitle,
     message: I18N_KEYS.tryouts.registeredMessage,
+    tone: 'success',
   },
   waitlisted: {
     title: I18N_KEYS.tryouts.waitlistedTitle,
     message: I18N_KEYS.tryouts.waitlistedMessage,
+    tone: 'warning',
   },
   duplicate: {
     title: I18N_KEYS.tryouts.duplicateTitle,
     message: I18N_KEYS.tryouts.duplicateMessage,
+    tone: 'medium',
   },
 } as const;
 
 export function buildRegistrationResultView(
   t: Translate,
   result: RegistrationResult | null,
-): RegistrationResultView | null {
+  onReset: () => void,
+): RegistrationOutcomeView | null {
   if (result === null) {
     return null;
   }
@@ -117,5 +118,8 @@ export function buildRegistrationResultView(
     message: t(copy.message),
     referenceLabel: t(I18N_KEYS.tryouts.referenceLabel),
     reference: result.reference,
+    tone: copy.tone,
+    resetLabel: t(I18N_KEYS.tryouts.publicApplyAnother),
+    onReset,
   };
 }
