@@ -8,6 +8,7 @@ import { getContactRouteDefinitions } from '@/modules/contact';
 import { getHomeRouteDefinitions, getNotFoundRouteDefinition } from '@/modules/home';
 import { getMatchesRouteDefinitions } from '@/modules/matches';
 import { getMembersRouteDefinitions } from '@/modules/members';
+import { getNewsRouteDefinitions } from '@/modules/news';
 import { getNotificationsRouteDefinitions } from '@/modules/notifications';
 import { getPointsRouteDefinitions } from '@/modules/points';
 import { getPracticeRouteDefinitions } from '@/modules/practice';
@@ -30,6 +31,7 @@ export function getAppRouteDefinitions(): readonly AppRouteDefinition[] {
     ...getContactRouteDefinitions(),
     ...getTeamDirectoryRouteDefinitions(),
     ...getPublicCompetitionsRouteDefinitions(),
+    ...getNewsRouteDefinitions(),
     ...getPracticeRouteDefinitions(),
     ...getAttendanceRouteDefinitions(),
     ...getMembersRouteDefinitions(),

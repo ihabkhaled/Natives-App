@@ -26,6 +26,10 @@ describe('getAppRouteDefinitions', () => {
       APP_PATHS.team,
       APP_PATHS.publicCompetitions,
       APP_PATHS.publicCompetitionDetail,
+      APP_PATHS.news,
+      // The literal editor path must precede the `:slug` pattern it shadows.
+      APP_PATHS.newsManage,
+      APP_PATHS.newsArticle,
       APP_PATHS.practices,
       APP_PATHS.practiceSession,
       APP_PATHS.attendance,

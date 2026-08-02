@@ -15,6 +15,7 @@ import {
   SCOREKEEPER_QUEUE_I18N_KEYS,
 } from './matches-keys.constants';
 import { MEMBERS_I18N_KEYS } from './members-keys.constants';
+import { NEWS_EDITOR_I18N_KEYS, NEWS_I18N_KEYS } from './news-keys.constants';
 import { NOTIFICATIONS_I18N_KEYS } from './notifications-keys.constants';
 import { POINTS_I18N_KEYS } from './points-keys.constants';
 import { PRACTICE_I18N_KEYS } from './practice-keys.constants';
@@ -100,6 +101,8 @@ export const I18N_KEYS = {
   contact: CONTACT_I18N_KEYS,
   landing: LANDING_I18N_KEYS,
   teamDirectory: TEAM_DIRECTORY_I18N_KEYS,
+  news: NEWS_I18N_KEYS,
+  newsEditor: NEWS_EDITOR_I18N_KEYS,
   auth: {
     loginTitle: 'auth.loginTitle',
     emailLabel: 'auth.emailLabel',

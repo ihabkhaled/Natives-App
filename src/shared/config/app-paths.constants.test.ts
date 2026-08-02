@@ -39,6 +39,9 @@ describe('APP_PATHS', () => {
       'memberProfile',
       'members',
       'myAttendance',
+      'news',
+      'newsArticle',
+      'newsManage',
       'notificationLink',
       'notificationPreferences',
       'notifications',
@@ -90,5 +93,17 @@ describe('APP_PATHS', () => {
   it('pins the two screens whose paths the deep-link policy also allows', () => {
     expect(APP_PATHS.root).toBe('/');
     expect(APP_PATHS.tryoutRegistration).toBe('/tryout-registration');
+  });
+
+  it('keeps the literal news editor path ahead of the slug pattern it shadows', () => {
+    // `/news/manage` and `/news/:slug` both match "/news/manage"; the router
+    // renders the first Route that matches, so the editor must be declared
+    // first or a signed-in editor lands on an article detail for slug
+    // "manage". `getNewsRouteDefinitions` owns that ordering.
+    const values = Object.values(APP_PATHS);
+
+    expect(values.indexOf(APP_PATHS.newsManage)).toBeLessThan(
+      values.indexOf(APP_PATHS.newsArticle),
+    );
   });
 });

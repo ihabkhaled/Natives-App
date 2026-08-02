@@ -56,6 +56,12 @@ const COACH_PERMISSIONS = [
   // A coach reads the team configuration but never changes it: the read-only
   // settings path is a real persona, not a test-only contrivance.
   PERMISSIONS.settingsRead,
+  // Newsroom authoring. Per the news domain spec the grant belongs to platform
+  // and team administrators, Coaches, and the Social Media & Marketing /
+  // Spirit Captain / Finance staff titles — never to a plain player. Placing
+  // it on the Coach bundle (which Team Admin extends) is what lets the
+  // permission-matrix test prove a member sees zero editing affordances.
+  PERMISSIONS.newsManage,
 ];
 
 /**
