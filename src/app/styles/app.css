@@ -96,6 +96,14 @@
   /* Frame */
   --app-gutter: var(--un-gutter-mobile);
   --app-tabbar-h: calc(var(--un-tabbar-height) + env(safe-area-inset-bottom));
+
+  /* Reading measure for the public marketing pages. These render in an
+     immersive shell with no Ionic padding, so without a measure they stretch
+     edge-to-edge on desktop. `--app-gutter-public` grows with the viewport so
+     the text never touches the frame on any width. */
+  --app-measure-wide: 1200px;
+  --app-measure-prose: 68ch;
+  --app-gutter-public: clamp(1rem, 4vw, 3rem);
 }
 
 :root:root.ion-palette-dark {
@@ -5786,7 +5794,11 @@ ion-spinner {
   display: flex;
   flex-direction: column;
   gap: var(--un-space-6);
-  padding-block-end: var(--un-space-8);
+  inline-size: 100%;
+  max-inline-size: var(--app-measure-wide);
+  margin-inline: auto;
+  padding-block: var(--un-space-6) var(--un-space-10);
+  padding-inline: var(--app-gutter-public);
 }
 
 .app-about-hero {
@@ -5835,7 +5847,11 @@ ion-spinner {
   display: flex;
   flex-direction: column;
   gap: var(--un-space-6);
-  padding-block-end: var(--un-space-8);
+  inline-size: 100%;
+  max-inline-size: var(--app-measure-wide);
+  margin-inline: auto;
+  padding-block: var(--un-space-6) var(--un-space-10);
+  padding-inline: var(--app-gutter-public);
 }
 
 .app-contact-notice {
@@ -5932,11 +5948,19 @@ ion-spinner {
   color: var(--app-cta-ink);
 }
 
+/* The landing page renders in an immersive shell, which drops Ionic's
+   `ion-padding` entirely — so the measure has to come from here. Without it
+   every section ran the full viewport width and sat flush against both edges,
+   which on a wide desktop read as unstyled. */
 .app-landing-layout {
   display: flex;
   flex-direction: column;
   gap: var(--un-space-6);
-  padding-block-end: var(--un-space-8);
+  inline-size: 100%;
+  max-inline-size: var(--app-measure-wide);
+  margin-inline: auto;
+  padding-block: var(--un-space-6) var(--un-space-10);
+  padding-inline: var(--app-gutter-public);
 }
 
 .app-landing-hero {
@@ -6102,7 +6126,11 @@ ion-spinner {
   display: flex;
   flex-direction: column;
   gap: var(--un-space-6);
-  padding-block-end: var(--un-space-8);
+  inline-size: 100%;
+  max-inline-size: var(--app-measure-wide);
+  margin-inline: auto;
+  padding-block: var(--un-space-6) var(--un-space-10);
+  padding-inline: var(--app-gutter-public);
 }
 
 .app-team-hero {
@@ -6451,7 +6479,11 @@ ion-spinner {
   display: flex;
   flex-direction: column;
   gap: var(--un-space-6);
-  padding-block-end: var(--un-space-8);
+  inline-size: 100%;
+  max-inline-size: var(--app-measure-wide);
+  margin-inline: auto;
+  padding-block: var(--un-space-6) var(--un-space-10);
+  padding-inline: var(--app-gutter-public);
 }
 
 .app-showcase-hero {
@@ -6800,7 +6832,11 @@ ion-spinner {
   display: flex;
   flex-direction: column;
   gap: var(--un-space-6);
-  padding-block-end: var(--un-space-8);
+  inline-size: 100%;
+  max-inline-size: var(--app-measure-wide);
+  margin-inline: auto;
+  padding-block: var(--un-space-6) var(--un-space-10);
+  padding-inline: var(--app-gutter-public);
 }
 
 .app-public-tryouts__hero {
@@ -7041,6 +7077,20 @@ ion-spinner {
    the same rules lay out correctly under `dir="rtl"`, and every colour comes
    from the app tokens so light and dark both follow the theme.
 ---------------------------------------------------------------------------- */
+/* The newsroom uses the padded shell rather than the immersive one, so it only
+   needs the measure — not the gutter. */
+.app-news,
+.app-news-article {
+  inline-size: 100%;
+  max-inline-size: var(--app-measure-wide);
+  margin-inline: auto;
+}
+
+/* An article is prose, so it gets the narrower measure for line length. */
+.app-news-article {
+  max-inline-size: var(--app-measure-prose);
+}
+
 .app-news__hero {
   display: flex;
   flex-direction: column;
