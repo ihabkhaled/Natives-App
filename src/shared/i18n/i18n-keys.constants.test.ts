@@ -110,6 +110,7 @@ describe('I18N_KEYS', () => {
       'appBar',
       'publicNav',
       'publicFooter',
+      'publicCompetitions',
       'admin',
       'guard',
     ]);

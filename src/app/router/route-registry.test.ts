@@ -22,6 +22,8 @@ describe('getAppRouteDefinitions', () => {
       APP_PATHS.about,
       APP_PATHS.home,
       APP_PATHS.contact,
+      APP_PATHS.publicCompetitions,
+      APP_PATHS.publicCompetitionDetail,
       APP_PATHS.practices,
       APP_PATHS.practiceSession,
       APP_PATHS.attendance,

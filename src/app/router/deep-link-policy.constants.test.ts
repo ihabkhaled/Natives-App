@@ -64,6 +64,8 @@ describe('APP_DEEP_LINK_POLICY', () => {
       '/practices/:sessionId/attendance',
       '/reports',
       '/reset-password',
+      '/results',
+      '/results/:competitionSlug',
       '/rosters',
       '/rosters/:rosterId',
       '/sessions',

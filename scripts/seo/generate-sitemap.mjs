@@ -22,6 +22,10 @@ const PUBLIC_ROUTES = [
   { path: '/welcome', changefreq: 'weekly', priority: '1.0' },
   { path: '/about', changefreq: 'monthly', priority: '0.8' },
   { path: '/contact', changefreq: 'monthly', priority: '0.6' },
+  // Public competitions showcase. Per-competition pages are intentionally
+  // absent: their slugs come from the (not yet live) showcase endpoint, and a
+  // sitemap must never list URLs a crawler would resolve to a 404.
+  { path: '/results', changefreq: 'weekly', priority: '0.8' },
 ];
 
 const OUTPUT_PATH = join(
