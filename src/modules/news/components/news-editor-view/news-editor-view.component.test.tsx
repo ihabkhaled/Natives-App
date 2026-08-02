@@ -7,6 +7,12 @@ import { buildNewsEditorScreenView } from '../../../../../tests/factories/news-v
 import { NewsEditorView } from './news-editor-view.component';
 
 describe('NewsEditorView', () => {
+  it('omits the seam notice entirely once the newsroom API is live', () => {
+    render(<NewsEditorView {...buildNewsEditorScreenView({ notice: null })} />);
+
+    expect(screen.queryByTestId(TEST_IDS.newsEditorRevisionNotice)).not.toBeInTheDocument();
+  });
+
   it('lists drafts alongside published stories', () => {
     render(<NewsEditorView {...buildNewsEditorScreenView()} />);
     const rows = screen.getAllByTestId(TEST_IDS.newsEditorRow);

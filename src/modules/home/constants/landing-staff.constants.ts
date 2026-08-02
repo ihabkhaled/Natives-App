@@ -4,7 +4,7 @@
  * directory endpoint ships (contract 1.8.0) and this becomes a query result —
  * see `helpers/landing-team-seam.helper.ts` for the seam this data feeds.
  */
-export const STAFF_TITLE = {
+const STAFF_TITLE = {
   Coach: 'coach',
   CoCoach: 'co-coach',
   SpiritCaptain: 'spirit-captain',

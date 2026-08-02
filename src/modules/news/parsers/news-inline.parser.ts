@@ -1,5 +1,5 @@
 import type { NewsSpan, NewsSpanKind } from '../types/news-markdown.types';
-import { NEWS_SAFE_LINK_PREFIXES, NEWS_SPAN_KIND } from './news-markdown.constants';
+import { NEWS_SAFE_LINK_PREFIXES, NEWS_SPAN_KIND, capturedGroup } from './news-markdown.constants';
 
 /**
  * `code`, **strong**, *emphasis*, _emphasis_, [label](href) — in that
@@ -41,10 +41,10 @@ const LINK_HREF_GROUP = 7;
 function matchedSpan(key: string, match: RegExpExecArray): NewsSpan {
   const marked = CAPTURE_KINDS.find((entry) => match[entry.group] !== undefined);
   if (marked !== undefined) {
-    return span(key, marked.kind, match[marked.group] ?? '', null);
+    return span(key, marked.kind, capturedGroup(match, marked.group), null);
   }
-  const label = match[LINK_LABEL_GROUP] ?? '';
-  const target = match[LINK_HREF_GROUP] ?? '';
+  const label = capturedGroup(match, LINK_LABEL_GROUP);
+  const target = capturedGroup(match, LINK_HREF_GROUP);
   return isSafeNewsLink(target)
     ? span(key, NEWS_SPAN_KIND.Link, label, target)
     : span(key, NEWS_SPAN_KIND.Text, label, null);

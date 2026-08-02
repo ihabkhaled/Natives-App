@@ -33,9 +33,12 @@ export function LandingStaffDirectory(props: LandingStaffDirectoryProps): React.
             <div className="app-landing-staff-card__avatar">
               <AvatarFallback name={member.name} label={member.avatarLabel} size="lg" />
               {member.photoUrl === null ? null : (
+                // Decorative: the AvatarFallback underneath already carries the
+                // accessible name, so labelling this too would announce the
+                // same person twice.
                 <span
-                  role="img"
-                  aria-label={member.avatarLabel}
+                  aria-hidden="true"
+                  data-testid={`${TEST_IDS.landingStaffCard}-${member.id}-photo`}
                   className="app-landing-staff-card__photo"
                   style={{ backgroundImage: `url("${member.photoUrl}")` }}
                 />

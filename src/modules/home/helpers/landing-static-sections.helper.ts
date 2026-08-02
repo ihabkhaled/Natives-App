@@ -64,7 +64,7 @@ export function buildLocationSection(t: Translate): LocationSectionView {
   };
 }
 
-export interface GalleryTileView {
+interface GalleryTileView {
   readonly key: string;
   readonly alt: string;
 }

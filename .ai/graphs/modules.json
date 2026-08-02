@@ -241,6 +241,7 @@
       "name": "contact",
       "publicSurface": [
         "contactPath",
+        "contactResponseSchema",
         "getContactRouteDefinitions"
       ]
     },
@@ -269,6 +270,7 @@
         "getHomeRouteDefinitions",
         "getNotFoundRouteDefinition",
         "homePath",
+        "rootPath",
         "welcomePath"
       ]
     },
@@ -330,6 +332,18 @@
         "membershipResponseSchema",
         "resolveRoleErrorKey",
         "resolveRoleLabel"
+      ]
+    },
+    {
+      "name": "news",
+      "publicSurface": [
+        "canManageNews",
+        "getNewsRouteDefinitions",
+        "newsArticlePath",
+        "newsManagePath",
+        "newsPath",
+        "newsQueryKeys",
+        "parseNewsMarkdown"
       ]
     },
     {
@@ -409,6 +423,17 @@
       ]
     },
     {
+      "name": "public-competitions",
+      "publicSurface": [
+        "MATCH_OUTCOME",
+        "MatchOutcome",
+        "getPublicCompetitionsRouteDefinitions",
+        "publicCompetitionDetailPath",
+        "publicCompetitionDetailPattern",
+        "publicCompetitionsPath"
+      ]
+    },
+    {
       "name": "reports",
       "publicSurface": [
         "REPORTS_LIMITS",
@@ -485,6 +510,17 @@
         "standingsRulesPagePath",
         "teamHistoryPagePath",
         "teamHistoryResponseSchema"
+      ]
+    },
+    {
+      "name": "team-directory",
+      "publicSurface": [
+        "TEAM_DIRECTORY_SLUG",
+        "TeamDirectoryContainer",
+        "getTeamDirectoryRouteDefinitions",
+        "mapTeamDirectoryResponse",
+        "teamDirectoryPath",
+        "teamDirectoryQueryKeys"
       ]
     },
     {

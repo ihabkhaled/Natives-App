@@ -162,7 +162,6 @@
     "jscpd": "5.0.12",
     "jsdom": "29.1.1",
     "knip": "6.27.0",
-    "lint-staged": "17.0.8",
     "madge": "8.0.0",
     "msw": "2.15.0",
     "npm-check-updates": "22.2.9",
@@ -175,15 +174,6 @@
     "vite": "8.1.5",
     "vite-tsconfig-paths": "6.1.1",
     "vitest": "4.1.10"
-  },
-  "lint-staged": {
-    "*.{ts,tsx,mts,cts,js,mjs,cjs}": [
-      "eslint --fix --max-warnings=0 --no-warn-ignored",
-      "prettier --write"
-    ],
-    "*.{json,md,yml,yaml,css,html}": [
-      "prettier --write"
-    ]
   },
   "msw": {
     "workerDirectory": [

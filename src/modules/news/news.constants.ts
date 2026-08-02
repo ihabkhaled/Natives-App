@@ -24,9 +24,6 @@ export const NEWS_STATUS = {
   Published: 'published',
 } as const;
 
-/** One bounded page of public stories; the backend caps the page size too. */
-export const NEWS_PAGE_SIZE = 12;
-
 /** The only page the screens read today; pagination controls land with 1.8.0. */
 export const NEWS_FIRST_PAGE = 1;
 

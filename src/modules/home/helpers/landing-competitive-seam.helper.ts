@@ -5,7 +5,7 @@ import { buildLandingSeamChrome, type LandingSeamChrome } from './landing-seam-c
 
 type Translate = (key: string) => string;
 
-export interface CompetitionCardView {
+interface CompetitionCardView {
   readonly id: string;
   readonly name: string;
   readonly season: string;

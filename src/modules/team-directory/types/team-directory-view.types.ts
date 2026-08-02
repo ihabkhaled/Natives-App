@@ -2,7 +2,7 @@ import type { ScreenCopy } from '@/shared/view';
 import type { AsyncViewStatus } from '@/shared/ui';
 
 /** The jersey badge a roster card shows, with its assistive-tech label. */
-export interface JerseyBadgeView {
+interface JerseyBadgeView {
   readonly text: string;
   readonly label: string;
 }
@@ -27,7 +27,7 @@ export interface DirectoryGroupView {
 }
 
 /** One labelled team fact rendered as a hero pill. */
-export interface TeamFactView {
+interface TeamFactView {
   readonly key: string;
   readonly label: string;
   readonly value: string;

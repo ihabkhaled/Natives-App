@@ -11,7 +11,9 @@ import { useNewsEditor } from './use-news-editor.hook';
 const doubles = vi.hoisted(() => ({
   canManage: true,
   showToast: vi.fn(),
-  save: vi.fn(() => Promise.resolve({ status: 'unavailable', article: null })),
+  save: vi.fn((_input: { articleId: string | null; draft: unknown }) =>
+    Promise.resolve({ status: 'unavailable', article: null }),
+  ),
   // Typed with the id parameter it is actually called with, so the assertion
   // below can read it — an untyped vi.fn() infers a zero-length argument tuple.
   publish: vi.fn((_articleId: string) => Promise.resolve({ status: 'unavailable', article: null })),
@@ -135,6 +137,34 @@ describe('useNewsEditor', () => {
       // mutate() forwards a React Query options object as a second argument;
       // only the story id this call actually chose is under test here.
       expect(doubles.publish.mock.calls[0]?.[0]).toBe('news-2');
+    });
+    await waitFor(() => {
+      expect(doubles.showToast).toHaveBeenCalledWith({
+        message: 'Publishing is not connected yet, so nothing was sent.',
+      });
+    });
+  });
+
+  it('saves a valid draft through the seam and reports that nothing was sent', async () => {
+    const { result } = await renderEditor();
+    await waitFor(() => {
+      expect(result.current.rows).toHaveLength(2);
+    });
+    act(() => {
+      result.current.onEdit('news-2');
+    });
+    await waitFor(() => {
+      expect(result.current.form.titleField.value).toBe('Tryouts open');
+    });
+
+    act(() => {
+      result.current.form.onSubmit({
+        preventDefault: () => undefined,
+      } as unknown as React.SyntheticEvent<HTMLFormElement>);
+    });
+
+    await waitFor(() => {
+      expect(doubles.save.mock.calls[0]?.[0]).toMatchObject({ articleId: 'news-2' });
     });
     await waitFor(() => {
       expect(doubles.showToast).toHaveBeenCalledWith({

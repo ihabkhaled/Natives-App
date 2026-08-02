@@ -111,6 +111,24 @@ describe('mapTeamDirectoryResponse', () => {
     expect(mapped.players.map((entry) => entry.id)).toEqual(['p-2', 'p-11', 'p-33']);
   });
 
+  it('sorts a leading-zero number by value, not lexically, and tolerates a non-numeric one', () => {
+    const mapped = mapTeamDirectoryResponse(
+      response({
+        players: [
+          player({ id: 'p-33', jerseyNumber: '33' }),
+          // "011" must land next to the other elevens, not between "0" and "1".
+          player({ id: 'p-011', jerseyNumber: '011' }),
+          player({ id: 'p-2', jerseyNumber: '2' }),
+          // Defensive: the server pattern rejects this, so it can only arrive
+          // from a contract drift — it must sort last, never crash the page.
+          player({ id: 'p-bad', displayName: 'Zed', jerseyNumber: 'n/a' }),
+        ],
+      }),
+    );
+
+    expect(mapped.players.map((entry) => entry.id)).toEqual(['p-2', 'p-011', 'p-33', 'p-bad']);
+  });
+
   it('places players without a jersey last, sorted by name', () => {
     const mapped = mapTeamDirectoryResponse(
       response({

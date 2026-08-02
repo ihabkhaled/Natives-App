@@ -1,6 +1,12 @@
 import type { NewsBlock, NewsBlockKind, NewsBlockLine } from '../types/news-markdown.types';
 import { parseNewsInline } from './news-inline.parser';
-import { NEWS_BLOCK_KIND, NEWS_MAX_HEADING_LEVEL, NEWS_SPAN_KIND } from './news-markdown.constants';
+import {
+  NEWS_BLOCK_KIND,
+  NEWS_MAX_HEADING_LEVEL,
+  NEWS_SPAN_KIND,
+  capturedGroup,
+  lineAt,
+} from './news-markdown.constants';
 
 /**
  * Each marker consumes exactly ONE whitespace character before its text. A
@@ -48,14 +54,16 @@ function classifyHeading(line: string): DraftBlock | null {
   const match = HEADING.exec(line);
   return match === null
     ? null
-    : draft(NEWS_BLOCK_KIND.Heading, headingLevel(match[1] ?? ''), [match[2] ?? '']);
+    : draft(NEWS_BLOCK_KIND.Heading, headingLevel(capturedGroup(match, 1)), [
+        capturedGroup(match, 2),
+      ]);
 }
 
 function classifyMarker(line: string): DraftBlock | null {
   for (const entry of LINE_PATTERNS) {
     const match = entry.pattern.exec(line);
     if (match !== null) {
-      return draft(entry.kind, 0, [match[1] ?? '']);
+      return draft(entry.kind, 0, [capturedGroup(match, 1)]);
     }
   }
   return null;
@@ -78,11 +86,11 @@ function continues(open: DraftBlock, next: DraftBlock): boolean {
 
 /** A wrapped paragraph is one line; list items and quote lines stay separate. */
 function mergedLines(open: DraftBlock, next: DraftBlock): readonly string[] {
-  const incoming = next.lines[0] ?? '';
+  const incoming = lineAt(next.lines, 0);
   if (open.kind !== NEWS_BLOCK_KIND.Paragraph) {
     return [...open.lines, incoming];
   }
-  return [...open.lines.slice(0, -1), `${open.lines.at(-1) ?? ''} ${incoming}`];
+  return [...open.lines.slice(0, -1), `${lineAt(open.lines, -1)} ${incoming}`];
 }
 
 function closeOpen(state: ParseState): ParseState {

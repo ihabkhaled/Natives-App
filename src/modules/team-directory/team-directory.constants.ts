@@ -28,8 +28,6 @@ export const STAFF_TITLE = {
   Technical: 'technical',
 } as const;
 
-export type StaffTitleCode = (typeof STAFF_TITLE)[keyof typeof STAFF_TITLE];
-
 /** Bucket for a title the catalog grows before this client learns about it. */
 export const STAFF_TITLE_OTHER = 'other';
 

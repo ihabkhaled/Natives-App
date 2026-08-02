@@ -10,7 +10,7 @@ import type { NEWS_STATUS } from '../news.constants';
  * `@/packages/api-contract`; the domain types in `news.types.ts` and every
  * consumer above the mapper stay unchanged.
  */
-export type NewsStatusDto = (typeof NEWS_STATUS)[keyof typeof NEWS_STATUS];
+type NewsStatusDto = (typeof NEWS_STATUS)[keyof typeof NEWS_STATUS];
 
 export interface NewsItemDto {
   readonly id: string;
@@ -30,13 +30,4 @@ export interface NewsItemDto {
 export interface NewsListResponseDto {
   readonly items: readonly NewsItemDto[];
   readonly total: number;
-}
-
-/** Create/update payload. The server derives `slug`, `author`, `publishedAt`. */
-export interface NewsWriteRequestDto {
-  readonly title: string;
-  readonly body: string;
-  readonly coverImageUrl: string | null;
-  readonly competitionId: string | null;
-  readonly matchId: string | null;
 }

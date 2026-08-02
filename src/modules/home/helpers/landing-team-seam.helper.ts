@@ -16,7 +16,7 @@ const STAFF_TITLE_LABEL_KEYS: Record<StaffTitle, string> = {
   technical: I18N_KEYS.landing.staffTitleTechnical,
 };
 
-export interface StaffCardView {
+interface StaffCardView {
   readonly id: string;
   readonly name: string;
   readonly nickname: string;

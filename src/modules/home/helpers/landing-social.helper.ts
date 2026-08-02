@@ -10,7 +10,7 @@ const SOCIAL_LABEL_KEYS: Record<SocialKey, string> = {
   tiktok: I18N_KEYS.publicFooter.tiktokLabel,
 };
 
-export interface SocialLinkView {
+interface SocialLinkView {
   readonly key: string;
   readonly href: string;
   readonly label: string;

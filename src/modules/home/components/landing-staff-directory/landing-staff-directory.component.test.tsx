@@ -47,6 +47,41 @@ function view(overrides: Partial<StaffDirectorySectionView> = {}): StaffDirector
 }
 
 describe('LandingStaffDirectory', () => {
+  it('paints a supplied portrait over the initials, and omits it when there is none', () => {
+    render(
+      <LandingStaffDirectory
+        view={view({
+          members: [
+            {
+              id: 'sherif-ashraf',
+              name: 'Sherif Ashraf',
+              nickname: '3alamy',
+              titles: ['Coach'],
+              avatarLabel: 'Sherif Ashraf avatar',
+              photoUrl: '/staff/sherif-ashraf.jpg',
+            },
+            {
+              id: 'ihab-khaled',
+              name: 'Ihab Khaled',
+              nickname: 'Hobz',
+              titles: ['Analysis'],
+              avatarLabel: 'Ihab Khaled avatar',
+              photoUrl: null,
+            },
+          ],
+        })}
+      />,
+    );
+
+    // The portrait is a background layer, not an <img>, so a file that has not
+    // been supplied yet simply does not paint and the initials show through
+    // rather than leaving a broken-image icon on a public page.
+    expect(screen.getByTestId('landing-staff-card-sherif-ashraf-photo')).toHaveStyle({
+      backgroundImage: 'url("/staff/sherif-ashraf.jpg")',
+    });
+    expect(screen.queryByTestId('landing-staff-card-ihab-khaled-photo')).not.toBeInTheDocument();
+  });
+
   it('renders every staff member with their name, nickname, and titles', () => {
     render(<LandingStaffDirectory view={view()} />);
 

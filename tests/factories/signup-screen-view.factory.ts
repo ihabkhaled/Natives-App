@@ -6,7 +6,7 @@ import type { SignupScreenView } from '@/modules/auth/hooks/use-signup-screen.ho
 import type { SignupScreenCopy } from '@/modules/auth/types/signup.types';
 
 /** A clean, spy-backed binding for one signup field. */
-export function buildSignupFieldBinding(
+function buildSignupFieldBinding(
   name: string,
   overrides: Partial<FormFieldBinding> = {},
 ): FormFieldBinding {

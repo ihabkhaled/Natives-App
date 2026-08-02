@@ -25,7 +25,7 @@ export interface NewsPage {
 }
 
 /** Whether a source answered with data or reported itself not connected yet. */
-export type NewsSourceStatus = (typeof NEWS_SOURCE_STATUS)[keyof typeof NEWS_SOURCE_STATUS];
+type NewsSourceStatus = (typeof NEWS_SOURCE_STATUS)[keyof typeof NEWS_SOURCE_STATUS];
 
 /**
  * What every newsroom source returns: the seam status plus whatever data the

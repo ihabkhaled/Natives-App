@@ -37,6 +37,10 @@ export function usePublicTryouts(): PublicTryoutsView {
   const events = usePublicTryoutEventsQuery();
   const items = events.data?.items ?? [];
   const selected = selectPublicEvent(items, state.draft.tryoutId);
+  // Hoisted out of the cards map: it is the same value for every card, and
+  // selectPublicEvent only returns null when there are no events at all — in
+  // which case the map never runs and the fallback would be unreachable.
+  const selectedId = selected?.tryoutId ?? '';
   const registration = useRegisterCandidateMutation({
     onResult: state.onResult,
     onFailure: state.onFailure,
@@ -69,7 +73,7 @@ export function usePublicTryouts(): PublicTryoutsView {
     cards: items.map((event) =>
       buildPublicTryoutCard(t, {
         event,
-        selectedId: selected?.tryoutId ?? '',
+        selectedId,
         formatDay: (iso: string) => formatCairoWeekdayDate(iso, locale),
         formatTime: (iso: string) => formatCairoTime(iso, locale),
         onApply: (tryoutId: string) => {

@@ -24,7 +24,7 @@ export interface SignupFormCopy {
 }
 
 /** The awaiting-approval confirmation shown after a successful request. */
-export interface SignupPendingCopy {
+interface SignupPendingCopy {
   readonly title: string;
   readonly message: string;
   readonly stepsTitle: string;

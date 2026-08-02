@@ -94,6 +94,46 @@ describe('usePublicTryouts', () => {
     expect(result.current.form.capacityNotice).not.toBeNull();
   });
 
+  it('switches the selected session through the picker', async () => {
+    const { result } = render();
+
+    await waitFor(() => {
+      expect(result.current.status).toBe('ready');
+    });
+
+    act(() => {
+      result.current.form.onEventChange('full-1');
+    });
+
+    // Selection is observable on the cards, which is what the screen renders.
+    await waitFor(() => {
+      expect(result.current.cards.find((card) => card.id === 'full-1')?.isSelected).toBe(true);
+    });
+  });
+
+  it('submits nothing to guess at when no session is open to select', async () => {
+    vi.mocked(listPublicTryoutEvents).mockResolvedValue({ items: [], total: 0 });
+    const { result } = render();
+
+    await waitFor(() => {
+      expect(result.current.status).not.toBe('loading');
+    });
+
+    expect(result.current.cards).toHaveLength(0);
+
+    act(() => {
+      result.current.form.onSubmit();
+    });
+
+    // With no selectable session the command carries an empty tryout id and
+    // the default consent version rather than inventing either.
+    await waitFor(() => {
+      expect(vi.mocked(registerCandidate).mock.calls[0]?.[0]).toMatchObject({
+        tryoutId: '',
+      });
+    });
+  });
+
   it('sends exactly the registration command the contract defines', async () => {
     const { result } = render();
 
