@@ -2,14 +2,13 @@ import { act, renderHook } from '@testing-library/react';
 import { afterEach, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import type * as AuthModule from '@/modules/auth';
-import { useSession } from '@/modules/auth';
 import type * as SettingsModule from '@/modules/settings';
 import { useLocaleToggle, useThemeToggle } from '@/modules/settings';
 import { APP_PATHS } from '@/shared/config';
 
-import { buildSessionView } from '../../../../tests/factories/session-view.factory';
 import { initTestI18n } from '../../../../tests/setup/i18n-test.helper';
 import { usePublicNav } from './use-public-nav.hook';
+import { mockPublicShellSession } from '../../../../tests/setup/public-shell-session.helper';
 
 vi.mock('@/modules/auth', async (importOriginal) => ({
   ...(await importOriginal<typeof AuthModule>()),
@@ -38,17 +37,13 @@ vi.mock('@/packages/router', () => ({
   }),
 }));
 
-function mockSession(isResolved: boolean, isAuthenticated: boolean): void {
-  vi.mocked(useSession).mockReturnValue(buildSessionView({ isResolved, isAuthenticated }));
-}
-
 beforeAll(async () => {
   await initTestI18n();
 });
 
 beforeEach(() => {
   currentPath = APP_PATHS.root;
-  mockSession(true, false);
+  mockPublicShellSession(true, false);
   vi.mocked(useThemeToggle).mockReturnValue({ isDark: false, toggle: toggleTheme });
   vi.mocked(useLocaleToggle).mockReturnValue({
     locale: 'en',
@@ -63,13 +58,13 @@ afterEach(() => {
 
 describe('usePublicNav', () => {
   it('stays hidden while the session is still resolving', () => {
-    mockSession(false, false);
+    mockPublicShellSession(false, false);
 
     expect(renderHook(() => usePublicNav()).result.current.isVisible).toBe(false);
   });
 
   it('stays hidden once a session is authenticated', () => {
-    mockSession(true, true);
+    mockPublicShellSession(true, true);
 
     expect(renderHook(() => usePublicNav()).result.current.isVisible).toBe(false);
   });

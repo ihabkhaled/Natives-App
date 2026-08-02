@@ -47,6 +47,18 @@ async function renderEditor() {
   return view;
 }
 
+/** Renders the editor and opens the draft story ready to edit. */
+async function renderEditingDraft() {
+  const view = await renderEditor();
+  await waitFor(() => {
+    expect(view.result.current.rows).toHaveLength(2);
+  });
+  act(() => {
+    view.result.current.onEdit('news-2');
+  });
+  return view;
+}
+
 beforeAll(async () => {
   await initTestI18n();
 });
@@ -113,13 +125,7 @@ describe('useNewsEditor', () => {
   });
 
   it('calls the story an edit, not a revision, while it is still a draft', async () => {
-    const { result } = await renderEditor();
-    await waitFor(() => {
-      expect(result.current.rows).toHaveLength(2);
-    });
-    act(() => {
-      result.current.onEdit('news-2');
-    });
+    const { result } = await renderEditingDraft();
 
     await waitFor(() => {
       expect(result.current.form.heading).toBe('Edit draft');
@@ -146,13 +152,7 @@ describe('useNewsEditor', () => {
   });
 
   it('saves a valid draft through the seam and reports that nothing was sent', async () => {
-    const { result } = await renderEditor();
-    await waitFor(() => {
-      expect(result.current.rows).toHaveLength(2);
-    });
-    act(() => {
-      result.current.onEdit('news-2');
-    });
+    const { result } = await renderEditingDraft();
     await waitFor(() => {
       expect(result.current.form.titleField.value).toBe('Tryouts open');
     });

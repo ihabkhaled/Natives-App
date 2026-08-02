@@ -12,23 +12,23 @@ describe('capturedGroup', () => {
     const match = /^(\w+)$/u.exec('heading');
 
     expect(match).not.toBeNull();
-    expect(capturedGroup(match as RegExpExecArray, 1)).toBe('heading');
+    expect(capturedGroup(match!, 1)).toBe('heading');
   });
 
   it('returns an empty string when the group did not participate', () => {
     // The second alternative matches, so group 1 is undefined rather than ''.
-    const match = /(?:(a)|b)/u.exec('b');
+    const match = /(a)|b/u.exec('b');
 
     expect(match).not.toBeNull();
     expect(match?.[1]).toBeUndefined();
-    expect(capturedGroup(match as RegExpExecArray, 1)).toBe('');
+    expect(capturedGroup(match!, 1)).toBe('');
   });
 
   it('returns an empty string for a group index the pattern does not define', () => {
     const match = /^b$/u.exec('b');
 
     expect(match).not.toBeNull();
-    expect(capturedGroup(match as RegExpExecArray, 9)).toBe('');
+    expect(capturedGroup(match!, 9)).toBe('');
   });
 });
 

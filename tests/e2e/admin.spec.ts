@@ -1,3 +1,4 @@
+import type { Locator } from '@playwright/test';
 import { expect, test } from '@playwright/test';
 
 import { TEST_IDS } from '@/shared/config';
@@ -10,6 +11,31 @@ import {
   signIn,
   switchToArabic,
 } from './fixtures/app.fixture';
+
+/**
+ * Clicks a genuinely future day in the open Cairo calendar.
+ *
+ * The picker disables past days, so a hardcoded date is a time bomb: this test
+ * pinned 28 July 2026 and started failing the moment that date passed. The day
+ * is computed from the clock instead, and the calendar is advanced a month when
+ * the target falls outside the month currently on screen (20 days can cross at
+ * most one boundary).
+ */
+async function pickFutureCalendarDay(calendar: Locator): Promise<void> {
+  const target = new Date(Date.now() + 20 * 24 * 60 * 60 * 1000);
+  const day = target.getDate();
+  const month = target.getMonth() + 1;
+  const year = target.getFullYear();
+  const cell = calendar.locator(
+    `.calendar-day[data-day="${String(day)}"][data-month="${String(month)}"][data-year="${String(year)}"]`,
+  );
+
+  if ((await cell.count()) === 0) {
+    await calendar.locator('.calendar-next-prev ion-button').last().click();
+    await expect(cell).toHaveCount(1);
+  }
+  await cell.click();
+}
 
 test.describe('admin console', () => {
   test('offers one card per surface the administrator may open', async ({ page }) => {
@@ -59,10 +85,7 @@ test.describe('admin console', () => {
 
     // Pick a future Cairo instant from the real calendar.
     await page.getByTestId(`${TEST_IDS.adminVersionEffectiveFrom}-trigger`).click();
-    await page
-      .getByTestId(TEST_IDS.adminVersionEffectiveInput)
-      .locator('.calendar-day[data-day="28"][data-month="7"][data-year="2026"]')
-      .click();
+    await pickFutureCalendarDay(page.getByTestId(TEST_IDS.adminVersionEffectiveInput));
     await page
       .getByTestId(TEST_IDS.adminVersionNote)
       .locator('textarea')

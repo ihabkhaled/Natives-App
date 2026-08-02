@@ -3262,9 +3262,13 @@ ion-spinner {
   font-size: var(--un-font-size-sm);
 }
 
+/* The warning-notice surface. `.app-public-form__status` joins the group with
+   :not(:empty) so its live region stays invisible until it has something
+   honest to announce. */
 .app-competition-detail__notice,
 .app-fixture-list__note,
-.app-scorekeeper__blocked {
+.app-scorekeeper__blocked,
+.app-public-form__status:not(:empty) {
   padding: var(--un-space-2) var(--un-space-3);
   border-inline-start: 3px solid var(--ion-color-warning-shade);
   border-radius: var(--un-radius-md);
@@ -5722,7 +5726,15 @@ ion-spinner {
   display: none;
 }
 
+/* The footer carries twelve destinations, so its links are the densest cluster
+   of targets in the app. Text alone left them 14px tall with 12px between
+   neighbours, which fails WCAG 2.2 AA target-size (minimum) — 24x24. The
+   inline-flex box gives each one a real hit area rather than just a text run. */
 .app-public-footer__link {
+  display: inline-flex;
+  align-items: center;
+  min-block-size: 24px;
+  padding-inline: var(--un-space-1);
   border: none;
   background: transparent;
   color: var(--app-muted-strong);
@@ -5790,16 +5802,6 @@ ion-spinner {
    About Us — static marketing page, built from the same section-panel and
    fact-list primitives every other screen shares.
 ---------------------------------------------------------------------------- */
-.app-about-layout {
-  display: flex;
-  flex-direction: column;
-  gap: var(--un-space-6);
-  inline-size: 100%;
-  max-inline-size: var(--app-measure-wide);
-  margin-inline: auto;
-  padding-block: var(--un-space-6) var(--un-space-10);
-  padding-inline: var(--app-gutter-public);
-}
 
 .app-about-hero {
   display: flex;
@@ -5843,18 +5845,11 @@ ion-spinner {
    Contact Us — reuses `.app-about-hero` for the intro; only the form notice
    and social-link list are new.
 ---------------------------------------------------------------------------- */
-.app-contact-layout {
-  display: flex;
-  flex-direction: column;
-  gap: var(--un-space-6);
-  inline-size: 100%;
-  max-inline-size: var(--app-measure-wide);
-  margin-inline: auto;
-  padding-block: var(--un-space-6) var(--un-space-10);
-  padding-inline: var(--app-gutter-public);
-}
 
-.app-contact-notice {
+/* The lime advisory panel, shared by the contact form and the competitions
+   showcase — the two rules were identical. */
+.app-contact-notice,
+.app-showcase-notice {
   display: flex;
   flex-direction: column;
   gap: var(--un-space-1);
@@ -5928,17 +5923,11 @@ ion-spinner {
   color: var(--app-gold-text);
 }
 
+/* The landing page's two primary CTAs carry the gold gradient; grouped because
+   the two rules were identical. */
 [data-testid='landing-page']
   .app-landing-hero
-  ion-button.button-solid.ion-color-primary::part(native) {
-  background: linear-gradient(
-    135deg,
-    var(--app-gold) 0%,
-    color-mix(in srgb, var(--app-gold) 85%, black) 100%
-  );
-  color: var(--app-cta-ink);
-}
-
+  ion-button.button-solid.ion-color-primary::part(native),
 [data-testid='landing-page']
   [data-testid='landing-final-cta']
   ion-button.button-solid.ion-color-primary::part(native) {
@@ -5950,11 +5939,17 @@ ion-spinner {
   color: var(--app-cta-ink);
 }
 
-/* The landing page renders in an immersive shell, which drops Ionic's
-   `ion-padding` entirely — so the measure has to come from here. Without it
-   every section ran the full viewport width and sat flush against both edges,
-   which on a wide desktop read as unstyled. */
-.app-landing-layout {
+/* Every public marketing page shares one measure. These pages render in an
+   immersive shell, which drops Ionic's `ion-padding` entirely, so without this
+   each section ran the full viewport width and sat flush against both edges —
+   which on a wide desktop read as unstyled. Grouped rather than repeated per
+   page: the six rules were byte-identical. */
+.app-about-layout,
+.app-contact-layout,
+.app-landing-layout,
+.app-team-layout,
+.app-showcase-layout,
+.app-public-tryouts {
   display: flex;
   flex-direction: column;
   gap: var(--un-space-6);
@@ -6155,16 +6150,6 @@ ion-spinner {
    four per row instead of stretching one mobile card across the viewport.
    Every offset is a logical property, so Arabic mirrors without an override.
 ---------------------------------------------------------------------------- */
-.app-team-layout {
-  display: flex;
-  flex-direction: column;
-  gap: var(--un-space-6);
-  inline-size: 100%;
-  max-inline-size: var(--app-measure-wide);
-  margin-inline: auto;
-  padding-block: var(--un-space-6) var(--un-space-10);
-  padding-inline: var(--app-gutter-public);
-}
 
 .app-team-hero {
   position: relative;
@@ -6508,34 +6493,12 @@ ion-spinner {
    only place gold appears. Every geometric value is logical so Arabic mirrors
    without a second stylesheet, and every column of digits is tabular-nums.
 ---------------------------------------------------------------------------- */
-.app-showcase-layout {
-  display: flex;
-  flex-direction: column;
-  gap: var(--un-space-6);
-  inline-size: 100%;
-  max-inline-size: var(--app-measure-wide);
-  margin-inline: auto;
-  padding-block: var(--un-space-6) var(--un-space-10);
-  padding-inline: var(--app-gutter-public);
-}
 
 .app-showcase-hero {
   display: flex;
   flex-direction: column;
   align-items: start;
   gap: var(--un-space-2);
-}
-
-.app-showcase-notice {
-  display: flex;
-  flex-direction: column;
-  gap: var(--un-space-1);
-  padding: var(--un-space-3) var(--un-space-4);
-  border: 1px solid var(--app-lime-line);
-  border-radius: var(--un-radius-md);
-  background: var(--app-lime-soft);
-  color: var(--app-ink);
-  font-size: var(--un-font-size-sm);
 }
 
 .app-showcase-notice__title {
@@ -6861,16 +6824,6 @@ ion-spinner {
    list. Two columns from 1024px so a desktop never renders a stretched mobile
    card. Logical properties throughout, so Arabic mirrors without overrides.
 ---------------------------------------------------------------------------- */
-.app-public-tryouts {
-  display: flex;
-  flex-direction: column;
-  gap: var(--un-space-6);
-  inline-size: 100%;
-  max-inline-size: var(--app-measure-wide);
-  margin-inline: auto;
-  padding-block: var(--un-space-6) var(--un-space-10);
-  padding-inline: var(--app-gutter-public);
-}
 
 .app-public-tryouts__hero {
   display: flex;
@@ -7031,16 +6984,6 @@ ion-spinner {
   display: flex;
   flex-direction: column;
   gap: var(--un-space-4);
-}
-
-/* The live region is invisible until it has something honest to announce. */
-.app-public-form__status:not(:empty) {
-  padding: var(--un-space-2) var(--un-space-3);
-  border-inline-start: 3px solid var(--ion-color-warning-shade);
-  border-radius: var(--un-radius-md);
-  background: color-mix(in srgb, var(--ion-color-warning) 14%, transparent);
-  color: var(--app-ink);
-  font-size: var(--un-font-size-sm);
 }
 
 .app-public-outcome {
