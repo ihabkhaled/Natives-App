@@ -2,7 +2,14 @@ import { describe, expect, it } from 'vitest';
 
 import { APP_PATHS } from '@/shared/config';
 
-import { aboutPath, homePath, welcomePath } from './home.paths';
+import { aboutPath, homePath, rootPath, welcomePath } from './home.paths';
+
+describe('rootPath', () => {
+  it('derives the public landing page from the canonical route table', () => {
+    expect(rootPath()).toBe(APP_PATHS.root);
+    expect(rootPath()).toBe('/');
+  });
+});
 
 describe('welcomePath', () => {
   it('derives the welcome route from the canonical route table', () => {

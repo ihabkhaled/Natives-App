@@ -10,9 +10,9 @@ export function buildPublicNavView(overrides: Partial<PublicNavView> = {}): Publ
     brandName: 'Ultimate Natives',
     brandTagline: 'Elite ultimate. One community.',
     logoLabel: 'Ultimate Natives logo',
-    homePath: '/welcome',
+    homePath: '/',
     links: [
-      { key: 'home', label: 'Home', path: '/welcome', isActive: true },
+      { key: 'home', label: 'Home', path: '/', isActive: true },
       { key: 'about', label: 'About', path: '/about', isActive: false },
       { key: 'tryouts', label: 'Tryouts', path: '/tryout-registration', isActive: false },
       { key: 'contact', label: 'Contact', path: '/contact', isActive: false },

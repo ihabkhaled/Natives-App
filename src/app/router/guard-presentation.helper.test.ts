@@ -14,7 +14,7 @@ describe('presentGuardStatus', () => {
   it('redirects login and home outcomes to their canonical paths', () => {
     expect(presentGuardStatus(GUARD_STATUS.RedirectLogin)).toEqual({
       kind: 'redirect',
-      redirectPath: APP_PATHS.login,
+      redirectPath: APP_PATHS.root,
     });
     expect(presentGuardStatus(GUARD_STATUS.RedirectHome)).toEqual({
       kind: 'redirect',

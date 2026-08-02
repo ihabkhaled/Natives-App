@@ -12,7 +12,7 @@ export function buildPublicFooterView(overrides: Partial<PublicFooterView> = {})
     tagline: 'Elite ultimate. One community.',
     navHeading: 'Explore',
     links: [
-      { key: 'home', label: 'Home', path: '/welcome' },
+      { key: 'home', label: 'Home', path: '/' },
       { key: 'about', label: 'About', path: '/about' },
       { key: 'tryouts', label: 'Tryouts', path: '/tryout-registration' },
       { key: 'contact', label: 'Contact', path: '/contact' },

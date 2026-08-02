@@ -4,36 +4,47 @@ import { NAV_GROUP, ROUTE_ACCESS } from '@/shared/types';
 
 import { AboutContainer } from '../containers/about.container';
 import { HomeContainer } from '../containers/home.container';
+import { LandingContainer } from '../containers/landing.container';
 import { NotFoundContainer } from '../containers/not-found.container';
 import { WelcomeContainer } from '../containers/welcome.container';
-import { aboutPath, homePath, welcomePath } from './home.paths';
+import { aboutPath, homePath, rootPath, welcomePath } from './home.paths';
 import { getHomeRouteDefinitions, getNotFoundRouteDefinition } from './home.routes';
 
 describe('getHomeRouteDefinitions', () => {
-  it('exposes the welcome, about, and home routes, in that order', () => {
+  it('exposes the landing, welcome, about, and home routes, in that order', () => {
     const definitions = getHomeRouteDefinitions();
 
-    expect(definitions).toHaveLength(3);
+    expect(definitions).toHaveLength(4);
     expect(definitions.map((definition) => definition.path)).toEqual([
+      rootPath(),
       welcomePath(),
       aboutPath(),
       homePath(),
     ]);
   });
 
+  it('keeps the landing page public for signed-in and signed-out visitors alike', () => {
+    const [landing] = getHomeRouteDefinitions();
+
+    expect(landing!.path).toBe('/');
+    expect(landing!.exact).toBe(true);
+    expect(landing!.access).toBe(ROUTE_ACCESS.Public);
+    expect(landing!.component).toBe(LandingContainer);
+  });
+
   it('keeps the welcome screen signed-out-only and exactly matched', () => {
-    const [welcome] = getHomeRouteDefinitions();
+    const [, welcome] = getHomeRouteDefinitions();
 
     expect(welcome!.path).toBe('/welcome');
     expect(welcome!.exact).toBe(true);
-    // `/` redirects to `/welcome`, so a Public welcome screen showed an
-    // authenticated visitor the marketing page and a dead "Sign in" CTA.
+    // The landing page at `/` is the marketing front door; welcome stays a
+    // lightweight signed-out entry (sign-in CTA) so old deep links still work.
     expect(welcome!.access).toBe(ROUTE_ACCESS.PublicOnly);
     expect(welcome!.component).toBe(WelcomeContainer);
   });
 
   it('keeps the about screen public for signed-in and signed-out visitors alike', () => {
-    const [, about] = getHomeRouteDefinitions();
+    const [, , about] = getHomeRouteDefinitions();
 
     expect(about!.path).toBe('/about');
     expect(about!.exact).toBe(true);
@@ -42,7 +53,7 @@ describe('getHomeRouteDefinitions', () => {
   });
 
   it('protects the home screen behind a session', () => {
-    const [, , home] = getHomeRouteDefinitions();
+    const [, , , home] = getHomeRouteDefinitions();
 
     expect(home!.path).toBe('/home');
     expect(home!.exact).toBe(true);
@@ -51,7 +62,7 @@ describe('getHomeRouteDefinitions', () => {
   });
 
   it('is a permission-free primary navigation destination', () => {
-    const [, , home] = getHomeRouteDefinitions();
+    const [, , , home] = getHomeRouteDefinitions();
 
     expect(home!.meta?.permissions).toEqual([]);
     expect(home!.meta?.nav).toEqual({

@@ -2,6 +2,7 @@ import { IonText } from '@/packages/ionic';
 import { TEST_IDS } from '@/shared/config';
 import { FactList, PageSeo, PageShell, SectionPanel } from '@/shared/ui';
 
+import { SpiritValuesGrid } from '../spirit-values-grid';
 import type { AboutViewProps } from './about-view.types';
 
 /** Static, fully translated About Us marketing screen. */
@@ -39,24 +40,12 @@ export function AboutView(props: AboutViewProps): React.JSX.Element {
           </IonText>
         </SectionPanel>
 
-        <SectionPanel heading={props.spiritHeading} intro={props.spiritIntro}>
-          <div className="app-about-spirit-grid">
-            {props.spiritValues.map((value) => (
-              <div
-                key={value.key}
-                className="app-about-spirit-card"
-                data-testid={`${TEST_IDS.aboutSpiritValue}-${value.key}`}
-              >
-                <IonText>
-                  <h3 className="app-about-spirit-card__title m-0">{value.title}</h3>
-                </IonText>
-                <IonText color="medium">
-                  <p className="m-0 text-sm">{value.body}</p>
-                </IonText>
-              </div>
-            ))}
-          </div>
-        </SectionPanel>
+        <SpiritValuesGrid
+          heading={props.spiritHeading}
+          intro={props.spiritIntro}
+          values={props.spiritValues}
+          cardTestIdPrefix={TEST_IDS.aboutSpiritValue}
+        />
       </div>
     </PageShell>
   );

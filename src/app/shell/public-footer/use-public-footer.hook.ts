@@ -25,7 +25,7 @@ export function usePublicFooter(): PublicFooterView {
     tagline: t(I18N_KEYS.publicFooter.tagline),
     navHeading: t(I18N_KEYS.publicFooter.navHeading),
     links: [
-      { key: 'home', label: t(I18N_KEYS.publicNav.home), path: APP_PATHS.welcome },
+      { key: 'home', label: t(I18N_KEYS.publicNav.home), path: APP_PATHS.root },
       { key: 'about', label: t(I18N_KEYS.publicNav.about), path: APP_PATHS.about },
       {
         key: 'tryouts',

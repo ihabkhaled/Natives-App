@@ -13,9 +13,10 @@ import type { PublicNavLink, PublicNavView } from './public-nav.types';
 
 /**
  * Prepared view model for the signed-out marketing navbar. Visible on every
- * anonymous route (welcome, login, forgot/reset password, about, contact,
- * tryout registration, and the 404 fallback); hidden the moment a session
- * resolves as authenticated, at which point the protected app bar takes over.
+ * anonymous route (landing, welcome, login, forgot/reset password, about,
+ * contact, tryout registration, and the 404 fallback); hidden the moment a
+ * session resolves as authenticated, at which point the protected app bar
+ * takes over.
  */
 export function usePublicNav(): PublicNavView {
   const session = useSession();
@@ -26,7 +27,7 @@ export function usePublicNav(): PublicNavView {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const rawLinks: readonly Omit<PublicNavLink, 'isActive'>[] = [
-    { key: 'home', label: t(I18N_KEYS.publicNav.home), path: APP_PATHS.welcome },
+    { key: 'home', label: t(I18N_KEYS.publicNav.home), path: APP_PATHS.root },
     { key: 'about', label: t(I18N_KEYS.publicNav.about), path: APP_PATHS.about },
     { key: 'tryouts', label: t(I18N_KEYS.publicNav.tryouts), path: tryoutRegistrationPath() },
     { key: 'contact', label: t(I18N_KEYS.publicNav.contact), path: APP_PATHS.contact },
@@ -43,7 +44,7 @@ export function usePublicNav(): PublicNavView {
     brandName: t(I18N_KEYS.common.appName),
     brandTagline: t(I18N_KEYS.brand.tagline),
     logoLabel: t(I18N_KEYS.brand.logoAlt),
-    homePath: APP_PATHS.welcome,
+    homePath: APP_PATHS.root,
     links: rawLinks.map((link) => ({
       ...link,
       isActive: navigation.currentPath === link.path,

@@ -10,19 +10,24 @@ exports typed builders in `routes/*.paths.ts` and definitions in `routes/*.route
 
 | Path         | Access        | Container            | Module         |
 | ------------ | ------------- | -------------------- | -------------- |
-| `/`          | redirect      | → `/welcome`         | app router     |
-| `/welcome`   | `public`      | `WelcomeContainer`   | `home`         |
+| `/`          | `public`      | `LandingContainer`   | `home`         |
+| `/welcome`   | `public-only` | `WelcomeContainer`   | `home`         |
 | `/login`     | `public-only` | `LoginContainer`     | `auth`         |
 | `/home`      | `protected`   | `HomeContainer`      | `home`         |
 | `/settings`  | `public`      | `SettingsContainer`  | `settings`     |
 | `/workbench` | `public`      | `WorkbenchContainer` | `ui-workbench` |
 | `*`          | `public`      | `NotFoundContainer`  | `home`         |
 
-Registration order is `auth`, `home`, `settings`, `ui-workbench`, then the root redirect, then the
-catch-all. The catch-all comes from `getCatchAllRouteDefinition()` and **must** stay last — React
-Router v5 matches in order, so a catch-all registered earlier would swallow everything after it.
-`settings` and `workbench` are public deliberately: preferences must be reachable before signing in,
-and the workbench is a design-system catalogue with no data of its own.
+`/` is the public marketing landing page — the site's front door, `public` so an authenticated
+visitor can still view it. `/welcome` is a lightweight signed-out entry (a sign-in CTA) kept working
+for old deep links; `public-only` because it would otherwise offer a dead-end "Sign in" CTA to a
+visitor who is already signed in.
+
+Registration order is `auth`, `home`, `settings`, `ui-workbench`, then the catch-all. The catch-all
+comes from `getCatchAllRouteDefinition()` and **must** stay last — React Router v5 matches in order,
+so a catch-all registered earlier would swallow everything after it. `settings` and `workbench` are
+public deliberately: preferences must be reachable before signing in, and the workbench is a
+design-system catalogue with no data of its own.
 
 ## Access levels
 
@@ -31,7 +36,8 @@ and the workbench is a design-system catalogue with no data of its own.
 - **`public`** — always renders.
 - **`public-only`** — renders only for an anonymous visitor. `/login` is `public-only`, so an
   authenticated user who navigates back to it is sent to `/home`.
-- **`protected`** — renders only with a session; otherwise redirect to `/login`.
+- **`protected`** — renders only with a session; otherwise redirect to `/`, the public landing page
+  (which carries the sign-in CTA one click away — see Guard behavior below).
 
 A route declares its access; it never enforces it. That is the guard's job.
 
@@ -42,10 +48,15 @@ gives it `isResolved`, `isAuthenticated`, and a translated loading label from `u
 
 ```text
 !isResolved                          → <LoadingState />        (session status still unknown)
-protected   && !isAuthenticated      → <Redirect to="/login" />
+protected   && !isAuthenticated      → <Redirect to="/" />     (public landing page, not /login)
 public-only && isAuthenticated       → <Redirect to="/home" />
 otherwise                            → <Screen />
 ```
+
+Redirecting an unauthenticated visitor to `/` rather than straight to `/login` matters for logout:
+signing out from a protected screen resolves the same `RedirectLogin` outcome, so a just-logged-out
+user lands on the marketing site (with a one-click "Sign in" CTA) instead of bouncing back to a bare
+login form.
 
 The `isResolved` branch is what makes this correct rather than merely typical. The session store
 starts at `unknown`, and `bootstrapSessionFromStoredTokens()` resolves it during `startApp()` —

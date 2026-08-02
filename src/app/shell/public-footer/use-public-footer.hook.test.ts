@@ -21,7 +21,7 @@ vi.mock('@/packages/router', () => ({
     push: pushSpy,
     replace: vi.fn(),
     goBack: vi.fn(),
-    currentPath: APP_PATHS.welcome,
+    currentPath: APP_PATHS.root,
   }),
 }));
 

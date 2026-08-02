@@ -8,7 +8,11 @@ import type { GuardPresentation } from './guarded-route.types';
 const PRESENTATION: Record<GuardStatus, GuardPresentation> = {
   [GUARD_STATUS.Loading]: { kind: 'loading' },
   [GUARD_STATUS.Allow]: { kind: 'allow' },
-  [GUARD_STATUS.RedirectLogin]: { kind: 'redirect', redirectPath: APP_PATHS.login },
+  // Redirect to the public landing page at `/`, not straight to /login: the
+  // landing page carries the sign-in CTA (one click away), reads correctly
+  // for a visitor who was never authenticated, and is where a just-logged-out
+  // user should land instead of bouncing back to a login form.
+  [GUARD_STATUS.RedirectLogin]: { kind: 'redirect', redirectPath: APP_PATHS.root },
   [GUARD_STATUS.RedirectHome]: { kind: 'redirect', redirectPath: APP_PATHS.home },
   [GUARD_STATUS.Forbidden]: {
     kind: 'state',

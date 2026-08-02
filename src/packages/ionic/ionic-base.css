@@ -1,0 +1,19 @@
+/**
+ * Ionic's core/base stylesheets, loaded inside an explicit `ionic` cascade
+ * layer. Unlayered CSS always outranks layered CSS regardless of source
+ * order or specificity, so every rule `src/app/styles/app.css` writes (it
+ * declares no layer of its own, so it is unlayered) wins over Ionic's base
+ * styles automatically — including `typography.css`'s `h1`-`h6` rules, which
+ * previously beat every Tailwind heading utility because both stylesheets
+ * were unlayered and Ionic's loaded later in the bundle. See
+ * recovery-audit/specs/ui-prettiness-spec.md §4.1(a).
+ */
+@import '@ionic/react/css/core.css' layer(ionic);
+@import '@ionic/react/css/normalize.css' layer(ionic);
+@import '@ionic/react/css/structure.css' layer(ionic);
+@import '@ionic/react/css/typography.css' layer(ionic);
+@import '@ionic/react/css/padding.css' layer(ionic);
+@import '@ionic/react/css/text-alignment.css' layer(ionic);
+@import '@ionic/react/css/flex-utils.css' layer(ionic);
+@import '@ionic/react/css/display.css' layer(ionic);
+@import '@ionic/react/css/palettes/dark.class.css' layer(ionic);

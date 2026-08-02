@@ -56,3 +56,6 @@ android/app/src/main/assets/capacitor.plugins.json
 *.csv
 /exports/
 /uploads/
+
+# Claude Code agent worktrees (local only)
+.claude/worktrees/

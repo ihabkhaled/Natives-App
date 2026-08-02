@@ -55,7 +55,7 @@ describe('PublicNav', () => {
 
     await userEvent.click(screen.getByTestId(TEST_IDS.publicNavBrand));
 
-    expect(onNavigate).toHaveBeenCalledWith('/welcome');
+    expect(onNavigate).toHaveBeenCalledWith('/');
   });
 
   it('routes to sign-in from the call to action', async () => {

@@ -18,6 +18,7 @@ describe('getAppRouteDefinitions', () => {
       APP_PATHS.resetPassword,
       APP_PATHS.acceptInvitation,
       APP_PATHS.sessions,
+      APP_PATHS.root,
       APP_PATHS.welcome,
       APP_PATHS.about,
       APP_PATHS.home,
@@ -98,8 +99,10 @@ describe('getAppRouteDefinitions', () => {
     expect(byPath.get(APP_PATHS.sessions)).toBe(ROUTE_ACCESS.Protected);
     expect(byPath.get(APP_PATHS.login)).toBe(ROUTE_ACCESS.PublicOnly);
     expect(byPath.get(APP_PATHS.acceptInvitation)).toBe(ROUTE_ACCESS.PublicOnly);
-    // Welcome is signed-out-only: `/` redirects here, so an authenticated
-    // visitor would otherwise land on the marketing page and a dead CTA.
+    // The landing page at `/` is public for everyone, signed in or not.
+    expect(byPath.get(APP_PATHS.root)).toBe(ROUTE_ACCESS.Public);
+    // Welcome stays signed-out-only: it is a lightweight sign-in entry kept
+    // for old deep links, not the marketing site (that is `/` now).
     expect(byPath.get(APP_PATHS.welcome)).toBe(ROUTE_ACCESS.PublicOnly);
   });
 });

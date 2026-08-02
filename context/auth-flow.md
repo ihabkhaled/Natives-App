@@ -90,7 +90,8 @@ one promise and exactly one refresh goes out. `createUnauthorizedRetryHandler` t
 `#refresh()` fails when there is no refresh token or the executor throws. Either way
 `#handleFailure()` runs: `tokenStore.clearTokens()` then `onAuthFailure?.()` → `handleAuthFailure()`
 → `useSessionStore.getState().markAnonymous()`. The original request's `HttpError` still propagates
-and maps to `UNAUTHORIZED`, so the caller sees a real failure while the guard redirects to `/login`.
+and maps to `UNAUTHORIZED`, so the caller sees a real failure while the guard redirects to `/`, the
+public landing page (not straight to `/login` — see [routing-map](routing-map.md#guard-behavior)).
 
 `tests/integration/token-refresh.integration.test.ts` proves all of it against MSW: three concurrent
 `getCurrentUser()` calls produce exactly one `/auth/refresh`, and a rejected refresh yields the

@@ -3,20 +3,29 @@ import { NAV_GROUP, ROUTE_ACCESS, type AppRouteDefinition } from '@/shared/types
 
 import { AboutContainer } from '../containers/about.container';
 import { HomeContainer } from '../containers/home.container';
+import { LandingContainer } from '../containers/landing.container';
 import { NotFoundContainer } from '../containers/not-found.container';
 import { WelcomeContainer } from '../containers/welcome.container';
-import { aboutPath, homePath, welcomePath } from './home.paths';
+import { aboutPath, homePath, rootPath, welcomePath } from './home.paths';
 
 export function getHomeRouteDefinitions(): readonly AppRouteDefinition[] {
   return [
     {
+      // Public, not PublicOnly: `/` is the site's front door — the full
+      // marketing landing page — and must read the same for an anonymous
+      // visitor and a signed-in one; nobody should be bounced away from it.
+      path: rootPath(),
+      exact: true,
+      access: ROUTE_ACCESS.Public,
+      component: LandingContainer,
+    },
+    {
       path: welcomePath(),
       exact: true,
-      // PublicOnly, not Public: `/` redirects here, so an authenticated visitor
-      // who opens the app root would otherwise land on the signed-out marketing
-      // screen and be offered a "Sign in" CTA that leads nowhere. Every other
-      // signed-out entry point (login, forgot/reset password, invitation) is
-      // already PublicOnly; welcome was the one screen that was not.
+      // PublicOnly: `/welcome` is the lightweight signed-out app entry (a
+      // sign-in CTA, nothing else) kept working for existing deep links; the
+      // full marketing site now lives at `/`. Showing it to an authenticated
+      // visitor would offer a "Sign in" CTA that leads nowhere.
       access: ROUTE_ACCESS.PublicOnly,
       component: WelcomeContainer,
     },

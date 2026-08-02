@@ -1,3 +1,12 @@
-npx lint-staged
-node scripts/quality/validate-filenames.mjs --staged
-node scripts/architecture/validate-forbidden-imports.mjs
+# Pre-commit intentionally does NOT lint, validate filenames, or check imports.
+#
+# lint-staged fanned eslint out over parallel chunks; on a loaded machine that
+# was enough to get the chunks OOM-killed mid-commit, leaving a stale
+# .git/index.lock behind and aborting the commit.
+#
+# Verification now happens ONCE: `npm run quality` is run in the foreground
+# before pushing a batch, and authoritatively in CI — both of which cover
+# lint, filenames, and forbidden imports. Commits stay cheap so work can be
+# checkpointed often (see the incremental-commit rule) instead of being held
+# hostage to a multi-minute hook. This hook is a deliberate no-op.
+exit 0

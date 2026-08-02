@@ -64,16 +64,18 @@ test.describe('authentication', () => {
     await expectPresentedPage(page, TEST_IDS.homePage);
   });
 
-  test('signs out and returns to the public flow', async ({ page }) => {
+  test('signs out and returns to the public landing page, not the login form', async ({
+    page,
+  }) => {
     await login(page);
     await expectPresentedPage(page, TEST_IDS.homePage);
 
     await page.getByTestId(TEST_IDS.appBarUserMenuButton).click();
     await page.getByTestId(TEST_IDS.appBarSignOut).click();
 
-    await expectPresentedPage(page, TEST_IDS.loginPage);
+    await expectPresentedPage(page, TEST_IDS.landingPage);
     await gotoApp(page, APP_ROUTES.home);
-    await expectPresentedPage(page, TEST_IDS.loginPage);
+    await expectPresentedPage(page, TEST_IDS.landingPage);
   });
 
   test('never exposes tokens to localStorage', async ({ page }) => {

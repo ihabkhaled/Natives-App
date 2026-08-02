@@ -8,6 +8,7 @@ import { ADMIN_TEST_IDS } from './admin-test-ids.constants';
 import { ANALYTICS_TEST_IDS } from './analytics-test-ids.constants';
 import { ASSESSMENTS_TEST_IDS } from './assessments-test-ids.constants';
 import { CONTACT_TEST_IDS } from './contact-test-ids.constants';
+import { LANDING_TEST_IDS } from './landing-test-ids.constants';
 import { ONBOARDING_TEST_IDS } from './onboarding-test-ids.constants';
 import { PUBLIC_TEST_IDS } from './public-test-ids.constants';
 import { SELF_SERVICE_TEST_IDS } from './self-service-test-ids.constants';
@@ -64,6 +65,7 @@ export const TEST_IDS = {
   adminPage: 'admin-page',
   ...ABOUT_TEST_IDS,
   ...CONTACT_TEST_IDS,
+  ...LANDING_TEST_IDS,
   welcomePage: 'welcome-page',
   welcomeLoginCta: 'welcome-login-cta',
   loginPage: 'login-page',

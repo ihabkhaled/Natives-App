@@ -7,6 +7,7 @@ import { ATTENDANCE_I18N_KEYS } from './attendance-keys.constants';
 import { COMPETITIONS_I18N_KEYS } from './competitions-keys.constants';
 import { CONTACT_I18N_KEYS } from './contact-keys.constants';
 import { DASHBOARD_I18N_KEYS } from './dashboard-keys.constants';
+import { LANDING_I18N_KEYS } from './landing-keys.constants';
 import {
   MATCH_STATS_I18N_KEYS,
   MATCHES_I18N_KEYS,
@@ -95,6 +96,7 @@ export const I18N_KEYS = {
   },
   about: ABOUT_I18N_KEYS,
   contact: CONTACT_I18N_KEYS,
+  landing: LANDING_I18N_KEYS,
   auth: {
     loginTitle: 'auth.loginTitle',
     emailLabel: 'auth.emailLabel',

@@ -1,5 +1,4 @@
-import { IonReactRouter, IonRouterOutlet, Redirect, Route } from '@/packages/router';
-import { APP_PATHS } from '@/shared/config';
+import { IonReactRouter, IonRouterOutlet, Route } from '@/packages/router';
 
 import { AppLifecycle } from '../lifecycle/app-lifecycle.provider';
 import { AppBarContainer } from '../shell/app-bar/app-bar.container';
@@ -10,7 +9,11 @@ import { GuardedRoute } from './guarded-route.guard';
 import { RouteChrome } from './route-chrome.provider';
 import { getAppRouteDefinitions, getCatchAllRouteDefinition } from './route-registry';
 
-/** The single router composition: chrome, guards, module routes, root redirect, 404. */
+/**
+ * The single router composition: chrome, guards, module routes, 404. `/` is
+ * a normal registered route (the public landing page, owned by the home
+ * module) — it needs no special-cased redirect here.
+ */
 export function AppRouter(): React.JSX.Element {
   const catchAll = getCatchAllRouteDefinition();
   return (
@@ -28,7 +31,6 @@ export function AppRouter(): React.JSX.Element {
             render={() => <GuardedRoute definition={definition} />}
           />
         ))}
-        <Route exact path={APP_PATHS.root} render={() => <Redirect to={APP_PATHS.welcome} />} />
         <Route render={() => <GuardedRoute definition={catchAll} />} />
       </IonRouterOutlet>
       <PrimaryNavigationContainer />

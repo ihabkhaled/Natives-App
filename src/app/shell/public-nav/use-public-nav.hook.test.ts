@@ -25,7 +25,7 @@ vi.mock('@/modules/settings', async (importOriginal) => ({
 const toggleTheme = vi.fn();
 const toggleLocale = vi.fn();
 const pushSpy = vi.fn();
-let currentPath: string = APP_PATHS.welcome;
+let currentPath: string = APP_PATHS.root;
 
 vi.mock('@/packages/router', () => ({
   useAppNavigation: () => ({
@@ -47,7 +47,7 @@ beforeAll(async () => {
 });
 
 beforeEach(() => {
-  currentPath = APP_PATHS.welcome;
+  currentPath = APP_PATHS.root;
   mockSession(true, false);
   vi.mocked(useThemeToggle).mockReturnValue({ isDark: false, toggle: toggleTheme });
   vi.mocked(useLocaleToggle).mockReturnValue({

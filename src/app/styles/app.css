@@ -5466,9 +5466,22 @@ ion-spinner {
    Public marketing shell — navbar + footer around every signed-out route.
    Same chrome language as the app bar / primary nav: fixed strips that carve
    the router outlet's insets rather than sitting in normal document flow.
+
+   Known limitation (recovery-audit/specs/ui-prettiness-spec.md §A2): this
+   still scrolls `ion-content` internally rather than the document itself,
+   so `position: sticky` sections and scroll-linked reveals are not
+   available to public pages. Converting to a true document-scroll model
+   safely requires touching `ion-router-outlet`'s Ionic-default
+   `position: absolute` behavior, which this batch does not attempt without
+   the ability to verify it live in a real browser across every screen —
+   flagged for a follow-up pass. What IS fixed here: the footer's permanent
+   footprint is cut roughly in half (was 8.5rem / ~17-20% of a phone
+   viewport, now matches the desktop height at every width), so far less of
+   the internal scroll area is permanently lost, and every public page keeps
+   comfortable clearance above it.
 ---------------------------------------------------------------------------- */
 :root:root {
-  --app-public-footer-h: 8.5rem;
+  --app-public-footer-h: 4.5rem;
 }
 
 @media (min-width: 720px) {
@@ -5673,14 +5686,20 @@ ion-spinner {
   font-weight: var(--un-font-weight-bold);
 }
 
+/* Dropped below 720px so the compact mobile footer (brand + social +
+   copyright) fits `--app-public-footer-h` in a single row instead of the
+   four-row stack that used to force the footer's mobile height to 8.5rem —
+   nearly a fifth of a phone viewport, permanently. The public navbar's
+   drawer already repeats every one of these destinations. */
 .app-public-footer__tagline {
+  display: none;
   margin: 0;
   color: var(--app-muted);
   font-size: var(--un-font-size-xs);
 }
 
 .app-public-footer__nav {
-  display: flex;
+  display: none;
   flex-wrap: wrap;
   align-items: center;
   justify-content: center;
@@ -5743,6 +5762,11 @@ ion-spinner {
   .app-public-footer {
     flex-wrap: nowrap;
     justify-content: space-between;
+  }
+
+  .app-public-footer__tagline,
+  .app-public-footer__nav {
+    display: flex;
   }
 
   .app-public-footer__copyright {
@@ -5842,4 +5866,202 @@ ion-spinner {
 
 .app-contact-social-link:hover {
   text-decoration: underline;
+}
+
+/* ----------------------------------------------------------------------------
+   Landing page (`/`) — the public marketing front door. `.app-welcome-hero__mark`
+   (defined above) supplies the decorative arc; everything here is new.
+
+   Brand direction (recovery-audit/specs/ui-prettiness-spec.md §2): the team's
+   real identity is gold-and-black (Season-Board graphics, the logo), not the
+   app-wide turf-lime primary. Scoped to `[data-testid='landing-page']` only —
+   a full app-wide "Falcon Gold" retheme (new token ramp, regenerated
+   `brand-tokens.generated.css`) is a separate follow-up pass; this page just
+   stops being the one screen where the gold logo sits inside a lime hero.
+---------------------------------------------------------------------------- */
+[data-testid='landing-page'] .app-welcome-hero__mark {
+  border-block-end-color: var(--app-gold-line);
+  border-inline-start-color: var(--app-gold-line);
+}
+
+[data-testid='landing-page'] .app-eyebrow {
+  color: var(--app-gold-text);
+}
+
+[data-testid='landing-page'] .app-landing-hero ion-button.button-solid.ion-color-primary::part(native) {
+  background: linear-gradient(
+    135deg,
+    var(--app-gold) 0%,
+    color-mix(in srgb, var(--app-gold) 85%, black) 100%
+  );
+  color: var(--app-cta-ink);
+}
+
+[data-testid='landing-page']
+  [data-testid='landing-final-cta']
+  ion-button.button-solid.ion-color-primary::part(native) {
+  background: linear-gradient(
+    135deg,
+    var(--app-gold) 0%,
+    color-mix(in srgb, var(--app-gold) 85%, black) 100%
+  );
+  color: var(--app-cta-ink);
+}
+
+.app-landing-layout {
+  display: flex;
+  flex-direction: column;
+  gap: var(--un-space-6);
+  padding-block-end: var(--un-space-8);
+}
+
+.app-landing-hero {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  gap: var(--un-space-3);
+  padding: clamp(1.75rem, 6vw, 3.5rem) clamp(1rem, 4vw, 2rem);
+  border-radius: var(--un-radius-xl);
+  background:
+    radial-gradient(
+      120% 80% at 8% -10%,
+      color-mix(in srgb, var(--app-gold) 22%, var(--app-page-bg)),
+      transparent 58%
+    ),
+    var(--app-page-bg);
+  border: 1px solid var(--app-hairline);
+}
+
+.app-landing-hero__content {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--un-space-3);
+  max-width: 40rem;
+}
+
+.app-landing-hero__title {
+  font-size: clamp(2rem, 5vw, 3.25rem);
+  font-weight: var(--un-font-weight-bold);
+  letter-spacing: var(--un-letter-spacing-tight);
+}
+
+.app-landing-hero__tagline {
+  font-size: var(--un-font-size-md);
+  line-height: var(--un-line-height-normal);
+  max-width: 34rem;
+}
+
+.app-landing-hero__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--un-space-3);
+  margin-block-start: var(--un-space-2);
+}
+
+.app-landing-staff-grid,
+.app-landing-competitions-grid {
+  display: grid;
+  gap: var(--un-space-4);
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.app-landing-staff-card,
+.app-landing-competition-card {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--un-space-2);
+  padding: var(--un-space-4);
+  border: 1px solid var(--app-hairline);
+  border-radius: var(--un-radius-lg);
+  background: var(--app-page-bg);
+}
+
+.app-landing-staff-card__titles {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--un-space-1);
+  margin: 0;
+  padding-inline-start: 0;
+  list-style: none;
+  font-size: var(--un-font-size-xs);
+  color: var(--app-muted-strong);
+}
+
+.app-landing-staff-card__titles li {
+  padding: 0.125rem var(--un-space-2);
+  border-radius: var(--un-radius-pill);
+  background: var(--app-gold-soft);
+  color: var(--app-gold-text);
+  font-weight: var(--un-font-weight-semibold);
+}
+
+.app-landing-location {
+  display: flex;
+  flex-direction: column;
+  gap: var(--un-space-4);
+}
+
+.app-landing-location__mark {
+  inline-size: 100%;
+  block-size: 10rem;
+  border-radius: var(--un-radius-lg);
+  background: color-mix(in srgb, var(--app-gold) 16%, var(--app-page-bg));
+  border: 1px dashed var(--app-gold-line);
+}
+
+.app-landing-location__details {
+  display: flex;
+  flex-direction: column;
+  gap: var(--un-space-2);
+}
+
+.app-landing-gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--un-space-3);
+}
+
+.app-landing-gallery-tile {
+  aspect-ratio: 4 / 3;
+  border-radius: var(--un-radius-lg);
+  background: var(--app-skeleton-base);
+  border: 1px solid var(--app-hairline);
+}
+
+@media (min-width: 720px) {
+  .app-landing-staff-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .app-landing-competitions-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .app-landing-location {
+    flex-direction: row;
+    align-items: center;
+  }
+
+  .app-landing-location__mark {
+    flex: 0 0 16rem;
+    block-size: 12rem;
+  }
+
+  .app-landing-gallery-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1080px) {
+  .app-landing-staff-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  .app-landing-gallery-grid {
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+  }
 }

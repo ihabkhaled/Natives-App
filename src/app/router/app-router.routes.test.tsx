@@ -6,10 +6,17 @@ import { ROUTE_ACCESS, type AppRouteDefinition } from '@/shared/types';
 
 import { AppRouter } from './app-router.routes';
 
+const ROOT_ROUTE: AppRouteDefinition = {
+  path: APP_PATHS.root,
+  exact: true,
+  access: ROUTE_ACCESS.Public,
+  component: () => <div>landing screen</div>,
+};
+
 const WELCOME_ROUTE: AppRouteDefinition = {
   path: APP_PATHS.welcome,
   exact: true,
-  access: ROUTE_ACCESS.Public,
+  access: ROUTE_ACCESS.PublicOnly,
   component: () => <div>welcome screen</div>,
 };
 
@@ -28,7 +35,7 @@ const CATCH_ALL: AppRouteDefinition = {
 };
 
 vi.mock('./route-registry', () => ({
-  getAppRouteDefinitions: () => [WELCOME_ROUTE, HOME_ROUTE],
+  getAppRouteDefinitions: () => [ROOT_ROUTE, WELCOME_ROUTE, HOME_ROUTE],
   getCatchAllRouteDefinition: () => CATCH_ALL,
 }));
 
@@ -64,10 +71,10 @@ beforeEach(() => {
 });
 
 describe('AppRouter', () => {
-  it('redirects the root path to the welcome screen', () => {
+  it('routes the root path through the guard like any other registered route', () => {
     render(<AppRouter />);
 
-    expect(screen.getByTestId('guarded-route')).toHaveTextContent(APP_PATHS.welcome);
+    expect(screen.getByTestId('guarded-route')).toHaveTextContent(APP_PATHS.root);
   });
 
   it('routes a registered path through the guard', () => {
