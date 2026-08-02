@@ -65,6 +65,8 @@ describe('I18N_KEYS', () => {
       'welcome',
       'about',
       'contact',
+      'news',
+      'newsEditor',
       'auth',
       'sessions',
       'home',

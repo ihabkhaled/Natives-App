@@ -8,6 +8,11 @@ export const APP_PATHS = {
   welcome: '/welcome',
   about: '/about',
   contact: '/contact',
+  news: '/news',
+  // Registered before `newsArticle` in the news route table so the literal
+  // segment wins over the `:slug` pattern in the router's first-match Switch.
+  newsManage: '/news/manage',
+  newsArticle: '/news/:slug',
   login: '/login',
   forgotPassword: '/forgot-password',
   resetPassword: '/reset-password',

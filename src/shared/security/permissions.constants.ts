@@ -87,5 +87,14 @@ export const PERMISSIONS = {
   calculationRuleManage: 'points.rules.manage',
   auditRead: 'audit.read',
   outboxManage: 'jobs.manage',
+  // Newsroom authoring. Held by platform and team administrators, Coaches, and
+  // the Social Media & Marketing / Spirit Captain / Finance staff titles — a
+  // plain player never holds it, so the news editor and every editing
+  // affordance stay invisible to them. Public reading needs no grant at all.
+  // PENDING: the backend publishes this string in contract 1.8.0, which is not
+  // synced here yet (contracts/openapi.json is 1.6.0). Until it is,
+  // tests/contract/permissions.contract.test.ts carries it in its documented,
+  // self-expiring pending list.
+  newsManage: 'news.manage',
 } as const;
 export type Permission = (typeof PERMISSIONS)[keyof typeof PERMISSIONS];

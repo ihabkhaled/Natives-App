@@ -14,6 +14,7 @@ import { SELF_SERVICE_TEST_IDS } from './self-service-test-ids.constants';
 import { COMPETITIONS_TEST_IDS } from './competitions-test-ids.constants';
 import { FEATURE_TEST_IDS } from './feature-test-ids.constants';
 import { MATCHES_TEST_IDS } from './matches-test-ids.constants';
+import { NEWS_TEST_IDS } from './news-test-ids.constants';
 import { NOTIFICATIONS_TEST_IDS } from './notifications-test-ids.constants';
 import { REPORTS_TEST_IDS } from './reports-test-ids.constants';
 import { STANDINGS_TEST_IDS } from './standings-test-ids.constants';
@@ -36,6 +37,7 @@ export const TEST_IDS = {
   ...ANALYTICS_TEST_IDS,
   ...REPORTS_TEST_IDS,
   ...PUBLIC_TEST_IDS,
+  ...NEWS_TEST_IDS,
   appShell: 'app-shell',
   skipLink: 'skip-link',
   mainContent: 'main-content',

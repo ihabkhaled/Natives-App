@@ -22,6 +22,27 @@ import { PERMISSIONS } from '@/shared/security';
 
 const CONTRACT_PATH = fileURLToPath(new URL('../../contracts/openapi.json', import.meta.url));
 
+/**
+ * Grants the frontend declares AHEAD of the contract version that publishes
+ * them, mapped to the exact backend contract release that will. This is the
+ * narrow, documented seam for a feature built against a spec while the API is
+ * still shipping — never a place to park a typo:
+ *
+ * - the drift guard below still runs against every other permission string;
+ * - the entry names the release, so "when can this go?" has one answer;
+ * - `rejects a pending entry the contract already publishes` FAILS the moment
+ *   the catalog does carry the string, which forces the entry to be deleted
+ *   rather than quietly outliving its reason.
+ *
+ * A pending grant behaves exactly like an ungranted one at runtime (it never
+ * appears in `/auth/me`), so its screen is forbidden and its nav entry hidden
+ * for every persona until the contract lands — which is the correct behavior
+ * for a feature whose endpoints do not exist yet.
+ */
+const PENDING_BACKEND_CATALOG: Readonly<Record<string, string>> = {
+  'news.manage': '1.8.0',
+};
+
 interface OpenApiContract {
   readonly components: {
     readonly schemas: {
@@ -54,10 +75,32 @@ describe('permission catalog wire contract', () => {
     const catalog = new Set(readPublishedCatalog());
 
     const unknown = Object.entries(PERMISSIONS)
-      .filter(([, value]) => !catalog.has(value))
+      .filter(([, value]) => !catalog.has(value) && PENDING_BACKEND_CATALOG[value] === undefined)
       .map(([key, value]) => `${key} = "${value}"`);
 
     expect(unknown).toEqual([]);
+  });
+
+  it('declares every pending grant in the frontend catalog it excuses', () => {
+    const declared = new Set<string>(Object.values(PERMISSIONS));
+
+    const orphaned = Object.keys(PENDING_BACKEND_CATALOG).filter(
+      (permission) => !declared.has(permission),
+    );
+
+    expect(orphaned).toEqual([]);
+  });
+
+  it('rejects a pending entry the contract already publishes', () => {
+    // Self-expiring: once the named release is synced the string is in the
+    // catalog, the excuse is spent, and this fails until the entry is removed.
+    const catalog = new Set(readPublishedCatalog());
+
+    const stale = Object.entries(PENDING_BACKEND_CATALOG)
+      .filter(([permission]) => catalog.has(permission))
+      .map(([permission, version]) => `${permission} (promised in ${version}) is already published`);
+
+    expect(stale).toEqual([]);
   });
 
   it('rejects the drifted strings that silently forbade their screens', () => {
