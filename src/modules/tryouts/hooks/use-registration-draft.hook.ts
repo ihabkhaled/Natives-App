@@ -2,10 +2,7 @@ import { useState } from 'react';
 
 import { EMPTY_REGISTRATION_DRAFT } from '../helpers/registration-form.helper';
 import type { RegistrationResult } from '../types/tryouts.types';
-import type {
-  RegistrationDraft,
-  RegistrationDraftState,
-} from '../types/public-tryouts-view.types';
+import type { RegistrationDraft, RegistrationDraftState } from '../types/public-tryouts-view.types';
 
 /**
  * The application draft, the server's answer, and the failure flag. Editing

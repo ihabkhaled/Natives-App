@@ -5,13 +5,13 @@ the public About Us marketing screen, the protected home screen, and the not-fou
 
 ## Public surface (`index.ts`)
 
-| Export                                            | Purpose                                                                      |
-| -------------------------------------------------- | ----------------------------------------------------------------------------- |
+| Export                                             | Purpose                                                                         |
+| -------------------------------------------------- | ------------------------------------------------------------------------------- |
 | `getHomeRouteDefinitions`                          | `/` (public), `/welcome` (public-only), `/about` (public), `/home` (protected). |
-| `getNotFoundRouteDefinition`                       | Catch-all; the app router registers it last.                                |
-| `rootPath`, `welcomePath`, `aboutPath`, `homePath` | Typed path builders.                                                        |
-| `AboutScreenView`                                  | About screen's view-model type, for tests/factories.                        |
-| `LandingScreenView`                                | Landing screen's view-model type, for tests/factories.                      |
+| `getNotFoundRouteDefinition`                       | Catch-all; the app router registers it last.                                    |
+| `rootPath`, `welcomePath`, `aboutPath`, `homePath` | Typed path builders.                                                            |
+| `AboutScreenView`                                  | About screen's view-model type, for tests/factories.                            |
+| `LandingScreenView`                                | Landing screen's view-model type, for tests/factories.                          |
 
 ## Anatomy
 
@@ -43,7 +43,7 @@ containers/*             composition (home injects the health card by slot)
   that does not exist yet (contract 1.8.0 is in flight). Every seam renders through the same
   `AsyncStateView` machinery a real query would use (see `LandingSeamSection`), so wiring the real
   query later only changes what feeds `chrome` — no layout rework. Leadership & staff and
-  competitions already have real, spec-sourced content (only the *source* is a stub); active
+  competitions already have real, spec-sourced content (only the _source_ is a stub); active
   players, match scores, leaderboard, and news have no seed data to show honestly, so they always
   present their designed empty state.
 - `SpiritValuesGrid` (`components/spirit-values-grid`) is shared by the About page and the landing

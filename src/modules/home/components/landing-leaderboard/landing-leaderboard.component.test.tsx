@@ -1,5 +1,5 @@
 import { render, screen } from '@testing-library/react';
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 
 import type { LeaderboardSectionView } from '../../helpers/landing-competitive-seam.helper';
 import { LandingLeaderboard } from './landing-leaderboard.component';
@@ -14,7 +14,7 @@ function view(): LeaderboardSectionView {
       errorTitle: 'Error',
       errorMessage: 'Error',
       retryLabel: 'Retry',
-      onRetry: () => {},
+      onRetry: vi.fn(),
       offlineTitle: 'Offline',
       offlineMessage: 'Offline',
       offlineNoticeLabel: 'Offline',

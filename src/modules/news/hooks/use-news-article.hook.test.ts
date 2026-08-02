@@ -6,10 +6,19 @@ import { initTestI18n } from '../../../../tests/setup/i18n-test.helper';
 import { renderHookWithProviders } from '../../../../tests/setup/render-with-providers.helper';
 import { useNewsArticle } from './use-news-article.hook';
 
-const doubles = vi.hoisted(() => ({
-  slug: 'first-league-win' as string | null,
+// Declared, not inferred: individual tests reassign `slug` to null and
+// `article` to a real story, so inference from the initial values alone would
+// pin these to `string` and `null`.
+interface ArticleDoubles {
+  slug: string | null;
+  push: ReturnType<typeof vi.fn>;
+  result: { status: string; article: unknown };
+}
+
+const doubles = vi.hoisted<ArticleDoubles>(() => ({
+  slug: 'first-league-win',
   push: vi.fn(),
-  result: { status: 'unavailable', article: null as unknown },
+  result: { status: 'unavailable', article: null },
 }));
 
 vi.mock('./use-news-context.hook', () => ({
@@ -27,7 +36,9 @@ vi.mock('@/packages/router', () => ({
 // several render/microtask cycles — a single flushed tick leaves status stuck
 // at "loading". `waitFor` polls until the query has actually settled, the same
 // pattern used by every other React-Query-backed hook test in this codebase.
-function renderArticle(): ReturnType<typeof renderHookWithProviders<ReturnType<typeof useNewsArticle>>> {
+function renderArticle(): ReturnType<
+  typeof renderHookWithProviders<ReturnType<typeof useNewsArticle>>
+> {
   return renderHookWithProviders(() => useNewsArticle(), {
     initialPath: '/news/first-league-win',
   });

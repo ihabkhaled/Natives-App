@@ -127,7 +127,10 @@ describe('mapTeamDirectoryResponse', () => {
 
   it('never mutates the response it was given', () => {
     const dto = response({
-      players: [player({ id: 'p-33', jerseyNumber: '33' }), player({ id: 'p-2', jerseyNumber: '2' })],
+      players: [
+        player({ id: 'p-33', jerseyNumber: '33' }),
+        player({ id: 'p-2', jerseyNumber: '2' }),
+      ],
     });
 
     mapTeamDirectoryResponse(dto);

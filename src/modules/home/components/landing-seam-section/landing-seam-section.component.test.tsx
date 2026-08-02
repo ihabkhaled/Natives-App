@@ -1,5 +1,5 @@
 import { render, screen } from '@testing-library/react';
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 
 import type { LandingSeamChrome } from '../../helpers/landing-seam-copy.helper';
 import { LandingSeamSection } from './landing-seam-section.component';
@@ -12,7 +12,7 @@ function chrome(overrides: Partial<LandingSeamChrome> = {}): LandingSeamChrome {
     errorTitle: 'Something went wrong',
     errorMessage: 'Try again.',
     retryLabel: 'Retry',
-    onRetry: () => {},
+    onRetry: vi.fn(),
     offlineTitle: 'Offline',
     offlineMessage: 'Reconnect to continue.',
     offlineNoticeLabel: 'Reconnect to continue.',

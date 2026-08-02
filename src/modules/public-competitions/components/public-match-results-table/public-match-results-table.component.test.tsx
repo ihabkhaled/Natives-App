@@ -134,7 +134,7 @@ describe('PublicMatchResultsTable', () => {
  * renders as `6 – 8`, reversing who won. The isolate pair pins the run.
  */
 describe('PublicMatchResultsTable score rendering in Arabic (RTL)', () => {
-  function renderArabicScore() {
+  function arabicScoreCell() {
     document.documentElement.dir = 'rtl';
     const row = toPublicMatchRowView(
       {
@@ -161,18 +161,18 @@ describe('PublicMatchResultsTable score rendering in Arabic (RTL)', () => {
   }
 
   it('keeps our score first inside a bidi isolate', () => {
-    const cell = renderArabicScore();
+    const cell = arabicScoreCell();
 
     expect(cell.textContent).toContain(`${FIRST_STRONG_ISOLATE}8 – 6${POP_DIRECTIONAL_ISOLATE}`);
     expect(cell.textContent).not.toContain('6 – 8');
   });
 
   it('keeps Latin digits so a score stays scannable in both scripts', () => {
-    expect(renderArabicScore().textContent).toContain('8 – 6');
+    expect(arabicScoreCell().textContent).toContain('8 – 6');
   });
 
   it('offers a spelled-out alternative to assistive tech and hides the glyph run', () => {
-    const cell = renderArabicScore();
+    const cell = arabicScoreCell();
 
     expect(cell).toHaveTextContent('8 - Cairo Ultimate 6');
     expect(

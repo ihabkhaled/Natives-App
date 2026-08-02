@@ -30,7 +30,9 @@ export function buildNewsEditorRow(
     statusLabel: t(isPublished ? I18N_KEYS.news.statusPublished : I18N_KEYS.news.statusDraft),
     statusTone: isPublished ? PUBLISHED_TONE : DRAFT_TONE,
     dateLabel:
-      article.publishedAt === null ? '' : t(I18N_KEYS.news.publishedOn, { date: formatDay(article.publishedAt) }),
+      article.publishedAt === null
+        ? ''
+        : t(I18N_KEYS.news.publishedOn, { date: formatDay(article.publishedAt) }),
     isPublished,
     editLabel: t(I18N_KEYS.newsEditor.edit),
     publishLabel: t(I18N_KEYS.newsEditor.publish),

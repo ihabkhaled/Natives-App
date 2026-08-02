@@ -202,7 +202,9 @@ describe('buildValidationPanel', () => {
 
 describe('buildEntryRows', () => {
   it('drops withdrawn entries and spells out every missing value', () => {
-    const rows = buildEntryRows(t, [
+    const rows = buildEntryRows(
+      t,
+      [
         entry(),
         entry({
           entryId: 'e-2',
@@ -227,7 +229,9 @@ describe('buildEntryRows', () => {
   });
 
   it('keeps the override provenance on an entry added past a constraint', () => {
-    const rows = buildEntryRows(t, [entry({ constraintOverridden: true, overrideReason: 'Handler depth.' })],
+    const rows = buildEntryRows(
+      t,
+      [entry({ constraintOverridden: true, overrideReason: 'Handler depth.' })],
       true,
     );
 

@@ -30,7 +30,9 @@ describe('PublicSectionPage', () => {
     render(<PublicSectionPage {...props()} />);
 
     expect(screen.getByText('New to the sport?')).toBeInTheDocument();
-    expect(screen.getByRole('heading', { level: 1, name: 'What is Ultimate Frisbee?' })).toBeInTheDocument();
+    expect(
+      screen.getByRole('heading', { level: 1, name: 'What is Ultimate Frisbee?' }),
+    ).toBeInTheDocument();
   });
 
   it('renders its children below the header', () => {

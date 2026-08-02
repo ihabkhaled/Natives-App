@@ -40,7 +40,13 @@ describe('getHomeRouteDefinitions', () => {
 
   it('keeps every standalone subject page public, exact, and unauthenticated-readable', () => {
     const definitions = getHomeRouteDefinitions();
-    const subjectPaths = [ultimatePath(), spiritPath(), galleryPath(), locationPath(), achievementsPath()];
+    const subjectPaths = [
+      ultimatePath(),
+      spiritPath(),
+      galleryPath(),
+      locationPath(),
+      achievementsPath(),
+    ];
 
     for (const path of subjectPaths) {
       const route = definitions.find((definition) => definition.path === path);

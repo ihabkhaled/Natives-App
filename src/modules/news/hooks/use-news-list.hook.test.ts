@@ -1,7 +1,6 @@
 import { act, waitFor } from '@testing-library/react';
 import { beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
 
-
 import { buildNewsArticle } from '../../../../tests/factories/news.factory';
 import { initTestI18n } from '../../../../tests/setup/i18n-test.helper';
 import { renderHookWithProviders } from '../../../../tests/setup/render-with-providers.helper';
@@ -22,11 +21,11 @@ vi.mock('../services/list-published-news.service', () => ({
 vi.mock('@/packages/router', () => ({ useAppNavigation: () => ({ push: doubles.push }) }));
 
 async function renderList() {
-  const rendered = renderHookWithProviders(() => useNewsList(), { initialPath: '/news' });
+  const view = renderHookWithProviders(() => useNewsList(), { initialPath: '/news' });
   await waitFor(() => {
-    expect(rendered.result.current.status).not.toBe('loading');
+    expect(view.result.current.status).not.toBe('loading');
   });
-  return rendered;
+  return view;
 }
 
 beforeAll(async () => {
@@ -75,7 +74,10 @@ describe('useNewsList', () => {
   it('prepares one card per story and counts them honestly', async () => {
     doubles.result = {
       status: 'ready',
-      page: { items: [buildNewsArticle(), buildNewsArticle({ id: 'news-2', slug: 'b' })], total: 7 },
+      page: {
+        items: [buildNewsArticle(), buildNewsArticle({ id: 'news-2', slug: 'b' })],
+        total: 7,
+      },
     };
     const { result } = await renderList();
 

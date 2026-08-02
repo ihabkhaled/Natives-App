@@ -36,9 +36,9 @@ function renderAndSubmit(): MutationRender {
   );
 }
 
-async function waitForFailure(render: MutationRender): Promise<void> {
+async function waitForFailure(view: MutationRender): Promise<void> {
   await waitFor(() => {
-    expect(render.result.current.error).not.toBeNull();
+    expect(view.result.current.error).not.toBeNull();
   });
 }
 
@@ -71,11 +71,11 @@ describe('useSubmitContactMutation', () => {
       new AppError({ code: APP_ERROR_CODE.RateLimited }),
     );
 
-    const render = renderAndSubmit();
-    await waitForFailure(render);
+    const view = renderAndSubmit();
+    await waitForFailure(view);
 
-    expect(render.result.current.error?.code).toBe(APP_ERROR_CODE.RateLimited);
-    expect(render.result.current.isSent).toBe(false);
+    expect(view.result.current.error?.code).toBe(APP_ERROR_CODE.RateLimited);
+    expect(view.result.current.isSent).toBe(false);
   });
 
   it('resends exactly what the visitor wrote when a failure is retried', async () => {
@@ -84,14 +84,14 @@ describe('useSubmitContactMutation', () => {
     );
     vi.mocked(submitContactRequest).mockResolvedValueOnce({ sent: true });
 
-    const render = renderAndSubmit();
-    await waitForFailure(render);
+    const view = renderAndSubmit();
+    await waitForFailure(view);
     act(() => {
-      render.result.current.retry();
+      view.result.current.retry();
     });
 
     await waitFor(() => {
-      expect(render.result.current.isSent).toBe(true);
+      expect(view.result.current.isSent).toBe(true);
     });
     expect(submitContactRequest).toHaveBeenNthCalledWith(2, REQUEST);
   });

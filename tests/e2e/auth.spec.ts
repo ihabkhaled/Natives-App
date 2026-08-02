@@ -64,9 +64,7 @@ test.describe('authentication', () => {
     await expectPresentedPage(page, TEST_IDS.homePage);
   });
 
-  test('signs out and returns to the public landing page, not the login form', async ({
-    page,
-  }) => {
+  test('signs out and returns to the public landing page, not the login form', async ({ page }) => {
     await login(page);
     await expectPresentedPage(page, TEST_IDS.homePage);
 

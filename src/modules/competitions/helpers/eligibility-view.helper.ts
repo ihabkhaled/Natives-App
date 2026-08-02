@@ -55,7 +55,7 @@ export function formatAvailability(
  * is printed on the shirt.
  */
 export function formatJersey(t: Translate, jerseyNumber: string | null): string {
-  return jerseyNumber === null ? t(I18N_KEYS.squads.jerseyNone) : jerseyNumber;
+  return jerseyNumber ?? t(I18N_KEYS.squads.jerseyNone);
 }
 
 export function buildSignalChips(

@@ -21,8 +21,6 @@ export const APP_PATHS = {
   gallery: '/gallery',
   location: '/location',
   publicAchievements: '/at-a-glance',
-  teamStaff: '/team/staff',
-  teamPlayers: '/team/players',
   /**
    * Public competitions showcase (signed-out). `/competitions` and
    * `/competitions/:competitionId` already belong to the authenticated

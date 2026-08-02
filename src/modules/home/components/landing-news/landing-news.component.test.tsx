@@ -1,5 +1,5 @@
 import { render, screen } from '@testing-library/react';
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 
 import type { NewsSectionView } from '../../helpers/landing-news-seam.helper';
 import { LandingNews } from './landing-news.component';
@@ -14,7 +14,7 @@ function view(): NewsSectionView {
       errorTitle: 'Error',
       errorMessage: 'Error',
       retryLabel: 'Retry',
-      onRetry: () => {},
+      onRetry: vi.fn(),
       offlineTitle: 'Offline',
       offlineMessage: 'Offline',
       offlineNoticeLabel: 'Offline',

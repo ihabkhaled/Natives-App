@@ -39,7 +39,7 @@ function buildCoreFields(t: Translate, profile: MemberProfile): readonly Profile
     {
       key: 'jersey',
       label: t(I18N_KEYS.members.fieldJersey),
-      value: profile.jerseyNumber === null ? notProvided : String(profile.jerseyNumber),
+      value: profile.jerseyNumber ?? notProvided,
     },
     { key: 'positions', label: t(I18N_KEYS.members.fieldPositions), value: positions },
   ];

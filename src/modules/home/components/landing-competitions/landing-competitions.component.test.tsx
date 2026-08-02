@@ -1,5 +1,5 @@
 import { render, screen } from '@testing-library/react';
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 
 import type { CompetitionsSectionView } from '../../helpers/landing-competitive-seam.helper';
 import { LandingCompetitions } from './landing-competitions.component';
@@ -14,7 +14,7 @@ function view(overrides: Partial<CompetitionsSectionView> = {}): CompetitionsSec
       errorTitle: 'Error',
       errorMessage: 'Error',
       retryLabel: 'Retry',
-      onRetry: () => {},
+      onRetry: vi.fn(),
       offlineTitle: 'Offline',
       offlineMessage: 'Offline',
       offlineNoticeLabel: 'Offline',

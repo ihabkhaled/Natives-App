@@ -26,7 +26,7 @@
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://natives-frontend-app.vercel.app/achievements</loc>
+    <loc>https://natives-frontend-app.vercel.app/at-a-glance</loc>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>

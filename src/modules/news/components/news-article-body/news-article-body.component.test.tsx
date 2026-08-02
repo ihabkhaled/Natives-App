@@ -7,14 +7,14 @@ import { countElements, textOfElements } from '../../../../../tests/setup/dom-qu
 import { parseNewsMarkdown } from '../../parsers/news-markdown.parser';
 import { NewsArticleBody } from './news-article-body.component';
 
-function renderBody(markdown: string): HTMLElement {
+function bodyElementFor(markdown: string): HTMLElement {
   render(<NewsArticleBody blocks={parseNewsMarkdown(markdown)} />);
   return screen.getByTestId(TEST_IDS.newsArticleBody);
 }
 
 describe('NewsArticleBody', () => {
   it('renders headings as h2 and h3, never as an h1 competing with the page', () => {
-    renderBody('## Two\n\n### Three');
+    bodyElementFor('## Two\n\n### Three');
 
     expect(screen.getByRole('heading', { level: 2 })).toHaveTextContent('Two');
     expect(screen.getByRole('heading', { level: 3 })).toHaveTextContent('Three');
@@ -22,14 +22,14 @@ describe('NewsArticleBody', () => {
   });
 
   it('renders bullets and ordered items as real list semantics', () => {
-    renderBody('- one\n- two\n\n1. first');
+    bodyElementFor('- one\n- two\n\n1. first');
 
     expect(screen.getAllByRole('list')).toHaveLength(2);
     expect(screen.getAllByRole('listitem')).toHaveLength(3);
   });
 
   it('renders emphasis marks as elements, not as literal asterisks', () => {
-    const body = renderBody('A **bold** and *italic* and `code` word.');
+    const body = bodyElementFor('A **bold** and *italic* and `code` word.');
 
     expect(body).not.toHaveTextContent('**');
     expect(textOfElements(body, 'strong')).toEqual(['bold']);
@@ -38,7 +38,7 @@ describe('NewsArticleBody', () => {
   });
 
   it('renders an allowlisted link as a safe anchor', () => {
-    renderBody('See [the report](https://example.com/report).');
+    bodyElementFor('See [the report](https://example.com/report).');
     const link = screen.getByRole('link', { name: 'the report' });
 
     expect(link).toHaveAttribute('href', 'https://example.com/report');
@@ -46,7 +46,7 @@ describe('NewsArticleBody', () => {
   });
 
   it('never produces an anchor for a javascript: target', () => {
-    const body = renderBody('[click me](javascript:alert(1))');
+    const body = bodyElementFor('[click me](javascript:alert(1))');
 
     expect(screen.queryByRole('link')).not.toBeInTheDocument();
     expect(body).toHaveTextContent('click me');
@@ -55,7 +55,7 @@ describe('NewsArticleBody', () => {
   it('escapes embedded HTML instead of executing it', () => {
     // The whole reason this module parses to values: a story is untrusted,
     // author-supplied content served on a public page.
-    const body = renderBody('<img src=x onerror="alert(1)"> and <script>alert(2)</script>');
+    const body = bodyElementFor('<img src=x onerror="alert(1)"> and <script>alert(2)</script>');
 
     expect(countElements(body, 'img')).toBe(0);
     expect(countElements(body, 'script')).toBe(0);
@@ -63,7 +63,7 @@ describe('NewsArticleBody', () => {
   });
 
   it('renders a fenced block verbatim, marks included', () => {
-    const body = renderBody('```\n**not bold**\n```');
+    const body = bodyElementFor('```\n**not bold**\n```');
 
     expect(countElements(body, 'strong')).toBe(0);
     expect(countElements(body, 'pre')).toBe(1);
@@ -71,10 +71,10 @@ describe('NewsArticleBody', () => {
   });
 
   it('renders a quote as a blockquote', () => {
-    expect(countElements(renderBody('> quoted line'), 'blockquote')).toBe(1);
+    expect(countElements(bodyElementFor('> quoted line'), 'blockquote')).toBe(1);
   });
 
   it('renders nothing at all for an empty story', () => {
-    expect(countElements(renderBody(''), '*')).toBe(0);
+    expect(countElements(bodyElementFor(''), '*')).toBe(0);
   });
 });

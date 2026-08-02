@@ -44,8 +44,8 @@ describe('GalleryContainer', () => {
   it('renders one tile per gallery entry', () => {
     render(<GalleryContainer />);
 
-    expect(screen.getAllByTestId(new RegExp(`^${TEST_IDS.landingGalleryTile}-`))).toHaveLength(
-      VIEW.gallery.tiles.length,
-    );
+    for (const tile of VIEW.gallery.tiles) {
+      expect(screen.getByTestId(`${TEST_IDS.landingGalleryTile}-${tile.key}`)).toBeInTheDocument();
+    }
   });
 });

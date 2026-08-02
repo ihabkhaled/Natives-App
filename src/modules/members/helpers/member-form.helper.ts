@@ -1,4 +1,4 @@
-const JERSEY_INPUT_PATTERN = /^[0-9]{1,4}$/;
+const JERSEY_INPUT_PATTERN = /^\d{1,4}$/;
 
 /** Parse a free-text jersey field into a bounded number, or null when blank/invalid. */
 /**
@@ -47,6 +47,6 @@ export function buildSelfEditInitialValues(
   return {
     fullName: source.fullName ?? source.displayName,
     nickname: source.nickname ?? '',
-    jersey: source.jerseyNumber === null ? '' : String(source.jerseyNumber),
+    jersey: source.jerseyNumber ?? '',
   };
 }

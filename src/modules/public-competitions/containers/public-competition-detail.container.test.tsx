@@ -19,9 +19,15 @@ describe('PublicCompetitionDetailContainer', () => {
       <PublicCompetitionDetailContainer />,
     );
 
-    await waitFor(() => {
-      expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent('EUNC 2026');
-    });
+    // 5s, not the 1s default: under v8 coverage instrumentation the query
+    // settles well past a second, and the heading shows the section title
+    // until it does.
+    await waitFor(
+      () => {
+        expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent('EUNC 2026');
+      },
+      { timeout: 5000 },
+    );
     expect(screen.getByTestId(TEST_IDS.publicCompetitionDetailPage)).toBeInTheDocument();
   });
 });

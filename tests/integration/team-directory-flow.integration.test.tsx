@@ -109,7 +109,7 @@ describe('public team directory endpoint (contract 1.8.0, mocked)', () => {
     expect(directory.team.socialUrls).not.toContain('http://insecure.example.com/ultimatenatives');
     expect(directory.staff.map((member) => member.displayName)).toContain('Rawan Elessawy');
     expect(directory.staff[1]?.titles).toEqual(['co-coach']);
-    expect(directory.players.map((player) => player.jerseyNumber)).toEqual([11, 33, null]);
+    expect(directory.players.map((player) => player.jerseyNumber)).toEqual(['11', '33', null]);
   });
 
   it('keeps a published portrait and a missing one side by side', async () => {

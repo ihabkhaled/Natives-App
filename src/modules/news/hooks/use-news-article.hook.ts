@@ -27,11 +27,7 @@ export function useNewsArticle(): NewsArticleScreenView {
   const query = useNewsArticleQuery(slug);
   const article = query.data?.article ?? null;
   const blocks = useMemo(() => parseNewsMarkdown(article?.body ?? ''), [article?.body]);
-  const facts = buildNewsArticleFacts(
-    t,
-    (isoDate: string) => formatDate(isoDate, locale),
-    article,
-  );
+  const facts = buildNewsArticleFacts(t, (isoDate: string) => formatDate(isoDate, locale), article);
 
   return {
     ...buildPublicNewsCopy(t, {

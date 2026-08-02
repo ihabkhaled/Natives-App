@@ -98,7 +98,9 @@ describe('permission catalog wire contract', () => {
 
     const stale = Object.entries(PENDING_BACKEND_CATALOG)
       .filter(([permission]) => catalog.has(permission))
-      .map(([permission, version]) => `${permission} (promised in ${version}) is already published`);
+      .map(
+        ([permission, version]) => `${permission} (promised in ${version}) is already published`,
+      );
 
     expect(stale).toEqual([]);
   });

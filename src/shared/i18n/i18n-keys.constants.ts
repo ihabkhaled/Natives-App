@@ -7,6 +7,7 @@ import { ATTENDANCE_I18N_KEYS } from './attendance-keys.constants';
 import { COMPETITIONS_I18N_KEYS } from './competitions-keys.constants';
 import { CONTACT_I18N_KEYS } from './contact-keys.constants';
 import { DASHBOARD_I18N_KEYS } from './dashboard-keys.constants';
+import { ERRORS_I18N_KEYS } from './errors-keys.constants';
 import { LANDING_I18N_KEYS } from './landing-keys.constants';
 import {
   MATCH_STATS_I18N_KEYS,
@@ -59,27 +60,7 @@ export const I18N_KEYS = {
     logoAlt: 'brand.logoAlt',
     tagline: 'brand.tagline',
   },
-  errors: {
-    network: 'errors.network',
-    timeout: 'errors.timeout',
-    unauthorized: 'errors.unauthorized',
-    forbidden: 'errors.forbidden',
-    notFound: 'errors.notFound',
-    conflict: 'errors.conflict',
-    rateLimited: 'errors.rateLimited',
-    validation: 'errors.validation',
-    server: 'errors.server',
-    unexpected: 'errors.unexpected',
-    invalidCredentials: 'errors.invalidCredentials',
-    sessionExpired: 'errors.sessionExpired',
-    deepLinkRejected: 'errors.deepLinkRejected',
-    linkInvalidOrExpired: 'errors.linkInvalidOrExpired',
-    /** Backend-namespaced practice-domain message keys the UI renders as copy. */
-    practices: {
-      checkInWindowClosed: 'errors.practices.checkInWindowClosed',
-      attendanceRuleMissing: 'errors.practices.attendanceRuleMissing',
-    },
-  },
+  errors: ERRORS_I18N_KEYS,
   states: {
     emptyTitle: 'states.emptyTitle',
     emptyMessage: 'states.emptyMessage',

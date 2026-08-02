@@ -73,9 +73,7 @@ describe('useNewsArticleForm', () => {
     });
 
     await waitFor(() => {
-      expect(result.current.titleField.errorMessage).toBe(
-        't:newsEditor.validationTitleTooShort',
-      );
+      expect(result.current.titleField.errorMessage).toBe('t:newsEditor.validationTitleTooShort');
     });
     expect(onValidSubmit).not.toHaveBeenCalled();
   });
@@ -91,7 +89,9 @@ describe('useNewsArticleForm', () => {
     });
 
     await waitFor(() => {
-      expect(onValidSubmit).toHaveBeenCalledWith(expect.objectContaining({ title: 'First league win' }));
+      expect(onValidSubmit).toHaveBeenCalledWith(
+        expect.objectContaining({ title: 'First league win' }),
+      );
     });
   });
 

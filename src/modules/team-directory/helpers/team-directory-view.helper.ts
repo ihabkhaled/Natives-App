@@ -41,9 +41,7 @@ function toCard(t: Translate, source: CardSource): DirectoryCardView {
     portraitAlt: t(KEYS.portraitAlt, { name: source.displayName }),
     avatarLabel: t(KEYS.avatarLabel, { name: source.displayName }),
     jersey:
-      jersey === null
-        ? null
-        : { text: String(jersey), label: t(KEYS.jerseyLabel, { number: jersey }) },
+      jersey === null ? null : { text: jersey, label: t(KEYS.jerseyLabel, { number: jersey }) },
     tags: source.tags,
   };
 }

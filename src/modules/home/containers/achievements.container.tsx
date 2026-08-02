@@ -9,10 +9,7 @@ export function AchievementsContainer(): React.JSX.Element {
   const screen = useAchievementsScreen();
   return (
     <PublicSectionPage view={screen.page} testId={TEST_IDS.publicAchievementsPage}>
-      <SectionPanel
-        heading={screen.achievements.heading}
-        testId={TEST_IDS.landingAchievements}
-      >
+      <SectionPanel heading={screen.achievements.heading} testId={TEST_IDS.landingAchievements}>
         <FactList
           items={screen.achievements.items}
           ariaLabel={screen.achievements.heading}

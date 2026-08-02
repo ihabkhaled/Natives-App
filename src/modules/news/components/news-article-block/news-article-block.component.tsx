@@ -1,9 +1,5 @@
 import { NewsRichText } from '../news-rich-text';
-import {
-  NEWS_BLOCK_TAGS,
-  NEWS_HEADING_TAGS,
-  NEWS_LINE_TAGS,
-} from './news-article-block.constants';
+import { NEWS_BLOCK_TAGS, NEWS_HEADING_TAGS, NEWS_LINE_TAGS } from './news-article-block.constants';
 import type { NewsArticleBlockProps } from './news-article-block.types';
 
 /**

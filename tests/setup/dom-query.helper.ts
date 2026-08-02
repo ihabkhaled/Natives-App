@@ -12,5 +12,5 @@ export function countElements(root: ParentNode, selector: string): number {
 }
 
 export function textOfElements(root: ParentNode, selector: string): readonly string[] {
-  return [...root.querySelectorAll(selector)].map((node) => node.textContent ?? '');
+  return [...root.querySelectorAll(selector)].map((node) => node.textContent);
 }

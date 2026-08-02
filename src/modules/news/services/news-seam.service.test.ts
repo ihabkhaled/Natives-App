@@ -19,7 +19,10 @@ describe('the newsroom TODO seam', () => {
       listPublishedNews(1),
       getPublishedNewsArticle('first-league-win'),
       listManagedNews(1),
-      saveNewsArticle({ articleId: null, draft: { title: '', body: '', coverImageUrl: '', competitionId: '', matchId: '' } }),
+      saveNewsArticle({
+        articleId: null,
+        draft: { title: '', body: '', coverImageUrl: '', competitionId: '', matchId: '' },
+      }),
       publishNewsArticle('news-1'),
     ]);
 

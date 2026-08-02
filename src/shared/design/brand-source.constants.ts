@@ -1,15 +1,22 @@
 /**
- * Provenance of the committed source art. The Ultimate Natives logo is treated
- * as the canonical, untouched source image; every raster/native derivative is
- * generated from it (scripts/branding/generate-brand-assets.mjs). The checksum
- * is pinned so an accidental edit or re-export is caught by the colocated test
- * and by the generation script. Confirm brand ownership and store-distribution
- * rights before public release.
+ * Provenance of the committed source art. Every raster/native derivative is
+ * generated from this file (scripts/branding/generate-brand-assets.mjs). The
+ * checksum is pinned so an accidental edit or re-export is caught by the
+ * colocated test and by the generation script. Confirm brand ownership and
+ * store-distribution rights before public release.
+ *
+ * The committed file is NOT the byte-identical supplied original: the supplied
+ * PNG was colorType 2 with no tRNS chunk — RGB with a near-black backdrop baked
+ * in — so it rendered as a black slab on any surface that was not also black.
+ * It has been re-encoded as RGBA (colorType 6) with that backdrop keyed out by
+ * a flood fill seeded from the image border, which removes only the background
+ * connected to the edge and leaves the artwork's own black outlines and letter
+ * fills intact. Artwork, dimensions and palette are otherwise unchanged.
  */
 export const BRAND_LOGO_SOURCE_PATH = 'public/brand-logo.png';
 
 export const BRAND_LOGO_SOURCE_SHA256 =
-  'd5dc2db2b60df43eea7cf91dfb7f45fcfb5dc4e38d7692c1fe92b7980deb09cf';
+  'cb47ddc4b3aaf54718d92c500c78e62eb4a154d15309ca8b2d6b5937772ef1f9';
 
 export const BRAND_LOGO_DIMENSIONS = { width: 1152, height: 1152 } as const;
 

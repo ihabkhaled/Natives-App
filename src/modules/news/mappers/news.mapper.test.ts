@@ -59,7 +59,10 @@ describe('mapNewsArticle', () => {
 
 describe('mapNewsPage', () => {
   it('maps every item and keeps the reported total', () => {
-    const page = mapNewsPage({ items: [buildNewsItemDto(), buildNewsItemDto({ id: 'n2' })], total: 9 });
+    const page = mapNewsPage({
+      items: [buildNewsItemDto(), buildNewsItemDto({ id: 'n2' })],
+      total: 9,
+    });
 
     expect(page.items.map((item) => item.id)).toEqual(['news-1', 'n2']);
     expect(page.total).toBe(9);

@@ -12,7 +12,9 @@ const doubles = vi.hoisted(() => ({
   canManage: true,
   showToast: vi.fn(),
   save: vi.fn(() => Promise.resolve({ status: 'unavailable', article: null })),
-  publish: vi.fn(() => Promise.resolve({ status: 'unavailable', article: null })),
+  // Typed with the id parameter it is actually called with, so the assertion
+  // below can read it — an untyped vi.fn() infers a zero-length argument tuple.
+  publish: vi.fn((_articleId: string) => Promise.resolve({ status: 'unavailable', article: null })),
   items: [] as unknown[],
 }));
 
@@ -21,7 +23,10 @@ vi.mock('./use-news-context.hook', () => ({
 }));
 vi.mock('../services/list-managed-news.service', () => ({
   listManagedNews: () =>
-    Promise.resolve({ status: 'ready', page: { items: doubles.items, total: doubles.items.length } }),
+    Promise.resolve({
+      status: 'ready',
+      page: { items: doubles.items, total: doubles.items.length },
+    }),
 }));
 vi.mock('../services/save-news-article.service', () => ({ saveNewsArticle: doubles.save }));
 vi.mock('../services/publish-news-article.service', () => ({
@@ -33,11 +38,11 @@ vi.mock('@/shared/ui', async (importOriginal) => ({
 }));
 
 async function renderEditor() {
-  const rendered = renderHookWithProviders(() => useNewsEditor(), { initialPath: '/news/manage' });
+  const view = renderHookWithProviders(() => useNewsEditor(), { initialPath: '/news/manage' });
   await act(async () => {
     await Promise.resolve();
   });
-  return rendered;
+  return view;
 }
 
 beforeAll(async () => {
@@ -46,7 +51,10 @@ beforeAll(async () => {
 
 beforeEach(() => {
   doubles.canManage = true;
-  doubles.items = [buildNewsArticle(), buildNewsArticle({ id: 'news-2', status: 'draft', publishedAt: null, title: 'Tryouts open' })];
+  doubles.items = [
+    buildNewsArticle(),
+    buildNewsArticle({ id: 'news-2', status: 'draft', publishedAt: null, title: 'Tryouts open' }),
+  ];
   doubles.showToast.mockClear();
   doubles.save.mockClear();
   doubles.publish.mockClear();

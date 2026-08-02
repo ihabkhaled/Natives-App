@@ -74,8 +74,8 @@ describe('newsArticleFormSchema', () => {
   });
 
   it('rejects an overlong optional identifier', () => {
-    expect(
-      firstIssue({ ...valid, matchId: 'm'.repeat(NEWS_FIELD_LIMITS.linkIdMax + 1) }),
-    ).toBe(I18N_KEYS.newsEditor.validationLinkTooLong);
+    expect(firstIssue({ ...valid, matchId: 'm'.repeat(NEWS_FIELD_LIMITS.linkIdMax + 1) })).toBe(
+      I18N_KEYS.newsEditor.validationLinkTooLong,
+    );
   });
 });

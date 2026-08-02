@@ -1,5 +1,5 @@
 import { render, screen } from '@testing-library/react';
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 
 import type { MatchScoresSectionView } from '../../helpers/landing-competitive-seam.helper';
 import { LandingMatchScores } from './landing-match-scores.component';
@@ -14,7 +14,7 @@ function view(): MatchScoresSectionView {
       errorTitle: 'Error',
       errorMessage: 'Error',
       retryLabel: 'Retry',
-      onRetry: () => {},
+      onRetry: vi.fn(),
       offlineTitle: 'Offline',
       offlineMessage: 'Offline',
       offlineNoticeLabel: 'Offline',

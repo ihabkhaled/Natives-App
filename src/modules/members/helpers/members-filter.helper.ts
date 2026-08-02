@@ -5,7 +5,7 @@ function matchesSearch(item: MemberDirectoryItem, needle: string): boolean {
   if (needle === '') {
     return true;
   }
-  const jersey = item.jerseyNumber === null ? '' : String(item.jerseyNumber);
+  const jersey = item.jerseyNumber ?? '';
   const haystack = [item.displayName, item.nickname ?? '', jersey, ...item.positions]
     .join(' ')
     .toLowerCase();

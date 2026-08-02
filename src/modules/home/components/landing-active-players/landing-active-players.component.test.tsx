@@ -1,5 +1,5 @@
 import { render, screen } from '@testing-library/react';
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 
 import type { ActivePlayersSectionView } from '../../helpers/landing-team-seam.helper';
 import { LandingActivePlayers } from './landing-active-players.component';
@@ -14,7 +14,7 @@ function view(): ActivePlayersSectionView {
       errorTitle: 'Error',
       errorMessage: 'Error',
       retryLabel: 'Retry',
-      onRetry: () => {},
+      onRetry: vi.fn(),
       offlineTitle: 'Offline',
       offlineMessage: 'Offline',
       offlineNoticeLabel: 'Offline',

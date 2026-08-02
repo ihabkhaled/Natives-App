@@ -47,7 +47,13 @@ export const LANDING_STAFF: readonly LandingStaffMember[] = [
     titles: [STAFF_TITLE.CoCoach],
     photoUrl: '/staff/rawan-elessawy.jpg',
   },
-  { id: 'zahra', name: 'Zahra', nickname: 'Zoza', titles: [STAFF_TITLE.SpiritCaptain], photoUrl: '/staff/zahra.jpg' },
+  {
+    id: 'zahra',
+    name: 'Zahra',
+    nickname: 'Zoza',
+    titles: [STAFF_TITLE.SpiritCaptain],
+    photoUrl: '/staff/zahra.jpg',
+  },
   {
     id: 'abdelrahman-elleimy',
     name: 'Abdelrahman Elleimy',
@@ -62,8 +68,20 @@ export const LANDING_STAFF: readonly LandingStaffMember[] = [
     titles: [STAFF_TITLE.SocialMedia],
     photoUrl: '/staff/nourane.jpg',
   },
-  { id: 'lina', name: 'Lina', nickname: 'Lilo', titles: [STAFF_TITLE.SocialMedia], photoUrl: '/staff/lina.jpg' },
-  { id: 'roaa', name: 'Roaa', nickname: 'Riri', titles: [STAFF_TITLE.SocialMedia], photoUrl: '/staff/roaa.jpg' },
+  {
+    id: 'lina',
+    name: 'Lina',
+    nickname: 'Lilo',
+    titles: [STAFF_TITLE.SocialMedia],
+    photoUrl: '/staff/lina.jpg',
+  },
+  {
+    id: 'roaa',
+    name: 'Roaa',
+    nickname: 'Riri',
+    titles: [STAFF_TITLE.SocialMedia],
+    photoUrl: '/staff/roaa.jpg',
+  },
   {
     id: 'ihab-khaled',
     name: 'Ihab Khaled',

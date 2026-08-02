@@ -6,16 +6,16 @@ newsroom API arrives in contract **1.8.0**; until then every data source is an h
 
 ## Public surface (`index.ts`)
 
-| Export                                                 | Purpose                                                 |
-| ------------------------------------------------------ | ------------------------------------------------------- |
-| `getNewsRouteDefinitions`                              | `/news`, `/news/manage`, `/news/:slug` — in that order.  |
-| `newsPath`, `newsArticlePath`, `newsManagePath`        | Typed path builders.                                    |
-| `canManageNews`                                        | The `news.manage` convenience check.                    |
-| `parseNewsMarkdown`                                    | Markdown source → typed blocks (no HTML, ever).         |
-| `newsQueryKeys`                                        | Cache branch for cross-module invalidation.             |
-| `NewsArticle`, `NewsPage`, `NewsStatus`                | Domain types.                                           |
-| `NewsItemDto`, `NewsListResponseDto`                   | The 1.8.0 wire shapes the seam is typed against.        |
-| `NewsListScreenView`, `NewsArticleScreenView`, …       | Screen view models, for tests and factories.            |
+| Export                                           | Purpose                                                 |
+| ------------------------------------------------ | ------------------------------------------------------- |
+| `getNewsRouteDefinitions`                        | `/news`, `/news/manage`, `/news/:slug` — in that order. |
+| `newsPath`, `newsArticlePath`, `newsManagePath`  | Typed path builders.                                    |
+| `canManageNews`                                  | The `news.manage` convenience check.                    |
+| `parseNewsMarkdown`                              | Markdown source → typed blocks (no HTML, ever).         |
+| `newsQueryKeys`                                  | Cache branch for cross-module invalidation.             |
+| `NewsArticle`, `NewsPage`, `NewsStatus`          | Domain types.                                           |
+| `NewsItemDto`, `NewsListResponseDto`             | The 1.8.0 wire shapes the seam is typed against.        |
+| `NewsListScreenView`, `NewsArticleScreenView`, … | Screen view models, for tests and factories.            |
 
 ## Anatomy
 

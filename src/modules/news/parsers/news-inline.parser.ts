@@ -51,7 +51,9 @@ function matchedSpan(key: string, match: RegExpExecArray): NewsSpan {
 }
 
 function textSpan(keyPrefix: string, index: number, text: string): readonly NewsSpan[] {
-  return text === '' ? [] : [span(`${keyPrefix}-t${String(index)}`, NEWS_SPAN_KIND.Text, text, null)];
+  return text === ''
+    ? []
+    : [span(`${keyPrefix}-t${String(index)}`, NEWS_SPAN_KIND.Text, text, null)];
 }
 
 /**

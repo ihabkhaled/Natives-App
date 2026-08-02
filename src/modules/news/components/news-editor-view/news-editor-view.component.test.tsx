@@ -28,7 +28,7 @@ describe('NewsEditorView', () => {
     const onEdit = vi.fn();
     const onPublish = vi.fn();
     render(<NewsEditorView {...buildNewsEditorScreenView({ onEdit, onPublish })} />);
-    fireEvent.click(screen.getAllByTestId(TEST_IDS.newsEditorRowEdit)[0] as HTMLElement);
+    fireEvent.click(screen.getAllByTestId(TEST_IDS.newsEditorRowEdit)[0]!);
     fireEvent.click(screen.getByTestId(TEST_IDS.newsEditorRowPublish));
 
     expect(onEdit).toHaveBeenCalledWith('news-1');

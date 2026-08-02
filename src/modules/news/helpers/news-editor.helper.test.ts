@@ -42,9 +42,7 @@ describe('buildNewsEditorRow', () => {
 
 describe('toNewsDraftInput', () => {
   it('loads a story back into the editable fields', () => {
-    expect(
-      toNewsDraftInput(buildNewsArticle({ competitionId: 'c1', matchId: 'm1' })),
-    ).toEqual({
+    expect(toNewsDraftInput(buildNewsArticle({ competitionId: 'c1', matchId: 'm1' }))).toEqual({
       title: 'First league win',
       body: '## A statement win\n\nThe Natives took the opener **15-12**.',
       coverImageUrl: 'https://cdn.example.com/first-win.jpg',
@@ -54,9 +52,11 @@ describe('toNewsDraftInput', () => {
   });
 
   it('turns every absent optional into an empty field, never "null"', () => {
-    expect(
-      toNewsDraftInput(buildNewsArticle({ coverImageUrl: null })),
-    ).toMatchObject({ coverImageUrl: '', competitionId: '', matchId: '' });
+    expect(toNewsDraftInput(buildNewsArticle({ coverImageUrl: null }))).toMatchObject({
+      coverImageUrl: '',
+      competitionId: '',
+      matchId: '',
+    });
   });
 
   it('starts a brand-new draft from empty fields', () => {

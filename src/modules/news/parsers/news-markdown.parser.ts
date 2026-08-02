@@ -1,10 +1,6 @@
 import type { NewsBlock, NewsBlockKind, NewsBlockLine } from '../types/news-markdown.types';
 import { parseNewsInline } from './news-inline.parser';
-import {
-  NEWS_BLOCK_KIND,
-  NEWS_MAX_HEADING_LEVEL,
-  NEWS_SPAN_KIND,
-} from './news-markdown.constants';
+import { NEWS_BLOCK_KIND, NEWS_MAX_HEADING_LEVEL, NEWS_SPAN_KIND } from './news-markdown.constants';
 
 /**
  * Each marker consumes exactly ONE whitespace character before its text. A

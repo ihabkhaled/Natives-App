@@ -10,9 +10,9 @@ const formatDay = (isoDate: string): string => `day(${isoDate})`;
 
 describe('buildNewsExcerpt', () => {
   it('skips headings, bullets, quotes and fences to reach the first prose line', () => {
-    expect(buildNewsExcerpt('## Head\n> quoted\n- item\n```\ncode\n```\nThe real teaser.', 80)).toBe(
-      'The real teaser.',
-    );
+    expect(
+      buildNewsExcerpt('## Head\n> quoted\n- item\n```\ncode\n```\nThe real teaser.', 80),
+    ).toBe('The real teaser.');
   });
 
   it('strips inline marks from the teaser', () => {
@@ -60,6 +60,8 @@ describe('buildNewsCard', () => {
   });
 
   it('passes a missing cover through as null so the view can brand the fallback', () => {
-    expect(buildNewsCard(translate, formatDay, buildNewsArticle({ coverImageUrl: null })).coverImageUrl).toBeNull();
+    expect(
+      buildNewsCard(translate, formatDay, buildNewsArticle({ coverImageUrl: null })).coverImageUrl,
+    ).toBeNull();
   });
 });

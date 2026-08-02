@@ -1,10 +1,7 @@
 import { useAppTranslation } from '@/packages/i18n';
 
 import type { PublicSectionPageView } from '../components/public-section-page';
-import {
-  PUBLIC_PAGE_DEFINITIONS,
-  type PublicPageKey,
-} from '../constants/public-pages.constants';
+import { PUBLIC_PAGE_DEFINITIONS, type PublicPageKey } from '../constants/public-pages.constants';
 
 /**
  * Builds the frame (title, eyebrow, canonical path and SEO copy) for one of

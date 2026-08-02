@@ -27,7 +27,7 @@ describe('parseNewsMarkdown', () => {
     const blocks = parseNewsMarkdown('The Natives took\nthe opener.');
 
     expect(kinds(blocks)).toEqual(['paragraph']);
-    expect(texts(blocks[0] as NewsBlock)).toEqual(['The Natives took the opener.']);
+    expect(texts(blocks[0]!)).toEqual(['The Natives took the opener.']);
   });
 
   it('ends a paragraph at a blank line', () => {
@@ -42,35 +42,35 @@ describe('parseNewsMarkdown', () => {
     const blocks = parseNewsMarkdown('- one\n* two\n- three');
 
     expect(kinds(blocks)).toEqual(['bullets']);
-    expect(texts(blocks[0] as NewsBlock)).toEqual(['one', 'two', 'three']);
+    expect(texts(blocks[0]!)).toEqual(['one', 'two', 'three']);
   });
 
   it('collects an ordered list, accepting both `1.` and `1)`', () => {
     const blocks = parseNewsMarkdown('1. one\n2) two');
 
     expect(kinds(blocks)).toEqual(['numbers']);
-    expect(texts(blocks[0] as NewsBlock)).toEqual(['one', 'two']);
+    expect(texts(blocks[0]!)).toEqual(['one', 'two']);
   });
 
   it('keeps quote lines separate inside one blockquote', () => {
     const blocks = parseNewsMarkdown('> first\n>second');
 
     expect(kinds(blocks)).toEqual(['quote']);
-    expect(texts(blocks[0] as NewsBlock)).toEqual(['first', 'second']);
+    expect(texts(blocks[0]!)).toEqual(['first', 'second']);
   });
 
   it('keeps a fenced code block verbatim, marks and blank lines included', () => {
     const blocks = parseNewsMarkdown('```\n**not bold**\n\nplain\n```');
 
     expect(kinds(blocks)).toEqual(['code']);
-    expect(texts(blocks[0] as NewsBlock)).toEqual(['**not bold**', '', 'plain']);
+    expect(texts(blocks[0]!)).toEqual(['**not bold**', '', 'plain']);
   });
 
   it('still renders an unterminated fence rather than swallowing the story', () => {
     const blocks = parseNewsMarkdown('```\nlet x = 1;');
 
     expect(kinds(blocks)).toEqual(['code']);
-    expect(texts(blocks[0] as NewsBlock)).toEqual(['let x = 1;']);
+    expect(texts(blocks[0]!)).toEqual(['let x = 1;']);
   });
 
   it('closes an open block before a fence opens', () => {
@@ -94,10 +94,7 @@ describe('parseNewsMarkdown', () => {
   it('parses inline marks inside prose but not inside code', () => {
     const blocks = parseNewsMarkdown('a **b**\n\n```\na **b**\n```');
 
-    expect((blocks[0] as NewsBlock).lines[0]?.spans.map((span) => span.kind)).toEqual([
-      'text',
-      'strong',
-    ]);
-    expect((blocks[1] as NewsBlock).lines[0]?.spans.map((span) => span.kind)).toEqual(['text']);
+    expect(blocks[0]!.lines[0]?.spans.map((span) => span.kind)).toEqual(['text', 'strong']);
+    expect(blocks[1]!.lines[0]?.spans.map((span) => span.kind)).toEqual(['text']);
   });
 });

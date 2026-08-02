@@ -41,12 +41,12 @@ the web fallback is secure — see above.
 
 ## Lifecycle
 
-| Event                      | Behavior                                                          |
-| -------------------------- | ----------------------------------------------------------------- |
-| Login success              | Both tokens written through the repository.                       |
-| Access token expired (401) | Single-flight refresh, then the original request replays once.    |
-| Refresh rejected / absent  | Tokens cleared, session → anonymous, guards redirect to `/`.      |
-| Logout                     | Server call is best-effort; local tokens are cleared regardless.  |
+| Event                      | Behavior                                                         |
+| -------------------------- | ---------------------------------------------------------------- |
+| Login success              | Both tokens written through the repository.                      |
+| Access token expired (401) | Single-flight refresh, then the original request replays once.   |
+| Refresh rejected / absent  | Tokens cleared, session → anonymous, guards redirect to `/`.     |
+| Logout                     | Server call is best-effort; local tokens are cleared regardless. |
 
 The single-flight coordinator
 ([`token-refresh.coordinator.ts`](../../src/packages/http/token-refresh.coordinator.ts)) guarantees

@@ -21,10 +21,7 @@ describe('buildStaffDirectorySection', () => {
     const section = buildStaffDirectorySection(t);
     const ihab = section.members.find((member) => member.id === 'ihab-khaled');
 
-    expect(ihab?.titles).toEqual([
-      't:landing.staffTitleAnalysis',
-      't:landing.staffTitleTechnical',
-    ]);
+    expect(ihab?.titles).toEqual(['t:landing.staffTitleAnalysis', 't:landing.staffTitleTechnical']);
   });
 });
 

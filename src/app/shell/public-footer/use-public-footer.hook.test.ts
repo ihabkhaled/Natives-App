@@ -58,14 +58,25 @@ describe('usePublicFooter', () => {
     expect(renderHook(() => usePublicFooter()).result.current.isVisible).toBe(true);
   });
 
-  it('lists the same primary destinations as the navbar', () => {
+  it('carries the navbar spine plus the secondary marketing pages', () => {
     const { result } = renderHook(() => usePublicFooter());
 
+    // The footer is site-wide, so it also carries the pages kept out of the
+    // navbar to keep that bar legible on a phone — and it is what makes them
+    // crawlable from every page.
     expect(result.current.links.map((link) => link.key)).toEqual([
       'home',
       'about',
+      'team',
       'tryouts',
       'contact',
+      'ultimate',
+      'results',
+      'news',
+      'spirit',
+      'gallery',
+      'location',
+      'achievements',
     ]);
   });
 

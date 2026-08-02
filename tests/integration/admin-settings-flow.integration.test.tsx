@@ -28,7 +28,10 @@ vi.mock('@/shared/ui', async (importOriginal) =>
   ),
 );
 
-const WAIT = { timeout: 5000 };
+// 15s, not 5: this flow drives a full schedule -> history -> cancel round trip
+// through MSW, and under v8 coverage instrumentation the whole suite runs slow
+// enough that 5s intermittently expires mid-mutation.
+const WAIT = { timeout: 15000 };
 const FUTURE_WALL_TIME = '2026-09-01T12:00';
 
 async function openSettings(email: string = MOCK_PERSONA_EMAILS.admin): Promise<void> {

@@ -5928,7 +5928,9 @@ ion-spinner {
   color: var(--app-gold-text);
 }
 
-[data-testid='landing-page'] .app-landing-hero ion-button.button-solid.ion-color-primary::part(native) {
+[data-testid='landing-page']
+  .app-landing-hero
+  ion-button.button-solid.ion-color-primary::part(native) {
   background: linear-gradient(
     135deg,
     var(--app-gold) 0%,

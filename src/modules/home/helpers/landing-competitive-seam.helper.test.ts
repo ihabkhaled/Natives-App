@@ -14,8 +14,18 @@ describe('buildCompetitionsSection', () => {
 
     expect(section.chrome.status).toBe('ready');
     expect(section.competitions).toEqual([
-      { id: 'eunc-2026', name: 'EUNC', season: '2026', rankStatus: 't:landing.competitionsRankPending' },
-      { id: 'eudl-2026', name: 'EUDL', season: '2026', rankStatus: 't:landing.competitionsRankPending' },
+      {
+        id: 'eunc-2026',
+        name: 'EUNC',
+        season: '2026',
+        rankStatus: 't:landing.competitionsRankPending',
+      },
+      {
+        id: 'eudl-2026',
+        name: 'EUDL',
+        season: '2026',
+        rankStatus: 't:landing.competitionsRankPending',
+      },
     ]);
   });
 });

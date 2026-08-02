@@ -15,10 +15,16 @@ const coverImageField = schemaBuilder
   .string()
   .trim()
   .max(NEWS_FIELD_LIMITS.coverImageMax, keys.validationCoverImageTooLong)
-  .refine((value) => value === '' || value.startsWith('https://'), keys.validationCoverImageInvalid);
+  .refine(
+    (value) => value === '' || value.startsWith('https://'),
+    keys.validationCoverImageInvalid,
+  );
 
 /** An optional backend identifier link (competition or match). */
-const linkIdField = schemaBuilder.string().trim().max(NEWS_FIELD_LIMITS.linkIdMax, keys.validationLinkTooLong);
+const linkIdField = schemaBuilder
+  .string()
+  .trim()
+  .max(NEWS_FIELD_LIMITS.linkIdMax, keys.validationLinkTooLong);
 
 /**
  * Story validation, bounds mirrored from the backend create/update DTO spec
