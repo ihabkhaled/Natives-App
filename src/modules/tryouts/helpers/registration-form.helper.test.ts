@@ -104,31 +104,60 @@ describe('fieldError', () => {
 });
 
 describe('buildRegistrationResultView', () => {
+  const reset = (): void => {
+    // the reset handler is asserted by identity, never invoked here
+  };
+
   it('renders nothing before the candidate has submitted', () => {
-    expect(buildRegistrationResultView(t, null)).toBeNull();
+    expect(buildRegistrationResultView(t, null, reset)).toBeNull();
   });
 
-  it('reports each outcome with its own copy', () => {
-    const registered = buildRegistrationResultView(t, {
-      outcome: 'registered',
-      reference: 'UN-1',
-      consentVersion: 'v1',
-    });
-    const waitlisted = buildRegistrationResultView(t, {
-      outcome: 'waitlisted',
-      reference: null,
-      consentVersion: 'v1',
-    });
-    const duplicate = buildRegistrationResultView(t, {
-      outcome: 'duplicate',
-      reference: null,
-      consentVersion: 'v1',
-    });
+  it('confirms a registered candidate with their reference', () => {
+    const view = buildRegistrationResultView(
+      t,
+      { outcome: 'registered', reference: 'UN-1', consentVersion: 'v1' },
+      reset,
+    );
 
-    expect(registered?.title).toBe('tryouts.registeredTitle');
-    expect(registered?.reference).toBe('UN-1');
-    expect(waitlisted?.title).toBe('tryouts.waitlistedTitle');
-    expect(duplicate?.title).toBe('tryouts.duplicateTitle');
-    expect(duplicate?.reference).toBeNull();
+    expect(view).toMatchObject({
+      title: 'tryouts.registeredTitle',
+      reference: 'UN-1',
+      tone: 'success',
+    });
+  });
+
+  it('says a waitlist placement is a waitlist placement', () => {
+    const view = buildRegistrationResultView(
+      t,
+      { outcome: 'waitlisted', reference: null, consentVersion: 'v1' },
+      reset,
+    );
+
+    expect(view).toMatchObject({ title: 'tryouts.waitlistedTitle', tone: 'warning' });
+  });
+
+  it('reports a duplicate as a duplicate, with no invented reference', () => {
+    const view = buildRegistrationResultView(
+      t,
+      { outcome: 'duplicate', reference: null, consentVersion: 'v1' },
+      reset,
+    );
+
+    expect(view).toMatchObject({
+      title: 'tryouts.duplicateTitle',
+      tone: 'medium',
+      reference: null,
+    });
+  });
+
+  it('offers a way back to the form, labelled from the catalog', () => {
+    const view = buildRegistrationResultView(
+      t,
+      { outcome: 'registered', reference: 'UN-1', consentVersion: 'v1' },
+      reset,
+    );
+
+    expect(view?.resetLabel).toBe('tryouts.publicApplyAnother');
+    expect(view?.onReset).toBe(reset);
   });
 });

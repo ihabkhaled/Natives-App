@@ -41,50 +41,6 @@ export interface RegistrationFieldView {
   readonly onChange: (value: string) => void;
 }
 
-export interface RegistrationResultView {
-  readonly title: string;
-  readonly message: string;
-  readonly referenceLabel: string;
-  readonly reference: string | null;
-}
-
-export interface TryoutRegistrationView extends TryoutsScreenCopy {
-  readonly title: string;
-  readonly intro: string;
-  readonly status: AsyncViewStatus;
-  readonly backendPendingNotice: string;
-  readonly eventLabel: string;
-  readonly eventValue: string;
-  readonly eventOptions: readonly TryoutsOption[];
-  readonly capacityNotice: string | null;
-  readonly nameLabel: string;
-  readonly namePlaceholder: string;
-  readonly name: RegistrationFieldView;
-  readonly preferredLabel: string;
-  readonly preferred: RegistrationFieldView;
-  readonly emailLabel: string;
-  readonly emailPlaceholder: string;
-  readonly email: RegistrationFieldView;
-  readonly phoneLabel: string;
-  readonly phone: RegistrationFieldView;
-  readonly birthYearLabel: string;
-  readonly birthYear: RegistrationFieldView;
-  readonly consentHeading: string;
-  readonly consentStatement: string;
-  readonly consentVersionLabel: string;
-  readonly consentGiven: boolean;
-  readonly consentError: string | null;
-  readonly privacyHeading: string;
-  readonly privacyNotice: string;
-  readonly submitLabel: string;
-  readonly isSubmitting: boolean;
-  readonly canSubmit: boolean;
-  readonly result: RegistrationResultView | null;
-  readonly onEventChange: (value: string) => void;
-  readonly onConsentChange: (value: boolean) => void;
-  readonly onSubmit: () => void;
-}
-
 export interface TryoutCardView {
   readonly id: string;
   readonly name: string;

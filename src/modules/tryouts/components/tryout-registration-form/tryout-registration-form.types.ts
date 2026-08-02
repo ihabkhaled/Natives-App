@@ -1,5 +1,5 @@
-import type { TryoutRegistrationView } from '../../types/tryouts-view.types';
+import type { RegistrationFormView } from '../../types/public-tryouts-view.types';
 
 export interface TryoutRegistrationFormProps {
-  readonly view: TryoutRegistrationView;
+  readonly view: RegistrationFormView;
 }

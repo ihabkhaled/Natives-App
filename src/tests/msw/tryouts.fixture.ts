@@ -22,21 +22,37 @@ type ConversionDto = SchemaOutput<typeof conversionResponseSchema>;
 
 const CREATED_AT = '2026-07-01T09:00:00.000Z';
 
+const OPEN_EVENT: EventDto = {
+  tryoutId: MOCK_TRYOUTS.openEventId,
+  teamId: MOCK_TRYOUTS.teamId,
+  name: 'Autumn intake — session 1',
+  status: 'open',
+  heldAt: '2026-08-15T15:00:00.000Z',
+  venueName: 'Maadi Club pitch 1',
+  capacity: 24,
+  registeredCount: 4,
+  waitlistedCount: 1,
+  consentVersion: MOCK_TRYOUTS.consentVersion,
+  createdAt: CREATED_AT,
+  updatedAt: CREATED_AT,
+};
+
+/**
+ * A wire-shaped event for the states the default list does not carry (a
+ * closed session, an empty venue). Overrides are applied over the open event
+ * so every required field stays present and schema-valid.
+ */
+export function makeTryoutEventDto(overrides: Partial<EventDto> = {}): EventDto {
+  return { ...OPEN_EVENT, ...overrides };
+}
+
+/** The page envelope the public endpoint returns, for handler overrides. */
+export function makeTryoutEventsResponse(items: readonly EventDto[]): EventListDto {
+  return { items: [...items], total: items.length, limit: 50, offset: 0 };
+}
+
 const EVENTS: EventDto[] = [
-  {
-    tryoutId: MOCK_TRYOUTS.openEventId,
-    teamId: MOCK_TRYOUTS.teamId,
-    name: 'Autumn intake — session 1',
-    status: 'open',
-    heldAt: '2026-08-15T15:00:00.000Z',
-    venueName: 'Maadi Club pitch 1',
-    capacity: 24,
-    registeredCount: 4,
-    waitlistedCount: 1,
-    consentVersion: MOCK_TRYOUTS.consentVersion,
-    createdAt: CREATED_AT,
-    updatedAt: CREATED_AT,
-  },
+  OPEN_EVENT,
   {
     tryoutId: MOCK_TRYOUTS.fullEventId,
     teamId: MOCK_TRYOUTS.teamId,

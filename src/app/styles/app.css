@@ -5843,3 +5843,249 @@ ion-spinner {
 .app-contact-social-link:hover {
   text-decoration: underline;
 }
+
+/* ----------------------------------------------------------------------------
+   Public Tryouts — the signed-out application page. Composes the shared
+   surface card, status chip, and section panel; adds a floodlit hero, the
+   session grid with its capacity meter, and the numbered "what happens next"
+   list. Two columns from 1024px so a desktop never renders a stretched mobile
+   card. Logical properties throughout, so Arabic mirrors without overrides.
+---------------------------------------------------------------------------- */
+.app-public-tryouts {
+  display: flex;
+  flex-direction: column;
+  gap: var(--un-space-6);
+  padding-block-end: var(--un-space-8);
+}
+
+.app-public-tryouts__hero {
+  display: flex;
+  flex-direction: column;
+  gap: var(--un-space-2);
+  padding: var(--un-space-6);
+  border: 1px solid var(--app-lime-line);
+  border-radius: var(--un-radius-xl);
+  background: var(--app-hero-glow);
+}
+
+.app-public-tryouts__title {
+  color: var(--app-ink);
+  font-size: var(--un-font-size-xxl);
+  font-weight: var(--un-font-weight-bold);
+  line-height: var(--un-line-height-tight);
+  letter-spacing: var(--un-letter-spacing-tight);
+}
+
+.app-public-tryouts__intro {
+  max-inline-size: 62ch;
+  font-size: var(--un-font-size-md);
+  line-height: var(--un-line-height-normal);
+}
+
+.app-public-tryouts__layout {
+  display: grid;
+  align-items: start;
+  gap: var(--un-space-4);
+  grid-template-columns: 1fr;
+}
+
+@media (min-width: 1024px) {
+  .app-public-tryouts__layout {
+    grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+  }
+}
+
+/* ---- Session grid: one column on phones, two on tablets, one per column on
+   desktop because the form sits beside it. ---- */
+.app-public-sessions {
+  display: grid;
+  gap: var(--un-space-3);
+  grid-template-columns: 1fr;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+@media (min-width: 640px) and (max-width: 1023px) {
+  .app-public-sessions {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.app-public-session {
+  position: relative;
+  gap: var(--un-space-3);
+  border-radius: var(--un-radius-lg);
+  background: var(--app-page-bg);
+  box-shadow: none;
+  transition:
+    border-color 160ms ease,
+    box-shadow 160ms ease,
+    transform 160ms ease;
+}
+
+@media (hover: hover) {
+  .app-public-session:hover {
+    border-color: var(--app-lime-line);
+    box-shadow: var(--app-elevation-card);
+    transform: translateY(-2px);
+  }
+}
+
+.app-public-session--selected {
+  border-color: var(--app-lime);
+  background: var(--app-card-bg);
+  box-shadow: var(--app-elevation-card);
+}
+
+/* The disc-flight arc, echoed once on the chosen session. */
+.app-public-session--selected::before {
+  position: absolute;
+  content: '';
+  inset-block: var(--un-space-4);
+  inset-inline-start: -1px;
+  inline-size: 3px;
+  border-radius: var(--un-radius-pill);
+  background: var(--app-arc-strong);
+}
+
+.app-public-session--closed {
+  opacity: 0.72;
+}
+
+.app-public-session__head {
+  display: flex;
+  align-items: start;
+  justify-content: space-between;
+  gap: var(--un-space-3);
+}
+
+.app-public-session__title {
+  color: var(--app-ink);
+  font-size: var(--un-font-size-md);
+  font-weight: var(--un-font-weight-bold);
+  line-height: var(--un-line-height-snug);
+}
+
+.app-public-session__facts {
+  display: grid;
+  gap: var(--un-space-3);
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  margin: 0;
+}
+
+.app-public-session__fact {
+  display: flex;
+  min-inline-size: 0;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.app-public-session__fact dd {
+  margin: 0;
+  color: var(--app-ink);
+  font-size: var(--un-font-size-sm);
+  font-weight: var(--un-font-weight-semibold);
+}
+
+.app-public-session__fact dd.app-public-session__time {
+  color: var(--app-muted);
+  font-weight: var(--un-font-weight-regular);
+  font-variant-numeric: tabular-nums;
+}
+
+.app-public-session__meter {
+  overflow: hidden;
+  block-size: 6px;
+  border-radius: var(--un-radius-pill);
+  background: var(--app-track-bg);
+}
+
+.app-public-session__meter-fill {
+  display: block;
+  block-size: 100%;
+  border-radius: var(--un-radius-pill);
+  background: var(--app-cta-gradient);
+}
+
+.app-public-session__meter-fill--full {
+  background: var(--ion-color-warning);
+}
+
+/* ---- Application form + its outcome ---- */
+.app-public-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--un-space-4);
+}
+
+/* The live region is invisible until it has something honest to announce. */
+.app-public-form__status:not(:empty) {
+  padding: var(--un-space-2) var(--un-space-3);
+  border-inline-start: 3px solid var(--ion-color-warning-shade);
+  border-radius: var(--un-radius-md);
+  background: color-mix(in srgb, var(--ion-color-warning) 14%, transparent);
+  color: var(--app-ink);
+  font-size: var(--un-font-size-sm);
+}
+
+.app-public-outcome {
+  align-items: start;
+  gap: var(--un-space-3);
+  border-color: var(--app-lime-line);
+}
+
+.app-public-outcome__title {
+  color: var(--app-ink);
+  font-size: var(--un-font-size-lg);
+  font-weight: var(--un-font-weight-bold);
+  line-height: var(--un-line-height-tight);
+}
+
+/* ---- What happens next ---- */
+.app-public-steps {
+  display: grid;
+  gap: var(--un-space-4);
+  grid-template-columns: 1fr;
+  margin: 0;
+  padding: 0;
+  counter-reset: app-public-step;
+  list-style: none;
+}
+
+@media (min-width: 720px) {
+  .app-public-steps {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+.app-public-steps__item {
+  display: flex;
+  flex-direction: column;
+  gap: var(--un-space-1);
+  counter-increment: app-public-step;
+}
+
+.app-public-steps__item::before {
+  display: inline-flex;
+  align-items: center;
+  align-self: start;
+  justify-content: center;
+  inline-size: 1.75rem;
+  block-size: 1.75rem;
+  margin-block-end: var(--un-space-1);
+  border: 1px solid var(--app-lime-line);
+  border-radius: var(--un-radius-circle);
+  background: var(--app-lime-soft);
+  color: var(--app-lime-text);
+  content: counter(app-public-step);
+  font-size: var(--un-font-size-xs);
+  font-weight: var(--un-font-weight-bold);
+  font-variant-numeric: tabular-nums;
+}
+
+.app-public-steps__title {
+  color: var(--app-ink);
+  font-size: var(--un-font-size-md);
+  font-weight: var(--un-font-weight-bold);
+}
