@@ -3,7 +3,7 @@ import { expect, test } from '@playwright/test';
 import { TEST_IDS } from '@/shared/config';
 import { MOCK_CREDENTIALS, MOCK_PERSONA_EMAILS } from '@/tests/msw/mock-data.constants';
 
-import { APP_ROUTES, expectPresentedPage, gotoApp, login } from './fixtures/app.fixture';
+import { APP_ROUTES, expectPresentedPage, gotoApp, signIn, login } from './fixtures/app.fixture';
 
 function personaLogin(email: string): { email: string; password: string } {
   return { email, password: MOCK_CREDENTIALS.password };
@@ -30,7 +30,7 @@ test.describe('team and season administration', () => {
   });
 
   test('only the transitions that are legal from a team state are offered', async ({ page }) => {
-    await login(page, personaLogin(MOCK_PERSONA_EMAILS.admin));
+    await signIn(page, personaLogin(MOCK_PERSONA_EMAILS.admin));
     await gotoApp(page, APP_ROUTES.adminTeams);
     await expectPresentedPage(page, TEST_IDS.teamsPage);
 
@@ -44,7 +44,7 @@ test.describe('team and season administration', () => {
   });
 
   test('creating a team opens a form whose slug is writable', async ({ page }) => {
-    await login(page, personaLogin(MOCK_PERSONA_EMAILS.admin));
+    await signIn(page, personaLogin(MOCK_PERSONA_EMAILS.admin));
     await gotoApp(page, APP_ROUTES.adminTeams);
     await expectPresentedPage(page, TEST_IDS.teamsPage);
 
@@ -57,7 +57,7 @@ test.describe('team and season administration', () => {
   test('editing an existing team locks its slug, which is its permanent identity', async ({
     page,
   }) => {
-    await login(page, personaLogin(MOCK_PERSONA_EMAILS.admin));
+    await signIn(page, personaLogin(MOCK_PERSONA_EMAILS.admin));
     await gotoApp(page, APP_ROUTES.adminTeams);
     await expectPresentedPage(page, TEST_IDS.teamsPage);
 
@@ -81,7 +81,7 @@ test.describe('team and season administration', () => {
   });
 
   test('a team administrator manages their own team seasons', async ({ page }) => {
-    await login(page, personaLogin(MOCK_PERSONA_EMAILS.teamAdmin));
+    await signIn(page, personaLogin(MOCK_PERSONA_EMAILS.teamAdmin));
     await gotoApp(page, APP_ROUTES.adminSeasons);
 
     await expectPresentedPage(page, TEST_IDS.seasonsPage);
@@ -90,7 +90,7 @@ test.describe('team and season administration', () => {
   });
 
   test('the season editor offers both dates as real pickers', async ({ page }) => {
-    await login(page, personaLogin(MOCK_PERSONA_EMAILS.teamAdmin));
+    await signIn(page, personaLogin(MOCK_PERSONA_EMAILS.teamAdmin));
     await gotoApp(page, APP_ROUTES.adminSeasons);
     await expectPresentedPage(page, TEST_IDS.seasonsPage);
 
@@ -103,7 +103,7 @@ test.describe('team and season administration', () => {
   });
 
   test('the permissions matrix answers "which bundle grants this"', async ({ page }) => {
-    await login(page, personaLogin(MOCK_PERSONA_EMAILS.teamAdmin));
+    await signIn(page, personaLogin(MOCK_PERSONA_EMAILS.teamAdmin));
     await gotoApp(page, APP_ROUTES.adminPermissions);
 
     await expectPresentedPage(page, TEST_IDS.permissionsMatrixPage);

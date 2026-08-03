@@ -8,6 +8,7 @@ import {
   expectPresentedPage,
   fillIonInput,
   gotoApp,
+  signIn,
   login,
 } from './fixtures/app.fixture';
 
@@ -32,7 +33,7 @@ async function fillInvite(page: Page): Promise<void> {
  */
 test.describe('invite a member by email', () => {
   test('refuses to submit without an email, before the server ever sees it', async ({ page }) => {
-    await login(page, personaLogin(MOCK_PERSONA_EMAILS.admin));
+    await signIn(page, personaLogin(MOCK_PERSONA_EMAILS.admin));
     await gotoApp(page, APP_ROUTES.members);
     await page.getByTestId(TEST_IDS.membersInviteButton).click();
 
@@ -48,7 +49,7 @@ test.describe('invite a member by email', () => {
   });
 
   test('reports where the invitation went and hands over the one-time link', async ({ page }) => {
-    await login(page, personaLogin(MOCK_PERSONA_EMAILS.admin));
+    await signIn(page, personaLogin(MOCK_PERSONA_EMAILS.admin));
     await gotoApp(page, APP_ROUTES.members);
     await fillInvite(page);
 
@@ -63,7 +64,7 @@ test.describe('invite a member by email', () => {
   });
 
   test('hands back to a blank form when the administrator is done', async ({ page }) => {
-    await login(page, personaLogin(MOCK_PERSONA_EMAILS.admin));
+    await signIn(page, personaLogin(MOCK_PERSONA_EMAILS.admin));
     await gotoApp(page, APP_ROUTES.members);
     await fillInvite(page);
     await expect(page.getByTestId(TEST_IDS.memberInviteSent)).toBeVisible();
@@ -75,7 +76,7 @@ test.describe('invite a member by email', () => {
   });
 
   test('never offers the invite affordance to a member', async ({ page }) => {
-    await login(page, personaLogin(MOCK_PERSONA_EMAILS.member));
+    await signIn(page, personaLogin(MOCK_PERSONA_EMAILS.member));
     await gotoApp(page, APP_ROUTES.members);
     await expectPresentedPage(page, TEST_IDS.membersPage);
 
@@ -104,7 +105,7 @@ test.describe('team switcher', () => {
  */
 test.describe('date picker', () => {
   test('asks for a date instead of showing one, and opens a calendar', async ({ page }) => {
-    await login(page, personaLogin(MOCK_PERSONA_EMAILS.member));
+    await signIn(page, personaLogin(MOCK_PERSONA_EMAILS.member));
     await gotoApp(page, APP_ROUTES.training);
     await expectPresentedPage(page, TEST_IDS.trainingPage);
 
@@ -121,7 +122,7 @@ test.describe('date picker', () => {
   });
 
   test('is a real target, not a printed value', async ({ page }) => {
-    await login(page, personaLogin(MOCK_PERSONA_EMAILS.member));
+    await signIn(page, personaLogin(MOCK_PERSONA_EMAILS.member));
     await gotoApp(page, APP_ROUTES.training);
     await expectPresentedPage(page, TEST_IDS.trainingPage);
 
