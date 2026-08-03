@@ -115,16 +115,18 @@ describe('brand themes', () => {
     }
   });
 
-  it('keeps turf lime as the primary in both themes, always with ink text', () => {
-    expect(BRAND_THEME_LIGHT.primary.base).toBe(BRAND_PALETTE.lime);
-    expect(BRAND_THEME_DARK.primary.base).toBe(BRAND_PALETTE.limeBright);
+  it('keeps falcon gold as the primary in both themes, always with ink text', () => {
+    // The crest is gold; the primary action is the same gold, so the page and
+    // the mark read as one brand rather than two competing accents.
+    expect(BRAND_THEME_LIGHT.primary.base).toBe(BRAND_PALETTE.gold);
+    expect(BRAND_THEME_DARK.primary.base).toBe(BRAND_PALETTE.goldBright);
     expect(BRAND_THEME_LIGHT.primary.contrast).toBe(BRAND_PALETTE.black);
     expect(BRAND_THEME_DARK.primary.contrast).toBe(BRAND_PALETTE.black);
   });
 
-  it('reserves the gold tertiary role for achievements in both themes', () => {
-    expect(BRAND_THEME_LIGHT.tertiary.base).toBe(BRAND_PALETTE.gold);
-    expect(BRAND_THEME_DARK.tertiary.base).toBe(BRAND_PALETTE.gold);
+  it('demotes turf lime to the supporting tertiary accent in both themes', () => {
+    expect(BRAND_THEME_LIGHT.tertiary.base).toBe(BRAND_PALETTE.lime);
+    expect(BRAND_THEME_DARK.tertiary.base).toBe(BRAND_PALETTE.limeBright);
   });
 });
 

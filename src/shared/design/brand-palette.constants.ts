@@ -42,6 +42,12 @@ export const BRAND_PALETTE = {
   goldBright: '#FBCB63',
   /** Deep gold that stays legible as text on light surfaces. */
   goldDeep: '#A16207',
+  /**
+   * Darkest gold, for text on a SOFT GOLD wash. `goldDeep` clears 4.5:1 on
+   * white but only reaches 4.39:1 once the surface itself is tinted gold, so
+   * the tinted case needs its own ink rather than a shared one.
+   */
+  goldInk: '#854D0E',
   /** Pure white — the light-theme card surface. */
   white: '#FFFFFF',
   /** Cool page canvas for the light theme. */

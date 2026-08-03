@@ -5,9 +5,11 @@
  * brand-css.helper.ts turns these into the committed brand-tokens.generated.css.
  *
  * Role meanings in the "Field & Floodlight" system:
- * - `primary`   = electric turf lime with near-black ink. The one bold move.
+ * - `primary`   = falcon gold with near-black ink. The one bold move, and the
+ *                 colour of the crest, so the page and the mark agree.
  * - `secondary` = cool slate tonal. Supporting actions, never a dead grey.
- * - `tertiary`  = achievement gold. Badges, ranks, points — nothing else.
+ * - `tertiary`  = electric turf lime. The supporting accent: badges, ranks,
+ *                 points — never a second competing call to action.
  * - `medium`    = muted slate for meta text and neutral chips.
  */
 export interface IonColorRole {
@@ -56,14 +58,14 @@ export const BRAND_THEME_LIGHT: BrandThemeTokens = {
   surfaceElevated: '#FFFFFF',
   border: '#E2E8F0',
   muted: '#475569',
-  focusRing: '#4D7C0F',
+  focusRing: '#A16207',
   primary: {
-    base: '#84CC16',
-    rgb: '132, 204, 22',
+    base: '#F5B93B',
+    rgb: '245, 185, 59',
     contrast: '#0B1220',
     contrastRgb: '11, 18, 32',
-    shade: '#65A30D',
-    tint: '#A3E635',
+    shade: '#A16207',
+    tint: '#FBCB63',
   },
   secondary: {
     base: '#F1F5F9',
@@ -74,12 +76,12 @@ export const BRAND_THEME_LIGHT: BrandThemeTokens = {
     tint: '#F8FAFC',
   },
   tertiary: {
-    base: '#F5B93B',
-    rgb: '245, 185, 59',
+    base: '#84CC16',
+    rgb: '132, 204, 22',
     contrast: '#0B1220',
     contrastRgb: '11, 18, 32',
-    shade: '#A16207',
-    tint: '#FBCB63',
+    shade: '#65A30D',
+    tint: '#A3E635',
   },
   success: {
     base: '#15803D',
@@ -123,14 +125,14 @@ export const BRAND_THEME_DARK: BrandThemeTokens = {
   surfaceElevated: '#131C2E',
   border: '#1E293B',
   muted: '#94A3B8',
-  focusRing: '#A3E635',
+  focusRing: '#FBCB63',
   primary: {
-    base: '#A3E635',
-    rgb: '163, 230, 53',
+    base: '#FBCB63',
+    rgb: '251, 203, 99',
     contrast: '#0B1220',
     contrastRgb: '11, 18, 32',
-    shade: '#84CC16',
-    tint: '#BEF264',
+    shade: '#F5B93B',
+    tint: '#FDE0A3',
   },
   secondary: {
     base: '#1E293B',
@@ -141,12 +143,12 @@ export const BRAND_THEME_DARK: BrandThemeTokens = {
     tint: '#334155',
   },
   tertiary: {
-    base: '#F5B93B',
-    rgb: '245, 185, 59',
+    base: '#A3E635',
+    rgb: '163, 230, 53',
     contrast: '#0B1220',
     contrastRgb: '11, 18, 32',
-    shade: '#D99F1F',
-    tint: '#FBCB63',
+    shade: '#84CC16',
+    tint: '#BEF264',
   },
   success: {
     base: '#22C55E',

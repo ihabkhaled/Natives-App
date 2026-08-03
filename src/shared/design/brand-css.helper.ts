@@ -34,6 +34,7 @@ function renderConstantColorVars(palette: BrandTokens['palette']): readonly stri
     line('--un-on-brand-lime', palette.black),
     line('--un-brand-gold-bright', palette.goldBright),
     line('--un-brand-gold-deep', palette.goldDeep),
+    line('--un-brand-gold-ink', palette.goldInk),
   ];
 }
 

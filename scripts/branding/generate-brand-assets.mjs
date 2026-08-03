@@ -22,7 +22,7 @@ import process from 'node:process';
 import { chromium } from '@playwright/test';
 
 const SOURCE_PATH = 'public/brand-logo.png';
-const EXPECTED_SHA256 = 'd5dc2db2b60df43eea7cf91dfb7f45fcfb5dc4e38d7692c1fe92b7980deb09cf';
+const EXPECTED_SHA256 = 'cb47ddc4b3aaf54718d92c500c78e62eb4a154d15309ca8b2d6b5937772ef1f9';
 const RASTER_TOOLS = ['@capacitor/assets', 'sharp'];
 const PWA_ICONS = [
   { path: 'public/pwa-icon-192.png', size: 192, artworkScale: 1 },

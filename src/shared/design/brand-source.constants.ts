@@ -26,18 +26,18 @@ export const BRAND_PWA_ICON_DERIVATIVES = [
     path: 'public/pwa-icon-192.png',
     width: 192,
     height: 192,
-    sha256: '5f82a79226b2fc32360892ef61b0a51d1ae16c7da46f575cf9ace2ce2ec61564',
+    sha256: 'e9a4bc07dd619e2a9a2e59feb4ba68a5c268160b57d01287fe5a04eda361d59d',
   },
   {
     path: 'public/pwa-icon-512.png',
     width: 512,
     height: 512,
-    sha256: '27dab641390942400f578a12010fd3a538bc2f793f9d9f863d7520df5bdf34d8',
+    sha256: 'ce5eb58d84e9dc744af3e7eba6ed01618a0764dd72914ed6952b9ad5bf517795',
   },
   {
     path: 'public/pwa-icon-maskable-512.png',
     width: 512,
     height: 512,
-    sha256: 'd07e66d3a234048a0dc02220d138187cea7d348e903d5915bc5a9fd199e4396e',
+    sha256: '62e11df8070cc20b0a002174f388f3ac59783b13d7b29f3f6f23ab62bd029a1b',
   },
 ] as const;

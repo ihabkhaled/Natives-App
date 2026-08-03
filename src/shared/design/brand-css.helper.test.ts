@@ -22,8 +22,8 @@ describe('buildBrandTokensCss', () => {
 
   it('emits the light primary and dark primary Ionic variables', () => {
     const css = buildBrandTokensCss(BRAND_TOKENS);
-    expect(css).toContain('--ion-color-primary: #84CC16;');
-    expect(css).toContain('--ion-color-primary: #A3E635;');
+    expect(css).toContain('--ion-color-primary: #F5B93B;');
+    expect(css).toContain('--ion-color-primary: #FBCB63;');
   });
 
   it('emits the theme-independent brand and scale custom properties once', () => {
