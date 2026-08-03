@@ -1,5 +1,7 @@
+import type * as TeamDirectoryModule from '@/modules/team-directory';
+import { resetTeamDirectoryDouble } from '../../../../tests/setup/team-directory-double.helper';
 import { screen, waitFor } from '@testing-library/react';
-import { beforeAll, describe, expect, it } from 'vitest';
+import { beforeEach, beforeAll, describe, expect, it, vi } from 'vitest';
 
 import { TEST_IDS } from '@/shared/config';
 
@@ -10,6 +12,17 @@ import { PublicCompetitionDetailContainer } from './public-competition-detail.co
 beforeAll(async () => {
   await initTestI18n();
 });
+
+// jscpd:ignore-start
+// vitest hoists a vi.mock factory to the top of the file that declares it, so
+// this cannot move into a shared helper — only the reset it pairs with can.
+vi.mock('@/modules/team-directory', async (importOriginal) => {
+  const actual = await importOriginal<typeof TeamDirectoryModule>();
+  return { ...actual, requestPublicTeamDirectory: vi.fn() };
+});
+// jscpd:ignore-end
+
+beforeEach(resetTeamDirectoryDouble);
 
 describe('PublicCompetitionDetailContainer', () => {
   it('composes the detail hook with the presentational view for the routed slug', async () => {

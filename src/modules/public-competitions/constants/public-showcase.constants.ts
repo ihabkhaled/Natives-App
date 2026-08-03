@@ -22,11 +22,11 @@ export const MATCH_OUTCOME_TONES: Readonly<Record<MatchOutcome, string>> = {
 };
 
 /**
- * `false` while the public showcase endpoints (contract 1.8.0) are still
- * being built: the screens render the real competitions we entered and say
- * plainly that live results are not connected yet. Flipping this to `true`
- * is the last step of the wire-up, after the two service files stop reading
- * the seed and start calling the gateway.
+ * `false` while match scores and the individual leaderboard have nowhere to
+ * come from. The competitions themselves are live — they are read from the
+ * public team directory — but no result is recorded yet, so the screens keep
+ * saying plainly that scores are not connected rather than implying the empty
+ * tables mean the team never scored. Flip this once results publish.
  */
 export const PUBLIC_SHOWCASE_LIVE = false;
 

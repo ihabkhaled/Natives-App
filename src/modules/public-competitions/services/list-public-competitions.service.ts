@@ -1,20 +1,44 @@
-import { PUBLIC_SHOWCASE_SEED_COMPETITIONS } from '../constants/public-showcase-seed.constants';
+import { requestPublicTeamDirectory, TEAM_DIRECTORY_SLUG } from '@/modules/team-directory';
+
+import { toCompetitionSlug } from '../mappers/public-competition-slug.mapper';
 import type { PublicCompetitionSummaryDto } from '../types/public-showcase.types';
 
 /**
- * TODO(public-showcase-1.8.0): SEAM 1 of 2.
+ * The competitions the team has entered, from the public team directory — the
+ * same read the landing page and `/team` use, so an admin publishing a
+ * competition sees it here without a release.
  *
- * The public read model (`GET /public/showcase/competitions`, @Public,
- * bounded publishable fields only) is being built right now and is not in
- * this repo's generated contract yet. Inventing a gateway call to a route
- * that does not exist would 404 for every visitor, so this resolves the
- * seeded competitions locally and makes no network request at all.
- *
- * Wiring it up is a one-file change: keep this exact signature, replace the
- * body with a gateway `request*` call parsed through a response schema, and
- * flip `PUBLIC_SHOWCASE_LIVE`. The query, mappers, hooks, and screens need
- * no changes — they already speak `PublicCompetitionSummaryDto`.
+ * Everything the directory does not carry stays null on purpose: the final
+ * ranks, formats, venues and field sizes are recorded nowhere yet, and a
+ * results page that invented them would be lying to visitors. `rank === null`
+ * is what drives the designed "Results pending" state.
  */
 export async function listPublicCompetitions(): Promise<readonly PublicCompetitionSummaryDto[]> {
-  return Promise.resolve(PUBLIC_SHOWCASE_SEED_COMPETITIONS);
+  const directory = await requestPublicTeamDirectory(TEAM_DIRECTORY_SLUG);
+
+  return directory.competitions.map((competition) => ({
+    slug: toCompetitionSlug(competition.name),
+    name: competition.name,
+    year: resolveYear(competition.startsOn, competition.seasonName),
+    format: null,
+    location: null,
+    startDate: competition.startsOn,
+    endDate: competition.endsOn,
+    rank: null,
+    entrantCount: null,
+  }));
+}
+
+/**
+ * The year the competition ran. Prefers its own start date; falls back to the
+ * four digits in the season label ("Season 2026"), which is the only other
+ * place the year is recorded.
+ */
+function resolveYear(startsOn: string | null, seasonName: string): number {
+  const fromDate = startsOn === null ? Number.NaN : Number.parseInt(startsOn.slice(0, 4), 10);
+  if (!Number.isNaN(fromDate)) {
+    return fromDate;
+  }
+  const fromSeason = /\d{4}/u.exec(seasonName);
+  return fromSeason === null ? 0 : Number.parseInt(fromSeason[0], 10);
 }

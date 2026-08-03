@@ -1,4 +1,5 @@
 import { renderRoute } from '../setup/render-with-providers.helper';
+import { wireRealHttpClient } from '../setup/real-http-client.helper';
 import { fireEvent, screen, waitFor, within } from '@testing-library/react';
 import { beforeEach, describe, expect, it } from 'vitest';
 
@@ -12,6 +13,8 @@ const WAIT = { timeout: 5000 };
 
 beforeEach(async () => {
   await initTestI18n();
+  // The showcase reads the public team directory through the real client.
+  wireRealHttpClient();
 });
 
 /**
@@ -21,7 +24,7 @@ beforeEach(async () => {
  * request to the not-yet-built contract-1.8.0 endpoints fails the suite
  * instead of silently 404-ing in front of a visitor.
  */
-describe('public competitions showcase (real query client + MSW, no network)', () => {
+describe('public competitions showcase (real query client + MSW)', () => {
   it('moves from skeleton to the seeded competitions without one request', async () => {
     renderRoute('/results', '/results', <PublicCompetitionsContainer />);
 

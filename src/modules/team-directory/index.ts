@@ -4,6 +4,7 @@ export { teamDirectoryPath } from './routes/team-directory.paths';
 export { mapTeamDirectoryResponse } from './mappers/team-directory.mapper';
 export { teamDirectoryQueryKeys } from './queries/team-directory.keys';
 export { useTeamDirectoryQuery } from './hooks/use-team-directory-query.hook';
+export { requestPublicTeamDirectory } from './gateways/team-directory.gateway';
 export { STAFF_TITLE_I18N_KEYS, TEAM_DIRECTORY_SLUG } from './team-directory.constants';
 export type {
   TeamDirectory,

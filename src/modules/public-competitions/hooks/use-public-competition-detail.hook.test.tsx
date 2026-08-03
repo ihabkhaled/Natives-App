@@ -1,8 +1,10 @@
+import type * as TeamDirectoryModule from '@/modules/team-directory';
+import { resetTeamDirectoryDouble } from '../../../../tests/setup/team-directory-double.helper';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { act, renderHook, waitFor } from '@testing-library/react';
 import type { ReactElement, ReactNode } from 'react';
 import { MemoryRouter, Route } from 'react-router-dom';
-import { beforeAll, describe, expect, it } from 'vitest';
+import { beforeEach, beforeAll, describe, expect, it, vi } from 'vitest';
 
 import { initTestI18n } from '../../../../tests/setup/i18n-test.helper';
 import { createTestQueryClient } from '../../../../tests/setup/render-with-providers.helper';
@@ -11,6 +13,17 @@ import { usePublicCompetitionDetailScreen } from './use-public-competition-detai
 beforeAll(async () => {
   await initTestI18n();
 });
+
+// jscpd:ignore-start
+// vitest hoists a vi.mock factory to the top of the file that declares it, so
+// this cannot move into a shared helper — only the reset it pairs with can.
+vi.mock('@/modules/team-directory', async (importOriginal) => {
+  const actual = await importOriginal<typeof TeamDirectoryModule>();
+  return { ...actual, requestPublicTeamDirectory: vi.fn() };
+});
+// jscpd:ignore-end
+
+beforeEach(resetTeamDirectoryDouble);
 
 /**
  * The slug arrives from the matched route pattern, so the hook is mounted
