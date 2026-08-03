@@ -1,7 +1,13 @@
 import { I18N_KEYS } from '@/shared/i18n';
 
-import { LANDING_COMPETITIONS } from '../constants/landing-competitions.constants';
-import { buildLandingSeamChrome, type LandingSeamChrome } from './landing-seam-copy.helper';
+import type { TeamDirectory } from '@/modules/team-directory';
+
+import {
+  buildLandingSeamChrome,
+  buildLiveSeamChrome,
+  type LandingSeamChrome,
+  type LiveSeamState,
+} from './landing-seam-copy.helper';
 
 type Translate = (key: string) => string;
 
@@ -20,25 +26,29 @@ export interface CompetitionsSectionView {
 }
 
 /**
- * Competitions entered this season — real seed names (EUNC 2026, EUDL 2026);
- * ranks/scores were not supplied, so every card reads "results pending"
- * rather than an invented placement. Backed by the public showcase endpoint
- * once contract 1.8.0 ships.
+ * Competitions entered this season, from the same public directory read the
+ * team page uses — so an admin publishing a competition sees it here without
+ * a release. No placement is shown: results are not recorded yet, and every
+ * card reads "results pending" rather than an invented finish.
  */
-export function buildCompetitionsSection(t: Translate): CompetitionsSectionView {
+export function buildCompetitionsSection(
+  t: Translate,
+  directory: TeamDirectory | null,
+  seam: LiveSeamState,
+): CompetitionsSectionView {
   const rankStatus = t(I18N_KEYS.landing.competitionsRankPending);
-  const competitions = LANDING_COMPETITIONS.map((competition) => ({
+  const competitions = (directory?.competitions ?? []).map((competition) => ({
     id: competition.id,
     name: competition.name,
-    season: competition.season,
+    season: competition.seasonName,
     rankStatus,
   }));
   return {
     heading: t(I18N_KEYS.landing.competitionsHeading),
     intro: t(I18N_KEYS.landing.competitionsIntro),
-    chrome: buildLandingSeamChrome(
+    chrome: buildLiveSeamChrome(
       t,
-      competitions.length > 0,
+      { ...seam, hasData: directory !== null, hasItems: competitions.length > 0 },
       I18N_KEYS.landing.competitionsEmptyTitle,
       I18N_KEYS.landing.competitionsEmptyMessage,
     ),

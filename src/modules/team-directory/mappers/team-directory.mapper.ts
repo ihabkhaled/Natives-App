@@ -105,5 +105,10 @@ export function mapTeamDirectoryResponse(dto: TeamDirectoryResponseDto): TeamDir
     team: mapProfile(dto.profile),
     staff: dto.staff.map((member) => mapStaffMember(member)),
     players: [...dto.players].map((player) => mapPlayer(player)).sort(byJerseyThenName),
+    competitions: dto.competitions.map((competition) => ({
+      id: competition.competitionId,
+      name: competition.name.trim(),
+      seasonName: competition.seasonName.trim(),
+    })),
   };
 }

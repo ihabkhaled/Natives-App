@@ -51,7 +51,7 @@ const TEAM: TeamProfile = {
 };
 
 function directory(overrides: Partial<TeamDirectory> = {}): TeamDirectory {
-  return { team: TEAM, staff: [], players: [], ...overrides };
+  return { team: TEAM, staff: [], players: [], competitions: [], ...overrides };
 }
 
 function staffOf(...members: readonly TeamStaffMember[]): TeamDirectory {

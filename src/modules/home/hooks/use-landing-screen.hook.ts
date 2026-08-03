@@ -68,6 +68,12 @@ export function useLandingScreen(): LandingScreenView {
   const navigation = useAppNavigation();
   const network = useNetworkStatus();
   const directoryQuery = useTeamDirectoryQuery(TEAM_DIRECTORY_SLUG);
+  const directorySeam = {
+    isLoading: directoryQuery.isLoading,
+    error: directoryQuery.error,
+    isOffline: !network.isOnline,
+    onRetry: directoryQuery.refetch,
+  };
 
   const goTo =
     (path: string): (() => void) =>
@@ -88,14 +94,9 @@ export function useLandingScreen(): LandingScreenView {
     explainer: buildExplainerSection(t),
     explainerLink: { label: seeMore, onClick: goTo(ultimatePath()) },
     aboutPreview: buildAboutPreviewSection(t, goToAbout),
-    staffDirectory: buildStaffDirectorySection(t, directoryQuery.data ?? null, {
-      isLoading: directoryQuery.isLoading,
-      error: directoryQuery.error,
-      isOffline: !network.isOnline,
-      onRetry: directoryQuery.refetch,
-    }),
+    staffDirectory: buildStaffDirectorySection(t, directoryQuery.data ?? null, directorySeam),
     staffLink: { label: seeMore, onClick: goTo(teamDirectoryPath()) },
-    competitions: buildCompetitionsSection(t),
+    competitions: buildCompetitionsSection(t, directoryQuery.data ?? null, directorySeam),
     competitionsLink: { label: seeMore, onClick: goTo(publicCompetitionsPath()) },
     news: buildNewsSection(t),
     newsLink: { label: seeMore, onClick: goTo(newsPath()) },

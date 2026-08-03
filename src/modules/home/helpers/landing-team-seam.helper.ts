@@ -53,7 +53,7 @@ export function buildStaffDirectorySection(
     intro: t(I18N_KEYS.landing.staffIntro),
     chrome: buildLiveSeamChrome(
       t,
-      { ...seam, hasItems: members.length > 0 },
+      { ...seam, hasData: directory !== null, hasItems: members.length > 0 },
       I18N_KEYS.landing.staffEmptyTitle,
       I18N_KEYS.landing.staffEmptyMessage,
     ),

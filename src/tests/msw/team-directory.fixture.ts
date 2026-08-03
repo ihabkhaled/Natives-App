@@ -95,4 +95,22 @@ export const MOCK_TEAM_DIRECTORY: TeamDirectoryResponseDto = {
       photoUrl: null,
     },
   ],
+  competitions: [
+    {
+      competitionId: 'comp-1',
+      name: 'EUNC 2026',
+      seasonName: 'Season 2026',
+      competitionType: 'tournament',
+      startsOn: null,
+      endsOn: null,
+    },
+    {
+      competitionId: 'comp-2',
+      name: 'EUDL 2026',
+      seasonName: 'Season 2026',
+      competitionType: 'league',
+      startsOn: null,
+      endsOn: null,
+    },
+  ],
 };

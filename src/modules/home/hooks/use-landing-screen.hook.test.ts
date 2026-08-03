@@ -137,11 +137,15 @@ describe('useLandingScreen', () => {
     }
   });
 
-  it('seeds the competitions seam with the two entered competitions and a pending rank', () => {
-    const { competitions } = renderLanding().result.current.screen;
+  it('fills the competitions seam from the live team directory', async () => {
+    const { result } = renderLanding();
 
-    expect(competitions.chrome.status).toBe('ready');
-    expect(competitions.competitions.map((entry) => `${entry.name} ${entry.season}`)).toEqual([
+    await waitFor(() => {
+      expect(result.current.screen.competitions.chrome.status).toBe('ready');
+    });
+
+    const { competitions } = result.current.screen;
+    expect(competitions.competitions.map((entry) => entry.name)).toEqual([
       'EUNC 2026',
       'EUDL 2026',
     ]);

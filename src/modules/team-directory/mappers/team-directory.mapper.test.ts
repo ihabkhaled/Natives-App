@@ -44,6 +44,7 @@ function response(overrides: Partial<TeamDirectoryResponseDto> = {}): TeamDirect
     },
     staff: [staff()],
     players: [player()],
+    competitions: [],
     ...overrides,
   };
 }

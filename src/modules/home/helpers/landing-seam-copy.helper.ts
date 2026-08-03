@@ -46,6 +46,8 @@ export interface LiveSeamState {
   readonly error: AppError | null;
   readonly isOffline: boolean;
   readonly onRetry: () => void;
+  /** Whether the query actually resolved data — not merely stopped loading. */
+  readonly hasData?: boolean;
   readonly hasItems?: boolean;
 }
 
@@ -75,7 +77,7 @@ export function buildLiveSeamChrome(
       isLoading: seam.isLoading,
       hasError: seam.error !== null,
       isOffline: seam.isOffline,
-      hasData: !seam.isLoading,
+      hasData: seam.hasData ?? false,
       hasItems: seam.hasItems ?? false,
     }),
   };

@@ -49,10 +49,21 @@ export interface TeamPlayerDto {
   readonly photoUrl: string | null;
 }
 
+/** One competition the team has entered, as the public site announces it. */
+interface TeamCompetitionDto {
+  readonly competitionId: string;
+  readonly name: string;
+  readonly seasonName: string;
+  readonly competitionType: string;
+  readonly startsOn: string | null;
+  readonly endsOn: string | null;
+}
+
 export interface TeamDirectoryResponseDto {
   readonly profile: TeamProfileDto;
   readonly staff: readonly TeamStaffMemberDto[];
   readonly players: readonly TeamPlayerDto[];
+  readonly competitions: readonly TeamCompetitionDto[];
 }
 
 /** Normalized team profile the screen renders. */
@@ -73,6 +84,13 @@ export interface TeamStaffMember {
   readonly photoUrl: string | null;
 }
 
+/** A competition on the public site, normalized. */
+interface TeamCompetition {
+  readonly id: string;
+  readonly name: string;
+  readonly seasonName: string;
+}
+
 export interface TeamRosterPlayer {
   readonly id: string;
   readonly displayName: string;
@@ -86,6 +104,7 @@ export interface TeamDirectory {
   readonly team: TeamProfile;
   readonly staff: readonly TeamStaffMember[];
   readonly players: readonly TeamRosterPlayer[];
+  readonly competitions: readonly TeamCompetition[];
 }
 
 /** Staff grouped under one responsibility, ready for a titled card grid. */

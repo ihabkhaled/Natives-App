@@ -21,7 +21,7 @@ export const TEAM_DIRECTORY_SLUG = 'un';
  * from RBAC permission roles: these describe who is responsible for what on
  * the public "who's who", and one person may hold several.
  */
-export const STAFF_TITLE = {
+const STAFF_TITLE = {
   Coach: 'coach',
   CoCoach: 'co-coach',
   SpiritCaptain: 'spirit-captain',

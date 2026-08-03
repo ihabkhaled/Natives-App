@@ -37,8 +37,18 @@ const publicRosterPlayerSchema = schemaBuilder.object({
   photoUrl: schemaBuilder.string().nullable(),
 });
 
+const publicCompetitionSchema = schemaBuilder.object({
+  competitionId: schemaBuilder.string().min(1),
+  name: schemaBuilder.string().min(1),
+  seasonName: schemaBuilder.string(),
+  competitionType: schemaBuilder.string(),
+  startsOn: schemaBuilder.string().nullable(),
+  endsOn: schemaBuilder.string().nullable(),
+});
+
 export const publicTeamDirectoryResponseSchema = schemaBuilder.object({
   profile: publicTeamProfileSchema,
   staff: schemaBuilder.array(publicStaffMemberSchema),
   players: schemaBuilder.array(publicRosterPlayerSchema),
+  competitions: schemaBuilder.array(publicCompetitionSchema),
 });

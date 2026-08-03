@@ -9735,6 +9735,16 @@ export interface components {
             /** Format: date-time */
             readonly updatedAt: string;
         };
+        readonly PublicCompetitionResponseDto: {
+            readonly competitionId: string;
+            /** @description friendly | league | tournament … */
+            readonly competitionType: string;
+            readonly endsOn: string | null;
+            readonly name: string;
+            /** @description Season label, e.g. "Season 2026". */
+            readonly seasonName: string;
+            readonly startsOn: string | null;
+        };
         readonly PublicInvitationResponseDto: {
             readonly email: string;
             /** Format: date-time */
@@ -9769,6 +9779,7 @@ export interface components {
             readonly titles: readonly string[];
         };
         readonly PublicTeamDirectoryResponseDto: {
+            readonly competitions: readonly components["schemas"]["PublicCompetitionResponseDto"][];
             readonly players: readonly components["schemas"]["PublicRosterPlayerResponseDto"][];
             readonly profile: components["schemas"]["PublicTeamProfileResponseDto"];
             readonly staff: readonly components["schemas"]["PublicStaffMemberResponseDto"][];
