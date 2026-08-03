@@ -5588,10 +5588,15 @@ ion-spinner {
   letter-spacing: var(--un-letter-spacing-tight);
 }
 
+/* `overflow: hidden` clips BOTH axes, and the line box is sized from Latin
+   metrics — so Arabic, whose tanween sits below that baseline, had its
+   descenders shaved off. The explicit line-height gives the glyphs room; the
+   ellipsis still truncates a long tagline horizontally, which is the point. */
 .app-public-nav__brand-tagline {
   overflow: hidden;
   color: var(--app-muted);
   font-size: var(--un-font-size-xs);
+  line-height: var(--un-line-height-normal);
   white-space: nowrap;
   text-overflow: ellipsis;
 }
@@ -5755,6 +5760,7 @@ ion-spinner {
   margin: 0;
   color: var(--app-muted);
   font-size: var(--un-font-size-xs);
+  line-height: var(--un-line-height-normal);
 }
 
 .app-public-footer__nav {
@@ -6122,6 +6128,13 @@ ion-spinner {
   display: flex;
   flex-direction: column;
   gap: var(--un-space-4);
+}
+
+.app-landing-location__map {
+  inline-size: 100%;
+  min-block-size: 260px;
+  border: 0;
+  border-radius: var(--un-radius-lg);
 }
 
 .app-landing-location__mark {

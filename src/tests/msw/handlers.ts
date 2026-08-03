@@ -56,6 +56,11 @@ import { resetMockNotificationsState } from './notifications.fixture';
 import { tryoutsHandlers } from './tryouts-handlers';
 import { resetMockTryoutsState } from './tryouts.fixture';
 import { dataQualityHandlers } from './data-quality-handlers';
+import { governanceHandlers } from './governance-handlers';
+import { jerseyHandlers } from './jersey-handlers';
+import { practiceAgendaHandlers } from './practice-agenda-handlers';
+import { roleAssignmentsHandlers } from './role-assignments-handlers';
+import { tryoutCandidatesHandlers } from './tryout-candidates-handlers';
 import { teamDirectoryHandlers } from './team-directory-handlers';
 import { teamsHandlers } from './teams-handlers';
 import { trainingHandlers } from './training-handlers';
@@ -257,6 +262,11 @@ export const mockApiHandlers = [
   ...reportsHandlers,
   ...teamsHandlers,
   ...dataQualityHandlers,
+  ...governanceHandlers,
+  ...jerseyHandlers,
+  ...practiceAgendaHandlers,
+  ...roleAssignmentsHandlers,
+  ...tryoutCandidatesHandlers,
   ...teamDirectoryHandlers,
   ...recoveryHandlers,
   ...contactHandlers,

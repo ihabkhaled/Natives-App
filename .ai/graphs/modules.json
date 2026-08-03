@@ -268,6 +268,16 @@
       ]
     },
     {
+      "name": "governance",
+      "publicSurface": [
+        "GOVERNANCE_PAGE_SIZE",
+        "TASK_PRIORITIES",
+        "getGovernanceRouteDefinitions",
+        "governancePagePath",
+        "governanceQueryKeys"
+      ]
+    },
+    {
       "name": "health",
       "publicSurface": [
         "HealthCardContainer",
@@ -284,6 +294,20 @@
         "homePath",
         "rootPath",
         "welcomePath"
+      ]
+    },
+    {
+      "name": "jersey",
+      "publicSurface": [
+        "JERSEY_ORDER_PAGE_SIZE",
+        "JERSEY_ORDER_STATUSES",
+        "JERSEY_SIZES",
+        "getJerseyRouteDefinitions",
+        "jerseyOrderResponseSchema",
+        "jerseyPagePath",
+        "jerseyQueryKeys",
+        "listJerseyOrdersResponseSchema",
+        "supplierExportResponseSchema"
       ]
     },
     {
@@ -435,6 +459,22 @@
       ]
     },
     {
+      "name": "practice-agenda",
+      "publicSurface": [
+        "AGENDA_BLOCK_TYPES",
+        "AGENDA_COMPLETION_STATUSES",
+        "AGENDA_INTENSITIES",
+        "AGENDA_STATUSES",
+        "agendaBlockResponseSchema",
+        "agendaResponseSchema",
+        "agendaSummaryResponseSchema",
+        "getPracticeAgendaRouteDefinitions",
+        "practiceAgendaPath",
+        "practiceAgendaPattern",
+        "practiceAgendaQueryKeys"
+      ]
+    },
+    {
       "name": "public-competitions",
       "publicSurface": [
         "MATCH_OUTCOME",
@@ -465,6 +505,18 @@
         "reportJobResponseSchema",
         "reportsPagePath",
         "reportsQueryKeys"
+      ]
+    },
+    {
+      "name": "role-assignments",
+      "publicSurface": [
+        "ROLE_KEY_CASE",
+        "assignableRoleCatalogSchema",
+        "getRoleAssignmentsRouteDefinitions",
+        "roleAssignmentResponseSchema",
+        "roleAssignmentsPagePath",
+        "roleAssignmentsQueryKeys",
+        "userAssignmentsResponseSchema"
       ]
     },
     {
@@ -595,6 +647,23 @@
         "trainingQueryKeys",
         "trainingReviewPath",
         "trainingSubmissionPath"
+      ]
+    },
+    {
+      "name": "tryout-candidates",
+      "publicSurface": [
+        "CANDIDATE_DISCLOSURE_BLOCKS",
+        "TRYOUT_CANDIDATE_CONTACT_CHANNELS",
+        "TRYOUT_CANDIDATE_PAGE_SIZE",
+        "TRYOUT_CANDIDATE_READINESS_LEVELS",
+        "TRYOUT_CANDIDATE_STATUSES",
+        "WITHDRAWABLE_CANDIDATE_STATUSES",
+        "getTryoutCandidatesRouteDefinitions",
+        "listTryoutCandidatesResponseSchema",
+        "tryoutCandidateResponseSchema",
+        "tryoutCandidatesPagePath",
+        "tryoutCandidatesQueryKeys",
+        "tryoutRetentionResponseSchema"
       ]
     },
     {

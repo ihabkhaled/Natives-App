@@ -2,7 +2,10 @@ import type { FactListItem } from '@/shared/ui';
 import { I18N_KEYS } from '@/shared/i18n';
 
 import type { SpiritValueItem } from '../components/spirit-values-grid';
-import { TEAM_LOCATION_MAPS_URL } from '../constants/landing-location.constants';
+import {
+  TEAM_LOCATION_EMBED_URL,
+  TEAM_LOCATION_MAPS_URL,
+} from '../constants/landing-location.constants';
 
 type Translate = (key: string) => string;
 
@@ -50,9 +53,10 @@ export interface LocationSectionView {
   readonly ctaLabel: string;
   readonly mapAlt: string;
   readonly mapsHref: string;
+  readonly mapEmbedHref: string;
 }
 
-/** El Sheikh Zayed, Giza, Egypt — a static illustrative map, never a key-bearing embed. */
+/** ملعب العربي, El Sheikh Zayed — the pitch itself, not the district. */
 export function buildLocationSection(t: Translate): LocationSectionView {
   return {
     heading: t(I18N_KEYS.landing.locationHeading),
@@ -61,6 +65,7 @@ export function buildLocationSection(t: Translate): LocationSectionView {
     ctaLabel: t(I18N_KEYS.landing.locationCta),
     mapAlt: t(I18N_KEYS.landing.locationMapAlt),
     mapsHref: TEAM_LOCATION_MAPS_URL,
+    mapEmbedHref: TEAM_LOCATION_EMBED_URL,
   };
 }
 

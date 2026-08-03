@@ -85,6 +85,15 @@ export const PERMISSIONS = {
   // `rules.read`/`rules.manage` pair is the separate team-rules governance
   // domain (P4 wave 2) and must never gate the calculation-rule screens.
   calculationRuleManage: 'points.rules.manage',
+  // Board records: meetings, their minutes, and the tasks they raise. Distinct
+  // from the `rules.*` team-rules pair above, which governs published rules
+  // rather than the board's own proceedings.
+  // Jersey stock, products and supplier orders. Sits in the backend's
+  // governance domain but is its own screen.
+  jerseyRead: 'jersey.read',
+  jerseyManage: 'jersey.manage',
+  governanceRead: 'governance.read',
+  governanceManage: 'governance.manage',
   auditRead: 'audit.read',
   outboxManage: 'jobs.manage',
   // Newsroom authoring. Held by platform and team administrators, Coaches, and

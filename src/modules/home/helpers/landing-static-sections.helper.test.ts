@@ -39,9 +39,10 @@ describe('buildLocationSection', () => {
     const section = buildLocationSection(t);
 
     expect(section.address).toBe('t:landing.locationAddress');
-    expect(section.mapsHref).toBe(
-      'https://www.google.com/maps/search/?api=1&query=El+Sheikh+Zayed%2C+Giza%2C+Egypt',
-    );
+    // The pitch itself, not the district — a district pin lands a visitor in
+    // the right suburb and they still cannot find the game.
+    expect(section.mapsHref).toBe('https://maps.app.goo.gl/77HEdLvay1qBQtHL6');
+    expect(section.mapEmbedHref).toContain('google.com/maps/embed');
   });
 });
 

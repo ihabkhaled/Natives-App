@@ -23,6 +23,7 @@ const VIEW = {
     ctaLabel: 'Get directions',
     mapAlt: 'Illustrative map of El Sheikh Zayed',
     mapsHref: 'https://maps.google.com/?q=El+Sheikh+Zayed',
+    mapEmbedHref: 'https://www.google.com/maps/embed?pb=test',
   },
 };
 

@@ -1,3 +1,12 @@
+// jscpd:ignore-start
+// vitest hoists a vi.mock factory to the top of the file that declares it,
+// so neither the factory nor the imports it needs can move into a shared
+// helper. Only the payloads could, and they now come from
+// tests/setup/screen-grants.helper.ts.
+import {
+  buildEffectivePermissions,
+  buildTeamScope,
+} from '../../../../tests/setup/screen-grants.helper';
 import { act, waitFor } from '@testing-library/react';
 // Must be imported before `@/platform`, whose module factory below reads it.
 import { createPlatformMock } from '../../../../tests/setup/platform-mock.helper';
@@ -28,29 +37,15 @@ vi.mock('@/modules/auth', async (importOriginal) => {
   const actual = await importOriginal<typeof AuthModule>();
   return { ...actual, useActiveTeamScope: vi.fn(), useEffectivePermissions: vi.fn() };
 });
+// jscpd:ignore-end
 
 /** The queue is one grant: data_quality.manage covers reviewing and repairing. */
 function mockGrants(
   permissions: readonly string[] = [PERMISSIONS.dataQualityManage],
   isLoading = false,
 ): void {
-  vi.mocked(useActiveTeamScope).mockReturnValue({
-    teamId: 'team-1',
-    membershipId: 'membership-1',
-    seasonId: null,
-    teamName: 'Cairo Natives',
-    isLoading,
-    isError: false,
-  });
-  vi.mocked(useEffectivePermissions).mockReturnValue({
-    permissions,
-    accountActive: true,
-    accountPending: false,
-    onboardingComplete: true,
-    hasTeamContext: true,
-    isLoading: false,
-    isError: false,
-  });
+  vi.mocked(useActiveTeamScope).mockReturnValue(buildTeamScope({ isLoading }));
+  vi.mocked(useEffectivePermissions).mockReturnValue(buildEffectivePermissions(permissions));
 }
 
 function renderScreen(): ReturnType<

@@ -12,6 +12,7 @@ function view(): LocationSectionView {
     ctaLabel: 'Open in Maps',
     mapAlt: 'Map marker for El Sheikh Zayed, Giza, Egypt',
     mapsHref: 'https://www.google.com/maps/search/?api=1&query=El+Sheikh+Zayed%2C+Giza%2C+Egypt',
+    mapEmbedHref: 'https://www.google.com/maps/embed?pb=test',
   };
 }
 

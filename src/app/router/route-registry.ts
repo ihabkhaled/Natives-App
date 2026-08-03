@@ -14,6 +14,11 @@ import { getPointsRouteDefinitions } from '@/modules/points';
 import { getPracticeRouteDefinitions } from '@/modules/practice';
 import { getPublicCompetitionsRouteDefinitions } from '@/modules/public-competitions';
 import { getDataQualityRouteDefinitions } from '@/modules/data-quality';
+import { getGovernanceRouteDefinitions } from '@/modules/governance';
+import { getJerseyRouteDefinitions } from '@/modules/jersey';
+import { getPracticeAgendaRouteDefinitions } from '@/modules/practice-agenda';
+import { getRoleAssignmentsRouteDefinitions } from '@/modules/role-assignments';
+import { getTryoutCandidatesRouteDefinitions } from '@/modules/tryout-candidates';
 import { getReportsRouteDefinitions } from '@/modules/reports';
 import { getSettingsRouteDefinitions } from '@/modules/settings';
 import { getStandingsRouteDefinitions } from '@/modules/standings';
@@ -42,6 +47,11 @@ export function getAppRouteDefinitions(): readonly AppRouteDefinition[] {
     ...getStandingsRouteDefinitions(),
     ...getAnalyticsRouteDefinitions(),
     ...getDataQualityRouteDefinitions(),
+    ...getGovernanceRouteDefinitions(),
+    ...getJerseyRouteDefinitions(),
+    ...getPracticeAgendaRouteDefinitions(),
+    ...getRoleAssignmentsRouteDefinitions(),
+    ...getTryoutCandidatesRouteDefinitions(),
     ...getReportsRouteDefinitions(),
     ...getCompetitionsRouteDefinitions(),
     ...getMatchesRouteDefinitions(),

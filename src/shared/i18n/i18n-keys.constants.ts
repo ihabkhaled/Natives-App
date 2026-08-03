@@ -24,6 +24,11 @@ import { PRACTICE_I18N_KEYS } from './practice-keys.constants';
 import { PUBLIC_COMPETITIONS_I18N_KEYS } from './public-competitions-keys.constants';
 import { PUBLIC_FOOTER_I18N_KEYS, PUBLIC_NAV_I18N_KEYS } from './public-keys.constants';
 import { DATA_QUALITY_I18N_KEYS } from './data-quality-keys.constants';
+import { GOVERNANCE_I18N_KEYS } from './governance-keys.constants';
+import { JERSEY_I18N_KEYS } from './jersey-keys.constants';
+import { PRACTICE_AGENDA_I18N_KEYS } from './practice-agenda-keys.constants';
+import { ROLE_ASSIGNMENTS_I18N_KEYS } from './role-assignments-keys.constants';
+import { TRYOUT_CANDIDATES_I18N_KEYS } from './tryout-candidates-keys.constants';
 import { REPORTS_I18N_KEYS } from './reports-keys.constants';
 import { ROSTERS_I18N_KEYS } from './rosters-keys.constants';
 import { SIGNUP_I18N_KEYS } from './signup-keys.constants';
@@ -173,6 +178,11 @@ export const I18N_KEYS = {
   standings: STANDINGS_I18N_KEYS,
   analytics: ANALYTICS_I18N_KEYS,
   dataQuality: DATA_QUALITY_I18N_KEYS,
+  governance: GOVERNANCE_I18N_KEYS,
+  jersey: JERSEY_I18N_KEYS,
+  practiceAgenda: PRACTICE_AGENDA_I18N_KEYS,
+  roleAssignments: ROLE_ASSIGNMENTS_I18N_KEYS,
+  tryoutCandidates: TRYOUT_CANDIDATES_I18N_KEYS,
   reports: REPORTS_I18N_KEYS,
   competitions: COMPETITIONS_I18N_KEYS,
   squads: SQUADS_I18N_KEYS,
