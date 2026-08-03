@@ -58,6 +58,7 @@ describe('getAppRouteDefinitions', () => {
       APP_PATHS.achievements,
       APP_PATHS.analytics,
       APP_PATHS.playerAnalytics,
+      APP_PATHS.dataQuality,
       APP_PATHS.reports,
       APP_PATHS.competitions,
       APP_PATHS.competitionDetail,

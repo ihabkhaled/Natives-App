@@ -43,6 +43,7 @@ describe('APP_DEEP_LINK_POLICY', () => {
       '/competitions',
       '/competitions/:competitionId',
       '/contact',
+      '/data-quality',
       '/forgot-password',
       '/gallery',
       '/home',

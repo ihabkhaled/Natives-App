@@ -55,6 +55,7 @@ import { notificationsHandlers } from './notifications-handlers';
 import { resetMockNotificationsState } from './notifications.fixture';
 import { tryoutsHandlers } from './tryouts-handlers';
 import { resetMockTryoutsState } from './tryouts.fixture';
+import { dataQualityHandlers } from './data-quality-handlers';
 import { teamDirectoryHandlers } from './team-directory-handlers';
 import { teamsHandlers } from './teams-handlers';
 import { trainingHandlers } from './training-handlers';
@@ -255,6 +256,7 @@ export const mockApiHandlers = [
   ...analyticsHandlers,
   ...reportsHandlers,
   ...teamsHandlers,
+  ...dataQualityHandlers,
   ...teamDirectoryHandlers,
   ...recoveryHandlers,
   ...contactHandlers,

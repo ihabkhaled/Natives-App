@@ -83,6 +83,7 @@ describe('I18N_KEYS', () => {
       'points',
       'standings',
       'analytics',
+      'dataQuality',
       'reports',
       'competitions',
       'squads',

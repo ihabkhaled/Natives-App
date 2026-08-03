@@ -23,6 +23,7 @@ import { PUBLIC_PAGES_I18N_KEYS } from './public-pages-keys.constants';
 import { PRACTICE_I18N_KEYS } from './practice-keys.constants';
 import { PUBLIC_COMPETITIONS_I18N_KEYS } from './public-competitions-keys.constants';
 import { PUBLIC_FOOTER_I18N_KEYS, PUBLIC_NAV_I18N_KEYS } from './public-keys.constants';
+import { DATA_QUALITY_I18N_KEYS } from './data-quality-keys.constants';
 import { REPORTS_I18N_KEYS } from './reports-keys.constants';
 import { ROSTERS_I18N_KEYS } from './rosters-keys.constants';
 import { SIGNUP_I18N_KEYS } from './signup-keys.constants';
@@ -171,6 +172,7 @@ export const I18N_KEYS = {
   points: POINTS_I18N_KEYS,
   standings: STANDINGS_I18N_KEYS,
   analytics: ANALYTICS_I18N_KEYS,
+  dataQuality: DATA_QUALITY_I18N_KEYS,
   reports: REPORTS_I18N_KEYS,
   competitions: COMPETITIONS_I18N_KEYS,
   squads: SQUADS_I18N_KEYS,

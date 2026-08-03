@@ -29,6 +29,7 @@ describe('APP_PATHS', () => {
       'competitionDetail',
       'competitions',
       'contact',
+      'dataQuality',
       'forgotPassword',
       'gallery',
       'home',

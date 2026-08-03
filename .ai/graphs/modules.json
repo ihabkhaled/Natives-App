@@ -256,6 +256,18 @@
       ]
     },
     {
+      "name": "data-quality",
+      "publicSurface": [
+        "ANOMALY_PAGE_SIZE",
+        "ANOMALY_SEVERITIES",
+        "anomalyResponseSchema",
+        "dataQualityPagePath",
+        "dataQualityQueryKeys",
+        "getDataQualityRouteDefinitions",
+        "listAnomaliesResponseSchema"
+      ]
+    },
+    {
       "name": "health",
       "publicSurface": [
         "HealthCardContainer",

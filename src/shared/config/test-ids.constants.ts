@@ -19,6 +19,7 @@ import { FEATURE_TEST_IDS } from './feature-test-ids.constants';
 import { MATCHES_TEST_IDS } from './matches-test-ids.constants';
 import { NEWS_TEST_IDS } from './news-test-ids.constants';
 import { NOTIFICATIONS_TEST_IDS } from './notifications-test-ids.constants';
+import { DATA_QUALITY_TEST_IDS } from './data-quality-test-ids.constants';
 import { REPORTS_TEST_IDS } from './reports-test-ids.constants';
 import { STANDINGS_TEST_IDS } from './standings-test-ids.constants';
 import { TEAM_DIRECTORY_TEST_IDS } from './team-directory-test-ids.constants';
@@ -39,6 +40,7 @@ export const TEST_IDS = {
   ...TEAMS_ADMIN_TEST_IDS,
   ...STANDINGS_TEST_IDS,
   ...ANALYTICS_TEST_IDS,
+  ...DATA_QUALITY_TEST_IDS,
   ...REPORTS_TEST_IDS,
   ...PUBLIC_TEST_IDS,
   ...PUBLIC_COMPETITIONS_TEST_IDS,

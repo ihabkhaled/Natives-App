@@ -65,6 +65,7 @@ export const APP_PATHS = {
   achievements: '/achievements',
   teamHistory: '/team-history',
   reports: '/reports',
+  dataQuality: '/data-quality',
   competitions: '/competitions',
   competitionDetail: '/competitions/:competitionId',
   squads: '/squads',
