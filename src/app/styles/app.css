@@ -6158,6 +6158,9 @@ ion-spinner {
 }
 
 .app-landing-gallery-tile {
+  object-fit: cover;
+  aspect-ratio: 4 / 5;
+  inline-size: 100%;
   aspect-ratio: 4 / 3;
   border-radius: var(--un-radius-lg);
   background: var(--app-skeleton-base);

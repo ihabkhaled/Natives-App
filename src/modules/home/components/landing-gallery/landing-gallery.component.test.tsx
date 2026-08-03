@@ -9,8 +9,8 @@ function view(): GallerySectionView {
     heading: 'Gallery',
     intro: 'Moments from the season.',
     tiles: [
-      { key: 'tile-1', alt: 'Ultimate Natives gallery placeholder' },
-      { key: 'tile-2', alt: 'Ultimate Natives gallery placeholder' },
+      { key: 'tile-1', alt: 'Ultimate Natives gallery placeholder', src: '/staff/tile-1.jpg' },
+      { key: 'tile-2', alt: 'Ultimate Natives gallery placeholder', src: '/staff/tile-2.jpg' },
     ],
   };
 }

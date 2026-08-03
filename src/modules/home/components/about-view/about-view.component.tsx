@@ -20,10 +20,15 @@ export function AboutView(props: AboutViewProps): React.JSX.Element {
           </IonText>
         </header>
 
-        <SectionPanel heading={props.foundingHeading}>
+        <SectionPanel heading={props.storyHeading}>
           <IonText>
             <p className="app-about-quote m-0">{props.foundingQuote}</p>
           </IonText>
+          {props.storyParagraphs.map((paragraph) => (
+            <IonText key={paragraph}>
+              <p className="m-0 text-base">{paragraph}</p>
+            </IonText>
+          ))}
         </SectionPanel>
 
         <SectionPanel heading={props.factsHeading}>

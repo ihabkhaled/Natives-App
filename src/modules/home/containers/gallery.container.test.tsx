@@ -20,8 +20,8 @@ const VIEW = {
     heading: 'Gallery',
     intro: 'Moments from the season.',
     tiles: [
-      { key: 'tile-1', alt: 'Match-day photo coming soon' },
-      { key: 'tile-2', alt: 'Match-day photo coming soon' },
+      { key: 'tile-1', alt: 'Match-day photo coming soon', src: '/staff/tile-1.jpg' },
+      { key: 'tile-2', alt: 'Match-day photo coming soon', src: '/staff/tile-2.jpg' },
     ],
   },
 };

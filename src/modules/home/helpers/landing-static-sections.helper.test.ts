@@ -10,7 +10,8 @@ import {
   buildSpiritValuesSection,
 } from './landing-static-sections.helper';
 
-const t = (key: string): string => `t:${key}`;
+const t = (key: string, params?: Record<string, unknown>): string =>
+  params === undefined ? `t:${key}` : `t:${key}:${JSON.stringify(params)}`;
 
 describe('buildExplainerSection', () => {
   it('translates the "what is Ultimate Frisbee" copy', () => {
@@ -47,14 +48,18 @@ describe('buildLocationSection', () => {
 });
 
 describe('buildGallerySection', () => {
-  it('builds six placeholder tiles, each with the same accessible alt text', () => {
+  it('shows a real photograph per person, named in the alt text', () => {
     const section = buildGallerySection(t);
 
-    expect(section.tiles).toHaveLength(6);
-    expect(section.tiles.every((tile) => tile.alt === 't:landing.galleryPlaceholderAlt')).toBe(
-      true,
-    );
-    expect(new Set(section.tiles.map((tile) => tile.key)).size).toBe(6);
+    expect(section.tiles).toHaveLength(9);
+    expect(section.tiles.every((tile) => tile.src.startsWith('/staff/'))).toBe(true);
+  });
+
+  it('names the person in each alt text rather than its position in the grid', () => {
+    const [first] = buildGallerySection(t).tiles;
+
+    // A screen-reader user hears who is in the picture, not "image 1".
+    expect(first?.alt).toBe('t:landing.galleryPhotoAlt:{"name":"Sherif Ashraf"}');
   });
 });
 

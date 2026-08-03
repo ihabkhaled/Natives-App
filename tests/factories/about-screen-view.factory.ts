@@ -8,7 +8,8 @@ export function buildAboutScreenView(overrides: Partial<AboutScreenView> = {}): 
     seoDescription: 'Ultimate Natives — an Ultimate Frisbee team in El Sheikh Zayed, Giza, Egypt.',
     heroEyebrow: 'Who we are',
     heroTitle: 'About Ultimate Natives',
-    foundingHeading: 'Our story',
+    storyHeading: 'Our story',
+    storyParagraphs: ['Founded in 2021.', 'Player-led since 2025.'],
     foundingQuote:
       'Founded in October 2021 by Captain Dalia Elgharib and Coach Youssef Aboutaleb. ' +
       'Ultimate Natives are a team of 25 committed and highly spirited players. We run ' +

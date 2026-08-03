@@ -3012,7 +3012,6 @@
     "metaDescription": "Ultimate Natives — an Ultimate Frisbee team based in El Sheikh Zayed, Giza, Egypt. Founded October 2021.",
     "heroEyebrow": "Who we are",
     "heroTitle": "About Ultimate Natives",
-    "foundingHeading": "Our story",
     "foundingQuote": "Founded in October 2021 by Captain Dalia Elgharib and Coach Youssef Aboutaleb. Ultimate Natives are a team of 25 committed and highly spirited players. We run natively as our programming systems and we play natively as our pharaonic ancestors.",
     "factsHeading": "Quick facts",
     "factLocationLabel": "Location",
@@ -3034,7 +3033,13 @@
     "spiritValue3Title": "Joy in the game",
     "spiritValue3Body": "Competitive drive stays rooted in why we play: the sport itself, our teammates, and the community around it.",
     "spiritValue4Title": "Consistent effort",
-    "spiritValue4Body": "We show up prepared, communicate clearly, and hold the same standard for ourselves that we expect from the team."
+    "spiritValue4Body": "We show up prepared, communicate clearly, and hold the same standard for ourselves that we expect from the team.",
+    "storyHeading": "Our story",
+    "storyEarly": "Ultimate Natives started in October 2021 in El Sheikh Zayed, founded by Captain Dalia Elgharib and Coach Youssef Aboutaleb. The first seasons were about learning the sport together — a handful of players, borrowed pitch time, and a disc.",
+    "storySelfCoached": "Since 2025 the team has run without an outside coach. Rather than wait for one, players stepped into the roles themselves: a coach and two co-coaches drawn from the squad, who plan sessions, run drills and pick lines alongside everyone they play with. It is harder than being coached, and it is the reason the team knows its own game so well.",
+    "storySeasonPrevious": "The previous season was spent rebuilding around that change — settling who leads what, growing the roster past twenty-five, and turning up week after week on the same pitch in El Sheikh Zayed.",
+    "storySeasonCurrent": "This season the Season Board 26/27 carries the club: coach and co-coaches on the field, a spirit captain who keeps the game honest, finance, social media, and analysis. The team has entered EUNC 2026 and EUDL 2026. Results appear on this site the moment each event publishes them — never before.",
+    "storySpiritNote": "Through all of it the sport stays self-officiated. There are no referees at any level of Ultimate, including ours: players call their own fouls and resolve them on the field, which is the part newcomers find strangest and the part the team is proudest of."
   },
   "contact": {
     "title": "Contact Us",
@@ -3131,7 +3136,6 @@
     "locationMapAlt": "Map marker for El Sheikh Zayed, Giza, Egypt",
     "galleryHeading": "Gallery",
     "galleryIntro": "Moments from the season — more photos coming soon.",
-    "galleryPlaceholderAlt": "Ultimate Natives gallery photo placeholder",
     "achievementsHeading": "Ultimate Natives at a glance",
     "statFoundedLabel": "Founded",
     "statFoundedValue": "October 2021",
@@ -3146,7 +3150,8 @@
     "finalCtaHeading": "Ready to play?",
     "finalCtaBody": "Whether you want to try out or just have a question, we would love to hear from you.",
     "finalCtaPrimary": "Join tryouts",
-    "finalCtaSecondary": "Get in touch"
+    "finalCtaSecondary": "Get in touch",
+    "galleryPhotoAlt": "{{name}} of Ultimate Natives"
   },
   "teamDirectory": {
     "title": "Our Team",

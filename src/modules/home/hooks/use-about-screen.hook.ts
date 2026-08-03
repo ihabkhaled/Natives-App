@@ -21,8 +21,10 @@ export interface AboutScreenView {
   readonly seoDescription: string;
   readonly heroEyebrow: string;
   readonly heroTitle: string;
-  readonly foundingHeading: string;
   readonly foundingQuote: string;
+  readonly storyHeading: string;
+  /** The club's history in order, rendered as consecutive paragraphs. */
+  readonly storyParagraphs: readonly string[];
   readonly factsHeading: string;
   readonly facts: readonly AboutFact[];
   readonly explainerHeading: string;
@@ -42,8 +44,15 @@ export function useAboutScreen(): AboutScreenView {
     seoDescription: t(keys.metaDescription),
     heroEyebrow: t(keys.heroEyebrow),
     heroTitle: t(keys.heroTitle),
-    foundingHeading: t(keys.foundingHeading),
     foundingQuote: t(keys.foundingQuote),
+    storyHeading: t(keys.storyHeading),
+    storyParagraphs: [
+      t(keys.storyEarly),
+      t(keys.storySelfCoached),
+      t(keys.storySeasonPrevious),
+      t(keys.storySeasonCurrent),
+      t(keys.storySpiritNote),
+    ],
     factsHeading: t(keys.factsHeading),
     facts: [
       { key: 'sport', label: t(keys.factSportLabel), value: t(keys.factSportValue) },

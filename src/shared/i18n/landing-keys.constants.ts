@@ -69,7 +69,7 @@ export const LANDING_I18N_KEYS = {
 
   galleryHeading: 'landing.galleryHeading',
   galleryIntro: 'landing.galleryIntro',
-  galleryPlaceholderAlt: 'landing.galleryPlaceholderAlt',
+  galleryPhotoAlt: 'landing.galleryPhotoAlt',
 
   achievementsHeading: 'landing.achievementsHeading',
   statFoundedLabel: 'landing.statFoundedLabel',

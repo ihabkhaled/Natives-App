@@ -1,15 +1,15 @@
+import type { TranslateParams } from '@/packages/i18n';
 import type { FactListItem } from '@/shared/ui';
 import { I18N_KEYS } from '@/shared/i18n';
 
 import type { SpiritValueItem } from '../components/spirit-values-grid';
+import { LANDING_GALLERY_PHOTOS } from '../constants/landing-gallery.constants';
 import {
   TEAM_LOCATION_EMBED_URL,
   TEAM_LOCATION_MAPS_URL,
 } from '../constants/landing-location.constants';
 
-type Translate = (key: string) => string;
-
-const GALLERY_TILE_COUNT = 6;
+type Translate = (key: string, params?: TranslateParams) => string;
 
 export interface ExplainerSectionView {
   readonly eyebrow: string;
@@ -72,6 +72,7 @@ export function buildLocationSection(t: Translate): LocationSectionView {
 interface GalleryTileView {
   readonly key: string;
   readonly alt: string;
+  readonly src: string;
 }
 
 export interface GallerySectionView {
@@ -80,15 +81,21 @@ export interface GallerySectionView {
   readonly tiles: readonly GalleryTileView[];
 }
 
-/** Static placeholder tiles until real match-day photos are DB-managed. */
+/**
+ * Real photographs of this team, not placeholder rectangles.
+ *
+ * The alt text names the person, so a screen-reader user hears who is in the
+ * picture rather than "gallery image 3". Match-day photography replaces the
+ * source list without touching this builder.
+ */
 export function buildGallerySection(t: Translate): GallerySectionView {
-  const alt = t(I18N_KEYS.landing.galleryPlaceholderAlt);
   return {
     heading: t(I18N_KEYS.landing.galleryHeading),
     intro: t(I18N_KEYS.landing.galleryIntro),
-    tiles: Array.from({ length: GALLERY_TILE_COUNT }, (_value, index) => ({
-      key: `tile-${index + 1}`,
-      alt,
+    tiles: LANDING_GALLERY_PHOTOS.map((photo) => ({
+      key: photo.key,
+      src: photo.src,
+      alt: t(I18N_KEYS.landing.galleryPhotoAlt, { name: photo.name }),
     })),
   };
 }
