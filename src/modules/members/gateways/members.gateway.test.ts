@@ -50,10 +50,33 @@ describe('members.gateway', () => {
   });
 
   it('invites with a profile body and omits null fields', async () => {
-    await requestInviteMember('t', { fullName: 'Omar', nickname: null, jerseyNumber: null });
+    await requestInviteMember('t', {
+      fullName: 'Omar',
+      nickname: null,
+      jerseyNumber: null,
+      email: null,
+    });
     const [path, body] = post.mock.calls[0] as [string, { profile: object }];
     expect(path).toBe('/teams/t/members/invite');
     expect(body.profile).toEqual({ fullName: 'Omar' });
+  });
+
+  // The membership acceptance claims is found by profile email. A body without
+  // it creates a row no invitation can ever attach to.
+  it('carries the invited email inside the profile body', async () => {
+    await requestInviteMember('t', {
+      fullName: 'Omar',
+      nickname: 'O',
+      jerseyNumber: '7',
+      email: 'omar@example.com',
+    });
+    const [, body] = post.mock.calls[0] as [string, { profile: object }];
+    expect(body.profile).toEqual({
+      fullName: 'Omar',
+      nickname: 'O',
+      jerseyNumber: '7',
+      email: 'omar@example.com',
+    });
   });
 
   it('creates the invitation on the TEAM-scoped route with the team role', async () => {

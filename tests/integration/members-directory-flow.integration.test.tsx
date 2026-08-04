@@ -5,6 +5,7 @@ import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
 import { MembersDirectoryContainer } from '@/modules/members/containers/members-directory.container';
 import { TEST_IDS } from '@/shared/config';
+import { readInviteLinkage } from '@/tests/msw/members.fixture';
 import { MOCK_PERSONA_EMAILS } from '@/tests/msw/mock-data.constants';
 
 import { fireIonInput } from '../setup/ionic-events.helper';
@@ -78,6 +79,39 @@ describe('members directory flow (real client + MSW)', () => {
     expect(screen.getByTestId(TEST_IDS.memberInviteSentTeam)).toHaveTextContent('Cairo Natives');
     expect(screen.getByTestId(TEST_IDS.memberInviteSentRole)).toHaveTextContent('Member');
     expect(await screen.findByText(/of 9 members/i)).toBeInTheDocument();
+  });
+
+  /**
+   * The P0 integration guard. Inviting writes two records through two
+   * requests, and acceptance links them by matching the invitation's email
+   * against the membership profile's. If the roster request omits the address
+   * — or sends a differently-cased one — acceptance claims nothing: the
+   * invitee ends up with an active account, an orphaned `invited` membership,
+   * no team context, no role assignment, and navigation collapsed to the
+   * permission-free destinations.
+   */
+  it('sends the same team and email to the invitation AND the roster record', async () => {
+    await signInAs(MOCK_PERSONA_EMAILS.admin);
+    renderDirectory();
+
+    await screen.findByTestId(TEST_IDS.membersInviteButton, {}, { timeout: 5000 });
+    fireEvent.click(screen.getByTestId(TEST_IDS.membersInviteButton));
+    fireIonInput(screen.getByTestId(TEST_IDS.memberInviteEmail), '  Recruit@Example.COM  ');
+    fireIonInput(screen.getByTestId(TEST_IDS.memberInviteFullName), 'New Recruit');
+    fireEvent.click(screen.getByTestId(TEST_IDS.memberInviteSubmit));
+
+    await waitFor(
+      () => {
+        expect(readInviteLinkage().membership).not.toBeNull();
+      },
+      { timeout: 5000 },
+    );
+    const linkage = readInviteLinkage();
+    expect(linkage.membership?.email).toBe(linkage.invitation?.email);
+    expect(linkage.membership?.teamId).toBe(linkage.invitation?.teamId);
+    // Normalized once, by the invite service, so padding and casing typed into
+    // the form cannot split the pair.
+    expect(linkage.membership?.email).toBe('recruit@example.com');
   });
 
   it('feeds the role select from the server catalog and enables it once loaded', async () => {

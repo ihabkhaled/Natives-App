@@ -29,8 +29,38 @@ const ASSIGNABLE_BY_TIER: Record<MemberTier, readonly MemberRole[]> = {
 
 let records: MemberRecord[] = buildInitialMemberRecords();
 
+/**
+ * The two addresses acceptance needs in order to link an account to a roster
+ * row: the one the identity invitation was created with, and the one written
+ * onto the membership profile. The real backend claims an invited membership
+ * by matching them, so recording both is what lets a test prove the invite
+ * composer cannot drift them apart — the failure that leaves an accepted
+ * account with no membership, no team context and no role.
+ */
+export interface InviteLinkage {
+  readonly invitation: { readonly teamId: string; readonly email: string } | null;
+  readonly membership: { readonly teamId: string; readonly email: string | null } | null;
+}
+
+const EMPTY_INVITE_LINKAGE: InviteLinkage = { invitation: null, membership: null };
+
+let inviteLinkage: InviteLinkage = EMPTY_INVITE_LINKAGE;
+
 export function resetMockMembersState(): void {
   records = buildInitialMemberRecords();
+  inviteLinkage = EMPTY_INVITE_LINKAGE;
+}
+
+export function recordInvitationRequest(teamId: string, email: string): void {
+  inviteLinkage = { ...inviteLinkage, invitation: { teamId, email } };
+}
+
+export function recordMembershipInviteRequest(teamId: string, email: string | null): void {
+  inviteLinkage = { ...inviteLinkage, membership: { teamId, email } };
+}
+
+export function readInviteLinkage(): InviteLinkage {
+  return inviteLinkage;
 }
 
 function find(membershipId: string): MemberRecord | undefined {

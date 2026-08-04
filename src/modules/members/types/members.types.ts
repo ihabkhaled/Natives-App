@@ -107,11 +107,23 @@ export interface MembersFilterState {
   readonly position: string | null;
 }
 
-/** Self-invite payload; identity of the inviter comes from the token. */
-export interface InviteMemberInput {
+/** The roster fields the invite form collects about the person. */
+export interface InviteProfileInput {
   readonly fullName: string;
   readonly nickname: string | null;
   readonly jerseyNumber: string | null;
+}
+
+/**
+ * The membership-invite payload; identity of the inviter comes from the token.
+ *
+ * The email is part of the PROFILE, not decoration: acceptance claims an
+ * invited membership by matching `member_profiles.email` against the accepted
+ * invitation. A membership written without it can never be claimed, which
+ * leaves the invitee with an active account, no team, and no role.
+ */
+export interface InviteMemberInput extends InviteProfileInput {
+  readonly email: string | null;
 }
 
 /** The team-scoped invitation an administrator sends by email. */

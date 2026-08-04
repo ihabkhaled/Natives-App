@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 
 import {
   buildSelfEditInitialValues,
+  normalizeInviteEmail,
   normalizeOptionalText,
   normalizeRequiredName,
   parseJerseyInput,
@@ -23,6 +24,14 @@ describe('member-form.helper', () => {
     expect(normalizeRequiredName(' Omar ')).toBe('Omar');
     expect(normalizeOptionalText('')).toBeNull();
     expect(normalizeOptionalText(' x ')).toBe('x');
+  });
+
+  // One owner, because the address is written twice (invitation + roster
+  // profile) and acceptance links the two by comparing them.
+  it('normalizes an invite email by trimming and lower-casing it', () => {
+    expect(normalizeInviteEmail('  Omar@Example.COM  ')).toBe('omar@example.com');
+    expect(normalizeInviteEmail('omar@example.com')).toBe('omar@example.com');
+    expect(normalizeInviteEmail('   ')).toBe('');
   });
 
   it('seeds self-edit values from a profile or blanks', () => {

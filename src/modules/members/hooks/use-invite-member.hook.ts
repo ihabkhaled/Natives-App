@@ -125,7 +125,9 @@ export function useInviteMember(
   const mutation = useAppMutation({
     mutationFn: () =>
       invitePersonByEmail(teamId, {
-        email: form.email.trim(),
+        // Raw on purpose: the invite service owns email normalization so the
+        // invitation and the membership profile carry one identical address.
+        email: form.email,
         teamRole: form.role,
         profile: {
           fullName: normalizeRequiredName(form.fullName) ?? '',

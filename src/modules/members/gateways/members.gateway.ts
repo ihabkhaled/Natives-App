@@ -71,14 +71,25 @@ export function requestMember(teamId: string, membershipId: string): Promise<Mem
   return getAppHttpClient().get(memberPath(teamId, membershipId), memberViewResponseSchema);
 }
 
-/** Invite a person into the team; the server returns the new membership. */
+/**
+ * Invite a person into the team; the server returns the new membership.
+ *
+ * The profile carries the invited email. That is the field acceptance matches
+ * on to claim this membership and grant the invited role, so omitting it is
+ * what produces an accepted account with no team (see `InviteMemberInput`).
+ */
 export function requestInviteMember(
   teamId: string,
   input: InviteMemberInput,
 ): Promise<MembershipDto> {
   return getAppHttpClient().post(
     memberInvitePath(teamId),
-    { profile: buildProfileBody(input) },
+    {
+      profile: {
+        ...buildProfileBody(input),
+        ...(input.email === null ? {} : { email: input.email }),
+      },
+    },
     membershipResponseSchema,
   );
 }
