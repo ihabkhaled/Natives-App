@@ -50,7 +50,33 @@ describe('invitePersonByEmail', () => {
       email: 'omar@example.com',
       teamRole: 'coach',
     });
-    expect(requestInviteMember).toHaveBeenCalledWith('team-1', INPUT.profile);
+    expect(requestInviteMember).toHaveBeenCalledWith('team-1', {
+      ...INPUT.profile,
+      email: 'omar@example.com',
+    });
+  });
+
+  /**
+   * The P0 regression guard. Acceptance claims an invited membership by
+   * matching the roster profile's email against the invitation; a membership
+   * written without that address is one nobody can claim, so the invitee lands
+   * with an active account, no membership, no team context, no role grant and
+   * a navigation menu collapsed to the permission-free destinations.
+   */
+  it('gives the membership profile the SAME email as the invitation', async () => {
+    await invitePersonByEmail('team-1', INPUT);
+
+    const invitationEmail = vi.mocked(requestCreateInvitation).mock.calls[0]?.[1].email;
+    const profileEmail = vi.mocked(requestInviteMember).mock.calls[0]?.[1].email;
+    expect(profileEmail).toBe(invitationEmail);
+    expect(profileEmail).not.toBeNull();
+  });
+
+  it('normalizes once, so casing and padding cannot split the two records', async () => {
+    await invitePersonByEmail('team-1', { ...INPUT, email: '  Omar@Example.COM  ' });
+
+    expect(vi.mocked(requestCreateInvitation).mock.calls[0]?.[1].email).toBe('omar@example.com');
+    expect(vi.mocked(requestInviteMember).mock.calls[0]?.[1].email).toBe('omar@example.com');
   });
 
   it('creates the invitation FIRST, so a refusal leaves no orphan directory row', async () => {

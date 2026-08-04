@@ -24,6 +24,19 @@ export function normalizeOptionalText(value: string): string | null {
   return trimmed === '' ? null : trimmed;
 }
 
+/**
+ * The single owner of invite-email normalization.
+ *
+ * Inviting a person writes the address twice — once as the identity
+ * invitation, once as the roster profile's email — and acceptance links the
+ * two by comparing them. Lower-casing and trimming in one place is what makes
+ * the two writes the same string, so a typed " Omar@Example.com " can never
+ * produce an invitation nobody's membership matches.
+ */
+export function normalizeInviteEmail(value: string): string {
+  return value.trim().toLowerCase();
+}
+
 export interface SelfEditInitialValues {
   readonly fullName: string;
   readonly nickname: string;
