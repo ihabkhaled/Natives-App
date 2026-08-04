@@ -63,6 +63,46 @@ test.describe('invite a member by email', () => {
     await expect(page.getByTestId(TEST_IDS.memberInviteForm)).toHaveCount(0);
   });
 
+  /**
+   * The P0 journey guard, asserted on the wire.
+   *
+   * Acceptance claims an invited membership by matching the invitation's
+   * address against the roster profile's email, and grants the invited team
+   * role only for the memberships it claims. The roster request used to omit
+   * the address entirely, so acceptance claimed nothing and the invitee landed
+   * with an active account, no membership, no team context, no role, and a
+   * navigation menu collapsed to the permission-free destinations.
+   *
+   * Checking the rendered receipt cannot catch that — the receipt is built
+   * from the invitation alone and looked perfectly correct the whole time the
+   * defect was live. Only the second request's body shows it.
+   */
+  test('sends the invited address on BOTH requests, so acceptance can link them', async ({
+    page,
+  }) => {
+    await signIn(page, personaLogin(MOCK_PERSONA_EMAILS.admin));
+    await gotoApp(page, APP_ROUTES.members);
+
+    const invitationRequest = page.waitForRequest(
+      (request) => request.method() === 'POST' && request.url().endsWith('/invitations'),
+    );
+    const membershipRequest = page.waitForRequest(
+      (request) => request.method() === 'POST' && request.url().endsWith('/members/invite'),
+    );
+
+    await fillInvite(page);
+
+    const invitationBody = JSON.parse((await invitationRequest).postData() ?? '{}') as {
+      email?: string;
+    };
+    const membershipBody = JSON.parse((await membershipRequest).postData() ?? '{}') as {
+      profile?: { email?: string };
+    };
+
+    expect(membershipBody.profile?.email).toBe('recruit@example.com');
+    expect(membershipBody.profile?.email).toBe(invitationBody.email);
+  });
+
   test('hands back to a blank form when the administrator is done', async ({ page }) => {
     await signIn(page, personaLogin(MOCK_PERSONA_EMAILS.admin));
     await gotoApp(page, APP_ROUTES.members);
