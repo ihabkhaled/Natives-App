@@ -72,6 +72,10 @@ export const APP_PATHS = {
   roleAssignments: '/admin/role-assignments',
   practiceAgenda: '/practice-sessions/:sessionId/agenda',
   practiceReminders: '/practice-sessions/:sessionId/reminders',
+  practiceSchedules: '/practice-schedules',
+  // The literal create path must precede the `:scheduleId` pattern it shadows.
+  practiceScheduleNew: '/practice-schedules/new',
+  practiceScheduleDetail: '/practice-schedules/:scheduleId',
   competitions: '/competitions',
   competitionDetail: '/competitions/:competitionId',
   squads: '/squads',

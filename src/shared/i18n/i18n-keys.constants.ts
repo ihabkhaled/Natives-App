@@ -29,6 +29,7 @@ import { GOVERNANCE_I18N_KEYS } from './governance-keys.constants';
 import { JERSEY_I18N_KEYS } from './jersey-keys.constants';
 import { PRACTICE_AGENDA_I18N_KEYS } from './practice-agenda-keys.constants';
 import { PRACTICE_REMINDERS_I18N_KEYS } from './practice-reminders-keys.constants';
+import { PRACTICE_SCHEDULES_I18N_KEYS } from './practice-schedules-keys.constants';
 import { SESSIONS_I18N_KEYS } from './sessions-keys.constants';
 import { ROLE_ASSIGNMENTS_I18N_KEYS } from './role-assignments-keys.constants';
 import { TRYOUT_CANDIDATES_I18N_KEYS } from './tryout-candidates-keys.constants';
@@ -167,6 +168,7 @@ export const I18N_KEYS = {
   jersey: JERSEY_I18N_KEYS,
   practiceAgenda: PRACTICE_AGENDA_I18N_KEYS,
   practiceReminders: PRACTICE_REMINDERS_I18N_KEYS,
+  practiceSchedules: PRACTICE_SCHEDULES_I18N_KEYS,
   roleAssignments: ROLE_ASSIGNMENTS_I18N_KEYS,
   tryoutCandidates: TRYOUT_CANDIDATES_I18N_KEYS,
   reports: REPORTS_I18N_KEYS,

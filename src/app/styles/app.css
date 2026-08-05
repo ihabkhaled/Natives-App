@@ -7364,3 +7364,37 @@ ion-spinner {
     transform: none;
   }
 }
+
+/* ---- Practice schedules: weekday toggle group ---- */
+.app-weekday-toggle {
+  min-inline-size: 44px;
+  min-block-size: 44px;
+  padding: var(--un-space-2) var(--un-space-3);
+  border: 1px solid var(--app-hairline);
+  border-radius: var(--un-radius-full, 999px);
+  background: transparent;
+  color: var(--app-muted-strong);
+  font-size: var(--un-font-size-sm);
+  font-weight: var(--un-font-weight-semibold);
+  cursor: pointer;
+  transition:
+    background-color 0.15s ease,
+    border-color 0.15s ease,
+    color 0.15s ease;
+}
+
+.app-weekday-toggle:hover {
+  border-color: var(--app-lime-line);
+}
+
+.app-weekday-toggle--selected {
+  border-color: var(--app-lime-line);
+  background: var(--app-lime-soft);
+  color: var(--app-lime-text);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .app-weekday-toggle {
+    transition: none;
+  }
+}
