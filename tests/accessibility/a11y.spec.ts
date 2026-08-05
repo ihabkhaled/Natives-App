@@ -458,6 +458,27 @@ test.describe('matches accessibility', () => {
     expect((await analyze(page)).violations).toEqual([]);
   });
 
+  test('the practice agenda groups screen has no violations, including its live region and confirm dialog', async ({
+    page,
+  }) => {
+    await signIn(page, {
+      email: MOCK_PERSONA_EMAILS.coach,
+      password: MOCK_CREDENTIALS.password,
+    });
+    await gotoApp(page, APP_ROUTES.practiceAgendaGroups);
+    await expect(page.getByTestId(TEST_IDS.practiceAgendaGroupsPlan)).toBeVisible();
+
+    await fillIonInput(page, TEST_IDS.practiceAgendaGroupsCreateName, 'Rotation squad');
+    await page.getByTestId(TEST_IDS.practiceAgendaGroupsCreateSubmit).click();
+    // The outcome list is announced, not just rendered — analyze it populated.
+    await expect(page.getByTestId(TEST_IDS.practiceAgendaGroupsNotice)).toBeVisible();
+
+    await page.getByTestId(TEST_IDS.practiceAgendaGroupsGroupRemove).first().click();
+    await expect(page.locator('ion-alert')).toBeVisible();
+    await waitForAppAnimations(page);
+    expect((await analyze(page)).violations).toEqual([]);
+  });
+
   test('the reports center has no violations, including its progress and countdown labels', async ({
     page,
   }) => {

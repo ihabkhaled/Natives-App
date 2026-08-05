@@ -17,6 +17,7 @@ import { getDataQualityRouteDefinitions } from '@/modules/data-quality';
 import { getGovernanceRouteDefinitions } from '@/modules/governance';
 import { getJerseyRouteDefinitions } from '@/modules/jersey';
 import { getPracticeAgendaRouteDefinitions } from '@/modules/practice-agenda';
+import { getPracticeAgendaGroupsRouteDefinitions } from '@/modules/practice-agenda-groups';
 import { getPracticeRemindersRouteDefinitions } from '@/modules/practice-reminders';
 import { getRoleAssignmentsRouteDefinitions } from '@/modules/role-assignments';
 import { getTryoutCandidatesRouteDefinitions } from '@/modules/tryout-candidates';
@@ -51,6 +52,7 @@ export function getAppRouteDefinitions(): readonly AppRouteDefinition[] {
     ...getGovernanceRouteDefinitions(),
     ...getJerseyRouteDefinitions(),
     ...getPracticeAgendaRouteDefinitions(),
+    ...getPracticeAgendaGroupsRouteDefinitions(),
     ...getPracticeRemindersRouteDefinitions(),
     ...getRoleAssignmentsRouteDefinitions(),
     ...getTryoutCandidatesRouteDefinitions(),

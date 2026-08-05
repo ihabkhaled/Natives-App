@@ -56,6 +56,7 @@ describe('APP_PATHS', () => {
       'playerAnalytics',
       'points',
       'practiceAgenda',
+      'practiceAgendaGroups',
       'practiceReminders',
       'practiceSession',
       'practices',

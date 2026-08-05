@@ -19,6 +19,7 @@ export type {
   AgendaIntensity,
   AgendaStation,
   AgendaStatus,
+  AgendaSummary,
   PracticeAgenda,
 } from './types/practice-agenda.types';
 export type { PracticeAgendaScreenView } from './types/practice-agenda-view.types';

@@ -475,6 +475,21 @@
       ]
     },
     {
+      "name": "practice-agenda-groups",
+      "publicSurface": [
+        "AGENDA_GROUP_COLOR_SWATCHES",
+        "AGENDA_GROUP_OUTCOME",
+        "AgendaGroupOutcome",
+        "agendaGroupResponseSchema",
+        "agendaGroupsPlanResponseSchema",
+        "getPracticeAgendaGroupsRouteDefinitions",
+        "groupMemberResponseSchema",
+        "practiceAgendaGroupsPath",
+        "practiceAgendaGroupsPattern",
+        "practiceAgendaGroupsQueryKeys"
+      ]
+    },
+    {
       "name": "practice-reminders",
       "publicSurface": [
         "REMINDER_SUPPRESSION_REASON",
