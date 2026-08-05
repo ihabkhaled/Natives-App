@@ -515,3 +515,30 @@ test.describe('matches accessibility', () => {
     expect((await analyze(page)).violations).toEqual([]);
   });
 });
+
+test.describe('practice schedules accessibility', () => {
+  test('the schedule list, its edit form, and the generate live region have no violations', async ({
+    page,
+  }) => {
+    await signIn(page, {
+      email: MOCK_PERSONA_EMAILS.coach,
+      password: MOCK_CREDENTIALS.password,
+    });
+    await gotoApp(page, APP_ROUTES.practiceSchedules);
+    await expect(page.getByTestId(TEST_IDS.practiceSchedulesList)).toBeVisible();
+    await waitForAppAnimations(page);
+    expect((await analyze(page)).violations).toEqual([]);
+
+    await page.getByText('Tuesday & Thursday practice').click();
+    await expect(page.getByTestId(TEST_IDS.practiceScheduleForm)).toBeVisible();
+    await waitForAppAnimations(page);
+    expect((await analyze(page)).violations).toEqual([]);
+
+    // The generate outcome is announced, not just rendered — analyze it populated.
+    await page.getByTestId(TEST_IDS.practiceScheduleGenerate).click();
+    await page.locator('ion-alert').getByRole('button', { name: 'Generate', exact: true }).click();
+    await expect(page.getByTestId(TEST_IDS.practiceScheduleMessages)).toBeVisible();
+    await waitForAppAnimations(page);
+    expect((await analyze(page)).violations).toEqual([]);
+  });
+});

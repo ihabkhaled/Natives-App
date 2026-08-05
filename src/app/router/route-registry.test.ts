@@ -66,6 +66,10 @@ describe('getAppRouteDefinitions', () => {
       APP_PATHS.practiceReminders,
       APP_PATHS.drills,
       APP_PATHS.drillDetail,
+      APP_PATHS.practiceSchedules,
+      // The literal create path must precede the `:scheduleId` pattern it shadows.
+      APP_PATHS.practiceScheduleNew,
+      APP_PATHS.practiceScheduleDetail,
       APP_PATHS.roleAssignments,
       APP_PATHS.tryoutCandidates,
       APP_PATHS.reports,
