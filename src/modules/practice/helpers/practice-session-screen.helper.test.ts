@@ -36,6 +36,7 @@ function params(
     onOpenAttendance: vi.fn(),
     canManagePractice: false,
     onOpenReminders: vi.fn(),
+    onOpenRsvpDetail: vi.fn(),
     ...overrides,
   };
 }
@@ -134,6 +135,35 @@ describe('buildPracticeSessionScreenView', () => {
     );
 
     expect(view.remindersCta).toBeNull();
+  });
+
+  it('hides the RSVP-detail CTA without the manage grant', () => {
+    expect(buildPracticeSessionScreenView(params()).rsvpDetailCta).toBeNull();
+  });
+
+  /**
+   * Gated on practice.manage, the same grant the reminders CTA requires: who
+   * is coming is roster information, and the screen behind the link can
+   * change an answer on somebody's behalf.
+   */
+  it('offers RSVP detail to a coach who may manage the session', () => {
+    const onOpenRsvpDetail = vi.fn();
+    const view = buildPracticeSessionScreenView(
+      params({ canManagePractice: true, onOpenRsvpDetail }),
+    );
+
+    expect(view.rsvpDetailCta?.heading).toBe('practiceRsvpDetail.title');
+    expect(view.rsvpDetailCta?.label).toBe('practiceRsvpDetail.ctaLabel');
+    view.rsvpDetailCta?.onOpen();
+    expect(onOpenRsvpDetail).toHaveBeenCalledTimes(1);
+  });
+
+  it('withholds the RSVP-detail CTA while the detail has not resolved', () => {
+    const view = buildPracticeSessionScreenView(
+      params({ canManagePractice: true, detail: undefined }),
+    );
+
+    expect(view.rsvpDetailCta).toBeNull();
   });
 
   it('withholds the CTA while the detail has not resolved', () => {

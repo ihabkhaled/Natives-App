@@ -91,6 +91,7 @@ describe('I18N_KEYS', () => {
       'practiceReminders',
       'drills',
       'practiceSchedules',
+      'practiceRsvpDetail',
       'roleAssignments',
       'tryoutCandidates',
       'reports',

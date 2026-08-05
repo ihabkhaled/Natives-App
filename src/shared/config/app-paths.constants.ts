@@ -79,6 +79,7 @@ export const APP_PATHS = {
   // The literal create path must precede the `:scheduleId` pattern it shadows.
   practiceScheduleNew: '/practice-schedules/new',
   practiceScheduleDetail: '/practice-schedules/:scheduleId',
+  practiceRsvpDetail: '/practice-sessions/:sessionId/rsvps',
   competitions: '/competitions',
   competitionDetail: '/competitions/:competitionId',
   squads: '/squads',

@@ -21,6 +21,7 @@ import { getPracticeAgendaRouteDefinitions } from '@/modules/practice-agenda';
 import { getPracticeAgendaGroupsRouteDefinitions } from '@/modules/practice-agenda-groups';
 import { getPracticeRemindersRouteDefinitions } from '@/modules/practice-reminders';
 import { getPracticeSchedulesRouteDefinitions } from '@/modules/practice-schedules';
+import { getPracticeRsvpDetailRouteDefinitions } from '@/modules/practice-rsvp-detail';
 import { getRoleAssignmentsRouteDefinitions } from '@/modules/role-assignments';
 import { getTryoutCandidatesRouteDefinitions } from '@/modules/tryout-candidates';
 import { getReportsRouteDefinitions } from '@/modules/reports';
@@ -58,6 +59,7 @@ export function getAppRouteDefinitions(): readonly AppRouteDefinition[] {
     ...getPracticeRemindersRouteDefinitions(),
     ...getDrillsRouteDefinitions(),
     ...getPracticeSchedulesRouteDefinitions(),
+    ...getPracticeRsvpDetailRouteDefinitions(),
     ...getRoleAssignmentsRouteDefinitions(),
     ...getTryoutCandidatesRouteDefinitions(),
     ...getReportsRouteDefinitions(),

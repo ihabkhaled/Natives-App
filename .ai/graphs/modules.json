@@ -268,6 +268,25 @@
       ]
     },
     {
+      "name": "drills",
+      "publicSurface": [
+        "DRILL_CATEGORIES",
+        "DRILL_DEFAULT_INTENSITY",
+        "DRILL_ID_PARAM",
+        "DRILL_INTENSITIES",
+        "DRILL_NEW_ID",
+        "DRILL_STATUS",
+        "DRILL_STATUSES",
+        "drillDetailPath",
+        "drillDetailPattern",
+        "drillResponseSchema",
+        "drillsPath",
+        "drillsQueryKeys",
+        "getDrillsRouteDefinitions",
+        "listDrillsResponseSchema"
+      ]
+    },
+    {
       "name": "governance",
       "publicSurface": [
         "GOVERNANCE_PAGE_SIZE",
@@ -500,6 +519,37 @@
         "reminderDispatchResponseSchema",
         "reminderStatusResponseSchema",
         "reminderTestResponseSchema"
+      ]
+    },
+    {
+      "name": "practice-rsvp-detail",
+      "publicSurface": [
+        "RSVP_NOTE_VISIBILITY",
+        "RSVP_SOURCE",
+        "RsvpNoteVisibility",
+        "RsvpSource",
+        "getPracticeRsvpDetailRouteDefinitions",
+        "listRsvpsResponseSchema",
+        "practiceRsvpDetailPath",
+        "practiceRsvpDetailPattern",
+        "practiceRsvpDetailQueryKeys",
+        "rsvpHistoryResponseSchema",
+        "rsvpResponseSchema",
+        "rsvpSummaryResponseSchema"
+      ]
+    },
+    {
+      "name": "practice-schedules",
+      "publicSurface": [
+        "generationResultResponseSchema",
+        "getPracticeSchedulesRouteDefinitions",
+        "listSchedulesResponseSchema",
+        "practiceScheduleDetailPath",
+        "practiceScheduleDetailPattern",
+        "practiceScheduleNewPath",
+        "practiceSchedulesPath",
+        "practiceSchedulesQueryKeys",
+        "scheduleResponseSchema"
       ]
     },
     {

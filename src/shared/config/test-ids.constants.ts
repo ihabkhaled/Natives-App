@@ -27,6 +27,7 @@ import { PRACTICE_AGENDA_TEST_IDS } from './practice-agenda-test-ids.constants';
 import { PRACTICE_AGENDA_GROUPS_TEST_IDS } from './practice-agenda-groups-test-ids.constants';
 import { PRACTICE_REMINDERS_TEST_IDS } from './practice-reminders-test-ids.constants';
 import { PRACTICE_SCHEDULES_TEST_IDS } from './practice-schedules-test-ids.constants';
+import { PRACTICE_RSVP_DETAIL_TEST_IDS } from './practice-rsvp-detail-test-ids.constants';
 import { ROLE_ASSIGNMENTS_TEST_IDS } from './role-assignments-test-ids.constants';
 import { TRYOUT_CANDIDATES_TEST_IDS } from './tryout-candidates-test-ids.constants';
 import { REPORTS_TEST_IDS } from './reports-test-ids.constants';
@@ -57,6 +58,7 @@ export const TEST_IDS = {
   ...PRACTICE_REMINDERS_TEST_IDS,
   ...DRILLS_TEST_IDS,
   ...PRACTICE_SCHEDULES_TEST_IDS,
+  ...PRACTICE_RSVP_DETAIL_TEST_IDS,
   ...ROLE_ASSIGNMENTS_TEST_IDS,
   ...TRYOUT_CANDIDATES_TEST_IDS,
   ...REPORTS_TEST_IDS,

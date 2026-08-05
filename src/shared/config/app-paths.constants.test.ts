@@ -60,6 +60,7 @@ describe('APP_PATHS', () => {
       'practiceAgenda',
       'practiceAgendaGroups',
       'practiceReminders',
+      'practiceRsvpDetail',
       'practiceScheduleDetail',
       'practiceScheduleNew',
       'practiceSchedules',

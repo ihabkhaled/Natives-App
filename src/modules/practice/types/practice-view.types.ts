@@ -201,6 +201,17 @@ interface PracticeRemindersCtaView {
   readonly onOpen: () => void;
 }
 
+/**
+ * Session-scoped RSVP-detail entry point: the roster, the summary, and the
+ * override/history tools. `null` without `practice.manage`, the same grant
+ * the reminders CTA requires — who is coming is roster information too.
+ */
+interface PracticeRsvpDetailCtaView {
+  readonly heading: string;
+  readonly label: string;
+  readonly onOpen: () => void;
+}
+
 export interface PracticeSessionScreenView extends AsyncViewCopy {
   readonly title: string;
   readonly status: PracticeSessionStatus;
@@ -208,6 +219,7 @@ export interface PracticeSessionScreenView extends AsyncViewCopy {
   readonly forbiddenMessage: string;
   readonly attendanceCta: PracticeAttendanceCtaView | null;
   readonly remindersCta: PracticeRemindersCtaView | null;
+  readonly rsvpDetailCta: PracticeRsvpDetailCtaView | null;
   readonly detail: PracticeSessionDetailData | null;
   readonly selectedReason: RsvpReason | null;
   readonly onSelectReason: (reason: RsvpReason | null) => void;

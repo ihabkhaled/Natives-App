@@ -20,6 +20,7 @@ export const APP_ROUTES = {
   practiceSchedules: '/practice-schedules',
   practiceScheduleNew: '/practice-schedules/new',
   practiceScheduleDetail: '/practice-schedules/schedule-mock-1',
+  practiceRsvpDetail: '/practice-sessions/session-mock-1/rsvps',
   myAttendance: '/my-attendance',
   members: '/members',
   assessments: '/assessments',
