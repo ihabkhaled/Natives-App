@@ -57,6 +57,7 @@ describe('APP_PATHS', () => {
       'points',
       'practiceAgenda',
       'practiceReminders',
+      'practiceRsvpDetail',
       'practiceSession',
       'practices',
       'publicAchievements',

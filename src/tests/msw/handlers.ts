@@ -61,6 +61,8 @@ import { jerseyHandlers } from './jersey-handlers';
 import { practiceAgendaHandlers } from './practice-agenda-handlers';
 import { practiceRemindersHandlers } from './practice-reminders-handlers';
 import { resetMockReminderState } from './practice-reminders.fixture';
+import { practiceRsvpDetailHandlers } from './practice-rsvp-detail-handlers';
+import { resetMockRsvpDetailState } from './practice-rsvp-detail.fixture';
 import { roleAssignmentsHandlers } from './role-assignments-handlers';
 import { tryoutCandidatesHandlers } from './tryout-candidates-handlers';
 import { teamDirectoryHandlers } from './team-directory-handlers';
@@ -75,6 +77,7 @@ const MOCK_STATE_RESETTERS: readonly (() => void)[] = [
   resetMockRecoveryState,
   resetMockPracticeState,
   resetMockReminderState,
+  resetMockRsvpDetailState,
   resetMockAttendanceState,
   resetMockAttendanceSelfState,
   resetMockMembersState,
@@ -269,6 +272,7 @@ export const mockApiHandlers = [
   ...jerseyHandlers,
   ...practiceAgendaHandlers,
   ...practiceRemindersHandlers,
+  ...practiceRsvpDetailHandlers,
   ...roleAssignmentsHandlers,
   ...tryoutCandidatesHandlers,
   ...teamDirectoryHandlers,

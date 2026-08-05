@@ -29,6 +29,14 @@ export function SessionCtaList(props: SessionCtaListProps): React.JSX.Element {
           onOpen={props.remindersCta.onOpen}
         />
       )}
+      {props.rsvpDetailCta === null ? null : (
+        <SessionCtaCard
+          heading={props.rsvpDetailCta.heading}
+          label={props.rsvpDetailCta.label}
+          testId={TEST_IDS.practiceSessionRsvpDetailCta}
+          onOpen={props.rsvpDetailCta.onOpen}
+        />
+      )}
     </>
   );
 }

@@ -458,6 +458,26 @@ test.describe('matches accessibility', () => {
     expect((await analyze(page)).violations).toEqual([]);
   });
 
+  test('the practice RSVP detail screen has no violations, including the open override form', async ({
+    page,
+  }) => {
+    await signIn(page, {
+      email: MOCK_PERSONA_EMAILS.coach,
+      password: MOCK_CREDENTIALS.password,
+    });
+    await gotoApp(page, APP_ROUTES.practiceRsvpDetail);
+    await expect(page.getByTestId(TEST_IDS.practiceRsvpDetailRosterRow).first()).toBeVisible();
+    await waitForAppAnimations(page);
+    expect((await analyze(page)).violations).toEqual([]);
+
+    // The override form adds a select, a required textarea, and two more
+    // optional fields — analyze it open, not only the roster it is opened from.
+    await page.getByTestId(TEST_IDS.practiceRsvpDetailOverrideAction).first().click();
+    await expect(page.getByTestId(TEST_IDS.practiceRsvpDetailOverridePanel)).toBeVisible();
+    await waitForAppAnimations(page);
+    expect((await analyze(page)).violations).toEqual([]);
+  });
+
   test('the reports center has no violations, including its progress and countdown labels', async ({
     page,
   }) => {

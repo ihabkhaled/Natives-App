@@ -71,6 +71,7 @@ describe('APP_DEEP_LINK_POLICY', () => {
       '/points',
       '/practice-sessions/:sessionId/agenda',
       '/practice-sessions/:sessionId/reminders',
+      '/practice-sessions/:sessionId/rsvps',
       '/practices',
       '/practices/:sessionId',
       '/practices/:sessionId/attendance',

@@ -170,6 +170,7 @@ export function buildPracticeSessionScreenView(
     forbiddenMessage: 'You cannot view this.',
     attendanceCta: null,
     remindersCta: null,
+    rsvpDetailCta: null,
     detail: buildPracticeSessionDetailData(),
     selectedReason: null,
     onSelectReason: noop,

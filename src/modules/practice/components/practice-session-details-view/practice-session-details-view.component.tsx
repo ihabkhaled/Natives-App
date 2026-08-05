@@ -46,7 +46,11 @@ export function PracticeSessionDetailsView(
           />
         ) : null}
         {/* Only permitted staff with a resolved detail carry a CTA at all. */}
-        <SessionCtaList attendanceCta={props.attendanceCta} remindersCta={props.remindersCta} />
+        <SessionCtaList
+          attendanceCta={props.attendanceCta}
+          remindersCta={props.remindersCta}
+          rsvpDetailCta={props.rsvpDetailCta}
+        />
         {props.status === 'ready' && props.detail !== null ? (
           <PracticeSessionBody
             detail={props.detail}

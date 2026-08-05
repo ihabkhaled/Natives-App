@@ -488,6 +488,23 @@
       ]
     },
     {
+      "name": "practice-rsvp-detail",
+      "publicSurface": [
+        "RSVP_NOTE_VISIBILITY",
+        "RSVP_SOURCE",
+        "RsvpNoteVisibility",
+        "RsvpSource",
+        "getPracticeRsvpDetailRouteDefinitions",
+        "listRsvpsResponseSchema",
+        "practiceRsvpDetailPath",
+        "practiceRsvpDetailPattern",
+        "practiceRsvpDetailQueryKeys",
+        "rsvpHistoryResponseSchema",
+        "rsvpResponseSchema",
+        "rsvpSummaryResponseSchema"
+      ]
+    },
+    {
       "name": "public-competitions",
       "publicSurface": [
         "MATCH_OUTCOME",

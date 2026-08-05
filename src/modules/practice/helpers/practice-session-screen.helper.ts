@@ -35,6 +35,7 @@ export interface BuildPracticeSessionScreenParams {
   readonly onOpenAttendance: () => void;
   readonly canManagePractice: boolean;
   readonly onOpenReminders: () => void;
+  readonly onOpenRsvpDetail: () => void;
 }
 
 /**
@@ -79,6 +80,24 @@ function buildRemindersCta(
   };
 }
 
+/**
+ * Session-detail RSVP-detail CTA. Gated on `practice.manage`, the same grant
+ * the reminders CTA requires: who is coming is roster information, and the
+ * screen behind this link can change an answer on somebody's behalf.
+ */
+function buildRsvpDetailCta(
+  params: BuildPracticeSessionScreenParams,
+): PracticeSessionScreenView['rsvpDetailCta'] {
+  if (!params.canManagePractice || params.detail === undefined) {
+    return null;
+  }
+  return {
+    heading: params.t(I18N_KEYS.practiceRsvpDetail.title),
+    label: params.t(I18N_KEYS.practiceRsvpDetail.ctaLabel),
+    onOpen: params.onOpenRsvpDetail,
+  };
+}
+
 /** Assemble the full translated session-detail screen view. */
 export function buildPracticeSessionScreenView(
   params: BuildPracticeSessionScreenParams,
@@ -118,6 +137,7 @@ export function buildPracticeSessionScreenView(
     forbiddenMessage: t(I18N_KEYS.states.permissionMessage),
     attendanceCta: buildAttendanceCta(params),
     remindersCta: buildRemindersCta(params),
+    rsvpDetailCta: buildRsvpDetailCta(params),
     detail: detailData,
     selectedReason: params.selectedReason,
     onSelectReason: params.onSelectReason,

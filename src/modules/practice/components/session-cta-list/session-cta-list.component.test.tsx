@@ -10,35 +10,74 @@ function cta(label: string): { heading: string; label: string; onOpen: () => voi
 }
 
 describe('SessionCtaList', () => {
-  it('renders nothing when the viewer holds neither grant', () => {
-    const { container } = render(<SessionCtaList attendanceCta={null} remindersCta={null} />);
+  it('renders nothing when the viewer holds no grant', () => {
+    const { container } = render(
+      <SessionCtaList attendanceCta={null} remindersCta={null} rsvpDetailCta={null} />,
+    );
 
     expect(container).toBeEmptyDOMElement();
   });
 
   it('renders only the attendance entry point when only that grant is held', () => {
-    render(<SessionCtaList attendanceCta={cta('Record attendance')} remindersCta={null} />);
+    render(
+      <SessionCtaList
+        attendanceCta={cta('Record attendance')}
+        remindersCta={null}
+        rsvpDetailCta={null}
+      />,
+    );
 
     expect(screen.getByTestId(TEST_IDS.practiceSessionAttendanceCta)).toBeInTheDocument();
     expect(screen.queryByTestId(TEST_IDS.practiceSessionRemindersCta)).not.toBeInTheDocument();
+    expect(screen.queryByTestId(TEST_IDS.practiceSessionRsvpDetailCta)).not.toBeInTheDocument();
   });
 
   it('renders only the reminders entry point when only that grant is held', () => {
-    render(<SessionCtaList attendanceCta={null} remindersCta={cta('Send due reminders')} />);
+    render(
+      <SessionCtaList
+        attendanceCta={null}
+        remindersCta={cta('Send due reminders')}
+        rsvpDetailCta={null}
+      />,
+    );
 
     expect(screen.getByTestId(TEST_IDS.practiceSessionRemindersCta)).toBeInTheDocument();
     expect(screen.queryByTestId(TEST_IDS.practiceSessionAttendanceCta)).not.toBeInTheDocument();
+    expect(screen.queryByTestId(TEST_IDS.practiceSessionRsvpDetailCta)).not.toBeInTheDocument();
+  });
+
+  it('renders only the RSVP-detail entry point when only that grant is held', () => {
+    render(
+      <SessionCtaList
+        attendanceCta={null}
+        remindersCta={null}
+        rsvpDetailCta={cta('View RSVPs')}
+      />,
+    );
+
+    expect(screen.getByTestId(TEST_IDS.practiceSessionRsvpDetailCta)).toBeInTheDocument();
+    expect(screen.queryByTestId(TEST_IDS.practiceSessionAttendanceCta)).not.toBeInTheDocument();
+    expect(screen.queryByTestId(TEST_IDS.practiceSessionRemindersCta)).not.toBeInTheDocument();
   });
 
   it('opens each entry point from its own button', () => {
     const attendance = cta('Record attendance');
     const reminders = cta('Send due reminders');
-    render(<SessionCtaList attendanceCta={attendance} remindersCta={reminders} />);
+    const rsvpDetail = cta('View RSVPs');
+    render(
+      <SessionCtaList
+        attendanceCta={attendance}
+        remindersCta={reminders}
+        rsvpDetailCta={rsvpDetail}
+      />,
+    );
 
     fireEvent.click(screen.getByTestId(TEST_IDS.practiceSessionAttendanceCta));
     fireEvent.click(screen.getByTestId(TEST_IDS.practiceSessionRemindersCta));
+    fireEvent.click(screen.getByTestId(TEST_IDS.practiceSessionRsvpDetailCta));
 
     expect(attendance.onOpen).toHaveBeenCalledTimes(1);
     expect(reminders.onOpen).toHaveBeenCalledTimes(1);
+    expect(rsvpDetail.onOpen).toHaveBeenCalledTimes(1);
   });
 });
