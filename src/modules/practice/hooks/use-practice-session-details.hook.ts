@@ -13,6 +13,7 @@ import { useAppToast } from '@/shared/ui';
 import { type RsvpReason } from '../constants/practice.constants';
 import { buildPracticeSessionScreenView } from '../helpers/practice-session-screen.helper';
 import { useRsvpMutation } from '../mutations/use-rsvp-mutation.hook';
+import { practiceRemindersPath } from '@/modules/practice-reminders';
 import { sessionAttendancePath } from '../routes/practice.paths';
 import { usePracticeSessionQuery } from './use-practice-session-query.hook';
 import { usePracticeTeamContext } from './use-practice-team-context.hook';
@@ -52,6 +53,7 @@ export function usePracticeSessionDetails(sessionId: string): PracticeSessionScr
     now: nowIso(),
     canRsvpSelf: hasAllPermissions(permissions.permissions, [PERMISSIONS.practicesRsvpSelf]),
     canRecordAttendance: hasAllPermissions(permissions.permissions, [PERMISSIONS.attendanceMark]),
+    canManagePractice: hasAllPermissions(permissions.permissions, [PERMISSIONS.practicesManage]),
     selectedReason: reason,
     isSubmitting: mutation.isSubmitting,
     isConflict: mutation.isConflict,
@@ -65,6 +67,9 @@ export function usePracticeSessionDetails(sessionId: string): PracticeSessionScr
     },
     onOpenAttendance: () => {
       navigation.push(sessionAttendancePath(sessionId));
+    },
+    onOpenReminders: () => {
+      navigation.push(practiceRemindersPath(sessionId));
     },
   });
 }

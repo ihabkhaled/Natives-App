@@ -71,6 +71,7 @@ export const APP_PATHS = {
   tryoutCandidates: '/tryout-candidates',
   roleAssignments: '/admin/role-assignments',
   practiceAgenda: '/practice-sessions/:sessionId/agenda',
+  practiceReminders: '/practice-sessions/:sessionId/reminders',
   competitions: '/competitions',
   competitionDetail: '/competitions/:competitionId',
   squads: '/squads',

@@ -70,6 +70,7 @@ describe('APP_DEEP_LINK_POLICY', () => {
       '/performance/measurements',
       '/points',
       '/practice-sessions/:sessionId/agenda',
+      '/practice-sessions/:sessionId/reminders',
       '/practices',
       '/practices/:sessionId',
       '/practices/:sessionId/attendance',

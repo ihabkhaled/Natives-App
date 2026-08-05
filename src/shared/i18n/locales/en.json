@@ -3434,5 +3434,30 @@
     "listIntro": "In the order the session runs them.",
     "countLabel": "{{total}} blocks",
     "actionFailed": "That action did not complete. Try again."
+  },
+  "practiceReminders": {
+    "title": "Reminders",
+    "subtitle": "Who still has to hear about this session, and what would go out.",
+    "loadingLabel": "Checking reminders…",
+    "errorTitle": "Reminders unavailable",
+    "errorMessage": "The reminder status for this session could not be read. Try again.",
+    "eligibleLabel": "{{count}} eligible",
+    "noResponseLabel": "{{count}} have not replied",
+    "kindsHeading": "Reminders due",
+    "kindsEmpty": "Nothing is due for this session right now.",
+    "windowOpen": "The reminder window is open.",
+    "windowClosed": "The reminder window has closed for this session.",
+    "windowReopened": "Reopened: a late cancellation is worth sending past the cutoff.",
+    "sessionPast": "This session has already taken place.",
+    "dispatchAction": "Send due reminders",
+    "dispatchRunning": "Sending…",
+    "dispatchResult": "Queued {{enqueued}} of {{candidates}}.",
+    "dispatchHeldBack": "{{count}} were held back — quiet hours, preferences, or already sent.",
+    "dispatchNothingDue": "Nothing was due, so nothing was sent.",
+    "testAction": "Send a test to myself",
+    "testRunning": "Sending test…",
+    "testQueued": "Test queued. It goes to you and nobody else.",
+    "testQuietHours": "Held back: you are inside your own quiet hours.",
+    "actionFailed": "That did not go through. Try again."
   }
 }

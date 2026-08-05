@@ -33,6 +33,8 @@ export interface BuildPracticeSessionScreenParams {
   readonly onSubmitRsvp: (status: RsvpStatus) => void;
   readonly onOpenMap: (url: string) => void;
   readonly onOpenAttendance: () => void;
+  readonly canManagePractice: boolean;
+  readonly onOpenReminders: () => void;
 }
 
 /**
@@ -56,6 +58,24 @@ function buildAttendanceCta(
         : I18N_KEYS.attendance.sessionAttendanceCta,
     ),
     onOpen: params.onOpenAttendance,
+  };
+}
+
+/**
+ * Session-detail reminders CTA. Gated on `practice.manage` rather than the
+ * attendance grant: who has not replied is roster information, and the screen
+ * behind this link can mail them.
+ */
+function buildRemindersCta(
+  params: BuildPracticeSessionScreenParams,
+): PracticeSessionScreenView['remindersCta'] {
+  if (!params.canManagePractice || params.detail === undefined) {
+    return null;
+  }
+  return {
+    heading: params.t(I18N_KEYS.practiceReminders.title),
+    label: params.t(I18N_KEYS.practiceReminders.dispatchAction),
+    onOpen: params.onOpenReminders,
   };
 }
 
@@ -97,6 +117,7 @@ export function buildPracticeSessionScreenView(
     forbiddenTitle: t(I18N_KEYS.states.permissionTitle),
     forbiddenMessage: t(I18N_KEYS.states.permissionMessage),
     attendanceCta: buildAttendanceCta(params),
+    remindersCta: buildRemindersCta(params),
     detail: detailData,
     selectedReason: params.selectedReason,
     onSelectReason: params.onSelectReason,

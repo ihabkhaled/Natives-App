@@ -34,6 +34,8 @@ function params(
     onSubmitRsvp: vi.fn(),
     onOpenMap: vi.fn(),
     onOpenAttendance: vi.fn(),
+    canManagePractice: false,
+    onOpenReminders: vi.fn(),
     ...overrides,
   };
 }
@@ -103,6 +105,35 @@ describe('buildPracticeSessionScreenView', () => {
     );
 
     expect(view.attendanceCta?.label).toBe('attendance.sessionAttendanceCtaFinalized');
+  });
+
+  it('hides the reminders CTA without the manage grant', () => {
+    expect(buildPracticeSessionScreenView(params()).remindersCta).toBeNull();
+  });
+
+  /**
+   * Gated on practice.manage rather than the attendance grant: who has not
+   * replied is roster information, and the screen behind the link can mail
+   * them.
+   */
+  it('offers reminders to a coach who may manage the session', () => {
+    const onOpenReminders = vi.fn();
+    const view = buildPracticeSessionScreenView(
+      params({ canManagePractice: true, onOpenReminders }),
+    );
+
+    expect(view.remindersCta?.heading).toBe('practiceReminders.title');
+    expect(view.remindersCta?.label).toBe('practiceReminders.dispatchAction');
+    view.remindersCta?.onOpen();
+    expect(onOpenReminders).toHaveBeenCalledTimes(1);
+  });
+
+  it('withholds the reminders CTA while the detail has not resolved', () => {
+    const view = buildPracticeSessionScreenView(
+      params({ canManagePractice: true, detail: undefined }),
+    );
+
+    expect(view.remindersCta).toBeNull();
   });
 
   it('withholds the CTA while the detail has not resolved', () => {

@@ -8,6 +8,7 @@ import { COMPETITIONS_I18N_KEYS } from './competitions-keys.constants';
 import { CONTACT_I18N_KEYS } from './contact-keys.constants';
 import { DASHBOARD_I18N_KEYS } from './dashboard-keys.constants';
 import { ERRORS_I18N_KEYS } from './errors-keys.constants';
+import { HOME_I18N_KEYS } from './home-keys.constants';
 import { LANDING_I18N_KEYS } from './landing-keys.constants';
 import {
   MATCH_STATS_I18N_KEYS,
@@ -27,6 +28,8 @@ import { DATA_QUALITY_I18N_KEYS } from './data-quality-keys.constants';
 import { GOVERNANCE_I18N_KEYS } from './governance-keys.constants';
 import { JERSEY_I18N_KEYS } from './jersey-keys.constants';
 import { PRACTICE_AGENDA_I18N_KEYS } from './practice-agenda-keys.constants';
+import { PRACTICE_REMINDERS_I18N_KEYS } from './practice-reminders-keys.constants';
+import { SESSIONS_I18N_KEYS } from './sessions-keys.constants';
 import { ROLE_ASSIGNMENTS_I18N_KEYS } from './role-assignments-keys.constants';
 import { TRYOUT_CANDIDATES_I18N_KEYS } from './tryout-candidates-keys.constants';
 import { REPORTS_I18N_KEYS } from './reports-keys.constants';
@@ -148,26 +151,8 @@ export const I18N_KEYS = {
   },
   /** Public self-signup: request an account, then wait for admin approval. */
   signup: SIGNUP_I18N_KEYS,
-  sessions: {
-    title: 'sessions.title',
-    intro: 'sessions.intro',
-    current: 'sessions.current',
-    lastActive: 'sessions.lastActive',
-    revoke: 'sessions.revoke',
-    revokeOthers: 'sessions.revokeOthers',
-    revokedToast: 'sessions.revokedToast',
-    revokeFailedToast: 'sessions.revokeFailedToast',
-    emptyTitle: 'sessions.emptyTitle',
-    emptyMessage: 'sessions.emptyMessage',
-    unknownDevice: 'sessions.unknownDevice',
-  },
-  home: {
-    title: 'home.title',
-    greeting: 'home.greeting',
-    manageSessions: 'home.manageSessions',
-    noAccessTitle: 'home.noAccessTitle',
-    noAccessMessage: 'home.noAccessMessage',
-  },
+  sessions: SESSIONS_I18N_KEYS,
+  home: HOME_I18N_KEYS,
   dashboard: DASHBOARD_I18N_KEYS,
   attendance: ATTENDANCE_I18N_KEYS,
   practice: PRACTICE_I18N_KEYS,
@@ -181,6 +166,7 @@ export const I18N_KEYS = {
   governance: GOVERNANCE_I18N_KEYS,
   jersey: JERSEY_I18N_KEYS,
   practiceAgenda: PRACTICE_AGENDA_I18N_KEYS,
+  practiceReminders: PRACTICE_REMINDERS_I18N_KEYS,
   roleAssignments: ROLE_ASSIGNMENTS_I18N_KEYS,
   tryoutCandidates: TRYOUT_CANDIDATES_I18N_KEYS,
   reports: REPORTS_I18N_KEYS,

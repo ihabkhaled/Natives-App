@@ -130,6 +130,27 @@ describe('usePracticeSessionDetails', () => {
     expect(pushSpy).toHaveBeenCalledWith('/practices/sess-1/attendance');
   });
 
+  it('offers the reminders CTA only to practice.manage holders and routes it', () => {
+    const { result } = renderHook(() => usePracticeSessionDetails('sess-1'));
+    expect(result.current.remindersCta).toBeNull();
+
+    vi.mocked(useEffectivePermissions).mockReturnValue({
+      permissions: [PERMISSIONS.practicesRead, PERMISSIONS.practicesManage],
+      accountActive: true,
+      accountPending: false,
+      onboardingComplete: true,
+      hasTeamContext: true,
+      isLoading: false,
+      isError: false,
+    });
+    const { result: grantedResult } = renderHook(() => usePracticeSessionDetails('sess-1'));
+    act(() => {
+      grantedResult.current.remindersCta?.onOpen();
+    });
+
+    expect(pushSpy).toHaveBeenCalledWith('/practice-sessions/sess-1/reminders');
+  });
+
   it('opens the venue map through the external navigation owner', () => {
     const { result } = renderHook(() => usePracticeSessionDetails('sess-1'));
 

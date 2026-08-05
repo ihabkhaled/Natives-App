@@ -442,6 +442,22 @@ test.describe('matches accessibility', () => {
     expect((await analyze(page)).violations).toEqual([]);
   });
 
+  test('the practice reminders screen has no violations, including its live region', async ({
+    page,
+  }) => {
+    await signIn(page, {
+      email: MOCK_PERSONA_EMAILS.coach,
+      password: MOCK_CREDENTIALS.password,
+    });
+    await gotoApp(page, APP_ROUTES.practiceReminders);
+    await expect(page.getByTestId(TEST_IDS.practiceRemindersDispatch)).toBeVisible();
+    // The outcome list is announced, not just rendered — analyze it populated.
+    await page.getByTestId(TEST_IDS.practiceRemindersDispatch).click();
+    await expect(page.getByTestId(TEST_IDS.practiceRemindersMessages)).toBeVisible();
+    await waitForAppAnimations(page);
+    expect((await analyze(page)).violations).toEqual([]);
+  });
+
   test('the reports center has no violations, including its progress and countdown labels', async ({
     page,
   }) => {

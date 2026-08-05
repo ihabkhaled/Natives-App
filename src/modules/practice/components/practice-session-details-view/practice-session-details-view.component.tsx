@@ -1,15 +1,8 @@
-import { IonText } from '@/packages/ionic';
 import { TEST_IDS } from '@/shared/config';
-import {
-  AppButton,
-  ErrorState,
-  LoadingState,
-  OfflineState,
-  PageShell,
-  PermissionState,
-} from '@/shared/ui';
+import { ErrorState, LoadingState, OfflineState, PageShell, PermissionState } from '@/shared/ui';
 
 import { PracticeSessionBody } from '../practice-session-body';
+import { SessionCtaList } from '../session-cta-list';
 import type { PracticeSessionDetailsViewProps } from './practice-session-details-view.types';
 
 /** Session-detail body: one presented state, or the full detail when ready. */
@@ -53,22 +46,7 @@ export function PracticeSessionDetailsView(
           />
         ) : null}
         {/* Only permitted staff with a resolved detail carry a CTA at all. */}
-        {props.attendanceCta !== null ? (
-          <section
-            aria-label={props.attendanceCta.heading}
-            className="app-surface-card flex flex-wrap items-center justify-between gap-3 p-4"
-          >
-            <IonText>
-              <h2 className="m-0 text-base font-semibold">{props.attendanceCta.heading}</h2>
-            </IonText>
-            <AppButton
-              label={props.attendanceCta.label}
-              tone="secondary"
-              testId={TEST_IDS.practiceSessionAttendanceCta}
-              onClick={props.attendanceCta.onOpen}
-            />
-          </section>
-        ) : null}
+        <SessionCtaList attendanceCta={props.attendanceCta} remindersCta={props.remindersCta} />
         {props.status === 'ready' && props.detail !== null ? (
           <PracticeSessionBody
             detail={props.detail}

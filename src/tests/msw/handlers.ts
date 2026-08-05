@@ -59,6 +59,8 @@ import { dataQualityHandlers } from './data-quality-handlers';
 import { governanceHandlers } from './governance-handlers';
 import { jerseyHandlers } from './jersey-handlers';
 import { practiceAgendaHandlers } from './practice-agenda-handlers';
+import { practiceRemindersHandlers } from './practice-reminders-handlers';
+import { resetMockReminderState } from './practice-reminders.fixture';
 import { roleAssignmentsHandlers } from './role-assignments-handlers';
 import { tryoutCandidatesHandlers } from './tryout-candidates-handlers';
 import { teamDirectoryHandlers } from './team-directory-handlers';
@@ -72,6 +74,7 @@ const MOCK_STATE_RESETTERS: readonly (() => void)[] = [
   resetMockSignupState,
   resetMockRecoveryState,
   resetMockPracticeState,
+  resetMockReminderState,
   resetMockAttendanceState,
   resetMockAttendanceSelfState,
   resetMockMembersState,
@@ -265,6 +268,7 @@ export const mockApiHandlers = [
   ...governanceHandlers,
   ...jerseyHandlers,
   ...practiceAgendaHandlers,
+  ...practiceRemindersHandlers,
   ...roleAssignmentsHandlers,
   ...tryoutCandidatesHandlers,
   ...teamDirectoryHandlers,

@@ -15,6 +15,7 @@ export const APP_ROUTES = {
   practices: '/practices',
   practiceSession: '/practices/sess-evening',
   attendance: '/practices/sess-evening/attendance',
+  practiceReminders: '/practice-sessions/session-mock-1/reminders',
   myAttendance: '/my-attendance',
   members: '/members',
   assessments: '/assessments',

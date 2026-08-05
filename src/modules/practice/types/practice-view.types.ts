@@ -191,12 +191,23 @@ interface PracticeAttendanceCtaView {
   readonly onOpen: () => void;
 }
 
+/**
+ * Session-scoped reminders entry point. `null` without `practice.manage`, so
+ * the CTA never offers a screen the viewer would only be refused on.
+ */
+interface PracticeRemindersCtaView {
+  readonly heading: string;
+  readonly label: string;
+  readonly onOpen: () => void;
+}
+
 export interface PracticeSessionScreenView extends AsyncViewCopy {
   readonly title: string;
   readonly status: PracticeSessionStatus;
   readonly forbiddenTitle: string;
   readonly forbiddenMessage: string;
   readonly attendanceCta: PracticeAttendanceCtaView | null;
+  readonly remindersCta: PracticeRemindersCtaView | null;
   readonly detail: PracticeSessionDetailData | null;
   readonly selectedReason: RsvpReason | null;
   readonly onSelectReason: (reason: RsvpReason | null) => void;

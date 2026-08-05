@@ -23,6 +23,7 @@ import { DATA_QUALITY_TEST_IDS } from './data-quality-test-ids.constants';
 import { GOVERNANCE_TEST_IDS } from './governance-test-ids.constants';
 import { JERSEY_TEST_IDS } from './jersey-test-ids.constants';
 import { PRACTICE_AGENDA_TEST_IDS } from './practice-agenda-test-ids.constants';
+import { PRACTICE_REMINDERS_TEST_IDS } from './practice-reminders-test-ids.constants';
 import { ROLE_ASSIGNMENTS_TEST_IDS } from './role-assignments-test-ids.constants';
 import { TRYOUT_CANDIDATES_TEST_IDS } from './tryout-candidates-test-ids.constants';
 import { REPORTS_TEST_IDS } from './reports-test-ids.constants';
@@ -49,6 +50,7 @@ export const TEST_IDS = {
   ...GOVERNANCE_TEST_IDS,
   ...JERSEY_TEST_IDS,
   ...PRACTICE_AGENDA_TEST_IDS,
+  ...PRACTICE_REMINDERS_TEST_IDS,
   ...ROLE_ASSIGNMENTS_TEST_IDS,
   ...TRYOUT_CANDIDATES_TEST_IDS,
   ...REPORTS_TEST_IDS,

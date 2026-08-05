@@ -475,6 +475,19 @@
       ]
     },
     {
+      "name": "practice-reminders",
+      "publicSurface": [
+        "REMINDER_SUPPRESSION_REASON",
+        "getPracticeRemindersRouteDefinitions",
+        "practiceRemindersPath",
+        "practiceRemindersPattern",
+        "practiceRemindersQueryKeys",
+        "reminderDispatchResponseSchema",
+        "reminderStatusResponseSchema",
+        "reminderTestResponseSchema"
+      ]
+    },
+    {
       "name": "public-competitions",
       "publicSurface": [
         "MATCH_OUTCOME",

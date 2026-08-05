@@ -3458,5 +3458,30 @@
     "listIntro": "بالترتيب الذي تُنفَّذ به.",
     "countLabel": "{{total}} مرحلة",
     "actionFailed": "لم يكتمل هذا الإجراء. حاول مرة أخرى."
+  },
+  "practiceReminders": {
+    "title": "التذكيرات",
+    "subtitle": "من لم يُبلَّغ بعد بهذه الجلسة، وما الذي سيُرسل.",
+    "loadingLabel": "جارٍ فحص التذكيرات…",
+    "errorTitle": "التذكيرات غير متاحة",
+    "errorMessage": "تعذّرت قراءة حالة التذكيرات لهذه الجلسة. حاول مرة أخرى.",
+    "eligibleLabel": "{{count}} مؤهلون",
+    "noResponseLabel": "{{count}} لم يردّوا",
+    "kindsHeading": "التذكيرات المستحقة",
+    "kindsEmpty": "لا شيء مستحق لهذه الجلسة الآن.",
+    "windowOpen": "نافذة التذكير مفتوحة.",
+    "windowClosed": "أُغلقت نافذة التذكير لهذه الجلسة.",
+    "windowReopened": "أُعيد فتحها: الإلغاء المتأخر يستحق الإرسال بعد الموعد النهائي.",
+    "sessionPast": "هذه الجلسة انتهت بالفعل.",
+    "dispatchAction": "إرسال التذكيرات المستحقة",
+    "dispatchRunning": "جارٍ الإرسال…",
+    "dispatchResult": "تم إدراج {{enqueued}} من {{candidates}}.",
+    "dispatchHeldBack": "{{count}} لم تُرسل — ساعات هدوء أو تفضيلات أو أُرسلت سابقًا.",
+    "dispatchNothingDue": "لا شيء مستحق، فلم يُرسل شيء.",
+    "testAction": "أرسل تجربة لي",
+    "testRunning": "جارٍ إرسال التجربة…",
+    "testQueued": "أُدرجت التجربة. سترسل إليك وحدك.",
+    "testQuietHours": "لم تُرسل: أنت داخل ساعات الهدوء الخاصة بك.",
+    "actionFailed": "لم تتم العملية. حاول مرة أخرى."
   }
 }
