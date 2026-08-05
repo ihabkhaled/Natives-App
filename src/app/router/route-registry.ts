@@ -14,6 +14,7 @@ import { getPointsRouteDefinitions } from '@/modules/points';
 import { getPracticeRouteDefinitions } from '@/modules/practice';
 import { getPublicCompetitionsRouteDefinitions } from '@/modules/public-competitions';
 import { getDataQualityRouteDefinitions } from '@/modules/data-quality';
+import { getDrillsRouteDefinitions } from '@/modules/drills';
 import { getGovernanceRouteDefinitions } from '@/modules/governance';
 import { getJerseyRouteDefinitions } from '@/modules/jersey';
 import { getPracticeAgendaRouteDefinitions } from '@/modules/practice-agenda';
@@ -52,6 +53,7 @@ export function getAppRouteDefinitions(): readonly AppRouteDefinition[] {
     ...getJerseyRouteDefinitions(),
     ...getPracticeAgendaRouteDefinitions(),
     ...getPracticeRemindersRouteDefinitions(),
+    ...getDrillsRouteDefinitions(),
     ...getRoleAssignmentsRouteDefinitions(),
     ...getTryoutCandidatesRouteDefinitions(),
     ...getReportsRouteDefinitions(),

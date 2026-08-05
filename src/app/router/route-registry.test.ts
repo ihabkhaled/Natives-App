@@ -63,6 +63,8 @@ describe('getAppRouteDefinitions', () => {
       APP_PATHS.jerseyOrders,
       APP_PATHS.practiceAgenda,
       APP_PATHS.practiceReminders,
+      APP_PATHS.drills,
+      APP_PATHS.drillDetail,
       APP_PATHS.roleAssignments,
       APP_PATHS.tryoutCandidates,
       APP_PATHS.reports,

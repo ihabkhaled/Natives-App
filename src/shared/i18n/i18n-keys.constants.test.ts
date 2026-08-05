@@ -88,6 +88,7 @@ describe('I18N_KEYS', () => {
       'jersey',
       'practiceAgenda',
       'practiceReminders',
+      'drills',
       'roleAssignments',
       'tryoutCandidates',
       'reports',

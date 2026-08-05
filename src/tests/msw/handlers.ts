@@ -56,6 +56,8 @@ import { resetMockNotificationsState } from './notifications.fixture';
 import { tryoutsHandlers } from './tryouts-handlers';
 import { resetMockTryoutsState } from './tryouts.fixture';
 import { dataQualityHandlers } from './data-quality-handlers';
+import { drillsHandlers } from './drills-handlers';
+import { resetMockDrillsState } from './drills.fixture';
 import { governanceHandlers } from './governance-handlers';
 import { jerseyHandlers } from './jersey-handlers';
 import { practiceAgendaHandlers } from './practice-agenda-handlers';
@@ -92,6 +94,7 @@ const MOCK_STATE_RESETTERS: readonly (() => void)[] = [
   resetMockStandingsState,
   resetMockAchievementsState,
   resetMockReportsState,
+  resetMockDrillsState,
 ];
 
 export function resetMockAuthState(): void {
@@ -269,6 +272,7 @@ export const mockApiHandlers = [
   ...jerseyHandlers,
   ...practiceAgendaHandlers,
   ...practiceRemindersHandlers,
+  ...drillsHandlers,
   ...roleAssignmentsHandlers,
   ...tryoutCandidatesHandlers,
   ...teamDirectoryHandlers,

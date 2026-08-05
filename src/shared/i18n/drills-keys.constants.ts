@@ -1,0 +1,101 @@
+/**
+ * Drill catalogue copy. Split out of the aggregate catalog so I18N_KEYS stays
+ * within its size budget; validate-locales.mjs reads every *keys.constants.ts.
+ */
+export const DRILLS_I18N_KEYS = {
+  // List screen.
+  title: 'drills.title',
+  subtitle: 'drills.subtitle',
+  loadingLabel: 'drills.loadingLabel',
+  emptyTitle: 'drills.emptyTitle',
+  emptyMessage: 'drills.emptyMessage',
+  noMatchesTitle: 'drills.noMatchesTitle',
+  noMatchesMessage: 'drills.noMatchesMessage',
+  countSummary: 'drills.countSummary',
+  searchLabel: 'drills.searchLabel',
+  searchPlaceholder: 'drills.searchPlaceholder',
+  categoryFilterLabel: 'drills.categoryFilterLabel',
+  statusFilterLabel: 'drills.statusFilterLabel',
+  filterAll: 'drills.filterAll',
+  newDrillLabel: 'drills.newDrillLabel',
+  openLabel: 'drills.openLabel',
+  noDurationLabel: 'drills.noDurationLabel',
+  durationLabel: 'drills.durationLabel',
+  noTagsLabel: 'drills.noTagsLabel',
+
+  // Detail / edit screen.
+  detailTitle: 'drills.detailTitle',
+  newHeading: 'drills.newHeading',
+  backLabel: 'drills.backLabel',
+  formHeading: 'drills.formHeading',
+  nameLabel: 'drills.nameLabel',
+  namePlaceholder: 'drills.namePlaceholder',
+  categoryLabel: 'drills.categoryLabel',
+  intensityLabel: 'drills.intensityLabel',
+  objectiveLabel: 'drills.objectiveLabel',
+  objectivePlaceholder: 'drills.objectivePlaceholder',
+  instructionsLabel: 'drills.instructionsLabel',
+  instructionsPlaceholder: 'drills.instructionsPlaceholder',
+  equipmentLabel: 'drills.equipmentLabel',
+  equipmentPlaceholder: 'drills.equipmentPlaceholder',
+  skillTagsLabel: 'drills.skillTagsLabel',
+  skillTagsPlaceholder: 'drills.skillTagsPlaceholder',
+  durationInputLabel: 'drills.durationInputLabel',
+  durationPlaceholder: 'drills.durationPlaceholder',
+  safetyNotesLabel: 'drills.safetyNotesLabel',
+  safetyNotesPlaceholder: 'drills.safetyNotesPlaceholder',
+  mediaUrlLabel: 'drills.mediaUrlLabel',
+  mediaUrlPlaceholder: 'drills.mediaUrlPlaceholder',
+  saveLabel: 'drills.saveLabel',
+  savingLabel: 'drills.savingLabel',
+  cancelLabel: 'drills.cancelLabel',
+
+  // Validation, i18n keys rather than raw strings (rules/16, packages/forms).
+  validationNameRequired: 'drills.validationNameRequired',
+  validationNameTooLong: 'drills.validationNameTooLong',
+  validationCategoryRequired: 'drills.validationCategoryRequired',
+  validationObjectiveTooLong: 'drills.validationObjectiveTooLong',
+  validationInstructionsTooLong: 'drills.validationInstructionsTooLong',
+  validationSafetyNotesTooLong: 'drills.validationSafetyNotesTooLong',
+  validationEquipmentTooMany: 'drills.validationEquipmentTooMany',
+  validationSkillTagsTooMany: 'drills.validationSkillTagsTooMany',
+  validationDurationRange: 'drills.validationDurationRange',
+  validationMediaUrlTooLong: 'drills.validationMediaUrlTooLong',
+  validationMediaUrlInvalid: 'drills.validationMediaUrlInvalid',
+
+  // Lifecycle: archive is a retirement, never a deletion.
+  statusActive: 'drills.statusActive',
+  statusArchived: 'drills.statusArchived',
+  archivedNotice: 'drills.archivedNotice',
+  archiveAction: 'drills.archiveAction',
+  archiveConfirmTitle: 'drills.archiveConfirmTitle',
+  archiveConfirmMessage: 'drills.archiveConfirmMessage',
+  archiveConfirm: 'drills.archiveConfirm',
+  archiveCancel: 'drills.archiveCancel',
+
+  // Toasts.
+  createdToast: 'drills.createdToast',
+  savedToast: 'drills.savedToast',
+  saveConflictToast: 'drills.saveConflictToast',
+  saveErrorToast: 'drills.saveErrorToast',
+  archivedToast: 'drills.archivedToast',
+  archiveErrorToast: 'drills.archiveErrorToast',
+
+  // Drill categories.
+  categoryWarmup: 'drills.categoryWarmup',
+  categoryConditioning: 'drills.categoryConditioning',
+  categoryThrowing: 'drills.categoryThrowing',
+  categoryCutting: 'drills.categoryCutting',
+  categoryDefense: 'drills.categoryDefense',
+  categoryOffense: 'drills.categoryOffense',
+  categoryScrimmage: 'drills.categoryScrimmage',
+  categorySetPlay: 'drills.categorySetPlay',
+  categoryCooldown: 'drills.categoryCooldown',
+  categoryOther: 'drills.categoryOther',
+
+  // Drill intensities.
+  intensityLow: 'drills.intensityLow',
+  intensityModerate: 'drills.intensityModerate',
+  intensityHigh: 'drills.intensityHigh',
+  intensityMax: 'drills.intensityMax',
+} as const;

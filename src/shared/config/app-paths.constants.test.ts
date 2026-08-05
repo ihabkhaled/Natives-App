@@ -30,6 +30,8 @@ describe('APP_PATHS', () => {
       'competitions',
       'contact',
       'dataQuality',
+      'drillDetail',
+      'drills',
       'forgotPassword',
       'gallery',
       'governance',

@@ -45,6 +45,8 @@ describe('APP_DEEP_LINK_POLICY', () => {
       '/competitions/:competitionId',
       '/contact',
       '/data-quality',
+      '/drills',
+      '/drills/:drillId',
       '/forgot-password',
       '/gallery',
       '/governance',

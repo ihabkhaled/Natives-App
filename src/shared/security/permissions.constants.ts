@@ -28,6 +28,9 @@ export const PERMISSIONS = {
   practicesRead: 'practice.read',
   practicesManage: 'practice.manage',
   practicesRsvpSelf: 'practice.rsvp.self',
+  // The catalog publishes no separate `drill.read`: every drill screen,
+  // including browsing the library, gates on the one grant a coach holds.
+  drillManage: 'drill.manage',
   attendanceMark: 'attendance.record',
   attendanceReadSelf: 'attendance.read.self',
   attendanceReadTeam: 'attendance.read.team',

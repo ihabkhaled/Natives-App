@@ -467,4 +467,30 @@ test.describe('matches accessibility', () => {
     await waitForAppAnimations(page);
     expect((await analyze(page)).violations).toEqual([]);
   });
+
+  test('the drills catalogue has no violations, including its archived status chip', async ({
+    page,
+  }) => {
+    await signIn(page, {
+      email: MOCK_PERSONA_EMAILS.coach,
+      password: MOCK_CREDENTIALS.password,
+    });
+    await gotoApp(page, APP_ROUTES.drills);
+    await expect(page.getByTestId(TEST_IDS.drillCard)).toHaveCount(2);
+    await waitForAppAnimations(page);
+    expect((await analyze(page)).violations).toEqual([]);
+  });
+
+  test('the drill detail/edit screen has no violations, including the archive control', async ({
+    page,
+  }) => {
+    await signIn(page, {
+      email: MOCK_PERSONA_EMAILS.coach,
+      password: MOCK_CREDENTIALS.password,
+    });
+    await gotoApp(page, APP_ROUTES.drillDetail);
+    await expect(page.getByTestId(TEST_IDS.drillArchiveButton)).toBeVisible();
+    await waitForAppAnimations(page);
+    expect((await analyze(page)).violations).toEqual([]);
+  });
 });

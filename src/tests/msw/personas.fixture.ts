@@ -14,6 +14,9 @@ const COACH_PERMISSIONS = [
   PERMISSIONS.practicesRead,
   PERMISSIONS.practicesManage,
   PERMISSIONS.practicesRsvpSelf,
+  // The drill catalogue is a coach tool: browsing, writing, and archiving a
+  // drill all gate on the one grant the backend publishes for it.
+  PERMISSIONS.drillManage,
   PERMISSIONS.attendanceMark,
   // The Coach bundle extends Member with team capture: read.team, record and
   // finalize — deliberately NOT attendance.correct (Team Admin only).
