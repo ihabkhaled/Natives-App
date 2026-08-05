@@ -7387,10 +7387,16 @@ ion-spinner {
   border-color: var(--app-lime-line);
 }
 
+/*
+ * Selected state is carried by the tint and the border, not by the label
+ * colour. Lime ink on the 14% lime tint measures 4.38:1 — under the 4.5:1 AA
+ * floor for 14px text — so the label keeps the body ink that passes, and
+ * aria-pressed carries the state for anyone not seeing the tint at all.
+ */
 .app-weekday-toggle--selected {
   border-color: var(--app-lime-line);
   background: var(--app-lime-soft);
-  color: var(--app-lime-text);
+  color: var(--app-ink);
 }
 
 @media (prefers-reduced-motion: reduce) {
