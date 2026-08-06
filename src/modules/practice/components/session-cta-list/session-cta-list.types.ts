@@ -4,4 +4,5 @@ export interface SessionCtaListProps {
   readonly attendanceCta: PracticeSessionScreenView['attendanceCta'];
   readonly remindersCta: PracticeSessionScreenView['remindersCta'];
   readonly rsvpDetailCta: PracticeSessionScreenView['rsvpDetailCta'];
+  readonly agendaGroupsCta: PracticeSessionScreenView['agendaGroupsCta'];
 }

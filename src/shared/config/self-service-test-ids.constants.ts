@@ -9,6 +9,7 @@ export const SELF_SERVICE_TEST_IDS = {
   practiceSessionAttendanceCta: 'practice-session-attendance-cta',
   practiceSessionRemindersCta: 'practice-session-reminders-cta',
   practiceSessionRsvpDetailCta: 'practice-session-rsvp-detail-cta',
+  practiceSessionAgendaGroupsCta: 'practice-session-agenda-groups-cta',
   myAttendancePage: 'my-attendance-page',
   myAttendanceView: 'my-attendance-view',
   myAttendanceLoading: 'my-attendance-loading',

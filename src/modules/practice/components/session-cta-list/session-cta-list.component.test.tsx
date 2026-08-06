@@ -12,7 +12,12 @@ function cta(label: string): { heading: string; label: string; onOpen: () => voi
 describe('SessionCtaList', () => {
   it('renders nothing when the viewer holds no grant', () => {
     const { container } = render(
-      <SessionCtaList attendanceCta={null} remindersCta={null} rsvpDetailCta={null} />,
+      <SessionCtaList
+        attendanceCta={null}
+        remindersCta={null}
+        rsvpDetailCta={null}
+        agendaGroupsCta={null}
+      />,
     );
 
     expect(container).toBeEmptyDOMElement();
@@ -24,6 +29,7 @@ describe('SessionCtaList', () => {
         attendanceCta={cta('Record attendance')}
         remindersCta={null}
         rsvpDetailCta={null}
+        agendaGroupsCta={null}
       />,
     );
 
@@ -38,6 +44,7 @@ describe('SessionCtaList', () => {
         attendanceCta={null}
         remindersCta={cta('Send due reminders')}
         rsvpDetailCta={null}
+        agendaGroupsCta={null}
       />,
     );
 
@@ -52,6 +59,7 @@ describe('SessionCtaList', () => {
         attendanceCta={null}
         remindersCta={null}
         rsvpDetailCta={cta('View RSVPs')}
+        agendaGroupsCta={null}
       />,
     );
 
@@ -69,6 +77,7 @@ describe('SessionCtaList', () => {
         attendanceCta={attendance}
         remindersCta={reminders}
         rsvpDetailCta={rsvpDetail}
+        agendaGroupsCta={null}
       />,
     );
 

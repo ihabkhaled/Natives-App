@@ -171,6 +171,7 @@ export function buildPracticeSessionScreenView(
     attendanceCta: null,
     remindersCta: null,
     rsvpDetailCta: null,
+    agendaGroupsCta: null,
     detail: buildPracticeSessionDetailData(),
     selectedReason: null,
     onSelectReason: noop,

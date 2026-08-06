@@ -13,6 +13,7 @@ import { useAppToast } from '@/shared/ui';
 import { type RsvpReason } from '../constants/practice.constants';
 import { buildPracticeSessionScreenView } from '../helpers/practice-session-screen.helper';
 import { useRsvpMutation } from '../mutations/use-rsvp-mutation.hook';
+import { practiceAgendaGroupsPath } from '@/modules/practice-agenda-groups';
 import { practiceRemindersPath } from '@/modules/practice-reminders';
 import { practiceRsvpDetailPath } from '@/modules/practice-rsvp-detail';
 import { sessionAttendancePath } from '../routes/practice.paths';
@@ -74,6 +75,9 @@ export function usePracticeSessionDetails(sessionId: string): PracticeSessionScr
     },
     onOpenRsvpDetail: () => {
       navigation.push(practiceRsvpDetailPath(sessionId));
+    },
+    onOpenAgendaGroups: () => {
+      navigation.push(practiceAgendaGroupsPath(sessionId));
     },
   });
 }

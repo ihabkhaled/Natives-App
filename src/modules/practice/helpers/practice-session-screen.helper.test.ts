@@ -37,6 +37,7 @@ function params(
     canManagePractice: false,
     onOpenReminders: vi.fn(),
     onOpenRsvpDetail: vi.fn(),
+    onOpenAgendaGroups: vi.fn(),
     ...overrides,
   };
 }
@@ -106,6 +107,21 @@ describe('buildPracticeSessionScreenView', () => {
     );
 
     expect(view.attendanceCta?.label).toBe('attendance.sessionAttendanceCtaFinalized');
+  });
+
+  it('hides the working-groups CTA without the manage grant', () => {
+    expect(buildPracticeSessionScreenView(params()).agendaGroupsCta).toBeNull();
+  });
+
+  it('offers working groups to a coach who may manage the session', () => {
+    const onOpenAgendaGroups = vi.fn();
+    const view = buildPracticeSessionScreenView(
+      params({ canManagePractice: true, onOpenAgendaGroups }),
+    );
+
+    expect(view.agendaGroupsCta?.heading).toBe('practiceAgendaGroups.title');
+    view.agendaGroupsCta?.onOpen();
+    expect(onOpenAgendaGroups).toHaveBeenCalledTimes(1);
   });
 
   it('hides the reminders CTA without the manage grant', () => {

@@ -212,6 +212,16 @@ interface PracticeRsvpDetailCtaView {
   readonly onOpen: () => void;
 }
 
+/**
+ * Session-scoped entry point to the working-group planner. `null` without
+ * `practice.manage`: dividing the roster into groups is a coach's decision.
+ */
+interface PracticeAgendaGroupsCtaView {
+  readonly heading: string;
+  readonly label: string;
+  readonly onOpen: () => void;
+}
+
 export interface PracticeSessionScreenView extends AsyncViewCopy {
   readonly title: string;
   readonly status: PracticeSessionStatus;
@@ -220,6 +230,7 @@ export interface PracticeSessionScreenView extends AsyncViewCopy {
   readonly attendanceCta: PracticeAttendanceCtaView | null;
   readonly remindersCta: PracticeRemindersCtaView | null;
   readonly rsvpDetailCta: PracticeRsvpDetailCtaView | null;
+  readonly agendaGroupsCta: PracticeAgendaGroupsCtaView | null;
   readonly detail: PracticeSessionDetailData | null;
   readonly selectedReason: RsvpReason | null;
   readonly onSelectReason: (reason: RsvpReason | null) => void;

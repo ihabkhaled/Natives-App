@@ -6,6 +6,7 @@
 export const PRACTICE_AGENDA_GROUPS_I18N_KEYS = {
   title: 'practiceAgendaGroups.title',
   subtitle: 'practiceAgendaGroups.subtitle',
+  ctaLabel: 'practiceAgendaGroups.ctaLabel',
   loadingLabel: 'practiceAgendaGroups.loadingLabel',
   errorTitle: 'practiceAgendaGroups.errorTitle',
   errorMessage: 'practiceAgendaGroups.errorMessage',

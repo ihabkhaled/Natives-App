@@ -36,6 +36,7 @@ export interface BuildPracticeSessionScreenParams {
   readonly canManagePractice: boolean;
   readonly onOpenReminders: () => void;
   readonly onOpenRsvpDetail: () => void;
+  readonly onOpenAgendaGroups: () => void;
 }
 
 /**
@@ -98,6 +99,24 @@ function buildRsvpDetailCta(
   };
 }
 
+/**
+ * Session-detail working-groups CTA. Same `practice.manage` gate as the other
+ * two: dividing the roster into groups is a coach's decision, and the screen
+ * behind this link can move people between them.
+ */
+function buildAgendaGroupsCta(
+  params: BuildPracticeSessionScreenParams,
+): PracticeSessionScreenView['agendaGroupsCta'] {
+  if (!params.canManagePractice || params.detail === undefined) {
+    return null;
+  }
+  return {
+    heading: params.t(I18N_KEYS.practiceAgendaGroups.title),
+    label: params.t(I18N_KEYS.practiceAgendaGroups.ctaLabel),
+    onOpen: params.onOpenAgendaGroups,
+  };
+}
+
 /** Assemble the full translated session-detail screen view. */
 export function buildPracticeSessionScreenView(
   params: BuildPracticeSessionScreenParams,
@@ -138,6 +157,7 @@ export function buildPracticeSessionScreenView(
     attendanceCta: buildAttendanceCta(params),
     remindersCta: buildRemindersCta(params),
     rsvpDetailCta: buildRsvpDetailCta(params),
+    agendaGroupsCta: buildAgendaGroupsCta(params),
     detail: detailData,
     selectedReason: params.selectedReason,
     onSelectReason: params.onSelectReason,

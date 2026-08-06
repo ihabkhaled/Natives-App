@@ -50,6 +50,7 @@ export function PracticeSessionDetailsView(
           attendanceCta={props.attendanceCta}
           remindersCta={props.remindersCta}
           rsvpDetailCta={props.rsvpDetailCta}
+          agendaGroupsCta={props.agendaGroupsCta}
         />
         {props.status === 'ready' && props.detail !== null ? (
           <PracticeSessionBody

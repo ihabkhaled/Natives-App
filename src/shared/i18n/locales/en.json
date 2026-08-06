@@ -3479,7 +3479,8 @@
     "memberAdded": "Member added.",
     "memberRemoved": "Member removed.",
     "agendaCopied": "Plan copied. Review it below.",
-    "actionFailed": "That did not go through. Try again."
+    "actionFailed": "That did not go through. Try again.",
+    "ctaLabel": "Plan working groups"
   },
   "practiceReminders": {
     "title": "Reminders",

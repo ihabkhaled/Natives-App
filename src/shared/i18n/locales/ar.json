@@ -3503,7 +3503,8 @@
     "memberAdded": "تمت إضافة العضو.",
     "memberRemoved": "تمت إزالة العضو.",
     "agendaCopied": "تم نسخ الخطة. راجعها أدناه.",
-    "actionFailed": "تعذّر إتمام ذلك. حاول مرة أخرى."
+    "actionFailed": "تعذّر إتمام ذلك. حاول مرة أخرى.",
+    "ctaLabel": "تخطيط مجموعات العمل"
   },
   "practiceReminders": {
     "title": "التذكيرات",

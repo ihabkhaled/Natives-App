@@ -172,6 +172,28 @@ describe('usePracticeSessionDetails', () => {
     expect(pushSpy).toHaveBeenCalledWith('/practice-sessions/sess-1/rsvps');
   });
 
+  /**
+   * 71 files of working-group planner are worthless if nothing opens them —
+   * this is the assertion that would have caught the module shipping unwired.
+   */
+  it('routes the working-groups CTA to the session-scoped planner', () => {
+    vi.mocked(useEffectivePermissions).mockReturnValue({
+      permissions: [PERMISSIONS.practicesRead, PERMISSIONS.practicesManage],
+      accountActive: true,
+      accountPending: false,
+      onboardingComplete: true,
+      hasTeamContext: true,
+      isLoading: false,
+      isError: false,
+    });
+    const { result } = renderHook(() => usePracticeSessionDetails('sess-1'));
+    act(() => {
+      result.current.agendaGroupsCta?.onOpen();
+    });
+
+    expect(pushSpy).toHaveBeenCalledWith('/practice-sessions/sess-1/agenda/groups');
+  });
+
   it('opens the venue map through the external navigation owner', () => {
     const { result } = renderHook(() => usePracticeSessionDetails('sess-1'));
 

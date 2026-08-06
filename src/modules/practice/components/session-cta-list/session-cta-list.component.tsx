@@ -37,6 +37,14 @@ export function SessionCtaList(props: SessionCtaListProps): React.JSX.Element {
           onOpen={props.rsvpDetailCta.onOpen}
         />
       )}
+      {props.agendaGroupsCta === null ? null : (
+        <SessionCtaCard
+          heading={props.agendaGroupsCta.heading}
+          label={props.agendaGroupsCta.label}
+          testId={TEST_IDS.practiceSessionAgendaGroupsCta}
+          onOpen={props.agendaGroupsCta.onOpen}
+        />
+      )}
     </>
   );
 }
